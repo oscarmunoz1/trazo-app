@@ -15,8 +15,6 @@
 
 */
 
-/*eslint-disable*/
-import { HamburgerIcon } from "@chakra-ui/icons";
 // chakra imports
 import {
   Accordion,
@@ -42,8 +40,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import IconBox from "components/Icons/IconBox";
-import { CreativeTimLogo } from "components/Icons/Icons";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   renderThumbDark,
   renderThumbLight,
@@ -52,13 +49,85 @@ import {
   renderView,
   renderViewRTL,
 } from "components/Scrollbar/Scrollbar";
+
+import { CreativeTimLogo } from "components/Icons/Icons";
+import { FaCircle } from "react-icons/fa";
 import { HSeparator } from "components/Separator/Separator";
-import { SidebarContext } from "contexts/SidebarContext";
+/*eslint-disable*/
+import { HamburgerIcon } from "@chakra-ui/icons";
+// ROUTES
+import { HomeIcon } from "components/Icons/Icons";
+import IconBox from "components/Icons/IconBox";
+import Overview from "views/Pages/Profile/Overview/index";
 import React from "react";
 import { Scrollbars } from "react-custom-scrollbars-2";
-import { FaCircle } from "react-icons/fa";
-import { NavLink, useLocation } from "react-router-dom";
+import { SidebarContext } from "contexts/SidebarContext";
 import SidebarHelp from "./SidebarHelp";
+
+export const dynamicRoutes = [
+  {
+    name: "La Primavera",
+    path: "/dashboard/establishment/1",
+    collapse: true,
+    establihmentId: 1,
+    authIcon: <HomeIcon color="inherit" />,
+    layout: "/admin",
+    items: [
+      {
+        name: "Parcel #1",
+        secondaryNavbar: true,
+        path: "/dashboard/establishment/1/parcel/1",
+        component: Overview,
+        layout: "/admin",
+      },
+      {
+        name: "Parcel #2",
+        secondaryNavbar: true,
+        path: "/dashboard/establishment/1/parcel/2",
+        component: Overview,
+        layout: "/admin",
+      },
+      {
+        name: "Parcel #3",
+        secondaryNavbar: true,
+        path: "/dashboard/establishment/1/parcel/3",
+        component: Overview,
+        layout: "/admin",
+      },
+    ],
+  },
+  {
+    name: "La Ilusión",
+    path: "/dashboard/establishment/2",
+    collapse: true,
+    establihmentId: 2,
+    authIcon: <HomeIcon color="inherit" />,
+    layout: "/admin",
+    items: [
+      {
+        name: "Parcel #1",
+        secondaryNavbar: true,
+        path: "/dashboard/establishment/2/parcel/1",
+        component: Overview,
+        layout: "/admin",
+      },
+      {
+        name: "Parcel #2",
+        secondaryNavbar: true,
+        path: "/dashboard/establishment/2/parcel/2",
+        component: Overview,
+        layout: "/admin",
+      },
+      {
+        name: "Parcel #3",
+        secondaryNavbar: true,
+        path: "/dashboard/establishment/2/parcel/3",
+        component: Overview,
+        layout: "/admin",
+      },
+    ],
+  },
+];
 
 // FUNCTIONS
 
@@ -72,8 +141,11 @@ function Sidebar(props) {
   const mainPanel = React.useRef();
   let variantChange = "0.2s linear";
   // verifies if routeName is the one active (in browser input)
-  const activeRoute = (routeName) => {
-    return location.pathname.includes(routeName);
+  const activeRoute = (routeName, isDashboard = false) => {
+    if (isDashboard) {
+      return location.pathname.startsWith(routeName) ? "active" : "";
+    }
+    return location.pathname === routeName ? "active" : "";
   };
   // this function creates the links and collapses that appear in the sidebar (left menu)
   const createLinks = (routes) => {
@@ -208,9 +280,17 @@ function Sidebar(props) {
                           color="teal.300"
                           display={sidebarWidth === 275 ? "block" : "none"}
                         />
-                        <Text color={activeColor} my="auto" fontSize="sm">
-                          {sidebarWidth === 275 ? prop.name : prop.name[0]}
-                        </Text>
+                        {prop.establihmentId ? (
+                          <NavLink color="red" to={prop.layout + prop.path}>
+                            <Text color={activeColor} my="auto" fontSize="sm">
+                              {sidebarWidth === 275 ? prop.name : prop.name[0]}
+                            </Text>
+                          </NavLink>
+                        ) : (
+                          <Text color={activeColor} my="auto" fontSize="sm">
+                            {sidebarWidth === 275 ? prop.name : prop.name[0]}
+                          </Text>
+                        )}
                       </HStack>
                     )}
                   </Button>
@@ -272,14 +352,27 @@ function Sidebar(props) {
                           color="teal.300"
                           display={sidebarWidth === 275 ? "block" : "none"}
                         />
-                        <Text
-                          color={inactiveColor}
-                          my="auto"
-                          fontSize="md"
-                          fontWeight="normal"
-                        >
-                          {sidebarWidth === 275 ? prop.name : prop.name[0]}
-                        </Text>
+                        {prop.establihmentId ? (
+                          <NavLink color="red" to={prop.layout + prop.path}>
+                            <Text
+                              color={inactiveColor}
+                              my="auto"
+                              fontSize="md"
+                              fontWeight="normal"
+                            >
+                              {sidebarWidth === 275 ? prop.name : prop.name[0]}
+                            </Text>
+                          </NavLink>
+                        ) : (
+                          <Text
+                            color={inactiveColor}
+                            my="auto"
+                            fontSize="md"
+                            fontWeight="normal"
+                          >
+                            {sidebarWidth === 275 ? prop.name : prop.name[0]}
+                          </Text>
+                        )}
                       </HStack>
                     )}
                   </Button>
@@ -310,8 +403,12 @@ function Sidebar(props) {
                 <List>
                   {
                     prop.icon
-                      ? createLinks(prop.items) // for bullet accordion links
-                      : createAccordionLinks(prop.items) // for non-bullet accordion links
+                      ? createLinks(
+                          prop.isDashboard ? dynamicRoutes : prop.items
+                        ) // for bullet accordion links
+                      : createAccordionLinks(
+                          prop.isDashboard ? dynamicRoutes : prop.items
+                        ) // for non-bullet accordion links
                   }
                 </List>
               </AccordionPanel>
@@ -465,7 +562,7 @@ function Sidebar(props) {
       <Stack direction="column" mb="40px">
         <Box>{links}</Box>
       </Stack>
-      <SidebarHelp sidebarWidth={sidebarWidth}/>
+      <SidebarHelp sidebarWidth={sidebarWidth} />
     </Box>
   );
 
@@ -635,14 +732,27 @@ export function SidebarResponsive(props) {
                         >
                           {prop.icon}
                         </IconBox>
-                        <Text
-                          color={activeColor}
-                          my="auto"
-                          fontSize="sm"
-                          display={"block"}
-                        >
-                          {prop.name}
-                        </Text>
+                        {prop.establihmentId ? (
+                          <NavLink color="red" to={prop.layout + prop.path}>
+                            <Text
+                              color={activeColor}
+                              my="auto"
+                              fontSize="sm"
+                              display={"block"}
+                            >
+                              {prop.name}
+                            </Text>
+                          </NavLink>
+                        ) : (
+                          <Text
+                            color={activeColor}
+                            my="auto"
+                            fontSize="sm"
+                            display={"block"}
+                          >
+                            {prop.name}
+                          </Text>
+                        )}
                       </Flex>
                     ) : (
                       <HStack spacing={"22px"} ps="10px" ms="0px">
@@ -694,14 +804,27 @@ export function SidebarResponsive(props) {
                     ) : (
                       <HStack spacing={"26px"} ps={"10px"} ms={"0px"}>
                         <Icon as={FaCircle} w="6px" color="teal.300" />
-                        <Text
-                          color={inactiveColor}
-                          my="auto"
-                          fontSize="md"
-                          fontWeight="normal"
-                        >
-                          {prop.name}
-                        </Text>
+                        {prop.establihmentId ? (
+                          <NavLink color="red" to={prop.layout + prop.path}>
+                            <Text
+                              color={inactiveColor}
+                              my="auto"
+                              fontSize="md"
+                              fontWeight="normal"
+                            >
+                              {prop.name}
+                            </Text>
+                          </NavLink>
+                        ) : (
+                          <Text
+                            color={inactiveColor}
+                            my="auto"
+                            fontSize="md"
+                            fontWeight="normal"
+                          >
+                            {prop.name}
+                          </Text>
+                        )}
                       </HStack>
                     )}
                   </Button>
@@ -712,8 +835,12 @@ export function SidebarResponsive(props) {
                 <List>
                   {
                     prop.icon
-                      ? createLinks(prop.items) // for bullet accordion links
-                      : createAccordionLinks(prop.items) // for non-bullet accordion links
+                      ? createLinks(
+                          prop.isDashboard ? dynamicRoutes : prop.items
+                        ) // for bullet accordion links
+                      : createAccordionLinks(
+                          prop.isDashboard ? dynamicRoutes : prop.items
+                        ) // for non-bullet accordion links
                   }
                 </List>
               </AccordionPanel>

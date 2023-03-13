@@ -34,8 +34,8 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import React, { useMemo } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
+import React, { useMemo } from "react";
 import {
   TiArrowSortedDown,
   TiArrowSortedUp,
@@ -85,7 +85,6 @@ function BasicTable(props) {
   };
 
   const { pageIndex, pageSize } = state;
-  console.log(pageIndex);
 
   return (
     <>
