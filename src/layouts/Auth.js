@@ -22,7 +22,7 @@ import "@fontsource/roboto/700.css";
 
 // Chakra imports
 import { Box, ChakraProvider, Portal } from "@chakra-ui/react";
-import { Redirect, Route, Routes } from "react-router-dom";
+import { Outlet, Redirect, Route, Routes } from "react-router-dom";
 
 // core components
 import AuthNavbar from "components/Navbars/AuthNavbar.js";
@@ -42,7 +42,7 @@ export default function Pages(props) {
     return function cleanup() {};
   });
   const getActiveRoute = (routes) => {
-    let activeRoute = "Default Brand Text";
+    let activeRoute = "Home";
     for (let i = 0; i < routes.length; i++) {
       if (routes[i].collapse) {
         let collapseActiveRoute = getActiveRoute(routes[i].items);
@@ -127,15 +127,7 @@ export default function Pages(props) {
         </Portal>
         <Box w="100%">
           <Box ref={wrapper} w="100%">
-            {/* <Routes>
-              {getRoutes(routes)}
-              <Route
-                path="/auth"
-                element={() => (
-                  <Navigate to="/auth/authentication/sign-in/cover" replace />
-                )}
-              />
-            </Routes> */}
+            <Outlet />
           </Box>
         </Box>
         <Box px="24px" mx="auto" width="1044px" maxW="100%">

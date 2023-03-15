@@ -32,15 +32,16 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import bgCard from "assets/img/background-card-reports.png";
-import IconBox from "components/Icons/IconBox";
 import { CreativeTimLogo, RocketIcon } from "components/Icons/Icons";
-import { SidebarResponsive } from "components/Sidebar/Sidebar";
-import PropTypes from "prop-types";
-import React from "react";
+
 import { AiFillStar } from "react-icons/ai";
 import { GoChevronDown } from "react-icons/go";
+import IconBox from "components/Icons/IconBox";
 import { NavLink } from "react-router-dom";
+import PropTypes from "prop-types";
+import React from "react";
+import { SidebarResponsive } from "components/Sidebar/Sidebar";
+import bgCard from "assets/img/background-card-reports.png";
 import routes from "routes.js";
 
 export default function AuthNavbar(props) {
@@ -73,14 +74,14 @@ export default function AuthNavbar(props) {
 
   let authObject = {};
   routes.forEach((route) => {
-    if (route.items) {
+    if (route?.items) {
       authObject = route.items.find((link) => link.name === "Authentication");
     }
   });
 
   let applicationsObject = {};
   routes.forEach((route) => {
-    if (route.items) {
+    if (route?.items) {
       applicationsObject = route.items.find(
         (link) => link.name === "Applications"
       );
@@ -89,14 +90,14 @@ export default function AuthNavbar(props) {
 
   let ecommerceObject = {};
   routes.forEach((route) => {
-    if (route.items) {
+    if (route?.items) {
       ecommerceObject = route.items.find((link) => link.name === "Ecommerce");
     }
   });
 
   let extraArr = [];
   routes.forEach((route) => {
-    route.items.forEach((item) => {
+    route?.items?.forEach((item) => {
       if (item.items && item.name === "Pages") {
         extraArr = item.items.filter((link) => !link.collapse);
       }
@@ -359,188 +360,188 @@ export default function AuthNavbar(props) {
     </Link>
   );
 
-  const linksAuth = (
-    <HStack display={{ sm: "none", lg: "flex" }} spacing="12px">
-      <Stack
-        direction="row"
-        spacing="4px"
-        align="center"
-        color="#fff"
-        fontWeight="bold"
-        onMouseEnter={onOpenPages}
-        onMouseLeave={onClosePages}
-        cursor="pointer"
-        position="relative"
-      >
-        <Text fontSize="sm" color={mainText}>
-          Pages
-        </Text>
-        <Icon
-          as={GoChevronDown}
-          color={mainText}
-          w="14px"
-          h="14px"
-          fontWeight="2000"
-        />
-        <Menu isOpen={isOpenPages}>
-          <MenuList
-            p="22px"
-            minW="550px"
-            cursor="default"
-            borderRadius="15px"
-            position="absolute"
-            top="30px"
-            left="-10px"
-          >
-            <Grid templateColumns="repeat(3, 1fr)" gap="16px">
-              {createPagesLinks(routes)}
-            </Grid>
-          </MenuList>
-        </Menu>
-      </Stack>
-      <Stack
-        direction="row"
-        spacing="4px"
-        align="center"
-        color="#fff"
-        fontWeight="bold"
-        onMouseEnter={onOpenAuth}
-        onMouseLeave={onCloseAuth}
-        cursor="pointer"
-        position="relative"
-      >
-        <Text fontSize="sm" color={mainText}>
-          Authentications
-        </Text>
-        <Icon
-          as={GoChevronDown}
-          color={mainText}
-          w="14px"
-          h="14px"
-          fontWeight="2000"
-        />
-        <Menu isOpen={isOpenAuth}>
-          <MenuList
-            p="22px"
-            minW="450px"
-            cursor="default"
-            borderRadius="15px"
-            position="absolute"
-            top="30px"
-            left="-10px"
-          >
-            <Stack direction="row" spacing="24px">
-              <Flex
-                direction="column"
-                justify="center"
-                align="center"
-                bgImage={bgCard}
-                maxW="220px"
-                minH="230px"
-                borderRadius="15px"
-              >
-                <IconBox
-                  bg="white"
-                  color="white"
-                  borderRadius="50%"
-                  h="50px"
-                  w="50px"
-                  mb="12px"
-                >
-                  <Icon as={AiFillStar} w="25px" h="25px" color="teal.300" />
-                </IconBox>
-                <Text
-                  fontSize="xl"
-                  fontWeight="bold"
-                  color="#fff"
-                  maxW="80%"
-                  textAlign="center"
-                >
-                  Explore our utilities pages
-                </Text>
-              </Flex>
-              <Grid templateColumns="1fr" gap="16px">
-                {createAuthLinks(authObject.items)}
-              </Grid>
-            </Stack>
-          </MenuList>
-        </Menu>
-      </Stack>
-      <Stack
-        direction="row"
-        spacing="4px"
-        align="center"
-        color="#fff"
-        fontWeight="bold"
-        onMouseEnter={onOpenApplication}
-        onMouseLeave={onCloseApplication}
-        cursor="pointer"
-        position="relative"
-      >
-        <Text fontSize="sm" color={mainText}>
-          Application
-        </Text>
-        <Icon
-          as={GoChevronDown}
-          color={mainText}
-          w="14px"
-          h="14px"
-          fontWeight="2000"
-        />
-        <Menu isOpen={isOpenApplication}>
-          <MenuList
-            p="22px"
-            cursor="default"
-            borderRadius="15px"
-            position="absolute"
-            top="30px"
-            left="-10px"
-          >
-            <Grid templateColumns="1fr" gap="16px">
-              {createApplicationLinks(applicationsObject.items)}
-            </Grid>
-          </MenuList>
-        </Menu>
-      </Stack>
-      <Stack
-        direction="row"
-        spacing="4px"
-        align="center"
-        color="#fff"
-        fontWeight="bold"
-        onMouseEnter={onOpenEcommerce}
-        onMouseLeave={onCloseEcommerce}
-        cursor="pointer"
-        position="relative"
-      >
-        <Text fontSize="sm" color={mainText}>
-          Ecommerce
-        </Text>
-        <Icon
-          as={GoChevronDown}
-          color={mainText}
-          w="14px"
-          h="14px"
-          fontWeight="2000"
-        />
-        <Menu isOpen={isOpenEcommerce}>
-          <MenuList
-            p="22px"
-            minW="350px"
-            cursor="default"
-            borderRadius="15px"
-            position="absolute"
-            top="30px"
-            left="-10px"
-          >
-            <Grid templateColumns="repeat(2, 1fr)" gap="16px">
-              {createEcommerceLinks(ecommerceObject.items)}
-            </Grid>
-          </MenuList>
-        </Menu>
-      </Stack>
-    </HStack>
-  );
+  // const linksAuth = (
+  //   <HStack display={{ sm: "none", lg: "flex" }} spacing="12px">
+  //     <Stack
+  //       direction="row"
+  //       spacing="4px"
+  //       align="center"
+  //       color="#fff"
+  //       fontWeight="bold"
+  //       onMouseEnter={onOpenPages}
+  //       onMouseLeave={onClosePages}
+  //       cursor="pointer"
+  //       position="relative"
+  //     >
+  //       <Text fontSize="sm" color={mainText}>
+  //         Pages
+  //       </Text>
+  //       <Icon
+  //         as={GoChevronDown}
+  //         color={mainText}
+  //         w="14px"
+  //         h="14px"
+  //         fontWeight="2000"
+  //       />
+  //       <Menu isOpen={isOpenPages}>
+  //         <MenuList
+  //           p="22px"
+  //           minW="550px"
+  //           cursor="default"
+  //           borderRadius="15px"
+  //           position="absolute"
+  //           top="30px"
+  //           left="-10px"
+  //         >
+  //           <Grid templateColumns="repeat(3, 1fr)" gap="16px">
+  //             {createPagesLinks(routes)}
+  //           </Grid>
+  //         </MenuList>
+  //       </Menu>
+  //     </Stack>
+  //     <Stack
+  //       direction="row"
+  //       spacing="4px"
+  //       align="center"
+  //       color="#fff"
+  //       fontWeight="bold"
+  //       onMouseEnter={onOpenAuth}
+  //       onMouseLeave={onCloseAuth}
+  //       cursor="pointer"
+  //       position="relative"
+  //     >
+  //       <Text fontSize="sm" color={mainText}>
+  //         Authentications
+  //       </Text>
+  //       <Icon
+  //         as={GoChevronDown}
+  //         color={mainText}
+  //         w="14px"
+  //         h="14px"
+  //         fontWeight="2000"
+  //       />
+  //       <Menu isOpen={isOpenAuth}>
+  //         <MenuList
+  //           p="22px"
+  //           minW="450px"
+  //           cursor="default"
+  //           borderRadius="15px"
+  //           position="absolute"
+  //           top="30px"
+  //           left="-10px"
+  //         >
+  //           <Stack direction="row" spacing="24px">
+  //             <Flex
+  //               direction="column"
+  //               justify="center"
+  //               align="center"
+  //               bgImage={bgCard}
+  //               maxW="220px"
+  //               minH="230px"
+  //               borderRadius="15px"
+  //             >
+  //               <IconBox
+  //                 bg="white"
+  //                 color="white"
+  //                 borderRadius="50%"
+  //                 h="50px"
+  //                 w="50px"
+  //                 mb="12px"
+  //               >
+  //                 <Icon as={AiFillStar} w="25px" h="25px" color="teal.300" />
+  //               </IconBox>
+  //               <Text
+  //                 fontSize="xl"
+  //                 fontWeight="bold"
+  //                 color="#fff"
+  //                 maxW="80%"
+  //                 textAlign="center"
+  //               >
+  //                 Explore our utilities pages
+  //               </Text>
+  //             </Flex>
+  //             <Grid templateColumns="1fr" gap="16px">
+  //               {createAuthLinks(authObject.items)}
+  //             </Grid>
+  //           </Stack>
+  //         </MenuList>
+  //       </Menu>
+  //     </Stack>
+  //     <Stack
+  //       direction="row"
+  //       spacing="4px"
+  //       align="center"
+  //       color="#fff"
+  //       fontWeight="bold"
+  //       onMouseEnter={onOpenApplication}
+  //       onMouseLeave={onCloseApplication}
+  //       cursor="pointer"
+  //       position="relative"
+  //     >
+  //       <Text fontSize="sm" color={mainText}>
+  //         Application
+  //       </Text>
+  //       <Icon
+  //         as={GoChevronDown}
+  //         color={mainText}
+  //         w="14px"
+  //         h="14px"
+  //         fontWeight="2000"
+  //       />
+  //       <Menu isOpen={isOpenApplication}>
+  //         <MenuList
+  //           p="22px"
+  //           cursor="default"
+  //           borderRadius="15px"
+  //           position="absolute"
+  //           top="30px"
+  //           left="-10px"
+  //         >
+  //           <Grid templateColumns="1fr" gap="16px">
+  //             {createApplicationLinks(applicationsObject.items)}
+  //           </Grid>
+  //         </MenuList>
+  //       </Menu>
+  //     </Stack>
+  //     <Stack
+  //       direction="row"
+  //       spacing="4px"
+  //       align="center"
+  //       color="#fff"
+  //       fontWeight="bold"
+  //       onMouseEnter={onOpenEcommerce}
+  //       onMouseLeave={onCloseEcommerce}
+  //       cursor="pointer"
+  //       position="relative"
+  //     >
+  //       <Text fontSize="sm" color={mainText}>
+  //         Ecommerce
+  //       </Text>
+  //       <Icon
+  //         as={GoChevronDown}
+  //         color={mainText}
+  //         w="14px"
+  //         h="14px"
+  //         fontWeight="2000"
+  //       />
+  //       <Menu isOpen={isOpenEcommerce}>
+  //         <MenuList
+  //           p="22px"
+  //           minW="350px"
+  //           cursor="default"
+  //           borderRadius="15px"
+  //           position="absolute"
+  //           top="30px"
+  //           left="-10px"
+  //         >
+  //           <Grid templateColumns="repeat(2, 1fr)" gap="16px">
+  //             {createEcommerceLinks(ecommerceObject.items)}
+  //           </Grid>
+  //         </MenuList>
+  //       </Menu>
+  //     </Stack>
+  //   </HStack>
+  // );
   return (
     <Flex
       position={navbarPosition}
@@ -571,7 +572,7 @@ export default function AuthNavbar(props) {
             {...rest}
           />
         </Box>
-        {linksAuth}
+        {/* {linksAuth} */}
         <Link href="https://www.creative-tim.com/product/purity-ui-dashboard-pro">
           <Button
             bg={bgButton}

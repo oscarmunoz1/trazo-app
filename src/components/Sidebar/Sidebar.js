@@ -32,6 +32,7 @@ import {
   Flex,
   HStack,
   Icon,
+  Image,
   Link,
   List,
   ListItem,
@@ -63,6 +64,7 @@ import React from "react";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { SidebarContext } from "contexts/SidebarContext";
 import SidebarHelp from "./SidebarHelp";
+import logo from "assets/img/traceit.png";
 
 export const dynamicRoutes = [
   {
@@ -75,21 +77,18 @@ export const dynamicRoutes = [
     items: [
       {
         name: "Parcel #1",
-        secondaryNavbar: true,
         path: "/dashboard/establishment/1/parcel/1",
         component: Overview,
         layout: "/admin",
       },
       {
         name: "Parcel #2",
-        secondaryNavbar: true,
         path: "/dashboard/establishment/1/parcel/2",
         component: Overview,
         layout: "/admin",
       },
       {
         name: "Parcel #3",
-        secondaryNavbar: true,
         path: "/dashboard/establishment/1/parcel/3",
         component: Overview,
         layout: "/admin",
@@ -106,21 +105,18 @@ export const dynamicRoutes = [
     items: [
       {
         name: "Parcel #1",
-        secondaryNavbar: true,
         path: "/dashboard/establishment/2/parcel/1",
         component: Overview,
         layout: "/admin",
       },
       {
         name: "Parcel #2",
-        secondaryNavbar: true,
         path: "/dashboard/establishment/2/parcel/2",
         component: Overview,
         layout: "/admin",
       },
       {
         name: "Parcel #3",
-        secondaryNavbar: true,
         path: "/dashboard/establishment/2/parcel/3",
         component: Overview,
         layout: "/admin",
@@ -141,11 +137,8 @@ function Sidebar(props) {
   const mainPanel = React.useRef();
   let variantChange = "0.2s linear";
   // verifies if routeName is the one active (in browser input)
-  const activeRoute = (routeName, isDashboard = false) => {
-    if (isDashboard) {
-      return location.pathname.startsWith(routeName) ? "active" : "";
-    }
-    return location.pathname === routeName ? "active" : "";
+  const activeRoute = (routeName) => {
+    return location.pathname.includes(routeName);
   };
   // this function creates the links and collapses that appear in the sidebar (left menu)
   const createLinks = (routes) => {
@@ -198,13 +191,13 @@ function Sidebar(props) {
                 align="center"
                 justify="center"
                 boxShadow={
-                  activeRoute(prop.path) && prop.icon
+                  activeRoute(prop.path, prop.isDashboard) && prop.icon
                     ? sidebarActiveShadow
                     : null
                 }
                 _hover={{
                   boxShadow:
-                    activeRoute(prop.path) && prop.icon
+                    activeRoute(prop.path, prop.isDashboard) && prop.icon
                       ? sidebarActiveShadow
                       : null,
                 }}
@@ -216,12 +209,12 @@ function Sidebar(props) {
                 px={prop.icon ? null : "0px"}
                 py={prop.icon ? "12px" : null}
                 bg={
-                  activeRoute(prop.path) && prop.icon
+                  activeRoute(prop.path, prop.isDashboard) && prop.icon
                     ? activeAccordionBg
                     : "transparent"
                 }
               >
-                {activeRoute(prop.path) ? (
+                {activeRoute(prop.path, prop.isDashboard) ? (
                   <Button
                     boxSize="initial"
                     justifyContent="flex-start"
@@ -432,11 +425,15 @@ function Sidebar(props) {
                   </IconBox>
                   <Text
                     color={
-                      activeRoute(prop.path.toLowerCase())
+                      activeRoute(prop.path.toLowerCase(), prop.isDashboard)
                         ? activeColor
                         : inactiveColor
                     }
-                    fontWeight={activeRoute(prop.name) ? "bold" : "normal"}
+                    fontWeight={
+                      activeRoute(prop.name, prop.isDashboard)
+                        ? "bold"
+                        : "normal"
+                    }
                     fontSize="sm"
                   >
                     {prop.name}
@@ -448,7 +445,7 @@ function Sidebar(props) {
                 <HStack
                   spacing={
                     sidebarWidth === 275
-                      ? activeRoute(prop.path.toLowerCase())
+                      ? activeRoute(prop.path.toLowerCase(), prop.isDashboard)
                         ? "22px"
                         : "26px"
                       : "8px"
@@ -458,18 +455,24 @@ function Sidebar(props) {
                 >
                   <Icon
                     as={FaCircle}
-                    w={activeRoute(prop.path.toLowerCase()) ? "10px" : "6px"}
+                    w={
+                      activeRoute(prop.path.toLowerCase(), prop.isDashboard)
+                        ? "10px"
+                        : "6px"
+                    }
                     color="teal.300"
                     display={sidebarWidth === 275 ? "block" : "none"}
                   />
                   <Text
                     color={
-                      activeRoute(prop.path.toLowerCase())
+                      activeRoute(prop.path.toLowerCase(), prop.isDashboard)
                         ? activeColor
                         : inactiveColor
                     }
                     fontWeight={
-                      activeRoute(prop.path.toLowerCase()) ? "bold" : "normal"
+                      activeRoute(prop.path.toLowerCase(), prop.isDashboard)
+                        ? "bold"
+                        : "normal"
                     }
                   >
                     {sidebarWidth === 275 ? prop.name : prop.name[0]}
@@ -497,12 +500,14 @@ function Sidebar(props) {
             <Text
               mb="4px"
               color={
-                activeRoute(prop.path.toLowerCase())
+                activeRoute(prop.path.toLowerCase(), prop.isDashboard)
                   ? activeColor
                   : inactiveColor
               }
               fontWeight={
-                activeRoute(prop.path.toLowerCase()) ? "bold" : "normal"
+                activeRoute(prop.path.toLowerCase(), prop.isDashboard)
+                  ? "bold"
+                  : "normal"
               }
               fontSize="sm"
             >
@@ -539,18 +544,25 @@ function Sidebar(props) {
         alignItems="center"
         fontSize="11px"
       >
-        <CreativeTimLogo
+        {/* <CreativeTimLogo
           w={sidebarWidth === 275 ? "32px" : "40px"}
           h={sidebarWidth === 275 ? "32px" : "40px"}
           me="10px"
-        />
-        <Text
+        /> */}
+        {/* <Text
           fontSize="xs"
           mt="3px"
           display={sidebarWidth === 275 ? "block" : "none"}
         >
           {logoText}
-        </Text>
+        </Text> */}
+        <Image
+          src={logo}
+          alt="trood image"
+          height="30px"
+          paddingRight="10px"
+          href=""
+        />
       </Link>
       <HSeparator />
     </Box>
@@ -695,12 +707,12 @@ export function SidebarResponsive(props) {
                 px={prop.icon ? null : "0px"}
                 py={prop.icon ? "12px" : null}
                 bg={
-                  activeRoute(prop.path) && prop.icon
+                  activeRoute(prop.path, prop.isDashboard) && prop.icon
                     ? activeAccordionBg
                     : "transparent"
                 }
               >
-                {activeRoute(prop.path) ? (
+                {activeRoute(prop.path, prop.isDashboard) ? (
                   <Button
                     boxSize="initial"
                     justifyContent="flex-start"
@@ -864,11 +876,15 @@ export function SidebarResponsive(props) {
                   </IconBox>
                   <Text
                     color={
-                      activeRoute(prop.path.toLowerCase())
+                      activeRoute(prop.path.toLowerCase(), prop.isDashboard)
                         ? activeColor
                         : inactiveColor
                     }
-                    fontWeight={activeRoute(prop.name) ? "bold" : "normal"}
+                    fontWeight={
+                      activeRoute(prop.name, prop.isDashboard)
+                        ? "bold"
+                        : "normal"
+                    }
                     fontSize="sm"
                   >
                     {prop.name}
@@ -880,17 +896,23 @@ export function SidebarResponsive(props) {
                 <HStack spacing="22px" py="5px" px="10px">
                   <Icon
                     as={FaCircle}
-                    w={activeRoute(prop.path.toLowerCase()) ? "10px" : "6px"}
+                    w={
+                      activeRoute(prop.path.toLowerCase(), prop.isDashboard)
+                        ? "10px"
+                        : "6px"
+                    }
                     color="teal.300"
                   />
                   <Text
                     color={
-                      activeRoute(prop.path.toLowerCase())
+                      activeRoute(prop.path.toLowerCase(), prop.isDashboard)
                         ? activeColor
                         : inactiveColor
                     }
                     fontWeight={
-                      activeRoute(prop.path.toLowerCase()) ? "bold" : "normal"
+                      activeRoute(prop.path.toLowerCase(), prop.isDashboard)
+                        ? "bold"
+                        : "normal"
                     }
                   >
                     {prop.name}
@@ -913,12 +935,14 @@ export function SidebarResponsive(props) {
           <ListItem pt="5px" ms="26px" key={index}>
             <Text
               color={
-                activeRoute(prop.path.toLowerCase())
+                activeRoute(prop.path.toLowerCase(), prop.isDashboard)
                   ? activeColor
                   : inactiveColor
               }
               fontWeight={
-                activeRoute(prop.path.toLowerCase()) ? "bold" : "normal"
+                activeRoute(prop.path.toLowerCase(), prop.isDashboard)
+                  ? "bold"
+                  : "normal"
               }
               fontSize="sm"
             >
@@ -951,10 +975,13 @@ export function SidebarResponsive(props) {
         alignItems="center"
         fontSize="11px"
       >
-        <CreativeTimLogo w="32px" h="32px" me="10px" />
-        <Text fontSize="xs" mt="3px">
-          {logoText}
-        </Text>
+        <Image
+          src={logo}
+          alt="trood image"
+          height="30px"
+          paddingRight="10px"
+          href=""
+        />
       </Link>
       <HSeparator />
     </Box>

@@ -15,9 +15,31 @@
 
 */
 
-import { useColorModeValue, Text } from "@chakra-ui/react";
+// Custom icons
+import {
+  AdobexdLogo,
+  AtlassianLogo,
+  InvisionLogo,
+  JiraLogo,
+  SlackLogo,
+  SpotifyLogo,
+} from "components/Icons/Icons.js";
 import { DocumentIcon, RocketIcon, SettingsIcon } from "components/Icons/Icons";
+import {
+  FaArrowDown,
+  FaArrowUp,
+  FaBell,
+  FaCreditCard,
+  FaFilePdf,
+  FaHtml5,
+  FaRegCheckCircle,
+  FaRegDotCircle,
+  FaShoppingCart,
+} from "react-icons/fa";
+import { Text, useColorModeValue } from "@chakra-ui/react";
 
+import { AiOutlineExclamation } from "react-icons/ai";
+import { SiDropbox } from "react-icons/si";
 // Assets
 import avatar1 from "assets/img/avatars/avatar1.png";
 import avatar10 from "assets/img/avatars/avatar10.png";
@@ -28,26 +50,92 @@ import avatar5 from "assets/img/avatars/avatar5.png";
 import avatar7 from "assets/img/avatars/avatar7.png";
 import avatar8 from "assets/img/avatars/avatar8.png";
 import avatar9 from "assets/img/avatars/avatar9.png";
-// Custom icons
-import {
-  AdobexdLogo,
-  AtlassianLogo,
-  InvisionLogo,
-  JiraLogo,
-  SlackLogo,
-  SpotifyLogo,
-} from "components/Icons/Icons.js";
-import { AiOutlineExclamation } from "react-icons/ai";
-import {
-  FaArrowDown,
-  FaArrowUp,
-  FaBell,
-  FaCreditCard,
-  FaFilePdf,
-  FaHtml5,
-  FaShoppingCart,
-} from "react-icons/fa";
-import { SiDropbox } from "react-icons/si";
+import imageEsperanza from "assets/img/imageEsperanza.png";
+import imagePrimavera from "assets/img/imagePrimavera.png";
+
+export const parcelsData = [
+  {
+    id: 1,
+    name: "Parcel #1",
+    area: 100,
+    category: "Cultivation",
+    crop: "Tomato",
+    cropVariety: "Tomato variety",
+    description: "Description",
+  },
+  {
+    id: 2,
+    name: "Parcel #2",
+    area: 100,
+    category: "Cultivation",
+    crop: "Orange",
+    cropVariety: "Orange variety",
+    description: "Description",
+  },
+  {
+    id: 3,
+    name: "Parcel #3",
+    area: 100,
+    category: "Cultivation",
+    crop: "Apple",
+    cropVariety: "Apple variety",
+    description: "Description",
+  },
+  {
+    id: 4,
+    name: "Parcel #1",
+    area: 100,
+    category: "Cultivation",
+    crop: "Tomato",
+    cropVariety: "Tomato variety",
+    description: "Description",
+  },
+  {
+    id: 5,
+    name: "Parcel #2",
+    area: 100,
+    category: "Cultivation",
+    crop: "Orange",
+    cropVariety: "Orange variety",
+    description: "Description",
+  },
+  {
+    id: 6,
+    name: "Parcel #3",
+    area: 100,
+    category: "Cultivation",
+    crop: "Apple",
+    cropVariety: "Apple variety",
+    description: "Description",
+  },
+];
+
+export const establishmentData = [
+  {
+    id: 1,
+    name: "La Primavera",
+    area: 100,
+    city: "Pueblo Valentín",
+    state: "Salto",
+    country: "Uruguay",
+    description:
+      "Located in Pueblo Valentín, La Primavera is the company's first establishment, created in 1986.",
+    parcels: [1, 2, 3],
+    image: imagePrimavera,
+  },
+  {
+    id: 2,
+    name: "La Esperanza",
+    area: 100,
+    city: "Pueblo Seberino",
+    state: "Salto",
+    country: "Uruguay",
+    description:
+      "Located in Pueblo Seberino, La Esperanza is the company's second establishment, created in 1988.",
+    parcels: [4, 5, 6],
+    image: imageEsperanza,
+  },
+];
 
 export const salesData = [
   {
@@ -157,12 +245,12 @@ export const brandCardsData = [
   {
     icon: (
       <AdobexdLogo
-      w="40px"
-      h="40px"
-      alignSelf="center"
-      justifySelf="center"
-      transform="translate(5%)"
-    />
+        w="40px"
+        h="40px"
+        alignSelf="center"
+        justifySelf="center"
+        transform="translate(5%)"
+      />
     ),
     title: "Design Tools",
     avatars: [avatar1, avatar2, avatar3, avatar4, avatar7],
@@ -174,11 +262,11 @@ export const brandCardsData = [
   {
     icon: (
       <AtlassianLogo
-      w="40px"
-      h="40px"
-      alignSelf="center"
-      justifySelf="center"
-    />
+        w="40px"
+        h="40px"
+        alignSelf="center"
+        justifySelf="center"
+      />
     ),
     title: "Looking Great",
     avatars: [avatar1, avatar2, avatar3, avatar4, avatar7],
@@ -189,12 +277,7 @@ export const brandCardsData = [
   },
   {
     icon: (
-      <JiraLogo
-      w="40px"
-      h="40px"
-      alignSelf="center"
-      justifySelf="center"
-    />
+      <JiraLogo w="40px" h="40px" alignSelf="center" justifySelf="center" />
     ),
     title: "Developer First",
     avatars: [avatar1, avatar2, avatar3, avatar4, avatar7],
@@ -207,84 +290,147 @@ export const brandCardsData = [
 
 export const dashboardTableData = [
   {
-    logo: AdobexdLogo,
-    name: "Purity UI Version",
-    members: [avatar1, avatar2, avatar3, avatar4, avatar5],
+    logo: FaRegCheckCircle,
+    name: "20/01/2018-20/05/2018",
+    members: [avatar1, avatar2],
     budget: "$14,000",
     progression: 60,
+    color: "green.300",
   },
   {
-    logo: AtlassianLogo,
-    name: "Add Progress Track",
+    logo: FaRegCheckCircle,
+    name: "20/01/2019-20/05/2019",
     members: [avatar3, avatar2],
     budget: "$3,000",
     progression: 10,
+    color: "green.300",
   },
   {
-    logo: SlackLogo,
-    name: "Fix Platform Errors",
+    logo: FaRegCheckCircle,
+    name: "20/01/2020-20/05/2020",
     members: [avatar10, avatar4],
     budget: "Not set",
     progression: 100,
+    color: "green.300",
   },
   {
-    logo: SpotifyLogo,
-    name: "Launch our Mobile App",
+    logo: FaRegDotCircle,
+    name: "20/01/2021-20/05/2021",
     members: [avatar2, avatar3, avatar7, avatar8],
     budget: "$32,000",
     progression: 100,
+    color: "blue.400",
   },
   {
-    logo: JiraLogo,
-    name: "Add the New Pricing Page",
+    logo: FaRegDotCircle,
+    name: "20/01/2022-20/05/2022",
     members: [avatar10, avatar3, avatar7, avatar2, avatar8],
     budget: "$400",
     progression: 25,
+    color: "blue.400",
   },
   {
-    logo: InvisionLogo,
-    name: "Redesign New Online Shop",
+    logo: FaRegDotCircle,
+    name: "20/01/2022-20/05/2022",
     members: [avatar9, avatar3, avatar2],
     budget: "$7,600",
     progression: 40,
+    color: "blue.400",
   },
 ];
 
 export const timelineData = [
   {
-    logo: FaBell,
-    title: "$2400, Design changes",
+    logo: FaRegCheckCircle,
+    title: "Germination",
+    description: "Germination of the seeds",
     date: "22 DEC 7:20 PM",
-    color: "teal.300",
+    color: "green.300",
   },
   {
-    logo: FaHtml5,
-    title: "New order #4219423",
+    logo: FaRegCheckCircle,
+    title: "Juvenile",
+    description: "Juvenile stage",
     date: "21 DEC 11:21 PM",
-    color: "orange",
+    color: "green.300",
   },
   {
-    logo: FaShoppingCart,
-    title: "Server Payments for April",
+    logo: FaRegDotCircle,
+    title: "Flowering",
+    description: "Flowering stage",
     date: "21 DEC 9:28 PM",
     color: "blue.400",
   },
   {
-    logo: FaCreditCard,
-    title: "New card added for order #3210145",
+    logo: FaRegDotCircle,
+    title: "Fruiting",
+    description: "Fruiting stage",
     date: "20 DEC 3:52 PM",
-    color: "orange.300",
+    color: "blue.400",
   },
   {
-    logo: SiDropbox,
-    title: "Unlock packages for Development",
+    logo: FaRegDotCircle,
+    title: "Irrigation",
+    description: "Irrigation stage",
     date: "19 DEC 11:35 PM",
-    color: "purple",
+    color: "blue.400",
+  },
+];
+
+export const tablesTableData = [
+  {
+    logo: avatar1,
+    name: "Esthera Jackson",
+    email: "alexa@simmmple.com",
+    subdomain: "Manager",
+    domain: "Organization",
+    status: "Online",
+    date: "14/06/21",
   },
   {
-    logo: AdobexdLogo,
-    title: "New order #9851258",
-    date: "18 DEC 4:41 PM",
+    logo: avatar2,
+    name: "Alexa Liras",
+    email: "laurent@simmmple.com",
+    subdomain: "Programmer",
+    domain: "Developer",
+    status: "Offline",
+    date: "12/05/21",
+  },
+  {
+    logo: avatar3,
+    name: "Laurent Michael",
+    email: "laurent@simmmple.com",
+    subdomain: "Executive",
+    domain: "Projects",
+    status: "Online",
+    date: "07/06/21",
+  },
+  {
+    logo: avatar4,
+    name: "Freduardo Hill",
+    email: "freduardo@simmmple.com",
+    subdomain: "Manager",
+    domain: "Organization",
+    status: "Online",
+    date: "14/11/21",
+  },
+  {
+    logo: avatar5,
+    name: "Daniel Thomas",
+    email: "daniel@simmmple.com",
+    subdomain: "Programmer",
+    domain: "Developer",
+    status: "Offline",
+    date: "21/01/21",
+  },
+  {
+    logo: avatar7,
+    name: "Mark Wilson",
+    email: "mark@simmmple.com",
+    subdomain: "Designer",
+    domain: "UI/UX Design",
+    status: "Offline",
+    date: "04/09/20",
   },
 ];
 
@@ -538,63 +684,6 @@ export const rtlTimelineData = [
     logo: AdobexdLogo,
     title: "طلب جديد #9851258",
     date: "18 DEC 4:41 PM",
-  },
-];
-
-export const tablesTableData = [
-  {
-    logo: avatar1,
-    name: "Esthera Jackson",
-    email: "alexa@simmmple.com",
-    subdomain: "Manager",
-    domain: "Organization",
-    status: "Online",
-    date: "14/06/21",
-  },
-  {
-    logo: avatar2,
-    name: "Alexa Liras",
-    email: "laurent@simmmple.com",
-    subdomain: "Programmer",
-    domain: "Developer",
-    status: "Offline",
-    date: "12/05/21",
-  },
-  {
-    logo: avatar3,
-    name: "Laurent Michael",
-    email: "laurent@simmmple.com",
-    subdomain: "Executive",
-    domain: "Projects",
-    status: "Online",
-    date: "07/06/21",
-  },
-  {
-    logo: avatar4,
-    name: "Freduardo Hill",
-    email: "freduardo@simmmple.com",
-    subdomain: "Manager",
-    domain: "Organization",
-    status: "Online",
-    date: "14/11/21",
-  },
-  {
-    logo: avatar5,
-    name: "Daniel Thomas",
-    email: "daniel@simmmple.com",
-    subdomain: "Programmer",
-    domain: "Developer",
-    status: "Offline",
-    date: "21/01/21",
-  },
-  {
-    logo: avatar7,
-    name: "Mark Wilson",
-    email: "mark@simmmple.com",
-    subdomain: "Designer",
-    domain: "UI/UX Design",
-    status: "Offline",
-    date: "04/09/20",
   },
 ];
 

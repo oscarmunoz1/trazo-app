@@ -15,8 +15,6 @@
 
 */
 
-// Chakra Imports
-import { HamburgerIcon } from "@chakra-ui/icons";
 import {
   Box,
   Breadcrumb,
@@ -27,11 +25,14 @@ import {
   Link,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { SidebarContext } from "contexts/SidebarContext";
-import PropTypes from "prop-types";
 import React, { useContext, useState } from "react";
-import { CgMenuRight } from "react-icons/cg";
+
 import AdminNavbarLinks from "./AdminNavbarLinks";
+import { CgMenuRight } from "react-icons/cg";
+// Chakra Imports
+import { HamburgerIcon } from "@chakra-ui/icons";
+import PropTypes from "prop-types";
+import { SidebarContext } from "contexts/SidebarContext";
 
 export default function AdminNavbar(props) {
   const [scrolled, setScrolled] = useState(false);
@@ -160,7 +161,7 @@ export default function AdminNavbar(props) {
             </BreadcrumbItem>
           </Breadcrumb>
           {/* Here we create navbar brand, based on route name */}
-          <Link
+          {/* <Link
             color={mainText}
             href="#"
             bg="inherit"
@@ -177,7 +178,7 @@ export default function AdminNavbar(props) {
             }}
           >
             {brandText}
-          </Link>
+          </Link> */}
         </Box>
         {toggleSidebar ? (
           <Icon
