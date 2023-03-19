@@ -10,12 +10,13 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 // Custom components
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import DashboardTableRow from "components/Tables/DashboardTableRow";
-import React from "react";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
+import React from "react";
 
 const Projects = ({ title, amount, captions, data }) => {
   const textColor = useColorModeValue("gray.700", "white");
@@ -30,7 +31,7 @@ const Projects = ({ title, amount, captions, data }) => {
           <Flex align="center">
             <Icon
               as={IoCheckmarkDoneCircleSharp}
-              color="teal.300"
+              color="green.400"
               w={4}
               h={4}
               pe="3px"

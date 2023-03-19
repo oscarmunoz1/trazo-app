@@ -41,17 +41,18 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import avatar4 from "assets/img/avatars/avatar4.png";
-import ProfileBgImage from "assets/img/ProfileBackground.png";
+import React, { useReducer, useRef, useState } from "react";
+
+import { BsCircleFill } from "react-icons/bs";
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 // Custom components
 import Editor from "components/Editor/Editor";
-import React, { useReducer, useRef, useState } from "react";
-import { useDropzone } from "react-dropzone";
-import { BsCircleFill } from "react-icons/bs";
 import Header from "views/Pages/Profile/Overview/components/Header";
+import ProfileBgImage from "assets/img/ProfileBackground.png";
+import avatar4 from "assets/img/avatars/avatar4.png";
+import { useDropzone } from "react-dropzone";
 
 const reducer = (state, action) => {
   if (action.type === "SWITCH_ACTIVE") {
@@ -650,7 +651,7 @@ function NewProduct() {
                         wrap="wrap"
                         border="1px solid lightgray"
                         borderRadius="15px"
-                        _focus={{ borderColor: "teal.300" }}
+                        _focus={{ borderColor: "green.400" }}
                         minH="40px"
                         cursor="text"
                       >

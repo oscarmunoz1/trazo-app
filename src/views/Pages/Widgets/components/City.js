@@ -17,16 +17,17 @@
 
 // Chakra imports
 import { Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
+import React, { useState } from "react";
+
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
-import IconBox from "components/Icons/IconBox";
-import React, { useState } from "react";
 import { FaShare } from "react-icons/fa";
+import IconBox from "components/Icons/IconBox";
 
 const City = () => {
   const textColor = useColorModeValue("gray.700", "white");
 
-  const iconTeal = useColorModeValue("teal.300", "teal.300");
+  const iconTeal = useColorModeValue("green.400", "green.400");
   const iconBoxInside = useColorModeValue("white", "white");
   return (
     <Card>

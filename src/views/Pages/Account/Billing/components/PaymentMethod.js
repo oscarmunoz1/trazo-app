@@ -7,16 +7,17 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 // Custom components
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
+import { FaPencilAlt } from "react-icons/fa";
 import IconBox from "components/Icons/IconBox";
 import React from "react";
-import { FaPencilAlt } from "react-icons/fa";
 
 const PaymentMethod = ({ title, mastercard, visa }) => {
-  const iconTeal = useColorModeValue("teal.300", "teal.300");
+  const iconTeal = useColorModeValue("green.400", "green.400");
   const textColor = useColorModeValue("gray.700", "white");
   const borderColor = useColorModeValue("#dee2e6", "gray.500");
   const bgButton = useColorModeValue(

@@ -25,16 +25,17 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
+import { BsArrowRight } from "react-icons/bs";
 // Custom components
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
+import { Element } from "react-scroll";
+import { GiSmartphone } from "react-icons/gi";
 import { HSeparator } from "components/Separator/Separator";
 import React from "react";
-import { BsArrowRight } from "react-icons/bs";
-import { GiSmartphone } from "react-icons/gi";
 import { RiComputerLine } from "react-icons/ri";
-import { Element } from "react-scroll";
 
 const Sessions = () => {
   const textColor = useColorModeValue("gray.700", "white");
@@ -99,8 +100,8 @@ const Sessions = () => {
                 <Text color="gray.400" fontSize="md" fontWeight="normal">
                   EU
                 </Text>
-                <Button variant="transparent-with-icon" color="teal.300">
-                  <Flex align="center" color="teal.300" w="100%" fontSize="sm">
+                <Button variant="transparent-with-icon" color="green.400">
+                  <Flex align="center" color="green.400" w="100%" fontSize="sm">
                     <Text
                       me="6px"
                       transition="all .3s ease"
@@ -150,8 +151,8 @@ const Sessions = () => {
                 <Text color="gray.400" fontSize="md" fontWeight="normal">
                   US
                 </Text>
-                <Button variant="transparent-with-icon" color="teal.300">
-                  <Flex align="center" color="teal.300" w="100%" fontSize="sm">
+                <Button variant="transparent-with-icon" color="green.400">
+                  <Flex align="center" color="green.400" w="100%" fontSize="sm">
                     <Text
                       me="6px"
                       transition="all .3s ease"
@@ -202,8 +203,8 @@ const Sessions = () => {
                 <Text color="gray.400" fontSize="md" fontWeight="normal">
                   US
                 </Text>
-                <Button variant="transparent-with-icon" color="teal.300">
-                  <Flex align="center" color="teal.300" w="100%" fontSize="sm">
+                <Button variant="transparent-with-icon" color="green.400">
+                  <Flex align="center" color="green.400" w="100%" fontSize="sm">
                     <Text
                       me="6px"
                       transition="all .3s ease"

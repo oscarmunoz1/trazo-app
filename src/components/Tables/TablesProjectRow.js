@@ -25,8 +25,9 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React from "react";
+
 import { FaEllipsisV } from "react-icons/fa";
+import React from "react";
 
 function DashboardTableRow(props) {
   const { logo, name, status, budget, progression } = props;
@@ -60,7 +61,7 @@ function DashboardTableRow(props) {
         <Flex direction="column">
           <Text
             fontSize="md"
-            color="teal.300"
+            color="green.400"
             fontWeight="bold"
             pb=".2rem"
           >{`${progression}%`}</Text>

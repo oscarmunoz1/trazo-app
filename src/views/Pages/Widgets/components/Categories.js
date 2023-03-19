@@ -25,13 +25,14 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { DocumentIcon, RocketIcon, SettingsIcon } from "components/Icons/Icons";
+import React, { useState } from "react";
+
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
-import IconBox from "components/Icons/IconBox";
-import { DocumentIcon, RocketIcon, SettingsIcon } from "components/Icons/Icons";
-import React, { useState } from "react";
 import { FaUser } from "react-icons/fa";
+import IconBox from "components/Icons/IconBox";
 import { RiArrowDropRightLine } from "react-icons/ri";
 
 const Categories = () => {
@@ -42,7 +43,7 @@ const Categories = () => {
     "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
     "gray.800"
   );
-  const iconTeal = useColorModeValue("teal.300", "teal.300");
+  const iconTeal = useColorModeValue("green.400", "green.400");
   const iconBoxInside = useColorModeValue("white", "white");
   return (
     <Card>

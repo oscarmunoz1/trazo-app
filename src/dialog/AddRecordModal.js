@@ -529,7 +529,7 @@ const AddRecordModal = ({ title, name, onClose, isOpen }) => {
                               transition=".5s all ease"
                               border="1px solid lightgray"
                               align="center"
-                              bg={checkboxes.design ? "teal.300" : "#fff"}
+                              bg={checkboxes.design ? "green.400" : "#fff"}
                               _hover={{ opacity: "0.8" }}
                             >
                               <Checkbox
@@ -574,7 +574,7 @@ const AddRecordModal = ({ title, name, onClose, isOpen }) => {
                               transition=".5s all ease"
                               border="1px solid lightgray"
                               align="center"
-                              bg={checkboxes.code ? "teal.300" : "#fff"}
+                              bg={checkboxes.code ? "green.400" : "#fff"}
                               _hover={{ opacity: "0.8" }}
                             >
                               <Checkbox
@@ -619,7 +619,7 @@ const AddRecordModal = ({ title, name, onClose, isOpen }) => {
                               transition=".5s all ease"
                               border="1px solid lightgray"
                               align="center"
-                              bg={checkboxes.develop ? "teal.300" : "#fff"}
+                              bg={checkboxes.develop ? "green.400" : "#fff"}
                               _hover={{ opacity: "0.8" }}
                             >
                               <Checkbox

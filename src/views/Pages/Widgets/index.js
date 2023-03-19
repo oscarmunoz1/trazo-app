@@ -15,6 +15,7 @@
 
 */
 
+import { AiFillBackward, AiFillForward } from "react-icons/ai";
 // Chakra imports
 import {
   Badge,
@@ -34,14 +35,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import BackgroundCard1 from "assets/img/BackgroundCard1.png";
-import BgMusicCard from "assets/img/BgMusicCard.png";
-import EventCalendar from "components/Calendars/EventCalendar";
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import LineChart from "components/Charts/LineChart";
-import IconBox from "components/Icons/IconBox";
+import { BsBatteryCharging, BsMusicNoteBeamed } from "react-icons/bs";
 import {
   ClockIcon,
   DocumentIcon,
@@ -49,11 +43,6 @@ import {
   SettingsIcon,
   WalletIcon,
 } from "components/Icons/Icons";
-import { HSeparator } from "components/Separator/Separator";
-import TimelineRow from "components/Tables/TimelineRow";
-import React, { useState } from "react";
-import { AiFillBackward, AiFillForward } from "react-icons/ai";
-import { BsBatteryCharging, BsMusicNoteBeamed } from "react-icons/bs";
 import {
   FaCheckCircle,
   FaLightbulb,
@@ -64,8 +53,8 @@ import {
   FaUser,
   FaWallet,
 } from "react-icons/fa";
+import React, { useState } from "react";
 import { RiArrowDropRightLine, RiMastercardFill } from "react-icons/ri";
-import { calendarDataWidgets } from "variables/calendar";
 import {
   lineChartDataWidgets1,
   lineChartDataWidgets2,
@@ -74,25 +63,37 @@ import {
   lineChartOptionsWidgets2,
   lineChartOptionsWidgets3,
 } from "variables/charts";
-import { timelineData } from "variables/general";
-import Tasks from "../Projects/General/components/Tasks";
+
+import BackgroundCard1 from "assets/img/BackgroundCard1.png";
+import BgMusicCard from "assets/img/BgMusicCard.png";
+import Calories from "./components/Calories";
+import Card from "components/Card/Card";
+import CardBody from "components/Card/CardBody";
+import CardHeader from "components/Card/CardHeader";
+import Categories from "./components/Categories";
+import City from "./components/City";
+import EventCalendar from "components/Calendars/EventCalendar";
+import FullBody from "./components/FullBody";
+import { HSeparator } from "components/Separator/Separator";
+import IconBox from "components/Icons/IconBox";
 import Income from "./components/Income";
+import Lights from "./components/Lights";
+import LineChart from "components/Charts/LineChart";
+import OrdersOverview from "./components/OrdersOverview";
+import PaymentCard from "./components/PaymentCard";
+import PaymentStatistics from "./components/PaymentStatistics";
+import SomeKindOfBlues from "./components/SomeKindOfBlues";
+import Steps from "./components/Steps";
+import Tasks from "../Projects/General/components/Tasks";
+import TimelineRow from "components/Tables/TimelineRow";
 import UpcomingEvents from "./components/UpcomingEvents";
 import WidgetsStatistics from "./components/WidgetsStatistics";
-import PaymentStatistics from "./components/PaymentStatistics";
-import PaymentCard from "./components/PaymentCard";
-import FullBody from "./components/FullBody";
-import Lights from "./components/Lights";
-import Calories from "./components/Calories";
-import City from "./components/City";
-import Steps from "./components/Steps";
-import Categories from "./components/Categories";
-import SomeKindOfBlues from "./components/SomeKindOfBlues";
-import OrdersOverview from "./components/OrdersOverview";
+import { calendarDataWidgets } from "variables/calendar";
+import { timelineData } from "variables/general";
 
 function Widgets() {
   const textColor = useColorModeValue("gray.700", "white");
-  const iconTeal = useColorModeValue("teal.300", "teal.300");
+  const iconTeal = useColorModeValue("green.400", "green.400");
 
   return (
     <Flex direction="column" pt={{ sm: "125px", lg: "75px" }}>

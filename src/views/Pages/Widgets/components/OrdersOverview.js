@@ -1,11 +1,12 @@
 // Chakra imports
 import { Flex, Text, useColorModeValue } from "@chakra-ui/react";
+
 // Custom components
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
-import TimelineRow from "components/Tables/TimelineRow";
 import React from "react";
+import TimelineRow from "components/Tables/TimelineRow";
 
 const OrdersOverview = ({ title, amount, data }) => {
   const textColor = useColorModeValue("gray.700", "white");
@@ -18,7 +19,7 @@ const OrdersOverview = ({ title, amount, data }) => {
             {title}
           </Text>
           <Text fontSize="sm" color="gray.400" fontWeight="normal">
-            <Text fontWeight="bold" as="span" color="teal.300">
+            <Text fontWeight="bold" as="span" color="green.400">
               {`${amount}%`}
             </Text>{" "}
             this month.

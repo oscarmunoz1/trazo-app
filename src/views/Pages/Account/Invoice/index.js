@@ -31,12 +31,13 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
-import logo from "assets/svg/logo.svg";
+import React, { useRef } from "react";
+
 // Custom components
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
-import React, { useRef } from "react";
+import logo from "assets/svg/logo.svg";
 import { useReactToPrint } from "react-to-print";
 
 class ComponentToPrint extends React.Component {
@@ -272,7 +273,7 @@ class ComponentToPrint extends React.Component {
               <Button
                 onClick={() => this.props.handlePrint()}
                 variant="no-hover"
-                bg="teal.300"
+                bg="green.400"
                 w="100px"
                 h="35px"
                 fontSize="xs"

@@ -15,19 +15,20 @@
 
 */
 
+import { ClockIcon, WalletIcon } from "components/Icons/Icons";
 // Chakra imports
 import { Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
+import React, { useState } from "react";
+
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import IconBox from "components/Icons/IconBox";
-import { ClockIcon, WalletIcon } from "components/Icons/Icons";
-import React, { useState } from "react";
 
 const UpcomingEvents = () => {
   const textColor = useColorModeValue("gray.700", "white");
 
-  const iconTeal = useColorModeValue("teal.300", "teal.300");
+  const iconTeal = useColorModeValue("green.400", "green.400");
   return (
     <Card>
       <CardHeader mb="16px">

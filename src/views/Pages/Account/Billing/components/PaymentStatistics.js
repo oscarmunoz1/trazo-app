@@ -1,14 +1,15 @@
 // Chakra imports
 import { Flex, Text, useColorModeValue } from "@chakra-ui/react";
+
 // Custom components
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
-import IconBox from "components/Icons/IconBox";
 import { HSeparator } from "components/Separator/Separator";
+import IconBox from "components/Icons/IconBox";
 import React from "react";
 
 const PaymentStatistics = ({ icon, title, description, amount }) => {
-  const iconTeal = useColorModeValue("teal.300", "teal.300");
+  const iconTeal = useColorModeValue("green.400", "green.400");
   const textColor = useColorModeValue("gray.700", "white");
 
   return (

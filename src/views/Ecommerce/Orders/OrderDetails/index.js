@@ -29,17 +29,18 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import productImage1 from "assets/img/product-page-1.png";
+
 // Custom components
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
-import IconBox from "components/Icons/IconBox";
-import { MastercardIcon } from "components/Icons/Icons";
-import { HSeparator } from "components/Separator/Separator";
-import React from "react";
 import { CgShapeCircle } from "react-icons/cg";
 import { FaPencilAlt } from "react-icons/fa";
+import { HSeparator } from "components/Separator/Separator";
+import IconBox from "components/Icons/IconBox";
+import { MastercardIcon } from "components/Icons/Icons";
+import React from "react";
+import productImage1 from "assets/img/product-page-1.png";
 
 function OrderDetails() {
   // Chakra color mode
@@ -60,7 +61,7 @@ function OrderDetails() {
               <Flex direction="column">
                 <Text fontSize="sm" color="gray.400" fontWeight="normal">
                   Order no.{" "}
-                  <Text as="span" color="teal.300" fontWeight="bold">
+                  <Text as="span" color="green.400" fontWeight="bold">
                     241342
                   </Text>{" "}
                   from{" "}
@@ -185,7 +186,7 @@ function OrderDetails() {
                   <Flex direction="column" align="center" h="100%" me="20px">
                     <Icon
                       as={CgShapeCircle}
-                      color="teal.300"
+                      color="green.400"
                       h={"30px"}
                       w={"30px"}
                       zIndex="1"
@@ -211,7 +212,7 @@ function OrderDetails() {
                   <Flex direction="column" align="center" h="100%" me="20px">
                     <Icon
                       as={CgShapeCircle}
-                      color="teal.300"
+                      color="green.400"
                       h={"30px"}
                       w={"30px"}
                       zIndex="1"

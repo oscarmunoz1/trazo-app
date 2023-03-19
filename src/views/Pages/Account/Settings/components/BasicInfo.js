@@ -29,11 +29,12 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import React, { useState } from "react";
+
 // Custom components
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
-import React, { useState } from "react";
 import { Element } from "react-scroll";
 
 const BasicInfo = () => {
@@ -246,7 +247,7 @@ const BasicInfo = () => {
                   wrap="wrap"
                   border="1px solid lightgray"
                   borderRadius="15px"
-                  _focus={{ borderColor: "teal.300" }}
+                  _focus={{ borderColor: "green.400" }}
                   minH="60px"
                   cursor="text"
                 >

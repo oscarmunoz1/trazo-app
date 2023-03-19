@@ -33,6 +33,12 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import React, { useState } from "react";
+
+import Card from "components/Card/Card";
+import CardBody from "components/Card/CardBody";
+import CardHeader from "components/Card/CardHeader";
 // Assets
 import basic from "assets/img/basic-auth.png";
 import deloitteLogo from "assets/svg/deloitte-logo.svg";
@@ -41,11 +47,6 @@ import googleLogo from "assets/svg/google-logo.svg";
 import microsoftLogo from "assets/svg/microsoft-logo.svg";
 import msnLogo from "assets/svg/msn-logo.svg";
 import zohoLogo from "assets/svg/zoho-logo.svg";
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import React, { useState } from "react";
-import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 function Pricing() {
   const [activeButton, setActiveButton] = useState({
@@ -164,7 +165,7 @@ function Pricing() {
                       h="20px"
                       as={FaCheckCircle}
                       mr="8px"
-                      color="teal.300"
+                      color="green.400"
                     />
                     <Text color="gray.500" fontWeight="normal" fontSize="md">
                       2 Team Members
@@ -176,7 +177,7 @@ function Pricing() {
                       h="20px"
                       as={FaCheckCircle}
                       mr="8px"
-                      color="teal.300"
+                      color="green.400"
                     />
                     <Text color="gray.500" fontWeight="normal" fontSize="md">
                       20GB Cloud Storage
@@ -263,7 +264,7 @@ function Pricing() {
                       h="20px"
                       as={FaCheckCircle}
                       mr="8px"
-                      color="teal.300"
+                      color="green.400"
                     />
                     <Text color="gray.500" fontWeight="normal" fontSize="md">
                       10 Team Members
@@ -275,7 +276,7 @@ function Pricing() {
                       h="20px"
                       as={FaCheckCircle}
                       mr="8px"
-                      color="teal.300"
+                      color="green.400"
                     />
                     <Text color="gray.500" fontWeight="normal" fontSize="md">
                       40GB Cloud Storage
@@ -287,7 +288,7 @@ function Pricing() {
                       h="20px"
                       as={FaCheckCircle}
                       mr="8px"
-                      color="teal.300"
+                      color="green.400"
                     />
                     <Text color="gray.500" fontWeight="normal" fontSize="md">
                       Integration Help
@@ -299,7 +300,7 @@ function Pricing() {
                       h="20px"
                       as={FaCheckCircle}
                       mr="8px"
-                      color="teal.300"
+                      color="green.400"
                     />
                     <Text color="gray.500" fontWeight="normal" fontSize="md">
                       Sketch Files
@@ -333,7 +334,7 @@ function Pricing() {
                 <Button
                   variant="no-hover"
                   fontSize="xs"
-                  bg="teal.300"
+                  bg="green.400"
                   color="#fff"
                 >
                   TRY PREMIUM
@@ -362,7 +363,7 @@ function Pricing() {
                       h="20px"
                       as={FaCheckCircle}
                       mr="8px"
-                      color="teal.300"
+                      color="green.400"
                     />
                     <Text color="gray.500" fontWeight="normal" fontSize="md">
                       Unlimited Team Members
@@ -374,7 +375,7 @@ function Pricing() {
                       h="20px"
                       as={FaCheckCircle}
                       mr="8px"
-                      color="teal.300"
+                      color="green.400"
                     />
                     <Text color="gray.500" fontWeight="normal" fontSize="md">
                       100GB Cloud Storage
@@ -386,7 +387,7 @@ function Pricing() {
                       h="20px"
                       as={FaCheckCircle}
                       mr="8px"
-                      color="teal.300"
+                      color="green.400"
                     />
                     <Text color="gray.500" fontWeight="normal" fontSize="md">
                       Integration Help
@@ -398,7 +399,7 @@ function Pricing() {
                       h="20px"
                       as={FaCheckCircle}
                       mr="8px"
-                      color="teal.300"
+                      color="green.400"
                     />
                     <Text color="gray.500" fontWeight="normal" fontSize="md">
                       Sketch Files
@@ -410,7 +411,7 @@ function Pricing() {
                       h="20px"
                       as={FaCheckCircle}
                       mr="8px"
-                      color="teal.300"
+                      color="green.400"
                     />
                     <Text color="gray.500" fontWeight="normal" fontSize="md">
                       API Access
@@ -422,7 +423,7 @@ function Pricing() {
                       h="20px"
                       as={FaCheckCircle}
                       mr="8px"
-                      color="teal.300"
+                      color="green.400"
                     />
                     <Text color="gray.500" fontWeight="normal" fontSize="md">
                       Complete Documentation

@@ -29,13 +29,14 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
+import React from "react";
 // Assets
 import cover from "assets/img/cover-auth.png";
-import React from "react";
 
 function SignIn() {
   // Chakra color mode
-  const titleColor = useColorModeValue("teal.300", "teal.200");
+  const titleColor = useColorModeValue("green.400", "teal.200");
   const textColor = useColorModeValue("gray.400", "white");
   return (
     <Flex position="relative" mb="40px">
@@ -110,7 +111,7 @@ function SignIn() {
               <Button
                 fontSize="sm"
                 type="submit"
-                bg="teal.300"
+                bg="green.400"
                 w="100%"
                 h="45"
                 mb="20px"

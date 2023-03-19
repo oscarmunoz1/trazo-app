@@ -23,15 +23,16 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import avatar1 from "assets/img/avatars/avatar1.png";
-import avatar2 from "assets/img/avatars/avatar2.png";
-import avatar5 from "assets/img/avatars/avatar5.png";
-import avatar8 from "assets/img/avatars/avatar8.png";
+
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 import { HSeparator } from "components/Separator/Separator.js";
 import React from "react";
+import avatar1 from "assets/img/avatars/avatar1.png";
+import avatar2 from "assets/img/avatars/avatar2.png";
+import avatar5 from "assets/img/avatars/avatar5.png";
+import avatar8 from "assets/img/avatars/avatar8.png";
 
 const Meeting = ({ icon, title, description, id, date }) => {
   // Chakra color mode
@@ -79,7 +80,7 @@ const Meeting = ({ icon, title, description, id, date }) => {
           </Text>
           <HSeparator my="14px" />
           <Flex justify="space-between" align="center">
-            <Button variant="no-hover" bg="teal.300" p="0px 40px" h="35px">
+            <Button variant="no-hover" bg="green.400" p="0px 40px" h="35px">
               <Text fontSize="sm" fontWeight="bold" color="#fff">
                 JOIN
               </Text>

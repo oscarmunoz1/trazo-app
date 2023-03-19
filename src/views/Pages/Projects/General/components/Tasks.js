@@ -17,22 +17,23 @@
 
 // Chakra imports
 import { Flex, Progress, Text, useColorModeValue } from "@chakra-ui/react";
-// Custom components
-import Card from "components/Card/Card";
-import CardHeader from "components/Card/CardHeader";
-import LineChart from "components/Charts/LineChart";
-import IconBox from "components/Icons/IconBox";
-import { HomeIcon } from "components/Icons/Icons";
-import React from "react";
 import {
   lineChartDataGeneral,
   lineChartOptionsGeneral,
 } from "variables/charts";
 
+// Custom components
+import Card from "components/Card/Card";
+import CardHeader from "components/Card/CardHeader";
+import { HomeIcon } from "components/Icons/Icons";
+import IconBox from "components/Icons/IconBox";
+import LineChart from "components/Charts/LineChart";
+import React from "react";
+
 const Tasks = () => {
   const textColor = useColorModeValue("gray.700", "white");
   const iconBoxInside = useColorModeValue("white", "white");
-  const iconTeal = useColorModeValue("teal.300", "teal.300");
+  const iconTeal = useColorModeValue("green.400", "green.400");
 
   return (
     <Card

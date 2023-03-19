@@ -1,4 +1,3 @@
-import React from "react";
 import {
   IconButton,
   Input,
@@ -6,11 +5,13 @@ import {
   InputLeftElement,
   useColorModeValue,
 } from "@chakra-ui/react";
+
+import React from "react";
 import { SearchIcon } from "@chakra-ui/icons";
 export function SearchBar(props) {
   const { variant, children, ...rest } = props;
   // Chakra Color Mode
-  const mainTeal = useColorModeValue("teal.300", "teal.300");
+  const mainTeal = useColorModeValue("green.400", "green.400");
   const searchIconColor = useColorModeValue("gray.700", "gray.200");
   const inputBg = useColorModeValue("white", "gray.800");
   return (

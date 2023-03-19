@@ -17,36 +17,41 @@
 
 // Chakra imports
 import {
-    Box,
-    Flex,
-    Grid, SimpleGrid, Stack, Text, useColorModeValue
+  Box,
+  Flex,
+  Grid,
+  SimpleGrid,
+  Stack,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
-import BarChart from "components/Charts/BarChart";
-import LineChart from "components/Charts/LineChart";
-import Globe from "components/Globe/Globe";
 // Custom icons
 import {
-    CartIcon,
-    DocumentIcon,
-    GlobeIcon, WalletIcon
+  CartIcon,
+  DocumentIcon,
+  GlobeIcon,
+  WalletIcon,
 } from "components/Icons/Icons.js";
-import React from "react";
 import {
-    barChartDataDefault,
-    barChartOptionsDefault,
-    lineChartDataDefault,
-    lineChartOptionsDefault
+  barChartDataDefault,
+  barChartOptionsDefault,
+  lineChartDataDefault,
+  lineChartOptionsDefault,
 } from "variables/charts";
-import { salesData } from "variables/general";
+
 import ActiveUsers from "./components/ActiveUsers";
+import BarChart from "components/Charts/BarChart";
+import Globe from "components/Globe/Globe";
+import LineChart from "components/Charts/LineChart";
 import MiniStatistics from "./components/MiniStatistics";
+import React from "react";
 import SalesByCountry from "./components/SalesByCountry";
 import SalesOverview from "./components/SalesOverview";
-
+import { salesData } from "variables/general";
 
 export default function Default() {
   // Chakra Color Mode
-  const iconTeal = useColorModeValue("teal.300", "teal.300");
+  const iconTeal = useColorModeValue("green.400", "green.400");
   const iconBoxInside = useColorModeValue("white", "white");
   const textColor = useColorModeValue("gray.700", "white");
   return (

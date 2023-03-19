@@ -24,22 +24,23 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import LineChart from "components/Charts/LineChart";
-import IconBox from "components/Icons/IconBox";
 import React, { useState } from "react";
-import { FaCheckCircle } from "react-icons/fa";
 import {
   lineChartDataWidgets2,
   lineChartOptionsWidgets2,
 } from "variables/charts";
 
+import Card from "components/Card/Card";
+import CardBody from "components/Card/CardBody";
+import CardHeader from "components/Card/CardHeader";
+import { FaCheckCircle } from "react-icons/fa";
+import IconBox from "components/Icons/IconBox";
+import LineChart from "components/Charts/LineChart";
+
 const Tasks = () => {
   const textColor = useColorModeValue("gray.700", "white");
 
-  const iconTeal = useColorModeValue("teal.300", "teal.300");
+  const iconTeal = useColorModeValue("green.400", "green.400");
   const iconBoxInside = useColorModeValue("white", "white");
   return (
     <Card

@@ -15,8 +15,6 @@
 
 */
 
-// Chakra imports
-import { AddIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   AvatarGroup,
@@ -29,31 +27,34 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import avatar1 from "assets/img/avatars/avatar1.png";
-import avatar2 from "assets/img/avatars/avatar2.png";
-import avatar3 from "assets/img/avatars/avatar3.png";
-import EventCalendar from "components/Calendars/EventCalendar";
-// Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import LineChart from "components/Charts/LineChart";
-import IconBox from "components/Icons/IconBox";
 import { ClockIcon, DocumentIcon, WalletIcon } from "components/Icons/Icons";
-import { VSeparator } from "components/Separator/Separator";
-import React from "react";
 import { FaPalette, FaShip } from "react-icons/fa";
-import { calendarDataCalendar } from "variables/calendar";
 import {
   lineChartDataCalendar,
   lineChartOptionsCalendar,
 } from "variables/charts";
-import UpcomingEvents from "./components/UpcomingEvents";
+
+// Chakra imports
+import { AddIcon } from "@chakra-ui/icons";
+// Custom components
+import Card from "components/Card/Card";
+import CardBody from "components/Card/CardBody";
+import CardHeader from "components/Card/CardHeader";
+import EventCalendar from "components/Calendars/EventCalendar";
+import IconBox from "components/Icons/IconBox";
+import LineChart from "components/Charts/LineChart";
 import Productivity from "./components/Productivity";
+import React from "react";
+import UpcomingEvents from "./components/UpcomingEvents";
+import { VSeparator } from "components/Separator/Separator";
+import avatar1 from "assets/img/avatars/avatar1.png";
+import avatar2 from "assets/img/avatars/avatar2.png";
+import avatar3 from "assets/img/avatars/avatar3.png";
+import { calendarDataCalendar } from "variables/calendar";
 
 function Calendar() {
   const textColor = useColorModeValue("gray.700", "white");
-  const iconTeal = useColorModeValue("teal.300", "teal.300");
+  const iconTeal = useColorModeValue("green.400", "green.400");
   const textGray = useColorModeValue("gray.400", "gray.300");
 
   return (

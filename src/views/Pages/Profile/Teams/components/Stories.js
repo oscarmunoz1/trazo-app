@@ -24,6 +24,11 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
+import Card from "components/Card/Card.js";
+import CardBody from "components/Card/CardBody.js";
+import { FaPlus } from "react-icons/fa";
+import React from "react";
 import avatar1 from "assets/img/avatars/avatar1.png";
 import avatar10 from "assets/img/avatars/avatar10.png";
 import avatar2 from "assets/img/avatars/avatar2.png";
@@ -33,10 +38,6 @@ import avatar5 from "assets/img/avatars/avatar5.png";
 import avatar7 from "assets/img/avatars/avatar7.png";
 import avatar8 from "assets/img/avatars/avatar8.png";
 import avatar9 from "assets/img/avatars/avatar9.png";
-import Card from "components/Card/Card.js";
-import CardBody from "components/Card/CardBody.js";
-import React from "react";
-import { FaPlus } from "react-icons/fa";
 
 const Stories = () => {
   // Chakra color mode
@@ -80,7 +81,7 @@ const Stories = () => {
             <Link
               href="#"
               border="1px solid"
-              borderColor="teal.300"
+              borderColor="green.400"
               borderRadius="50%"
               mb="6px"
               p="4px"
@@ -95,7 +96,7 @@ const Stories = () => {
             <Link
               href="#"
               border="1px solid"
-              borderColor="teal.300"
+              borderColor="green.400"
               borderRadius="50%"
               mb="6px"
               p="4px"
@@ -110,7 +111,7 @@ const Stories = () => {
             <Link
               href="#"
               border="1px solid"
-              borderColor="teal.300"
+              borderColor="green.400"
               borderRadius="50%"
               mb="6px"
               p="4px"
@@ -125,7 +126,7 @@ const Stories = () => {
             <Link
               href="#"
               border="1px solid"
-              borderColor="teal.300"
+              borderColor="green.400"
               borderRadius="50%"
               mb="6px"
               p="4px"
@@ -140,7 +141,7 @@ const Stories = () => {
             <Link
               href="#"
               border="1px solid"
-              borderColor="teal.300"
+              borderColor="green.400"
               borderRadius="50%"
               mb="6px"
               p="4px"
@@ -155,7 +156,7 @@ const Stories = () => {
             <Link
               href="#"
               border="1px solid"
-              borderColor="teal.300"
+              borderColor="green.400"
               borderRadius="50%"
               mb="6px"
               p="4px"
@@ -170,7 +171,7 @@ const Stories = () => {
             <Link
               href="#"
               border="1px solid"
-              borderColor="teal.300"
+              borderColor="green.400"
               borderRadius="50%"
               mb="6px"
               p="4px"
@@ -185,7 +186,7 @@ const Stories = () => {
             <Link
               href="#"
               border="1px solid"
-              borderColor="teal.300"
+              borderColor="green.400"
               borderRadius="50%"
               mb="6px"
               p="4px"
@@ -200,7 +201,7 @@ const Stories = () => {
             <Link
               href="#"
               border="1px solid"
-              borderColor="teal.300"
+              borderColor="green.400"
               borderRadius="50%"
               mb="6px"
               p="4px"
@@ -215,7 +216,7 @@ const Stories = () => {
             <Link
               href="#"
               border="1px solid"
-              borderColor="teal.300"
+              borderColor="green.400"
               borderRadius="50%"
               mb="6px"
               p="4px"
@@ -230,7 +231,7 @@ const Stories = () => {
             <Link
               href="#"
               border="1px solid"
-              borderColor="teal.300"
+              borderColor="green.400"
               borderRadius="50%"
               mb="6px"
               p="4px"

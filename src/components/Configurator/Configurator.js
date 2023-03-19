@@ -31,11 +31,12 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { FaFacebook, FaTwitter } from "react-icons/fa";
+import React, { useState } from "react";
+
+import GitHubButton from "react-github-btn";
 import { HSeparator } from "components/Separator/Separator";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
-import GitHubButton from "react-github-btn";
-import { FaFacebook, FaTwitter } from "react-icons/fa";
 
 export default function Configurator(props) {
   const { secondary, isOpen, onClose, fixed, ...rest } = props;
@@ -92,8 +93,8 @@ export default function Configurator(props) {
                     p="8px 32px"
                     me="8px"
                     colorScheme="teal"
-                    borderColor="teal.300"
-                    color="teal.300"
+                    borderColor="green.400"
+                    color="green.400"
                     variant="outline"
                     fontSize="xs"
                     onClick={props.onTransparent}
@@ -102,11 +103,11 @@ export default function Configurator(props) {
                   </Button>
                   <Button
                     type="submit"
-                    bg="teal.300"
+                    bg="green.400"
                     w="50%"
                     p="8px 32px"
                     mb={5}
-                    _hover="teal.300"
+                    _hover="green.400"
                     color="white"
                     fontSize="xs"
                     onClick={props.onOpaque}
@@ -166,10 +167,10 @@ export default function Configurator(props) {
                   >
                     <Button
                       type="submit"
-                      bg="teal.300"
+                      bg="green.400"
                       w="50%"
                       mb={5}
-                      _hover="teal.300"
+                      _hover="green.400"
                       color="white"
                       fontSize="xs"
                       w="100%"

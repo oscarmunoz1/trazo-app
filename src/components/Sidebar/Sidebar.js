@@ -182,17 +182,17 @@ function Sidebar(props) {
   const createLinks = (routes) => {
     const { sidebarVariant } = props;
     // Chakra Color Mode
-    let activeBg = useColorModeValue("teal.300", "teal.300");
+    let activeBg = useColorModeValue("green.400", "green.400");
     let activeAccordionBg = useColorModeValue("white", "gray.700");
     let inactiveBg = useColorModeValue("white", "gray.700");
-    let inactiveColorIcon = useColorModeValue("teal.300", "teal.300");
+    let inactiveColorIcon = useColorModeValue("green.400", "green.400");
     let activeColorIcon = useColorModeValue("white", "white");
     let activeColor = useColorModeValue("gray.700", "white");
     let inactiveColor = useColorModeValue("gray.400", "gray.400");
     let sidebarActiveShadow = "0px 7px 11px rgba(0, 0, 0, 0.04)";
     // Here are all the props that may change depending on sidebar's state.(Opaque or transparent)
     if (sidebarVariant === "opaque") {
-      activeBg = useColorModeValue("teal.300", "teal.300");
+      activeBg = useColorModeValue("green.400", "green.400");
       inactiveBg = useColorModeValue("gray.100", "gray.600");
       activeColor = useColorModeValue("gray.700", "white");
       inactiveColor = useColorModeValue("gray.400", "gray.400");
@@ -308,7 +308,7 @@ function Sidebar(props) {
                         <Icon
                           as={FaCircle}
                           w="10px"
-                          color="teal.300"
+                          color="green.400"
                           display={sidebarWidth === 275 ? "block" : "none"}
                         />
                         {prop.establihmentId ? (
@@ -380,7 +380,7 @@ function Sidebar(props) {
                         <Icon
                           as={FaCircle}
                           w="6px"
-                          color="teal.300"
+                          color="green.400"
                           display={sidebarWidth === 275 ? "block" : "none"}
                         />
                         {prop.establihmentId ? (
@@ -455,7 +455,7 @@ function Sidebar(props) {
               <Box>
                 <HStack spacing="14px" py="15px" px="15px">
                   <IconBox
-                    bg="teal.300"
+                    bg="green.400"
                     color="white"
                     h="30px"
                     w="30px"
@@ -500,7 +500,7 @@ function Sidebar(props) {
                         ? "10px"
                         : "6px"
                     }
-                    color="teal.300"
+                    color="green.400"
                     display={sidebarWidth === 275 ? "block" : "none"}
                   />
                   <Text
@@ -737,10 +737,10 @@ function Sidebar(props) {
 //   const createLinks = (routes) => {
 //     const { sidebarVariant } = props;
 //     // Chakra Color Mode
-//     let activeBg = useColorModeValue("teal.300", "teal.300");
+//     let activeBg = useColorModeValue("green.400", "green.400");
 //     let activeAccordionBg = useColorModeValue("white", "gray.700");
 //     let inactiveBg = useColorModeValue("white", "gray.700");
-//     let inactiveColorIcon = useColorModeValue("teal.300", "teal.300");
+//     let inactiveColorIcon = useColorModeValue("green.400", "green.400");
 //     let activeColorIcon = useColorModeValue("white", "white");
 //     let activeColor = useColorModeValue("gray.700", "white");
 //     let inactiveColor = useColorModeValue("gray.400", "gray.400");
@@ -848,7 +848,7 @@ function Sidebar(props) {
 //                       </Flex>
 //                     ) : (
 //                       <HStack spacing={"22px"} ps="10px" ms="0px">
-//                         <Icon as={FaCircle} w="10px" color="teal.300" />
+//                         <Icon as={FaCircle} w="10px" color="green.400" />
 //                         <Text color={activeColor} my="auto" fontSize="sm">
 //                           {prop.name}
 //                         </Text>
@@ -895,7 +895,7 @@ function Sidebar(props) {
 //                       </Flex>
 //                     ) : (
 //                       <HStack spacing={"26px"} ps={"10px"} ms={"0px"}>
-//                         <Icon as={FaCircle} w="6px" color="teal.300" />
+//                         <Icon as={FaCircle} w="6px" color="green.400" />
 //                         {prop.establihmentId ? (
 //                           <NavLink color="red" to={prop.layout + prop.path}>
 //                             <Text
@@ -948,7 +948,7 @@ function Sidebar(props) {
 //               <Box>
 //                 <HStack spacing="14px" py="15px" px="15px">
 //                   <IconBox
-//                     bg="teal.300"
+//                     bg="green.400"
 //                     color="white"
 //                     h="30px"
 //                     w="30px"
@@ -983,7 +983,7 @@ function Sidebar(props) {
 //                         ? "10px"
 //                         : "6px"
 //                     }
-//                     color="teal.300"
+//                     color="green.400"
 //                   />
 //                   <Text
 //                     color={

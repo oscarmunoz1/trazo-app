@@ -7,12 +7,13 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
+// react icons
+import { BsArrowRight } from "react-icons/bs";
 // Custom components
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import React from "react";
-// react icons
-import { BsArrowRight } from "react-icons/bs";
 
 const BuiltByDevelopers = ({ title, name, description, image }) => {
   const textColor = useColorModeValue("gray.700", "white");
@@ -71,7 +72,7 @@ const BuiltByDevelopers = ({ title, name, description, image }) => {
           </Flex>
           <Spacer />
           <Flex
-            bg="teal.300"
+            bg="green.400"
             align="center"
             justify="center"
             borderRadius="15px"

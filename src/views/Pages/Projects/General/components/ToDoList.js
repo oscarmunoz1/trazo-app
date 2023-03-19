@@ -24,13 +24,14 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 // Custom components
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import { HSeparator } from "components/Separator/Separator";
-import React from "react";
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
+import React from "react";
 
 const ToDoList = () => {
   const textColor = useColorModeValue("gray.700", "white");
@@ -56,7 +57,7 @@ const ToDoList = () => {
           <HSeparator my="14px" />
           <Flex>
             <Flex
-              bgColor="teal.300"
+              bgColor="green.400"
               borderRadius="12px"
               minWidth="3px"
               h="100%"

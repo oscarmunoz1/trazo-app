@@ -440,12 +440,12 @@ export const timelineProjectsData = [
     title: "$2400, Design changes",
     titleColor: "#fff",
     date: "22 DEC 7:20 PM",
-    color: "teal.300",
+    color: "green.400",
     description:
       "People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of.",
     tags: [
       {
-        bgTag: "teal.300",
+        bgTag: "green.400",
         titleTag: "DESIGN",
       },
     ],
@@ -531,12 +531,12 @@ export const timelineProjectsData = [
     title: "$2400, Design changes",
     titleColor: "#fff",
     date: "22 DEC 7:20 PM",
-    color: "teal.300",
+    color: "green.400",
     description:
       "People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of.",
     tags: [
       {
-        bgTag: "teal.300",
+        bgTag: "green.400",
         titleTag: "DESIGN",
       },
     ],
@@ -654,7 +654,7 @@ export const rtlTimelineData = [
     logo: FaBell,
     title: "$2400, تغييرات في التصميم",
     date: "22 DEC 7:20 PM",
-    color: "teal.300",
+    color: "green.400",
   },
   {
     logo: FaHtml5,

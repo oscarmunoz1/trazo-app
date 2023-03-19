@@ -15,7 +15,16 @@
 
 */
 
-import { Button, Flex, Icon, Spacer, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Icon,
+  Spacer,
+  Stack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
+
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
@@ -25,7 +34,7 @@ import { RiArrowDropRightLine } from "react-icons/ri";
 
 const Invoices = ({ name, invoicesData }) => {
   const textColor = useColorModeValue("gray.700", "white");
-  const iconTeal = useColorModeValue("teal.300", "teal.300");
+  const iconTeal = useColorModeValue("green.400", "green.400");
 
   return (
     <Card>

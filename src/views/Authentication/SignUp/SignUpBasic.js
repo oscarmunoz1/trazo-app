@@ -30,13 +30,14 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-// Assets
-import basic from "assets/img/basic-auth.png";
-import React from "react";
 import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
 
+import React from "react";
+// Assets
+import basic from "assets/img/basic-auth.png";
+
 function SignUp() {
-  const titleColor = useColorModeValue("teal.300", "teal.200");
+  const titleColor = useColorModeValue("green.400", "teal.200");
   const textColor = useColorModeValue("gray.700", "white");
   const bgColor = useColorModeValue("white", "gray.700");
   const bgIcons = useColorModeValue("teal.200", "rgba(255, 255, 255, 0.5)");
@@ -222,7 +223,7 @@ function SignUp() {
             </FormControl>
             <Button
               type="submit"
-              bg="teal.300"
+              bg="green.400"
               fontSize="sm"
               color="white"
               fontWeight="bold"

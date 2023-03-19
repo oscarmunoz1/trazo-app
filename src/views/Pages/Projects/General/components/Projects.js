@@ -17,23 +17,24 @@
 
 // Chakra imports
 import { Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
-// Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import DonutChart from "components/Charts/DonutChart";
-import IconBox from "components/Icons/IconBox";
-import { DocumentIcon } from "components/Icons/Icons";
-import React from "react";
-import { BsCircleFill } from "react-icons/bs";
 import {
   donutChartDataGeneral,
   donutChartOptionsGeneral,
 } from "variables/charts";
 
+import { BsCircleFill } from "react-icons/bs";
+// Custom components
+import Card from "components/Card/Card";
+import CardBody from "components/Card/CardBody";
+import { DocumentIcon } from "components/Icons/Icons";
+import DonutChart from "components/Charts/DonutChart";
+import IconBox from "components/Icons/IconBox";
+import React from "react";
+
 const Projects = () => {
   const textColor = useColorModeValue("gray.700", "white");
   const iconBoxInside = useColorModeValue("white", "white");
-  const iconTeal = useColorModeValue("teal.300", "teal.300");
+  const iconTeal = useColorModeValue("green.400", "green.400");
 
   return (
     <Card maxW={{ sm: "330px", md: "100%" }}>
@@ -57,7 +58,7 @@ const Projects = () => {
               <Flex align="center">
                 <Icon
                   as={BsCircleFill}
-                  color="teal.300"
+                  color="green.400"
                   w="10px"
                   h="10px"
                   me="8px"

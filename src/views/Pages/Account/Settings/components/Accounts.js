@@ -15,6 +15,12 @@
 
 */
 
+import {
+  AtlassianLogo,
+  InvisionLogo,
+  SlackLogo,
+  SpotifyLogo,
+} from "components/Icons/Icons";
 // Chakra imports
 import {
   Button,
@@ -27,20 +33,15 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
+import React, { useState } from "react";
+
 // Custom components
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
-import {
-  AtlassianLogo,
-  InvisionLogo,
-  SlackLogo,
-  SpotifyLogo,
-} from "components/Icons/Icons";
-import { HSeparator } from "components/Separator/Separator";
-import React, { useState } from "react";
-import { IoIosArrowUp } from "react-icons/io";
 import { Element } from "react-scroll";
+import { HSeparator } from "components/Separator/Separator";
+import { IoIosArrowUp } from "react-icons/io";
 
 const Accounts = () => {
   const bgVerificationCard = useColorModeValue("gray.100", "gray.600");
@@ -127,7 +128,12 @@ const Accounts = () => {
                   >
                     Verification Code
                   </Text>
-                  <Tooltip hasArrow label="Copy!" bg="teal.300" placement="top">
+                  <Tooltip
+                    hasArrow
+                    label="Copy!"
+                    bg="green.400"
+                    placement="top"
+                  >
                     <Input
                       borderRadius="15px"
                       value="1172913"

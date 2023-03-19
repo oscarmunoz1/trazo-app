@@ -227,7 +227,7 @@
 //                       aria-label="Search database"
 //                       variant="no-hover"
 //                       bg={kanbanCardBg}
-//                       icon={<AddIcon w="12px" h="12px" color="teal.300" />}
+//                       icon={<AddIcon w="12px" h="12px" color="green.400" />}
 //                       onClick={kanbanFormOpen}
 //                     />
 //                   </Flex>

@@ -392,7 +392,8 @@ function Wizard() {
                     What kind of event are you going to record?
                   </Text>
                   <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                    If it is not within the options, you can select the other option and specify in the next step.
+                    If it is not within the options, you can select the other
+                    option and specify in the next step.
                   </Text>
                 </Flex>
               </CardHeader>
@@ -415,7 +416,7 @@ function Wizard() {
                           transition=".5s all ease"
                           border="1px solid lightgray"
                           align="center"
-                          bg={checkboxes.design ? "teal.300" : "#fff"}
+                          bg={checkboxes.design ? "green.400" : "#fff"}
                           _hover={{ opacity: "0.8" }}
                         >
                           <Checkbox
@@ -451,7 +452,7 @@ function Wizard() {
                           transition=".5s all ease"
                           border="1px solid lightgray"
                           align="center"
-                          bg={checkboxes.code ? "teal.300" : "#fff"}
+                          bg={checkboxes.code ? "green.400" : "#fff"}
                           _hover={{ opacity: "0.8" }}
                         >
                           <Checkbox
@@ -487,7 +488,7 @@ function Wizard() {
                           transition=".5s all ease"
                           border="1px solid lightgray"
                           align="center"
-                          bg={checkboxes.develop ? "teal.300" : "#fff"}
+                          bg={checkboxes.develop ? "green.400" : "#fff"}
                           _hover={{ opacity: "0.8" }}
                         >
                           <Checkbox

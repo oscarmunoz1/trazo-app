@@ -132,10 +132,10 @@ function SidebarResponsive(props) {
   const createLinks = (routes) => {
     const { sidebarVariant } = props;
     // Chakra Color Mode
-    let activeBg = useColorModeValue("teal.300", "teal.300");
+    let activeBg = useColorModeValue("green.400", "green.400");
     let activeAccordionBg = useColorModeValue("white", "gray.700");
     let inactiveBg = useColorModeValue("white", "gray.700");
-    let inactiveColorIcon = useColorModeValue("teal.300", "teal.300");
+    let inactiveColorIcon = useColorModeValue("green.400", "green.400");
     let activeColorIcon = useColorModeValue("white", "white");
     let activeColor = useColorModeValue("gray.700", "white");
     let inactiveColor = useColorModeValue("gray.400", "gray.400");
@@ -243,7 +243,7 @@ function SidebarResponsive(props) {
                       </Flex>
                     ) : (
                       <HStack spacing={"22px"} ps="10px" ms="0px">
-                        <Icon as={FaCircle} w="10px" color="teal.300" />
+                        <Icon as={FaCircle} w="10px" color="green.400" />
                         <Text color={activeColor} my="auto" fontSize="sm">
                           {prop.name}
                         </Text>
@@ -290,7 +290,7 @@ function SidebarResponsive(props) {
                       </Flex>
                     ) : (
                       <HStack spacing={"26px"} ps={"10px"} ms={"0px"}>
-                        <Icon as={FaCircle} w="6px" color="teal.300" />
+                        <Icon as={FaCircle} w="6px" color="green.400" />
                         {prop.establihmentId ? (
                           <NavLink color="red" to={prop.layout + prop.path}>
                             <Text
@@ -343,7 +343,7 @@ function SidebarResponsive(props) {
               <Box>
                 <HStack spacing="14px" py="15px" px="15px">
                   <IconBox
-                    bg="teal.300"
+                    bg="green.400"
                     color="white"
                     h="30px"
                     w="30px"
@@ -378,7 +378,7 @@ function SidebarResponsive(props) {
                         ? "10px"
                         : "6px"
                     }
-                    color="teal.300"
+                    color="green.400"
                   />
                   <Text
                     color={

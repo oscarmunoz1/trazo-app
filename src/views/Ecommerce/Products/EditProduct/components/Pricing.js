@@ -29,10 +29,11 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import React, { useState } from "react";
+
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
-import React, { useState } from "react";
 
 const Pricing = () => {
   const [skills, setSkills] = useState([
@@ -110,7 +111,7 @@ const Pricing = () => {
               wrap="wrap"
               border="1px solid lightgray"
               borderRadius="8px"
-              _focus={{ borderColor: "teal.300" }}
+              _focus={{ borderColor: "green.400" }}
               minH="40px"
               cursor="text"
             >

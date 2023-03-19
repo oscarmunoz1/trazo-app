@@ -24,8 +24,9 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React from "react";
+
 import { BsCircleFill } from "react-icons/bs";
+import React from "react";
 
 function TablesReportsRow(props) {
   const { image, name, email, domain, review, employed, id, isLast } = props;
@@ -64,7 +65,7 @@ function TablesReportsRow(props) {
             h="8px"
             color={
               review === "Positive"
-                ? "teal.300"
+                ? "green.400"
                 : review === "Negative"
                 ? "red.500"
                 : "gray.700"

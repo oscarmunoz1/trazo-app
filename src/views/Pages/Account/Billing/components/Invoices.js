@@ -1,5 +1,6 @@
 // Chakra imports
 import { Button, Flex, Text, useColorModeValue } from "@chakra-ui/react";
+
 // Custom components
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
@@ -23,8 +24,8 @@ const Invoices = ({ title, data }) => {
           </Text>
           <Button
             colorScheme="teal"
-            borderColor="teal.300"
-            color="teal.300"
+            borderColor="green.400"
+            color="green.400"
             variant="outline"
             fontSize="xs"
             p="8px 32px"

@@ -166,7 +166,7 @@ export default function AuthNavbar(props) {
               mb="6px"
               cursor="default"
             >
-              <IconBox bg="teal.300" color="white" h="30px" w="30px">
+              <IconBox bg="green.400" color="white" h="30px" w="30px">
                 <RocketIcon color="inherit" />
               </IconBox>
               <Text fontWeight="bold" fontSize="sm" color={textColor}>
@@ -187,7 +187,7 @@ export default function AuthNavbar(props) {
               mb="6px"
               cursor="default"
             >
-              <IconBox bg="teal.300" color="white" h="30px" w="30px">
+              <IconBox bg="green.400" color="white" h="30px" w="30px">
                 {link.authIcon}
               </IconBox>
               <Text fontWeight="bold" fontSize="sm" color={textColor}>
@@ -251,7 +251,7 @@ export default function AuthNavbar(props) {
               mb="6px"
               cursor="default"
             >
-              <IconBox bg="teal.300" color="white" h="30px" w="30px">
+              <IconBox bg="green.400" color="white" h="30px" w="30px">
                 {link.authIcon}
               </IconBox>
               <Text fontWeight="bold" fontSize="sm" color={textColor}>
@@ -285,7 +285,7 @@ export default function AuthNavbar(props) {
       return (
         <NavLink to={link.layout + link.path}>
           <Stack direction="row" spacing="12px" align="center" cursor="pointer">
-            <IconBox bg="teal.300" color="white" h="30px" w="30px">
+            <IconBox bg="green.400" color="white" h="30px" w="30px">
               {link.authIcon}
             </IconBox>
             <Text fontWeight="bold" fontSize="sm" color={textColor}>
@@ -309,7 +309,7 @@ export default function AuthNavbar(props) {
               mb="6px"
               cursor="default"
             >
-              <IconBox bg="teal.300" color="white" h="30px" w="30px">
+              <IconBox bg="green.400" color="white" h="30px" w="30px">
                 {link.authIcon}
               </IconBox>
               <Text fontWeight="bold" fontSize="sm" color={textColor}>
@@ -448,7 +448,7 @@ export default function AuthNavbar(props) {
   //                 w="50px"
   //                 mb="12px"
   //               >
-  //                 <Icon as={AiFillStar} w="25px" h="25px" color="teal.300" />
+  //                 <Icon as={AiFillStar} w="25px" h="25px" color="green.400" />
   //               </IconBox>
   //               <Text
   //                 fontSize="xl"
