@@ -24,23 +24,26 @@ import "@fontsource/roboto/700.css";
 // Chakra imports
 import { ChakraProvider, Portal, useDisclosure } from "@chakra-ui/react";
 import { Outlet, Redirect, Route, Routes } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // Layout components
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Configurator from "components/Configurator/Configurator";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin";
 import Footer from "components/Footer/Footer.js";
+import { HomeIcon } from "components/Icons/Icons";
 // Custom components
 import MainPanel from "components/Layout/MainPanel";
+import Overview from "views/Pages/Profile/Overview/index";
 import PanelContainer from "components/Layout/PanelContainer";
 import PanelContent from "components/Layout/PanelContent";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import { SidebarContext } from "contexts/SidebarContext";
-import { dynamicRoutes } from "components/Sidebar/Sidebar";
+// import { dynamicRoutes } from "components/Sidebar/Sidebar";
 import routes from "routes.js";
 // Custom Chakra theme
 import theme from "theme/theme.js";
+import { useSelector } from "react-redux";
 
 export default function Dashboard(props) {
   const { ...rest } = props;
@@ -49,9 +52,44 @@ export default function Dashboard(props) {
   const [fixed, setFixed] = useState(false);
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(275);
+
+  const [dynamicRoutes, setDynamicRoutes] = useState([]);
+  const establishments = useSelector(
+    (state) => state.company.currentCompany?.establishments
+  );
+
+  // functions for changing the states from components
+
+  useEffect(() => {
+    const dynamicRoutes =
+      establishments &&
+      establishments.map((e) => {
+        return {
+          name: e.name,
+          path: `/dashboard/establishment/${e.id}`,
+          collapse: true,
+          establihmentId: e.id,
+          authIcon: <HomeIcon color="inherit" />,
+
+          layout: "/admin",
+          items: e.parcels.map((p) => {
+            return {
+              name: p.name,
+              path: `/dashboard/establishment/${e.id}/parcel/${p.id}`,
+              component: Overview,
+              layout: "/admin",
+            };
+          }),
+        };
+      });
+    if (establishments) {
+      setDynamicRoutes(dynamicRoutes);
+    }
+  }, [establishments]);
+
   // ref for main panel div
   const mainPanel = React.createRef();
-  // functions for changing the states from components
+
   const getRoute = () => {
     return window.location.pathname !== "/admin/full-screen-maps";
   };

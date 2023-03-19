@@ -16,7 +16,7 @@ const NotAuthenticated = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const isLoading = useSelector((state) => state.auth.isLoading);
 
-  const { state } = useLocation();
+  const { state, pathname } = useLocation();
   const [searchParams] = useSearchParams();
 
   //   useEffect(() => {
@@ -55,7 +55,7 @@ const NotAuthenticated = () => {
   return isLoading === false && isAuthenticated === false ? (
     <Outlet />
   ) : isLoading === false && isAuthenticated ? (
-    <Navigate to={nextRoute} replace />
+    <Navigate to={pathname || nextRoute} replace />
   ) : (
     <></>
   );

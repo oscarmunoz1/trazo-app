@@ -28,7 +28,7 @@ import { Outlet, Redirect, Route, Routes } from "react-router-dom";
 import AuthNavbar from "components/Navbars/AuthNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import React from "react";
-import { dynamicRoutes } from "components/Sidebar/Sidebar";
+// import { dynamicRoutes } from "components/Sidebar/Sidebar";
 import routes from "routes.js";
 import theme from "theme/theme.js";
 
@@ -36,6 +36,7 @@ export default function Pages(props) {
   const { ...rest } = props;
   // ref for the wrapper div
   const wrapper = React.createRef();
+  const dynamicRoutes = [];
   React.useEffect(() => {
     document.body.style.overflow = "unset";
     // Specify how to clean up after this effect:

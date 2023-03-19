@@ -32,18 +32,19 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+// Custom Icons
+import { ProfileIcon, SettingsIcon } from "components/Icons/Icons";
+
+// Custom Components
+import { ItemContent } from "components/Menu/ItemContent";
+import { NavLink } from "react-router-dom";
+import PropTypes from "prop-types";
+import React from "react";
+import SidebarResponsive from "components/Sidebar/SidebarResponsive";
 // Assets
 import avatar1 from "assets/img/avatars/avatar1.png";
 import avatar2 from "assets/img/avatars/avatar2.png";
 import avatar3 from "assets/img/avatars/avatar3.png";
-// Custom Icons
-import { ProfileIcon, SettingsIcon } from "components/Icons/Icons";
-// Custom Components
-import { ItemContent } from "components/Menu/ItemContent";
-import { SidebarResponsive } from "components/Sidebar/Sidebar";
-import PropTypes from "prop-types";
-import React from "react";
-import { NavLink } from "react-router-dom";
 import routes from "routes.js";
 
 export default function HeaderLinks(props) {

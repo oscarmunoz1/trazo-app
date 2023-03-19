@@ -39,7 +39,7 @@ const CarouselCard = ({ id, image, name, category, avatars, description }) => {
           position="absolute"
           top="0"
           borderRadius="15px"
-          bg="linear-gradient(360deg, rgba(49, 56, 96, 0.16) 0%, rgba(21, 25, 40, 0.88) 100%)"
+          bg="linear-gradient(360deg, rgba(49, 56, 96, 0.16) 0%, rgba(21, 25, 40, 0.28) 100%)"
         ></Box>
       </Box>
       <Flex direction="column">
@@ -49,7 +49,13 @@ const CarouselCard = ({ id, image, name, category, avatars, description }) => {
         <Text fontSize="xl" color={textColor} fontWeight="bold" mb="10px">
           {category}
         </Text>
-        <Text fontSize="md" color="gray.500" fontWeight="400" mb="20px">
+        <Text
+          fontSize="md"
+          color="gray.500"
+          fontWeight="400"
+          mb="20px"
+          minH={"24px"}
+        >
           {description}
         </Text>
         <Flex justifyContent="space-between">

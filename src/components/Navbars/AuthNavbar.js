@@ -40,7 +40,7 @@ import IconBox from "components/Icons/IconBox";
 import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
 import React from "react";
-import { SidebarResponsive } from "components/Sidebar/Sidebar";
+import SidebarResponsive from "components/Sidebar/SidebarResponsive";
 import bgCard from "assets/img/background-card-reports.png";
 import routes from "routes.js";
 

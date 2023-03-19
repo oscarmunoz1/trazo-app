@@ -16,7 +16,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import {
   dashboardTableData,
@@ -27,6 +27,7 @@ import {
 
 import ActiveUsers from "./components/ActiveUsers";
 import BarChart from "components/Charts/BarChart";
+import Card from "components/Card/Card.js";
 import CardWithBackground from "./components/CardWithBackground";
 import CardWithImage from "components/Card/CardWithImage";
 import CarouselHorizontal from "components/Carousel/CarouselHorizontal";
@@ -37,10 +38,23 @@ import SalesOverview from "./components/SalesOverview";
 import imageFarm from "assets/img/imageFarm.png";
 import imagePrimavera from "assets/img/imagePrimavera.png";
 import logoChakra from "assets/svg/logo-white.svg";
+import { useSelector } from "react-redux";
 
 export default function DashboardView() {
+  const { establishmentId } = useParams();
+
   const [currentEstablishmentId, setCurrentEstablishmentId] = useState(null);
-  const [establishment, setEstablishment] = useState({});
+  const [establishment, setEstablishment] = useState(null);
+
+  const cardColor = useColorModeValue("white", "gray.700");
+
+  const establishments = useSelector(
+    (state) => state.company.currentCompany?.establishments
+  );
+
+  console.log(establishmentId);
+  console.log(establishments);
+  console.log(establishment);
 
   // to check for active links and opened collapses
   let location = useLocation();
@@ -61,22 +75,17 @@ export default function DashboardView() {
   }, []);
 
   useEffect(() => {
-    if (establishmentData.length > 0) {
-      setCurrentEstablishmentId(establishmentData[0].id);
-      setEstablishment(establishmentData[0]);
-    }
-  }, []);
-
-  useEffect(() => {
     if (location.pathname.startsWith("/admin/dashboard/establishment")) {
-      setCurrentEstablishmentId(parseInt(location.pathname.split("/")[4]));
-      const establishment = establishmentData.filter(
-        (establishment) =>
-          establishment.id.toString() === location.pathname.split("/")[4]
-      )[0];
-      setEstablishment(establishment);
+      let establishment;
+      if (establishments) {
+        establishment = establishments.filter(
+          (establishment) => establishment.id.toString() === establishmentId
+        )[0];
+        setCurrentEstablishmentId(establishmentId);
+        setEstablishment(establishment);
+      }
     }
-  }, [location]);
+  }, [establishmentId, establishments]);
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
@@ -91,18 +100,22 @@ export default function DashboardView() {
         Establishments
       </Text>
       <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="24px">
-        {establishmentData.map((prop, key) => (
-          <NavLink to={`/admin/dashboard/establishment/${prop.id}`}>
-            <MiniStatistics
-              key={key}
-              isSelected={prop.id === currentEstablishmentId}
-              title={prop.name}
-              amount={`${prop.city}, ${prop.state}`}
-              percentage={55}
-              icon={<HomeIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
-            />
-          </NavLink>
-        ))}
+        {establishments ? (
+          establishments.map((prop, key) => (
+            <NavLink to={`/admin/dashboard/establishment/${prop.id}`}>
+              <MiniStatistics
+                key={key}
+                isSelected={prop.id === establishment?.id}
+                title={prop.name}
+                amount={`${prop.city || prop.zone || ""}, ${prop.state}`}
+                percentage={55}
+                icon={<HomeIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
+              />
+            </NavLink>
+          ))
+        ) : (
+          <Card minH="115px" bg={cardColor} />
+        )}
       </SimpleGrid>
 
       <Grid
@@ -111,32 +124,42 @@ export default function DashboardView() {
         my="26px"
         gap="24px"
       >
-        <CardWithImage
-          title={"Establishment Profile"}
-          name={establishment?.name}
-          description={establishment?.description}
-          image={
-            <Image
-              src={establishment?.image}
-              alt="establishment image"
-              width="100%"
-              height="100%"
-              objectFit={"cover"}
-              borderRadius="15px"
-            />
-          }
-        />
-        <CardWithBackground
-          backgroundImage={imageFarm}
-          title={"Work with certifications"}
-          description={
-            "Trood works with registered and accredited professionals who, through an electronic signature, certify that a certain event occurred in a certain way."
-          }
-        />
+        {establishment ? (
+          <CardWithImage
+            title={"Establishment Profile"}
+            name={establishment?.name}
+            description={establishment?.description}
+            image={
+              <Image
+                src={`http://localhost:8000${establishment?.image}`}
+                alt="establishment image"
+                width="100%"
+                height="100%"
+                objectFit={"cover"}
+                borderRadius="15px"
+              />
+            }
+          />
+        ) : (
+          <Card minH="290px" bg={cardColor} />
+        )}
+
+        {establishment ? (
+          <CardWithBackground
+            backgroundImage={imageFarm}
+            title={"Work with certifications"}
+            description={
+              "Trood works with registered and accredited professionals who, through an electronic signature, certify that a certain event occurred in a certain way."
+            }
+          />
+        ) : (
+          <Card minH="290px" bg={cardColor} />
+        )}
       </Grid>
       <CarouselHorizontal
         title={"Parcels"}
         description={"Establishment Parcels "}
+        data={establishment?.parcels}
       />
     </Flex>
   );

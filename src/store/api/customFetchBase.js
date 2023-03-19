@@ -42,7 +42,6 @@ const customFetchBase = async (args, api, extraOptions) => {
     result.error?.data?.detail ===
     "Authentication credentials were not provided."
   ) {
-    debugger;
     window.replace = "auth/signin";
     return;
   }

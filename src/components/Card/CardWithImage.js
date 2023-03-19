@@ -8,13 +8,14 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
+import React, { useState } from "react";
+
+// react icons
+import { BsArrowRight } from "react-icons/bs";
 // Custom components
 import Card from "./Card.js";
 import CardBody from "./CardBody.js";
 import ParcelModal from "dialog/ParcelModal.js";
-import React, { useState } from "react";
-// react icons
-import { BsArrowRight } from "react-icons/bs";
 
 const CardWithImage = ({ title, name, description, image }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -90,6 +91,7 @@ const CardWithImage = ({ title, name, description, image }) => {
             borderRadius="15px"
             width="320px"
             height="250px"
+            minH={"250px"}
           >
             {image}
           </Flex>

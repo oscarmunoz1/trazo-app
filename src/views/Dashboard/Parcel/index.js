@@ -10,9 +10,31 @@ import TrackList from "./components/TrackList";
 // assets
 import imageMap from "assets/img/imageMap.png";
 import imageParcel1 from "assets/img/ImageParcel1.png";
+import { useGetParcelQuery } from "store/features/productApi";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function ParcelView() {
+  const { establishmentId, parcelId } = useParams();
+  console.log(parcelId);
   let mainText = useColorModeValue("gray.700", "gray.200");
+
+  const establishment = useSelector(
+    (state) =>
+      state.company.currentCompany?.establishments.filter(
+        (establishment) => establishment.id === Number(establishmentId)
+      )[0]
+  );
+
+  console.log("establishment", establishment);
+  console.log("establishmentId", establishmentId);
+
+  const { data, error, isLoading, isFetching, refetch } = useGetParcelQuery(
+    parcelId || "",
+    {
+      skip: parcelId === undefined,
+    }
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -28,7 +50,7 @@ export default function ParcelView() {
         fontWeight="bold"
         padding="10px"
       >
-        Parcel #1
+        {establishment?.name}
       </Text>
       <Grid
         templateColumns={{ md: "1fr", lg: "1.8fr 1.2fr" }}
@@ -37,14 +59,14 @@ export default function ParcelView() {
         gap="24px"
       >
         <CardWithImage
-          title={"Valentín, Salto"}
-          name={"Parcel #1"}
-          description={
-            "3 hectares of land, 2 hectares of crops, 1 hectare of pasture"
-          }
+          title={`${establishment?.city || establishment?.zone || ""}, ${
+            establishment?.state
+          }`}
+          name={data?.name}
+          description={data?.description}
           image={
             <Image
-              src={imageParcel1}
+              src={data?.image}
               alt="chakra image"
               minWidth={{ md: "300px", lg: "auto" }}
               objectFit={"cover"}

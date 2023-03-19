@@ -20,6 +20,7 @@ import SignUp from "views/Authentication/SignUp/SignUpBasic";
 
 const App = () => {
   const location = useLocation();
+
   return (
     <Routes>
       <Route element={<CheckAuth />}>
@@ -37,13 +38,13 @@ const App = () => {
         <Route element={<Authenticated />}>
           <Route path="/admin/dashboard" element={<AdminLayout />}>
             <Route
-              path="establishment/:id"
+              path="establishment/:establishmentId"
               exact
               element={<DashboardView />}
               key={3}
             />
             <Route
-              path="establishment/:id/parcel/:id"
+              path="establishment/:establishmentId/parcel/:parcelId"
               exact
               key={2}
               element={<ParcelView />}
@@ -55,7 +56,7 @@ const App = () => {
           </Route>
         </Route>
         <Route
-          path="/"
+          path="*"
           element={() => <Navigate to="/admin/dashboard" replace />}
         />
       </Route>
