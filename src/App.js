@@ -29,10 +29,10 @@ const App = () => {
             <Route path="signin" exact element={<SignIn />} key={1} />
             <Route path="signup" exact key={2} element={<SignUp />} />
             {/* <Route path="verifyemail" exact key={2} element={<VerifyEmail />} /> */}
-            <Route
-              path="*"
+            {/* <Route
+              path="/"
               element={() => <Navigate to="/auth/signin" replace />}
-            />
+            /> */}
           </Route>
         </Route>
         <Route element={<Authenticated />}>

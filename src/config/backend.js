@@ -7,3 +7,8 @@ export const PASSWORD_CHANGE_URL = `${ROOT_URL}/auth/password/change/`;
 export const USER_DATA_URL = `${ROOT_URL}/user/me/`;
 export const COMPANY_URL = (id) => `${ROOT_URL}/companies/${id}/`;
 export const PARCEL_URL = (id) => `${ROOT_URL}/parcels/${id}/`;
+
+export const HISTORY_URL = (parcelId) =>
+  `${ROOT_URL}/parcels/${parcelId}/history/`;
+export const CURRENT_HISTORY = (parcelId) =>
+  `${ROOT_URL}/parcels/${parcelId}/current_history/`;

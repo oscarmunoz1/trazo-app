@@ -9,13 +9,14 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { NavLink, useNavigate } from "react-router-dom";
 
-import { NavLink } from "react-router-dom";
 import React from "react";
 
 const CarouselCard = ({ id, image, name, category, avatars, description }) => {
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
+  const navigate = useNavigate();
 
   return (
     <Flex direction="column">
@@ -59,18 +60,21 @@ const CarouselCard = ({ id, image, name, category, avatars, description }) => {
           {description}
         </Text>
         <Flex justifyContent="space-between">
-          <NavLink to={`/admin/dashboard/establishment/1/parcel/${id}`}>
-            <Button
-              variant="outline"
-              colorScheme="green"
-              minW="110px"
-              h="36px"
-              fontSize="xs"
-              px="1.5rem"
-            >
-              VIEW PARCEL
-            </Button>
-          </NavLink>
+          {/* <NavLink to={`/admin/dashboard/establishment/1/parcel/${id}`}> */}
+          <Button
+            variant="outline"
+            colorScheme="green"
+            minW="110px"
+            h="36px"
+            fontSize="xs"
+            px="1.5rem"
+            onClick={() => {
+              navigate(`/admin/dashboard/establishment/1/parcel/${id}`);
+            }}
+          >
+            VIEW PARCEL
+          </Button>
+          {/* </NavLink> */}
           <AvatarGroup size="xs">
             {avatars.map((el, idx) => {
               return <Avatar src={el} key={idx} />;

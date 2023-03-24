@@ -3,6 +3,7 @@ import { Flex, Grid, Image, Text, useColorModeValue } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { dashboardTableData, timelineData } from "variables/general";
 
+import Card from "components/Card/Card.js";
 import CardWithImage from "components/Card/CardWithImage";
 import CardWithMap from "./components/CardWithMap";
 import HistoryCard from "./components/HistoryCard";
@@ -16,8 +17,9 @@ import { useSelector } from "react-redux";
 
 export default function ParcelView() {
   const { establishmentId, parcelId } = useParams();
-  console.log(parcelId);
-  let mainText = useColorModeValue("gray.700", "gray.200");
+
+  const mainText = useColorModeValue("gray.700", "gray.200");
+  const cardColor = useColorModeValue("white", "gray.700");
 
   const establishment = useSelector(
     (state) =>
@@ -25,9 +27,6 @@ export default function ParcelView() {
         (establishment) => establishment.id === Number(establishmentId)
       )[0]
   );
-
-  console.log("establishment", establishment);
-  console.log("establishmentId", establishmentId);
 
   const { data, error, isLoading, isFetching, refetch } = useGetParcelQuery(
     parcelId || "",
@@ -38,6 +37,8 @@ export default function ParcelView() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    console.log("data", data);
+    console.log("parcelId", parcelId);
   }, []);
 
   return (
@@ -58,23 +59,28 @@ export default function ParcelView() {
         my="26px"
         gap="24px"
       >
-        <CardWithImage
-          title={`${establishment?.city || establishment?.zone || ""}, ${
-            establishment?.state
-          }`}
-          name={data?.name}
-          description={data?.description}
-          image={
-            <Image
-              src={data?.image}
-              alt="chakra image"
-              minWidth={{ md: "300px", lg: "auto" }}
-              objectFit={"cover"}
-              borderRadius="15px"
-              height="100%"
-            />
-          }
-        />
+        {establishment ? (
+          <CardWithImage
+            title={`${establishment?.city || establishment?.zone || ""}, ${
+              establishment?.state
+            }`}
+            name={data?.name}
+            description={data?.description}
+            image={
+              <Image
+                src={data?.image}
+                alt="chakra image"
+                minWidth={{ md: "300px", lg: "auto" }}
+                objectFit={"cover"}
+                borderRadius="15px"
+                height="100%"
+              />
+            }
+          />
+        ) : (
+          <Card minH="290px" bg={cardColor} />
+        )}
+
         <CardWithMap backgroundImage={imageMap} />
       </Grid>
       <Grid
@@ -82,12 +88,12 @@ export default function ParcelView() {
         templateRows={{ sm: "1fr auto", md: "1fr", lg: "1fr" }}
         gap="24px"
       >
-        <TrackList amount={40} data={timelineData} />
+        <TrackList amount={40} />
         <HistoryCard
           title={"History"}
           amount={30}
           captions={["Time frame", "Members", "Performance", "Certified"]}
-          data={dashboardTableData}
+          dataa={dashboardTableData}
         />
       </Grid>
     </Flex>

@@ -55,7 +55,7 @@ const NotAuthenticated = () => {
   return isLoading === false && isAuthenticated === false ? (
     <Outlet />
   ) : isLoading === false && isAuthenticated ? (
-    <Navigate to={pathname || nextRoute} replace />
+    <Navigate to={nextRoute} replace />
   ) : (
     <></>
   );

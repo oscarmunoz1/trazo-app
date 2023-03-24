@@ -4,6 +4,7 @@ import {
   useLocation,
   useMatch,
   useNavigate,
+  useParams,
 } from "react-router-dom";
 import React, { useEffect } from "react";
 
@@ -17,15 +18,14 @@ const Authenticated = ({ history }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const companyMatch = useMatch(
-    "/admin/dashboard/establishment/:establishmentId"
-  ) || {
-    params: {},
-  };
+  const { establishmentId, parcelId } = useParams();
 
   useEffect(() => {
-    const id = Number(companyMatch.params.establishmentId);
-    if (currentCompany && id !== currentCompany.establishments[0].id) {
+    const id = Number(establishmentId);
+    if (
+      currentCompany &&
+      !currentCompany.establishments.map((e) => e.id).includes(id)
+    ) {
       const establishment = currentCompany.establishments[0].id;
       navigate(`/admin/dashboard/establishment/${establishment}`);
     }

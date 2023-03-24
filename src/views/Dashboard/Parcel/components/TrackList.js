@@ -6,6 +6,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
+import { FaRegCheckCircle, FaRegDotCircle } from "react-icons/fa";
 
 import AddRecordModal from "dialog/AddRecordModal";
 // Custom components
@@ -14,10 +15,26 @@ import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 import React from "react";
 import TimelineRow from "components/Tables/TimelineRow";
+import { useGetCurrentHistoryQuery } from "store/features/historyApi";
+import { useParams } from "react-router-dom";
 
-const TrackList = ({ amount, data }) => {
+const TrackList = ({ amount }) => {
   const textColor = useColorModeValue("gray.700", "white");
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { parcelId } = useParams();
+
+  const {
+    data,
+    error,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetCurrentHistoryQuery(parcelId || "", {
+    skip: parcelId === undefined,
+  });
+
+  console.log("data", data);
 
   const bgButton = useColorModeValue(
     "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
@@ -25,7 +42,7 @@ const TrackList = ({ amount, data }) => {
   );
 
   return (
-    <Card maxH="100%">
+    <Card maxH="100%" height={"fit-content;"}>
       <CardHeader p="22px 0px 35px 14px">
         <Flex direction="column">
           <Text fontSize="lg" color={textColor} fontWeight="bold" pb=".5rem">
@@ -41,14 +58,14 @@ const TrackList = ({ amount, data }) => {
       </CardHeader>
       <CardBody ps="20px" pe="0px" mb="31px" position="relative">
         <Flex direction="column" width={"100%"}>
-          {data.map((row, index, arr) => {
+          {data?.events?.map((event, index, arr) => {
             return (
               <TimelineRow
-                key={row.title}
-                logo={row.logo}
-                title={row.title}
-                date={row.date}
-                color={row.color}
+                key={event.id}
+                logo={event.certified ? FaRegCheckCircle : FaRegDotCircle}
+                title={event.name}
+                date={new Date(event.date).toDateString()}
+                color={event.certified ? "green.300" : "blue.400"}
                 index={index}
                 arrLength={arr.length}
               />
