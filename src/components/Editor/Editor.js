@@ -17,8 +17,9 @@
 
 // Chakra imports
 import { Box, Button } from "@chakra-ui/react";
+import { Controller, useFormContext } from "react-hook-form";
+import React, { useState } from "react";
 
-import React from "react";
 import ReactQuill from "react-quill";
 
 const CustomToolbar = () => (
@@ -76,30 +77,34 @@ const CustomToolbar = () => (
   </Box>
 );
 
-export default class Editor extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { editorHtml: "" };
-    this.handleChange = this.handleChange.bind(this);
-  }
+const Editor = (props) => {
+  const [editorHtml, setEditorHtml] = useState("");
+  const { register, control, formState, handleSubmit } = useFormContext();
 
-  handleChange(html) {
-    this.setState({ editorHtml: html });
-  }
+  const handleChange = (html) => {
+    setEditorHtml(html);
+    console.log(html);
+  };
 
-  render() {
-    return (
-      <div className="text-editor">
-        <CustomToolbar />
-        <ReactQuill
-          onChange={this.handleChange}
-          placeholder={this.props.placeholder}
-          modules={Editor.modules}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div className="text-editor">
+      <CustomToolbar />
+      <Controller
+        name="description"
+        control={control}
+        render={({ field }) => (
+          <ReactQuill
+            {...field}
+            onChange={handleChange}
+            placeholder={""}
+            modules={Editor.modules}
+            value={editorHtml}
+          />
+        )}
+      />
+    </div>
+  );
+};
 
 Editor.modules = {
   toolbar: [
@@ -137,3 +142,5 @@ Editor.formats = [
   "image",
   "color",
 ];
+
+export default Editor;

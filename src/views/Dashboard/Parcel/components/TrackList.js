@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { FaRegCheckCircle, FaRegDotCircle } from "react-icons/fa";
 
-import AddRecordModal from "dialog/AddRecordModal";
+import AddEventModal from "dialog/AddEventModal";
 // Custom components
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
@@ -33,8 +33,6 @@ const TrackList = ({ amount }) => {
   } = useGetCurrentHistoryQuery(parcelId || "", {
     skip: parcelId === undefined,
   });
-
-  console.log("data", data);
 
   const bgButton = useColorModeValue(
     "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
@@ -95,7 +93,7 @@ const TrackList = ({ amount }) => {
           FINISH HISTORY
         </Button>
       </div>
-      <AddRecordModal
+      <AddEventModal
         title={"Add new historical event"}
         name={"Add event"}
         isOpen={isOpen}

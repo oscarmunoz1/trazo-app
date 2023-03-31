@@ -37,8 +37,6 @@ export default function ParcelView() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    console.log("data", data);
-    console.log("parcelId", parcelId);
   }, []);
 
   return (

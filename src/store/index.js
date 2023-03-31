@@ -3,7 +3,6 @@ import { baseApi } from "./features/baseApi";
 import companyReducer from "./features/companySlice";
 import { configureStore } from "@reduxjs/toolkit";
 import productReducer from "./features/productSlice";
-import { useSelector } from "react-redux";
 import userReducer from "./features/user.slice";
 
 export const store = configureStore({
@@ -20,5 +19,3 @@ export const store = configureStore({
       baseApi.middleware
     ),
 });
-
-export const useAppSelector = useSelector;
