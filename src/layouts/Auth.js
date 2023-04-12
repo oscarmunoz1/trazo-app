@@ -44,7 +44,7 @@ export default function Pages(props) {
   });
   const getActiveRoute = (routes) => {
     let activeRoute = "Home";
-    for (let i = 0; i < routes.length; i++) {
+    for (let i = 0; i < routes?.length; i++) {
       if (routes[i].collapse) {
         let collapseActiveRoute = getActiveRoute(routes[i].items);
         if (collapseActiveRoute !== activeRoute) {
@@ -68,7 +68,7 @@ export default function Pages(props) {
   // This changes navbar state(fixed or not)
   const getActiveNavbar = (routes) => {
     let activeNavbar = false;
-    for (let i = 0; i < routes.length; i++) {
+    for (let i = 0; i < routes?.length; i++) {
       if (routes[i].collapse) {
         let collapseActiveNavbar = getActiveNavbar(
           routes[i].isDashboard ? dynamicRoutes : routes[i].items
@@ -121,10 +121,7 @@ export default function Pages(props) {
     <ChakraProvider theme={theme} resetCss={false} w="100%">
       <Box ref={navRef} w="100%">
         <Portal containerRef={navRef}>
-          <AuthNavbar
-            secondary={getActiveNavbar(routes)}
-            logoText="PURITY UI DASHBOARD PRO"
-          />
+          <AuthNavbar secondary={false} logoText="traceit" />
         </Portal>
         <Box w="100%">
           <Box ref={wrapper} w="100%">

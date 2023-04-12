@@ -1,4 +1,9 @@
-import { LOGIN_URL, USER_DATA_URL } from "../../config";
+import {
+  LOGIN_URL,
+  SIGNUP_URL,
+  USER_DATA_URL,
+  VERIFY_EMAIL_URL,
+} from "../../config";
 
 import baseApi from "./baseApi";
 import { companyApi } from "./companyApi";
@@ -36,6 +41,15 @@ const authApi = baseApi.injectEndpoints({
         }
       },
     }),
+    signUp: build.mutation({
+      query(data) {
+        return {
+          url: SIGNUP_URL,
+          method: "POST",
+          body: data,
+        };
+      },
+    }),
     logout: build.mutation({
       query: () => ({
         url: "auth/logout/",
@@ -47,9 +61,27 @@ const authApi = baseApi.injectEndpoints({
           "Content-Type": "application/json",
         },
       }),
-      transformResult: (result, queryApi, extraOptions) => {
-        queryApi.dispatch(logoutUser());
-        return { ...result, isAuthenticated: false };
+      invalidatesTags: (result) =>
+        result ? ["User", "Company", "Parcel", "History"] : [],
+      // transformResult: (result, queryApi, extraOptions) => {
+      //   // queryApi.dispatch(logoutUser());
+      //   // return { ...result, isAuthenticated: false };
+      //   dispatch(queryApi.util.resetApiState());
+      // },
+    }),
+    verifyEmail: build.mutation({
+      query({ verificationCode }) {
+        return {
+          url: VERIFY_EMAIL_URL,
+          method: "POST",
+          body: {
+            code: verificationCode,
+          },
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        };
       },
     }),
     userData: build.query({
@@ -61,37 +93,18 @@ const authApi = baseApi.injectEndpoints({
         };
       },
       providesTags: (result) => (result ? ["User"] : []),
-      // async onQueryStarted(args, { dispatch, queryFulfilled }) {
-      //   try {
-      //     debugger;
-      //     const { data } = await queryFulfilled;
-      //     debugger;
-      //     dispatch(setUser(data));
-      //     debugger;
-      //     const companyID = data["companies"][0].id;
-      //     return queryFulfilled({ args: [companyID] });
-      //     // await dispatch(baseApi.endpoints.getCompany(data["companies"][0].id));
-      //     // debugger;
-      //     // dispatch(setCompany(companyData));
-      //   } catch (error) {}
-      // },
-      // onSuccess(result, { dispatch, queryFulfilled }) {
-      //   debugger;
-      //   dispatch(setUser(result.data));
-      //   const companyID = result.data["companies"][0].id;
-      //   debugger;
-      //   return queryFulfilled({ args: [companyID] });
-      // },
       async onQueryStarted(userId, { dispatch, queryFulfilled }) {
         try {
           const result = await queryFulfilled;
           dispatch(setUser(result.data));
-          const { data } = await dispatch(
-            baseApi.endpoints.getCompany.initiate(
-              result.data["companies"][0].id
-            )
-          );
-          dispatch(setCompany(data));
+          if (result.data["companies"].length > 0) {
+            const { data } = await dispatch(
+              baseApi.endpoints.getCompany.initiate(
+                result.data["companies"][0].id
+              )
+            );
+            dispatch(setCompany(data));
+          }
         } catch (error) {
           console.error(error);
         }
@@ -104,5 +117,7 @@ const authApi = baseApi.injectEndpoints({
 export const {
   useUserDataQuery,
   useLoginMutation,
+  useSignUpMutation,
   useLogoutMutation,
+  useVerifyEmailMutation,
 } = authApi;

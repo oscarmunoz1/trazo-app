@@ -7,20 +7,25 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { FaRegCheckCircle, FaRegDotCircle } from "react-icons/fa";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import AddEventModal from "dialog/AddEventModal";
 // Custom components
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
-import React from "react";
 import TimelineRow from "components/Tables/TimelineRow";
+import { setCurrentHistory } from "store/features/historySlice";
 import { useGetCurrentHistoryQuery } from "store/features/historyApi";
 import { useParams } from "react-router-dom";
 
 const TrackList = ({ amount }) => {
   const textColor = useColorModeValue("gray.700", "white");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const dispatch = useDispatch();
+
+  const currentHistory = useSelector((state) => state.history.currentHistory);
 
   const { parcelId } = useParams();
 
@@ -33,6 +38,10 @@ const TrackList = ({ amount }) => {
   } = useGetCurrentHistoryQuery(parcelId || "", {
     skip: parcelId === undefined,
   });
+
+  useEffect(() => {
+    if (data) dispatch(setCurrentHistory(data));
+  }, [data]);
 
   const bgButton = useColorModeValue(
     "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
@@ -56,7 +65,7 @@ const TrackList = ({ amount }) => {
       </CardHeader>
       <CardBody ps="20px" pe="0px" mb="31px" position="relative">
         <Flex direction="column" width={"100%"}>
-          {data?.events?.map((event, index, arr) => {
+          {currentHistory?.events?.map((event, index, arr) => {
             return (
               <TimelineRow
                 key={event.id}

@@ -163,7 +163,7 @@ function Sidebar(props) {
           authIcon: <HomeIcon color="inherit" />,
 
           layout: "/admin",
-          items: e.parcels.map((p) => {
+          items: e?.parcels?.map((p) => {
             return {
               name: p.name,
               path: `/dashboard/establishment/${e.id}/parcel/${p.id}`,
@@ -198,7 +198,7 @@ function Sidebar(props) {
       inactiveColor = useColorModeValue("gray.400", "gray.400");
       sidebarActiveShadow = "none";
     }
-    return routes.map((prop, index) => {
+    return routes?.map((prop, index) => {
       if (prop.category) {
         return (
           <>
@@ -529,7 +529,7 @@ function Sidebar(props) {
   const createAccordionLinks = (routes) => {
     let inactiveColor = useColorModeValue("gray.400", "gray.400");
     let activeColor = useColorModeValue("gray.700", "white");
-    return routes.map((prop, index) => {
+    return routes?.map((prop, index) => {
       return (
         <NavLink to={prop.layout + prop.path}>
           <ListItem
@@ -598,7 +598,7 @@ function Sidebar(props) {
         </Text> */}
         <Image
           src={logo}
-          alt="trood image"
+          alt="traceit logo"
           height="30px"
           paddingRight="10px"
           href=""

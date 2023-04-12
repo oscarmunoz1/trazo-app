@@ -79,11 +79,14 @@ const CustomToolbar = () => (
 
 const Editor = (props) => {
   const [editorHtml, setEditorHtml] = useState("");
-  const { register, control, formState, handleSubmit } = useFormContext();
+
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
 
   const handleChange = (html) => {
     setEditorHtml(html);
-    console.log(html);
   };
 
   return (
@@ -95,10 +98,10 @@ const Editor = (props) => {
         render={({ field }) => (
           <ReactQuill
             {...field}
-            onChange={handleChange}
+            onChange={field.onChange}
             placeholder={""}
             modules={Editor.modules}
-            value={editorHtml}
+            value={field.value}
           />
         )}
       />

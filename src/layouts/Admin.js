@@ -72,7 +72,7 @@ export default function Dashboard(props) {
           authIcon: <HomeIcon color="inherit" />,
 
           layout: "/admin",
-          items: e.parcels.map((p) => {
+          items: e?.parcels?.map((p) => {
             return {
               name: p.name,
               path: `/dashboard/establishment/${e.id}/parcel/${p.id}`,
@@ -95,7 +95,7 @@ export default function Dashboard(props) {
   };
   const getActiveRoute = (routes) => {
     let activeRoute = "Home";
-    for (let i = 0; i < routes.length; i++) {
+    for (let i = 0; i < routes?.length; i++) {
       if (routes[i].collapse) {
         let collapseActiveRoute = getActiveRoute(
           routes[i].isDashboard ? dynamicRoutes : routes[i].items
@@ -122,7 +122,7 @@ export default function Dashboard(props) {
   };
   const getActiveNavbar = (routes) => {
     let activeNavbar = false;
-    for (let i = 0; i < routes.length; i++) {
+    for (let i = 0; i < routes?.length; i++) {
       if (routes[i].collapse) {
         let collapseActiveNavbar = getActiveNavbar(
           routes[i].isDashboard ? dynamicRoutes : routes[i].items
@@ -200,7 +200,6 @@ export default function Dashboard(props) {
           <Portal>
             <AdminNavbar
               onOpen={onOpen}
-              logoText={"PURITY UI DASHBOARD PRO"}
               brandText={getActiveRoute(routes)}
               secondary={getActiveNavbar(routes)}
               fixed={fixed}

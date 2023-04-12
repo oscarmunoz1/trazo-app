@@ -69,7 +69,9 @@ const CarouselCard = ({ id, image, name, category, avatars, description }) => {
             fontSize="xs"
             px="1.5rem"
             onClick={() => {
-              navigate(`/admin/dashboard/establishment/1/parcel/${id}`);
+              navigate(`/admin/dashboard/establishment/1/parcel/${id}`, {
+                replace: true,
+              });
             }}
           >
             VIEW PARCEL

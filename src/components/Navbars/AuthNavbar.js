@@ -23,6 +23,7 @@ import {
   Grid,
   HStack,
   Icon,
+  Image,
   Link,
   Menu,
   MenuItem,
@@ -42,6 +43,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import SidebarResponsive from "components/Sidebar/SidebarResponsive";
 import bgCard from "assets/img/background-card-reports.png";
+import logoTraceit from "assets/img/traceit.png";
 import routes from "routes.js";
 
 export default function AuthNavbar(props) {
@@ -353,10 +355,13 @@ export default function AuthNavbar(props) {
       alignItems="center"
       color={mainText}
     >
-      <CreativeTimLogo w="32px" h="32px" me="10px" />
-      <Text fontsize="sm" mt="3px">
-        {logoText}
-      </Text>
+      <Image
+        src={logoTraceit}
+        alt="traceit logo"
+        height="30px"
+        paddingRight="10px"
+        href=""
+      />
     </Link>
   );
 
@@ -545,7 +550,7 @@ export default function AuthNavbar(props) {
   return (
     <Flex
       position={navbarPosition}
-      top="16px"
+      top="30px"
       left="50%"
       transform="translate(-50%, 0px)"
       background={navbarBg}

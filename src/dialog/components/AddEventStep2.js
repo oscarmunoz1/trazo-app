@@ -20,6 +20,7 @@ import {
 } from "@chakra-ui/react";
 // Custom components
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { BsFillCloudLightningRainFill } from "react-icons/bs";
 import Card from "components/Card/Card";
@@ -31,17 +32,26 @@ import OtherTab from "./OtherTab.js";
 import { RocketIcon } from "components/Icons/Icons";
 import { SlChemistry } from "react-icons/sl";
 import WeatherTab from "./WeatherTab.js";
+import { setForm } from "store/features/formSlice";
 
 const AddRecordStep2 = ({ prevTab, nextTab }) => {
   const textColor = useColorModeValue("gray.700", "white");
   const iconColor = useColorModeValue("gray.300", "gray.700");
   const bgPrevButton = useColorModeValue("gray.100", "gray.100");
 
-  const [checkboxes, setCheckboxes] = useState({
-    design: false,
-    code: false,
-    develop: false,
-  });
+  const dispatch = useDispatch();
+
+  const [checkBox, setCheckBox] = useState(null);
+
+  const currentEvent = useSelector((state) => state.form.currentForm?.event);
+
+  const handleNext = () => {
+    if (checkBox === null) {
+      return;
+    }
+    dispatch(setForm({ event: { ...currentEvent, event_type: checkBox } }));
+    nextTab.current.click();
+  };
 
   return (
     <Card>
@@ -82,25 +92,19 @@ const AddRecordStep2 = ({ prevTab, nextTab }) => {
                   transition=".5s all ease"
                   border="1px solid lightgray"
                   align="center"
-                  bg={checkboxes.design ? "green.400" : "#fff"}
+                  bg={checkBox == 0 ? "green.400" : "#fff"}
                   _hover={{ opacity: "0.8" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCheckBox(0);
+                  }}
                 >
-                  <Checkbox
-                    onChange={() =>
-                      setCheckboxes((prevCheckboxes) => {
-                        return {
-                          ...prevCheckboxes,
-                          design: !prevCheckboxes.design,
-                        };
-                      })
-                    }
-                    display="none"
-                  />
+                  <Checkbox display="none" />
                   <Icon
                     as={BsFillCloudLightningRainFill}
                     w="54px"
                     h="54px"
-                    color={checkboxes.design ? "#fff" : iconColor}
+                    color={checkBox == 0 ? "#fff" : iconColor}
                   />
                 </Flex>
               </FormLabel>
@@ -118,25 +122,19 @@ const AddRecordStep2 = ({ prevTab, nextTab }) => {
                   transition=".5s all ease"
                   border="1px solid lightgray"
                   align="center"
-                  bg={checkboxes.code ? "green.400" : "#fff"}
+                  bg={checkBox === 1 ? "green.400" : "#fff"}
                   _hover={{ opacity: "0.8" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCheckBox(1);
+                  }}
                 >
-                  <Checkbox
-                    onChange={() =>
-                      setCheckboxes((prevCheckboxes) => {
-                        return {
-                          ...prevCheckboxes,
-                          code: !prevCheckboxes.code,
-                        };
-                      })
-                    }
-                    display="none"
-                  />
+                  <Checkbox display="none" />
                   <Icon
                     as={SlChemistry}
                     w="54px"
                     h="54px"
-                    color={checkboxes.code ? "#fff" : iconColor}
+                    color={checkBox === 1 ? "#fff" : iconColor}
                   />
                 </Flex>
               </FormLabel>
@@ -154,25 +152,19 @@ const AddRecordStep2 = ({ prevTab, nextTab }) => {
                   transition=".5s all ease"
                   border="1px solid lightgray"
                   align="center"
-                  bg={checkboxes.develop ? "green.400" : "#fff"}
+                  bg={checkBox === 2 ? "green.400" : "#fff"}
                   _hover={{ opacity: "0.8" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCheckBox(2);
+                  }}
                 >
-                  <Checkbox
-                    onChange={() =>
-                      setCheckboxes((prevCheckboxes) => {
-                        return {
-                          ...prevCheckboxes,
-                          develop: !prevCheckboxes.develop,
-                        };
-                      })
-                    }
-                    display="none"
-                  />
+                  <Checkbox display="none" />
                   <Icon
                     as={RocketIcon}
                     w="54px"
                     h="54px"
-                    color={checkboxes.develop ? "#fff" : iconColor}
+                    color={checkBox === 2 ? "#fff" : iconColor}
                   />
                 </Flex>
               </FormLabel>
@@ -197,13 +189,16 @@ const AddRecordStep2 = ({ prevTab, nextTab }) => {
               </Text>
             </Button>
             <Button
-              variant="no-hover"
               bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+              _hover={{
+                bg: "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
+              }}
               alignSelf="flex-end"
               mt="24px"
               w={{ sm: "75px", lg: "100px" }}
               h="35px"
-              onClick={() => nextTab.current.click()}
+              onClick={handleNext}
+              disabled={checkBox === null}
             >
               <Text fontSize="xs" color="#fff" fontWeight="bold">
                 NEXT

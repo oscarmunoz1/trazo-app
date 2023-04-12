@@ -34,21 +34,29 @@ import {
 } from "@chakra-ui/react";
 // Custom Icons
 import { ProfileIcon, SettingsIcon } from "components/Icons/Icons";
+import React, { useEffect } from "react";
 
 // Custom Components
 import { ItemContent } from "components/Menu/ItemContent";
 import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
-import React from "react";
 import SidebarResponsive from "components/Sidebar/SidebarResponsive";
 // Assets
 import avatar1 from "assets/img/avatars/avatar1.png";
 import avatar2 from "assets/img/avatars/avatar2.png";
 import avatar3 from "assets/img/avatars/avatar3.png";
+import { clearCurrentCompany } from "store/features/companySlice";
+import { clearUser } from "store/features/user.slice";
+import { logout as logoutAction } from "store/features/authSlice";
 import routes from "routes.js";
+import { useDispatch } from "react-redux";
+import { useLogoutMutation } from "store/features/authApi";
+import { useNavigate } from "react-router-dom";
 
 export default function HeaderLinks(props) {
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Chakra Color Mode
   let mainTeal = useColorModeValue("green.400", "green.400");
@@ -56,6 +64,26 @@ export default function HeaderLinks(props) {
   let mainText = useColorModeValue("gray.700", "gray.200");
   let navbarIcon = useColorModeValue("gray.500", "gray.200");
   let searchIcon = useColorModeValue("gray.700", "gray.200");
+
+  const [
+    logout,
+    { isLoading, isSuccess, error, isError },
+  ] = useLogoutMutation();
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(logoutAction());
+      dispatch(clearCurrentCompany());
+      dispatch(clearUser());
+      setTimeout(() => {
+        navigate("/auth/signin", { replace: true });
+      }, 1);
+    }
+  }, [dispatch, isSuccess, navigate]);
 
   if (secondary) {
     navbarIcon = "white";
@@ -110,20 +138,19 @@ export default function HeaderLinks(props) {
           borderRadius="inherit"
         />
       </InputGroup>
-      <NavLink to="/auth/signin">
-        <Button
-          ms="0px"
-          px="0px"
-          me={{ sm: "2px", md: "16px" }}
-          color={navbarIcon}
-          variant="transparent-with-icon"
-          leftIcon={
-            <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
-          }
-        >
-          <Text display={{ sm: "none", md: "flex" }}>Sign Out</Text>
-        </Button>
-      </NavLink>
+      {/* <NavLink to="/auth/signin"> */}
+      <Button
+        ms="0px"
+        px="0px"
+        me={{ sm: "2px", md: "16px" }}
+        color={navbarIcon}
+        variant="transparent-with-icon"
+        leftIcon={<ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />}
+        onClick={handleLogout}
+      >
+        <Text display={{ sm: "none", md: "flex" }}>Sign Out</Text>
+      </Button>
+      {/* </NavLink> */}
       <SidebarResponsive
         logoText={props.logoText}
         secondary={props.secondary}

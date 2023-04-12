@@ -1,4 +1,4 @@
-import { CURRENT_HISTORY, HISTORY_URL } from "../../config";
+import { CURRENT_HISTORY, EVENT_URL, HISTORY_URL } from "../../config";
 import { LOGIN_URL, USER_DATA_URL } from "../../config";
 
 //   import { EmployeeType } from "../../types/employees";
@@ -26,8 +26,21 @@ const historyApi = baseApi.injectEndpoints({
       providesTags: (result, error, parcelId) =>
         result ? [{ type: "History", parcelId }] : [],
     }),
+    createEvent: build.mutation({
+      query: (event) => ({
+        url: EVENT_URL(),
+        method: "POST",
+        credentials: "include",
+        body: event,
+      }),
+      invalidatesTags: (result) => (result ? ["Event"] : []),
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetCurrentHistoryQuery, useGetHistoryQuery } = historyApi;
+export const {
+  useGetCurrentHistoryQuery,
+  useGetHistoryQuery,
+  useCreateEventMutation,
+} = historyApi;

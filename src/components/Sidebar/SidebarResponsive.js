@@ -81,7 +81,7 @@ function SidebarResponsive(props) {
           authIcon: <HomeIcon color="inherit" />,
 
           layout: "/admin",
-          items: e.parcels.map((p) => {
+          items: e?.parcels?.map((p) => {
             return {
               name: p.name,
               path: `/dashboard/establishment/${e.id}/parcel/${p.id}`,
@@ -103,7 +103,7 @@ function SidebarResponsive(props) {
   const createAccordionLinks = (routes) => {
     let inactiveColor = useColorModeValue("gray.400", "gray.400");
     let activeColor = useColorModeValue("gray.700", "white");
-    return routes.map((prop, index) => {
+    return routes?.map((prop, index) => {
       return (
         <NavLink to={prop.layout + prop.path}>
           <ListItem pt="5px" ms="26px" key={index}>
@@ -145,7 +145,7 @@ function SidebarResponsive(props) {
       activeColor = useColorModeValue("gray.700", "white");
       inactiveColor = useColorModeValue("gray.400", "gray.400");
     }
-    return routes.map((prop, index) => {
+    return routes?.map((prop, index) => {
       if (prop.category) {
         return (
           <>

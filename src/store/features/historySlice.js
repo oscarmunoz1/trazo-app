@@ -11,9 +11,16 @@ export const historySlice = createSlice({
     setCurrentHistory: (state, action) => {
       state.currentHistory = action.payload;
     },
+    setEventToHistory: (state, action) => {
+      if (!state.currentHistory?.events) {
+        state.currentHistory.events = [action.payload];
+      } else {
+        state.currentHistory.events.push(action.payload);
+      }
+    },
   },
 });
 
 export default historySlice.reducer;
 
-export const { setCurrentHistory } = historySlice.actions;
+export const { setCurrentHistory, setEventToHistory } = historySlice.actions;

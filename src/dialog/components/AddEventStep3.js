@@ -19,7 +19,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 // Custom components
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { BsFillCloudLightningRainFill } from "react-icons/bs";
 import Card from "components/Card/Card";
@@ -31,17 +32,39 @@ import OtherTab from "./OtherTab.js";
 import { RocketIcon } from "components/Icons/Icons";
 import { SlChemistry } from "react-icons/sl";
 import WeatherTab from "./WeatherTab.js";
+import { setEventToHistory } from "store/features/historySlice.js";
+import { setForm } from "store/features/formSlice";
+import { useCreateEventMutation } from "store/features/historyApi.js";
 
-const AddRecordStep2 = ({ prevTab }) => {
+const AddEventStep3 = ({ onClose }) => {
   const textColor = useColorModeValue("gray.700", "white");
   const iconColor = useColorModeValue("gray.300", "gray.700");
-  const bgPrevButton = useColorModeValue("gray.100", "gray.100");
 
-  const [checkboxes, setCheckboxes] = useState({
-    design: false,
-    code: false,
-    develop: false,
-  });
+  const [
+    createEvent,
+    { data, error, isSuccess, isLoading },
+  ] = useCreateEventMutation();
+
+  const dispatch = useDispatch();
+
+  const currentEvent = useSelector((state) => state.form.currentForm?.event);
+
+  const currentParcelId = useSelector(
+    (state) => state.product.currentParcel?.id
+  );
+
+  const onSubmit = (data) => {
+    dispatch(setForm({ event: { ...currentEvent, ...data } }));
+    createEvent({ ...currentEvent, ...data, parcel: currentParcelId });
+  };
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      dispatch(setEventToHistory(data));
+      onClose();
+    }
+  }, [isSuccess, data]);
+
   return (
     <Card>
       <CardHeader mb="40px">
@@ -65,39 +88,12 @@ const AddRecordStep2 = ({ prevTab }) => {
       <CardBody>
         <Flex direction="column" w="100%">
           <Stack direction="column" spacing="20px">
-            <WeatherTab />
+            <WeatherTab onSubmitHandler={onSubmit} isLoading={isLoading} />
           </Stack>
-          <Flex justify="space-between">
-            <Button
-              variant="no-hover"
-              bg={bgPrevButton}
-              alignSelf="flex-end"
-              mt="24px"
-              w={{ sm: "75px", lg: "100px" }}
-              h="35px"
-              onClick={() => prevTab.current.click()}
-            >
-              <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                PREV
-              </Text>
-            </Button>
-            <Button
-              variant="no-hover"
-              bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-              alignSelf="flex-end"
-              mt="24px"
-              w={{ sm: "75px", lg: "100px" }}
-              h="35px"
-            >
-              <Text fontSize="xs" color="#fff" fontWeight="bold">
-                SEND
-              </Text>
-            </Button>
-          </Flex>
         </Flex>
       </CardBody>
     </Card>
   );
 };
 
-export default AddRecordStep2;
+export default AddEventStep3;

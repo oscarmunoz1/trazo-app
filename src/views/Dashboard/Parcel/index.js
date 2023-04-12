@@ -2,6 +2,7 @@
 import { Flex, Grid, Image, Text, useColorModeValue } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { dashboardTableData, timelineData } from "variables/general";
+import { useDispatch, useSelector } from "react-redux";
 
 import Card from "components/Card/Card.js";
 import CardWithImage from "components/Card/CardWithImage";
@@ -11,12 +12,13 @@ import TrackList from "./components/TrackList";
 // assets
 import imageMap from "assets/img/imageMap.png";
 import imageParcel1 from "assets/img/ImageParcel1.png";
+import { setParcel } from "store/features/productSlice";
 import { useGetParcelQuery } from "store/features/productApi";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 export default function ParcelView() {
   const { establishmentId, parcelId } = useParams();
+  const dispatch = useDispatch();
 
   const mainText = useColorModeValue("gray.700", "gray.200");
   const cardColor = useColorModeValue("white", "gray.700");
@@ -38,6 +40,10 @@ export default function ParcelView() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    if (data) dispatch(setParcel(data));
+  }, [data]);
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>

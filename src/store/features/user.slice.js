@@ -12,9 +12,15 @@ export const userSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
+    clearUser: (state) => {
+      state.user = null;
+    },
+    setUserCompany: (state, action) => {
+      state.user.companies = [action.payload];
+    },
   },
 });
 
 export default userSlice.reducer;
 
-export const { logout, setUser } = userSlice.actions;
+export const { logout, setUser, clearUser, setUserCompany } = userSlice.actions;

@@ -64,7 +64,10 @@ function SignIn() {
     resolver: zodResolver(loginSchema),
   });
 
-  const [signIn, { data, isError, isLoading, isSuccess }] = useLoginMutation();
+  const [
+    signIn,
+    { data, isError, error, isLoading, isSuccess },
+  ] = useLoginMutation();
 
   const navigate = useNavigate();
   const location = useLocation();

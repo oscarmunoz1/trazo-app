@@ -59,12 +59,14 @@ import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import WeatherTab from "./components/WeatherTab.js";
+import { useCreateEventMutation } from "store/features/historyApi.js";
+import { useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = object({
   name: string().min(1, "Name is required"),
   date: string().min(1, "Date is required"),
-  description: string(),
+  // description: string(),
 });
 
 const AddEventModal = ({ title, onClose, isOpen }) => {
@@ -79,19 +81,6 @@ const AddEventModal = ({ title, onClose, isOpen }) => {
   const typeTab = useRef();
   const aboutTab = useRef();
 
-  const useSubsetForm = (fields) => {
-    const {
-      register,
-      handleSubmit,
-      formState: { errors },
-    } = useForm({
-      resolver: zodResolver(schema.pick(fields)),
-      defaultValues: {},
-    });
-
-    return { register, handleSubmit, errors };
-  };
-
   useEffect(() => {
     setCurrentStep(1);
   }, [isOpen]);
@@ -104,18 +93,27 @@ const AddEventModal = ({ title, onClose, isOpen }) => {
   const bgPrevButton = useColorModeValue("gray.100", "gray.100");
 
   const handleAddEvent = () => {
-    console.log("Add event");
     onClose();
   };
 
-  const methods = useForm({
-    resolver: zodResolver(formSchema),
-  });
+  const [
+    createEvent,
+    {
+      data: dataCompany,
+      error: errorCompany,
+      isSuccess: isSuccessCompany,
+      isLoading: isLoadingCompany,
+    },
+  ] = useCreateEventMutation();
 
-  const { register, handleSubmit, formState } = methods;
+  const currentEvent = useSelector((state) => state.form.currentForm?.event);
+
+  const createEventHandler = () => {
+    createEvent(currentEvent);
+  };
 
   const onSubmitHandler = (values) => {
-    console.log("values", values);
+    typeTab.current.click();
   };
 
   return (
@@ -125,219 +123,208 @@ const AddEventModal = ({ title, onClose, isOpen }) => {
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <FormProvider {...methods}>
-            <FormControl onSubmit={handleSubmit(onSubmitHandler)}>
-              <Tabs
-                variant="unstyled"
+          <FormControl>
+            <Tabs
+              variant="unstyled"
+              display="flex"
+              flexDirection="column"
+              margin={{ sm: "0 auto", md: "0" }}
+            >
+              <TabList
                 display="flex"
-                flexDirection="column"
-                margin={{ sm: "0 auto", md: "0" }}
+                align="center"
+                alignSelf="center"
+                justifySelf="center"
               >
-                <TabList
-                  display="flex"
-                  align="center"
-                  alignSelf="center"
-                  justifySelf="center"
+                <Tab
+                  ref={basicTab}
+                  _focus="none"
+                  w={{ sm: "120px", md: "250px", lg: "260px" }}
+                  onClick={() =>
+                    setActiveBullets({
+                      about: true,
+                      account: false,
+                      address: false,
+                    })
+                  }
                 >
-                  <Tab
-                    ref={basicTab}
-                    _focus="none"
-                    w={{ sm: "120px", md: "250px", lg: "260px" }}
-                    onClick={() =>
-                      setActiveBullets({
-                        about: true,
-                        account: false,
-                        address: false,
-                      })
-                    }
+                  <Flex
+                    direction="column"
+                    justify="center"
+                    align="center"
+                    position="relative"
+                    _before={{
+                      content: "''",
+                      width: { sm: "120px", md: "250px", lg: "250px" },
+                      height: "3px",
+                      bg: activeBullets.account ? textColor : "gray.200",
+                      left: { sm: "12px", md: "26px" },
+                      top: {
+                        sm: activeBullets.about ? "6px" : "4px",
+                        md: null,
+                      },
+                      position: "absolute",
+                      bottom: activeBullets.about ? "40px" : "38px",
+                      zIndex: -1,
+                      transition: "all .3s ease",
+                    }}
                   >
-                    <Flex
-                      direction="column"
-                      justify="center"
-                      align="center"
-                      position="relative"
-                      _before={{
-                        content: "''",
-                        width: { sm: "120px", md: "250px", lg: "250px" },
-                        height: "3px",
-                        bg: activeBullets.account ? textColor : "gray.200",
-                        left: { sm: "12px", md: "26px" },
-                        top: {
-                          sm: activeBullets.about ? "6px" : "4px",
-                          md: null,
-                        },
-                        position: "absolute",
-                        bottom: activeBullets.about ? "40px" : "38px",
-                        zIndex: -1,
-                        transition: "all .3s ease",
-                      }}
-                    >
-                      <Icon
-                        as={BsCircleFill}
-                        color={activeBullets.about ? textColor : "gray.300"}
-                        w={activeBullets.about ? "16px" : "12px"}
-                        h={activeBullets.about ? "16px" : "12px"}
-                        mb="8px"
-                      />
-                      <Text
-                        color={activeBullets.about ? { textColor } : "gray.300"}
-                        fontWeight={activeBullets.about ? "bold" : "normal"}
-                        display={{ sm: "none", md: "block" }}
-                        fontSize="sm"
-                      >
-                        Basic
-                      </Text>
-                    </Flex>
-                  </Tab>
-                  <Tab
-                    ref={typeTab}
-                    _focus="none"
-                    w={{ sm: "120px", md: "250px", lg: "260px" }}
-                    onClick={() =>
-                      setActiveBullets({
-                        about: true,
-                        account: true,
-                        address: false,
-                      })
-                    }
-                  >
-                    <Flex
-                      direction="column"
-                      justify="center"
-                      align="center"
-                      position="relative"
-                      _before={{
-                        content: "''",
-                        width: { sm: "120px", md: "250px", lg: "260px" },
-                        height: "3px",
-                        bg: activeBullets.address ? textColor : "gray.200",
-                        left: { sm: "12px", md: "18px" },
-                        top: {
-                          sm: activeBullets.account ? "6px" : "4px",
-                          md: null,
-                        },
-                        position: "absolute",
-                        bottom: activeBullets.account ? "40px" : "38px",
-                        zIndex: -1,
-                        transition: "all .3s ease",
-                      }}
-                    >
-                      <Icon
-                        as={BsCircleFill}
-                        color={activeBullets.account ? textColor : "gray.300"}
-                        w={activeBullets.account ? "16px" : "12px"}
-                        h={activeBullets.account ? "16px" : "12px"}
-                        mb="8px"
-                      />
-                      <Text
-                        color={
-                          activeBullets.account ? { textColor } : "gray.300"
-                        }
-                        fontWeight={activeBullets.account ? "bold" : "normal"}
-                        transition="all .3s ease"
-                        fontSize="sm"
-                        _hover={{ color: textColor }}
-                        display={{ sm: "none", md: "block" }}
-                      >
-                        Type
-                      </Text>
-                    </Flex>
-                  </Tab>
-                  <Tab
-                    ref={aboutTab}
-                    _focus="none"
-                    w={{ sm: "120px", md: "250px", lg: "260px" }}
-                    onClick={() =>
-                      setActiveBullets({
-                        about: true,
-                        account: true,
-                        address: true,
-                      })
-                    }
-                  >
-                    <Flex
-                      direction="column"
-                      justify="center"
-                      align="center"
-                      position="relative"
-                      _before={{
-                        content: "''",
-                        width: { sm: "120px", md: "250px", lg: "260px" },
-                        height: "3px",
-                        // bg: activeBullets.profile ? textColor : "gray.200",
-                        left: { sm: "12px", md: "32px" },
-                        top: {
-                          sm: activeBullets.address ? "6px" : "4px",
-                          md: null,
-                        },
-                        position: "absolute",
-                        bottom: activeBullets.address ? "40px" : "38px",
-                        zIndex: -1,
-                        transition: "all .3s ease",
-                      }}
-                    >
-                      <Icon
-                        as={BsCircleFill}
-                        color={activeBullets.address ? textColor : "gray.300"}
-                        w={activeBullets.address ? "16px" : "12px"}
-                        h={activeBullets.address ? "16px" : "12px"}
-                        mb="8px"
-                      />
-                      <Text
-                        color={
-                          activeBullets.address ? { textColor } : "gray.300"
-                        }
-                        fontWeight={activeBullets.address ? "bold" : "normal"}
-                        transition="all .3s ease"
-                        fontSize="sm"
-                        _hover={{ color: textColor }}
-                        display={{ sm: "none", md: "block" }}
-                      >
-                        About
-                      </Text>
-                    </Flex>
-                  </Tab>
-                </TabList>
-                <TabPanels maxW={{ md: "90%", lg: "100%" }} mx="auto">
-                  <TabPanel w={"100%"} mx="auto" p="0">
-                    <AddEventModalStep1
-                      onClose={onClose}
-                      isOpen={isOpen}
-                      nextTab={typeTab}
-                      register={register}
-                      formState={formState}
-                      onSubmit={onSubmitHandler}
+                    <Icon
+                      as={BsCircleFill}
+                      color={activeBullets.about ? textColor : "gray.300"}
+                      w={activeBullets.about ? "16px" : "12px"}
+                      h={activeBullets.about ? "16px" : "12px"}
+                      mb="8px"
                     />
-                  </TabPanel>
-                  <TabPanel
-                    w={{ sm: "330px", md: "660px", lg: "100%" }}
-                    mx="auto"
-                    p="0"
+                    <Text
+                      color={activeBullets.about ? { textColor } : "gray.300"}
+                      fontWeight={activeBullets.about ? "bold" : "normal"}
+                      display={{ sm: "none", md: "block" }}
+                      fontSize="sm"
+                    >
+                      Basic
+                    </Text>
+                  </Flex>
+                </Tab>
+                <Tab
+                  ref={typeTab}
+                  _focus="none"
+                  w={{ sm: "120px", md: "250px", lg: "260px" }}
+                  onClick={() =>
+                    setActiveBullets({
+                      about: true,
+                      account: true,
+                      address: false,
+                    })
+                  }
+                >
+                  <Flex
+                    direction="column"
+                    justify="center"
+                    align="center"
+                    position="relative"
+                    _before={{
+                      content: "''",
+                      width: { sm: "120px", md: "250px", lg: "260px" },
+                      height: "3px",
+                      bg: activeBullets.address ? textColor : "gray.200",
+                      left: { sm: "12px", md: "18px" },
+                      top: {
+                        sm: activeBullets.account ? "6px" : "4px",
+                        md: null,
+                      },
+                      position: "absolute",
+                      bottom: activeBullets.account ? "40px" : "38px",
+                      zIndex: -1,
+                      transition: "all .3s ease",
+                    }}
                   >
-                    <AddEventModalStep2
-                      prevTab={basicTab}
-                      nextTab={aboutTab}
-                      register={register}
-                      formState={formState}
-                      handleSubmit={handleSubmit}
+                    <Icon
+                      as={BsCircleFill}
+                      color={activeBullets.account ? textColor : "gray.300"}
+                      w={activeBullets.account ? "16px" : "12px"}
+                      h={activeBullets.account ? "16px" : "12px"}
+                      mb="8px"
                     />
-                  </TabPanel>
-                  <TabPanel
-                    w={{ sm: "330px", md: "660px", lg: "100%" }}
-                    mx="auto"
-                    p="0"
+                    <Text
+                      color={activeBullets.account ? { textColor } : "gray.300"}
+                      fontWeight={activeBullets.account ? "bold" : "normal"}
+                      transition="all .3s ease"
+                      fontSize="sm"
+                      _hover={{ color: textColor }}
+                      display={{ sm: "none", md: "block" }}
+                    >
+                      Type
+                    </Text>
+                  </Flex>
+                </Tab>
+                <Tab
+                  ref={aboutTab}
+                  _focus="none"
+                  w={{ sm: "120px", md: "250px", lg: "260px" }}
+                  onClick={() =>
+                    setActiveBullets({
+                      about: true,
+                      account: true,
+                      address: true,
+                    })
+                  }
+                >
+                  <Flex
+                    direction="column"
+                    justify="center"
+                    align="center"
+                    position="relative"
+                    _before={{
+                      content: "''",
+                      width: { sm: "120px", md: "250px", lg: "260px" },
+                      height: "3px",
+                      // bg: activeBullets.profile ? textColor : "gray.200",
+                      left: { sm: "12px", md: "32px" },
+                      top: {
+                        sm: activeBullets.address ? "6px" : "4px",
+                        md: null,
+                      },
+                      position: "absolute",
+                      bottom: activeBullets.address ? "40px" : "38px",
+                      zIndex: -1,
+                      transition: "all .3s ease",
+                    }}
                   >
-                    <AddEventModalStep3
-                      prevTab={typeTab}
-                      register={register}
-                      formState={formState}
-                      handleSubmit={handleSubmit}
+                    <Icon
+                      as={BsCircleFill}
+                      color={activeBullets.address ? textColor : "gray.300"}
+                      w={activeBullets.address ? "16px" : "12px"}
+                      h={activeBullets.address ? "16px" : "12px"}
+                      mb="8px"
                     />
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
-            </FormControl>
-          </FormProvider>
+                    <Text
+                      color={activeBullets.address ? { textColor } : "gray.300"}
+                      fontWeight={activeBullets.address ? "bold" : "normal"}
+                      transition="all .3s ease"
+                      fontSize="sm"
+                      _hover={{ color: textColor }}
+                      display={{ sm: "none", md: "block" }}
+                    >
+                      About
+                    </Text>
+                  </Flex>
+                </Tab>
+              </TabList>
+              <TabPanels maxW={{ md: "90%", lg: "100%" }} mx="auto">
+                <TabPanel w={"100%"} mx="auto" p="0">
+                  <AddEventModalStep1
+                    onClose={onClose}
+                    isOpen={isOpen}
+                    nextTab={typeTab}
+                    onSubmit={onSubmitHandler}
+                  />
+                </TabPanel>
+                <TabPanel
+                  w={{ sm: "330px", md: "660px", lg: "100%" }}
+                  mx="auto"
+                  p="0"
+                >
+                  <AddEventModalStep2
+                    prevTab={basicTab}
+                    nextTab={aboutTab}
+                    handleSubmit={onSubmitHandler}
+                  />
+                </TabPanel>
+                <TabPanel
+                  w={{ sm: "330px", md: "660px", lg: "100%" }}
+                  mx="auto"
+                  p="0"
+                >
+                  <AddEventModalStep3
+                    prevTab={typeTab}
+                    createEventHandler={createEventHandler}
+                    onClose={onClose}
+                  />
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          </FormControl>
         </ModalBody>
       </ModalContent>
     </Modal>

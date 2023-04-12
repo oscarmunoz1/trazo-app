@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* Purity UI Dashboard PRO - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/purity-ui-dashboard-pro
-* Copyright 2021 Creative Tim (https://www.creative-tim.com/)
-
-* Design by Creative Tim & Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 // Chakra imports
 import {
   Box,
@@ -31,16 +14,71 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import React, { useEffect } from "react";
+import { TypeOf, object, string } from "zod";
 
-import React from "react";
 // Assets
-import basic from "assets/img/basic-auth.png";
+import BgSignUp from "assets/img/basic-auth.png";
+import FormInput from "components/Forms/FormInput";
+import { useNavigate } from "react-router-dom";
+import { useSignUpMutation } from "store/features/authApi";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const registerSchema = object({
+  first_name: string().min(1, "Full name is required").max(100),
+  last_name: string().min(1, "Full name is required").max(100),
+  email: string()
+    .min(1, "Email address is required")
+    .email("Email Address is invalid"),
+  password: string()
+    .min(1, "Password is required")
+    .min(8, "Password must be more than 8 characters")
+    .max(32, "Password must be less than 32 characters"),
+  password2: string().min(1, "Please confirm your password"),
+}).refine((data) => data.password === data.password2, {
+  path: ["password2"],
+  message: "Passwords do not match",
+});
 
 function SignUp() {
-  const titleColor = useColorModeValue("green.400", "teal.200");
+  const titleColor = useColorModeValue("green.300", "green.200");
   const textColor = useColorModeValue("gray.700", "white");
   const bgColor = useColorModeValue("white", "gray.700");
-  const bgIcons = useColorModeValue("teal.200", "rgba(255, 255, 255, 0.5)");
+  const bgIcons = useColorModeValue("green.200", "rgba(255, 255, 255, 0.5)");
+  const navigate = useNavigate();
+
+  const methods = useForm({
+    resolver: zodResolver(registerSchema),
+  });
+
+  const {
+    reset,
+    handleSubmit,
+    formState: { errors, isSubmitSuccessful },
+  } = methods;
+
+  const [
+    registerUser,
+    { isLoading, isSuccess, error, isError },
+  ] = useSignUpMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/auth/verifyemail");
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful]);
+
+  const onSubmitHandler = (values) => {
+    registerUser(values);
+  };
+
   return (
     <Flex
       direction="column"
@@ -59,7 +97,7 @@ function SignUp() {
         overflow="hidden"
         zIndex="-1"
         top="0"
-        bgImage={basic}
+        bgImage={BgSignUp}
         bgSize="cover"
         mx={{ md: "auto" }}
         mt={{ md: "14px" }}
@@ -70,10 +108,10 @@ function SignUp() {
         justifyContent="center"
         align="center"
         mt="6.5rem"
-        mb="30px"
+        pt={"55px"}
       >
         <Text fontSize="4xl" color="white" fontWeight="bold">
-          Welcome
+          Welcome!
         </Text>
         <Text
           fontSize="md"
@@ -83,8 +121,8 @@ function SignUp() {
           mb="26px"
           w={{ base: "90%", sm: "60%", lg: "40%", xl: "25%" }}
         >
-          Use these awesome forms to login or create new account in your project
-          for free.
+          You can login by completing the form below or by using your social
+          account.
         </Text>
       </Flex>
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
@@ -178,68 +216,67 @@ function SignUp() {
           >
             or
           </Text>
-          <FormControl>
-            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-              Name
-            </FormLabel>
-            <Input
-              fontSize="sm"
-              ms="4px"
-              borderRadius="15px"
-              type="text"
-              placeholder="Your full name"
-              mb="24px"
-              size="lg"
-            />
-            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-              Email
-            </FormLabel>
-            <Input
-              fontSize="sm"
-              ms="4px"
-              borderRadius="15px"
-              type="email"
-              placeholder="Your email address"
-              mb="24px"
-              size="lg"
-            />
-            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-              Password
-            </FormLabel>
-            <Input
-              fontSize="sm"
-              ms="4px"
-              borderRadius="15px"
-              type="password"
-              placeholder="Your password"
-              mb="24px"
-              size="lg"
-            />
-            <FormControl display="flex" alignItems="center" mb="24px">
-              <Switch id="remember-login" colorScheme="teal" me="10px" />
-              <FormLabel htmlFor="remember-login" mb="0" fontWeight="normal">
-                Remember me
-              </FormLabel>
-            </FormControl>
-            <Button
-              type="submit"
-              bg="green.400"
-              fontSize="sm"
-              color="white"
-              fontWeight="bold"
-              w="100%"
-              h="45"
-              mb="24px"
-              _hover={{
-                bg: "teal.200",
-              }}
-              _active={{
-                bg: "teal.400",
-              }}
-            >
-              SIGN UP
-            </Button>
-          </FormControl>
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmitHandler)}>
+              <FormControl isInvalid={errors.name}>
+                <FormInput
+                  name="first_name"
+                  label="First Name"
+                  placeholder="Your first name"
+                />
+                <FormInput
+                  name="last_name"
+                  label="Last Name"
+                  placeholder="Your last name"
+                />
+                <FormInput
+                  name="email"
+                  label="Email"
+                  placeholder="Your email address"
+                />
+                <FormInput
+                  name="password"
+                  label="Password"
+                  placeholder="Your password"
+                  type="password"
+                />
+                <FormInput
+                  name="password2"
+                  label="Confirm Password"
+                  placeholder="Confirm your password"
+                  type="password"
+                />
+                <FormControl display="flex" alignItems="center" mb="24px">
+                  <Switch id="remember-login" colorScheme="green" me="10px" />
+                  <FormLabel
+                    htmlFor="remember-login"
+                    mb="0"
+                    fontWeight="normal"
+                  >
+                    Remember me
+                  </FormLabel>
+                </FormControl>
+                <Button
+                  type="submit"
+                  bg="green.300"
+                  fontSize="10px"
+                  color="white"
+                  fontWeight="bold"
+                  w="100%"
+                  h="45"
+                  mb="24px"
+                  _hover={{
+                    bg: "green.200",
+                  }}
+                  _active={{
+                    bg: "green.400",
+                  }}
+                >
+                  SIGN UP
+                </Button>
+              </FormControl>
+            </form>
+          </FormProvider>
           <Flex
             flexDirection="column"
             justifyContent="center"

@@ -52,10 +52,6 @@ export default function DashboardView() {
     (state) => state.company.currentCompany?.establishments
   );
 
-  console.log(establishmentId);
-  console.log(establishments);
-  console.log(establishment);
-
   // to check for active links and opened collapses
   let location = useLocation();
 

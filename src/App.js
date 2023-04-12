@@ -11,11 +11,12 @@ import ParcelView from "views/Dashboard/Parcel";
 // import ParcelView from "./views/Dashboard/Parcel";
 // import { Provider } from "react-redux";
 import React from "react";
+import SelectCompanyView from "views/Dashboard/SelectCompany";
 // import RequireUser from "./components/Auth/requireUser";
 import SignIn from "views/Authentication/SignIn/SignInBasic";
 import SignUp from "views/Authentication/SignUp/SignUpBasic";
+import VerifyEmail from "./views/Authentication/SignUp/VerifyEmail";
 
-// import VerifyEmail from "./views/Auth/VerifyEmail";
 // import { store } from "./store";
 
 const App = () => {
@@ -28,7 +29,7 @@ const App = () => {
           <Route path="/auth" element={<AuthLayout />}>
             <Route path="signin" exact element={<SignIn />} key={1} />
             <Route path="signup" exact key={2} element={<SignUp />} />
-            {/* <Route path="verifyemail" exact key={2} element={<VerifyEmail />} /> */}
+            <Route path="verifyemail" exact key={2} element={<VerifyEmail />} />
             {/* <Route
               path="/"
               element={() => <Navigate to="/auth/signin" replace />}
@@ -38,15 +39,18 @@ const App = () => {
         <Route element={<Authenticated />}>
           <Route path="/admin/dashboard" element={<AdminLayout />}>
             <Route
+              path="select-company"
+              exact
+              element={<SelectCompanyView />}
+            />
+            <Route
               path="establishment/:establishmentId"
               exact
               element={<DashboardView />}
-              key={3}
             />
             <Route
               path="establishment/:establishmentId/parcel/:parcelId"
               exact
-              key={2}
               element={<ParcelView />}
             />
             <Route
