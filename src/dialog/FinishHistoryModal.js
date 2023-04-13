@@ -100,7 +100,6 @@ const FinishHistoryModal = ({ title, onClose, isOpen }) => {
   } = methods;
 
   const onSubmit = (data) => {
-    console.log(data);
     finishCurrentHistory({ parcelId: currentParcelId, historyData: data });
   };
 

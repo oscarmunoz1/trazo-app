@@ -84,6 +84,20 @@ const TrackList = ({ amount }) => {
               />
             );
           })}
+          {!currentHistory?.events?.length > 0 && (
+            <Flex width={"100%"} height={"70px"}>
+              <Text
+                display={"flex"}
+                fontSize={"md"}
+                fontWeight={"300"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                textAlign={"center"}
+              >
+                No current history yet, start by adding a new event.
+              </Text>
+            </Flex>
+          )}
         </Flex>
       </CardBody>
       <div style={{ display: "flex", gap: "20px", justifyContent: "flex-end" }}>

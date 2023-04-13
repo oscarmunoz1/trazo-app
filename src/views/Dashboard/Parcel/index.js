@@ -97,7 +97,6 @@ export default function ParcelView() {
           title={"History"}
           amount={30}
           captions={["Time frame", "Members", "Performance", "Certified"]}
-          dataa={dashboardTableData}
         />
       </Grid>
     </Flex>

@@ -72,10 +72,6 @@ const formSchema = object({
 const AddRecordStep1 = ({ onClose, isOpen, nextTab, onSubmit }) => {
   const { parcelId } = useParams();
   const dispatch = useDispatch();
-  const onSubmitStep1 = (data) => {
-    dispatch(setForm({ event: data }));
-    onSubmit();
-  };
 
   const parcels = useSelector((state) =>
     state.company.currentCompany?.establishments.reduce(
@@ -104,6 +100,13 @@ const AddRecordStep1 = ({ onClose, isOpen, nextTab, onSubmit }) => {
   const [value, setValue] = useState(
     orderOptions(options.filter((v) => v.isFixed))
   );
+
+  const onSubmitStep1 = (data) => {
+    dispatch(
+      setForm({ event: { ...data, parcels: value.map((v) => v.value) } })
+    );
+    onSubmit();
+  };
 
   const onChange = (newValue, actionMeta) => {
     switch (actionMeta.action) {
@@ -138,6 +141,7 @@ const AddRecordStep1 = ({ onClose, isOpen, nextTab, onSubmit }) => {
   const {
     reset,
     handleSubmit,
+    register,
     formState: { errors, isSubmitSuccessful },
   } = methods;
 

@@ -21,10 +21,11 @@ import React from "react";
 import avatar1 from "assets/img/avatars/avatar1.png";
 import avatar2 from "assets/img/avatars/avatar10.png";
 import avatar3 from "assets/img/avatars/avatar2.png";
+import { convertToObject } from "typescript";
 import { useGetHistoryQuery } from "store/features/historyApi";
 import { useParams } from "react-router-dom";
 
-const HistoryCard = ({ title, amount, captions, dataa }) => {
+const HistoryCard = ({ title, amount, captions }) => {
   const textColor = useColorModeValue("gray.700", "white");
 
   const { parcelId } = useParams();
@@ -64,46 +65,61 @@ const HistoryCard = ({ title, amount, captions, dataa }) => {
           </Flex>
         </Flex>
       </CardHeader>
-      <Table variant="simple" color={textColor}>
-        <Thead>
-          <Tr my=".8rem" ps="0px">
-            {captions.map((caption, idx) => {
+      {data && data.length > 0 ? (
+        <Table variant="simple" color={textColor}>
+          <Thead>
+            <Tr my=".8rem" ps="0px">
+              {captions.map((caption, idx) => {
+                return (
+                  <Th color="gray.400" key={idx} ps={idx === 0 ? "0px" : null}>
+                    {caption}
+                  </Th>
+                );
+              })}
+            </Tr>
+          </Thead>
+          <Tbody>
+            {data?.map((history) => {
               return (
-                <Th color="gray.400" key={idx} ps={idx === 0 ? "0px" : null}>
-                  {caption}
-                </Th>
+                <DashboardTableRow
+                  key={history.id}
+                  name={`${new Date(
+                    history.start_date
+                  ).toLocaleDateString()}-${new Date(
+                    history.finish_date
+                  ).toLocaleDateString()}`}
+                  logo={
+                    history.certificate_percentage === 100
+                      ? FaRegCheckCircle
+                      : FaRegDotCircle
+                  }
+                  members={[avatar1, avatar2, avatar3]}
+                  budget={`$${history.earning}`}
+                  progression={history.certificate_percentage}
+                  color={
+                    history.certificate_percentage === 100
+                      ? "green.300"
+                      : "blue.400"
+                  }
+                />
               );
             })}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {data?.map((history) => {
-            return (
-              <DashboardTableRow
-                key={history.id}
-                name={`${new Date(
-                  history.start_date
-                ).toLocaleDateString()}-${new Date(
-                  history.finish_date
-                ).toLocaleDateString()}`}
-                logo={
-                  history.certificate_percentage === 100
-                    ? FaRegCheckCircle
-                    : FaRegDotCircle
-                }
-                members={[avatar1, avatar2, avatar3]}
-                budget={`$${history.earning}`}
-                progression={history.certificate_percentage}
-                color={
-                  history.certificate_percentage === 100
-                    ? "green.300"
-                    : "blue.400"
-                }
-              />
-            );
-          })}
-        </Tbody>
-      </Table>
+          </Tbody>
+        </Table>
+      ) : (
+        <Flex width={"100%"} height={"70px"} justifyContent="center">
+          <Text
+            display={"flex"}
+            fontSize={"md"}
+            fontWeight={"300"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            textAlign={"center"}
+          >
+            No histories yet, start by finishing the current history.
+          </Text>
+        </Flex>
+      )}
     </Card>
   );
 };

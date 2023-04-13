@@ -1,3 +1,15 @@
+// Chakra imports
+import {
+  Button,
+  Flex,
+  Grid,
+  Icon,
+  Image,
+  Link,
+  SimpleGrid,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 // Custom icons
 import {
   CartIcon,
@@ -6,16 +18,6 @@ import {
   HomeIcon,
   WalletIcon,
 } from "components/Icons/Icons.js";
-// Chakra imports
-import {
-  Flex,
-  Grid,
-  Image,
-  Link,
-  SimpleGrid,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
 import { NavLink, useLocation, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import {
@@ -31,6 +33,7 @@ import Card from "components/Card/Card.js";
 import CardWithBackground from "./components/CardWithBackground";
 import CardWithImage from "components/Card/CardWithImage";
 import CarouselHorizontal from "components/Carousel/CarouselHorizontal";
+import { FaPlus } from "react-icons/fa";
 import LineChart from "components/Charts/LineChart";
 import MiniStatistics from "./components/MiniStatistics";
 import SalesOverview from "./components/SalesOverview";
@@ -95,7 +98,7 @@ export default function DashboardView() {
       >
         Establishments
       </Text>
-      <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="24px">
+      <SimpleGrid columns={{ sm: 2, md: 3, xl: 4 }} spacing="24px">
         {establishments ? (
           establishments.map((prop, key) => (
             <NavLink to={`/admin/dashboard/establishment/${prop.id}`}>
@@ -112,6 +115,26 @@ export default function DashboardView() {
         ) : (
           <Card minH="115px" bg={cardColor} />
         )}
+        <Button
+          p="0px"
+          w="95px"
+          h="95px"
+          bg="transparent"
+          color="gray.500"
+          borderRadius="15px"
+        >
+          <Flex
+            direction="column"
+            justifyContent="center"
+            align="center"
+            h="120px"
+          >
+            <Icon as={FaPlus} w="15px" h="15px" mb="10px" />
+            <Text fontSize="md" fontWeight="bold">
+              New
+            </Text>
+          </Flex>
+        </Button>
       </SimpleGrid>
 
       <Grid

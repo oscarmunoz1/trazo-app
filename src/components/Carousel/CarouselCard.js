@@ -47,15 +47,15 @@ const CarouselCard = ({ id, image, name, category, avatars, description }) => {
         <Text fontSize="md" color="gray.500" fontWeight="600" mb="10px">
           {name}
         </Text>
-        <Text fontSize="xl" color={textColor} fontWeight="bold" mb="10px">
+        <Text fontSize="lg" color={textColor} fontWeight="bold" mb="10px">
           {category}
         </Text>
         <Text
-          fontSize="md"
+          fontSize="sm"
           color="gray.500"
           fontWeight="400"
           mb="20px"
-          minH={"24px"}
+          height={"32px"}
         >
           {description}
         </Text>

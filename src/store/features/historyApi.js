@@ -43,7 +43,7 @@ const historyApi = baseApi.injectEndpoints({
         credentials: "include",
         body: event,
       }),
-      invalidatesTags: (result) => (result ? ["Event"] : []),
+      invalidatesTags: (result) => (result ? ["Event", "History"] : []),
     }),
   }),
   overrideExisting: false,

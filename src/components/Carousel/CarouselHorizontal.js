@@ -30,13 +30,35 @@ const CarouselHorizontal = ({ title, description, data }) => {
   return (
     <Card p="16px" minH={"515px"}>
       <CardHeader p="12px 5px" mb="12px">
-        <Flex direction="column">
-          <Text fontSize="lg" color={textColor} fontWeight="bold">
-            {title}
-          </Text>
-          <Text fontSize="sm" color="gray.500" fontWeight="400">
-            {description}
-          </Text>
+        <Flex justify={"space-between"} width={"100%"}>
+          <Flex direction="column">
+            <Text fontSize="lg" color={textColor} fontWeight="bold">
+              {title}
+            </Text>
+            <Text fontSize="sm" color="gray.500" fontWeight="400">
+              {description}
+            </Text>
+          </Flex>
+          <Button
+            p="0px"
+            w="75px"
+            h="75px"
+            bg="transparent"
+            color="gray.500"
+            borderRadius="15px"
+          >
+            <Flex
+              direction="column"
+              justifyContent="center"
+              align="center"
+              h="120px"
+            >
+              <Icon as={FaPlus} w="15px" h="15px" mb="10px" />
+              <Text fontSize="md" fontWeight="bold">
+                New
+              </Text>
+            </Flex>
+          </Button>
         </Flex>
       </CardHeader>
       <CardBody px="5px">
