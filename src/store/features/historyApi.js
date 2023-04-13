@@ -1,10 +1,11 @@
-import { CURRENT_HISTORY, EVENT_URL, HISTORY_URL } from "../../config";
-import { LOGIN_URL, USER_DATA_URL } from "../../config";
+import {
+  CURRENT_HISTORY,
+  EVENT_URL,
+  FINISH_HISTORY,
+  HISTORY_URL,
+} from "../../config";
 
-//   import { EmployeeType } from "../../types/employees";
 import baseApi from "./baseApi";
-import { logout as logoutUser } from "store/features/authSlice";
-import { setCompany } from "./companySlice";
 
 const historyApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -16,6 +17,15 @@ const historyApi = baseApi.injectEndpoints({
       }),
       providesTags: (result, error, parcelId) =>
         result ? [{ type: "History", parcelId }] : [],
+    }),
+    finishCurrentHistory: build.mutation({
+      query: ({ parcelId, historyData }) => ({
+        url: FINISH_HISTORY(parcelId),
+        method: "POST",
+        credentials: "include",
+        body: historyData,
+      }),
+      invalidatesTags: (result) => (result ? ["History"] : []),
     }),
     getHistory: build.query({
       query: (parcelId) => ({
@@ -43,4 +53,5 @@ export const {
   useGetCurrentHistoryQuery,
   useGetHistoryQuery,
   useCreateEventMutation,
+  useFinishCurrentHistoryMutation,
 } = historyApi;

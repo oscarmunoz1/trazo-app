@@ -13,7 +13,7 @@ export const historySlice = createSlice({
     },
     setEventToHistory: (state, action) => {
       if (!state.currentHistory?.events) {
-        state.currentHistory.events = [action.payload];
+        state.currentHistory = { events: [action.payload] };
       } else {
         state.currentHistory.events.push(action.payload);
       }

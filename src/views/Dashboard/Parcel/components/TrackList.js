@@ -15,6 +15,7 @@ import AddEventModal from "dialog/AddEventModal";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
+import FinishHistoryModal from "dialog/FinishHistoryModal";
 import TimelineRow from "components/Tables/TimelineRow";
 import { setCurrentHistory } from "store/features/historySlice";
 import { useGetCurrentHistoryQuery } from "store/features/historyApi";
@@ -23,6 +24,11 @@ import { useParams } from "react-router-dom";
 const TrackList = ({ amount }) => {
   const textColor = useColorModeValue("gray.700", "white");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenFinishModal,
+    onOpen: onOpenFinishModal,
+    onClose: onCloseFinishModal,
+  } = useDisclosure();
   const dispatch = useDispatch();
 
   const currentHistory = useSelector((state) => state.history.currentHistory);
@@ -98,6 +104,12 @@ const TrackList = ({ amount }) => {
           h="36px"
           fontSize="xs"
           px="1.5rem"
+          onClick={onOpenFinishModal}
+          disabled={
+            currentHistory?.events && currentHistory?.events.length > 0
+              ? false
+              : true
+          }
         >
           FINISH HISTORY
         </Button>
@@ -107,6 +119,12 @@ const TrackList = ({ amount }) => {
         name={"Add event"}
         isOpen={isOpen}
         onClose={onClose}
+      />
+      <FinishHistoryModal
+        title={"Finish history"}
+        name={"Add last information"}
+        isOpen={isOpenFinishModal}
+        onClose={onCloseFinishModal}
       />
     </Card>
   );

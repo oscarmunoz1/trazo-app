@@ -17,5 +17,7 @@ export const HISTORY_URL = (parcelId) =>
   `${ROOT_URL}/parcels/${parcelId}/history/`;
 export const CURRENT_HISTORY = (parcelId) =>
   `${ROOT_URL}/parcels/${parcelId}/current_history/`;
+export const FINISH_HISTORY = (parcelId) =>
+  `${ROOT_URL}/parcels/${parcelId}/finish_history/`;
 export const EVENT_URL = (eventId) =>
   eventId ? `${ROOT_URL}/events/${eventId}/` : `${ROOT_URL}/events/`;
