@@ -9,12 +9,13 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { GoogleMap, Polygon, useLoadScript } from "@react-google-maps/api";
+import React, { useRef } from "react";
+
+// react icons
+import { BsArrowRight } from "react-icons/bs";
 // Custom components
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
-import React, { useRef } from "react";
-// react icons
-import { BsArrowRight } from "react-icons/bs";
 
 const options = {
   googleMapApiKey: "AIzaSyCLHij6DjbLLkhTsTvrRhwuKf8ZGXrx-Q8",

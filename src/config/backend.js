@@ -11,7 +11,8 @@ export const COMPANY_URL = (id) =>
   id ? `${ROOT_URL}/companies/${id}/` : `${ROOT_URL}/companies/`;
 export const ESTABLISHMENT_URL = (id) =>
   id ? `${ROOT_URL}/establishments/${id}/` : `${ROOT_URL}/establishments/`;
-export const PARCEL_URL = (id) => `${ROOT_URL}/parcels/${id}/`;
+export const PARCEL_URL = (id) =>
+  id ? `${ROOT_URL}/parcels/${id}/` : `${ROOT_URL}/parcels/`;
 
 export const HISTORY_URL = (parcelId) =>
   `${ROOT_URL}/parcels/${parcelId}/history/`;

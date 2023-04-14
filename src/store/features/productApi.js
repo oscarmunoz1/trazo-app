@@ -16,8 +16,17 @@ const productApi = baseApi.injectEndpoints({
       providesTags: (result, error, parcelId) =>
         result ? [{ type: "Parcel", parcelId }] : [],
     }),
+    createParcel: build.mutation({
+      query: (parcel) => ({
+        url: PARCEL_URL(),
+        method: "POST",
+        credentials: "include",
+        body: parcel,
+      }),
+      invalidatesTags: (result) => (result ? ["Parcel"] : []),
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetParcelQuery } = productApi;
+export const { useGetParcelQuery, useCreateParcelMutation } = productApi;

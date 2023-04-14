@@ -74,15 +74,13 @@ export default function DashboardView() {
   }, []);
 
   useEffect(() => {
-    if (location.pathname.startsWith("/admin/dashboard/establishment")) {
-      let establishment;
-      if (establishments) {
-        establishment = establishments.filter(
-          (establishment) => establishment.id.toString() === establishmentId
-        )[0];
-        setCurrentEstablishmentId(establishmentId);
-        setEstablishment(establishment);
-      }
+    let establishment;
+    if (establishments) {
+      establishment = establishments.filter(
+        (establishment) => establishment.id.toString() === establishmentId
+      )[0];
+      setCurrentEstablishmentId(establishmentId);
+      setEstablishment(establishment);
     }
   }, [establishmentId, establishments]);
 

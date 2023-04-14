@@ -6,8 +6,10 @@ import {
   Icon,
   Text,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react";
 
+import AddParcelModal from "dialog/AddParcelModal";
 // Custom components
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
@@ -24,6 +26,8 @@ import imageParcel2 from "assets/img/ImageParcel2.png";
 import imageParcel3 from "assets/img/ImageParcel3.png";
 
 const CarouselHorizontal = ({ title, description, data }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
 
@@ -46,6 +50,7 @@ const CarouselHorizontal = ({ title, description, data }) => {
             bg="transparent"
             color="gray.500"
             borderRadius="15px"
+            onClick={onOpen}
           >
             <Flex
               direction="column"
@@ -81,6 +86,7 @@ const CarouselHorizontal = ({ title, description, data }) => {
             ))}
         </Grid>
       </CardBody>
+      <AddParcelModal title="Create Parcel" onClose={onClose} isOpen={isOpen} />
     </Card>
   );
 };
