@@ -143,13 +143,6 @@ const AddParcelStep1 = ({ onClose, isOpen, nextTab, onSubmit }) => {
                 <Stack direction="column" spacing="20px" w="100%">
                   <FormControl>
                     <Flex direction={"column"} grow={"1"} pr={"32px"}>
-                      <FormLabel
-                        color={textColor}
-                        fontSize="xs"
-                        fontWeight="bold"
-                      >
-                        Name
-                      </FormLabel>
                       <FormInput
                         fontSize="xs"
                         ms="4px"
@@ -157,16 +150,8 @@ const AddParcelStep1 = ({ onClose, isOpen, nextTab, onSubmit }) => {
                         type="text"
                         placeholder="Name of the parcel"
                         name="name"
+                        label="Name"
                       />
-                      <FormLabel
-                        color={textColor}
-                        pt={"16px"}
-                        ms="4px"
-                        fontSize="xs"
-                        fontWeight="bold"
-                      >
-                        Product
-                      </FormLabel>
                       <FormInput
                         fontSize="xs"
                         ms="4px"
@@ -174,27 +159,25 @@ const AddParcelStep1 = ({ onClose, isOpen, nextTab, onSubmit }) => {
                         type="text"
                         name="product"
                         placeholder="Product of the parcel"
+                        label="Product"
                       />
                     </Flex>
                   </FormControl>
                 </Stack>
               </Flex>
-              <FormControl mb="25px">
-                <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
+              <FormControl mb="12px">
+                <FormLabel
+                  mb="4px"
+                  fontSize="xs"
+                  fontWeight="bold"
+                  color={textColor}
+                  pl="12px"
+                >
                   Description
                 </FormLabel>
                 <Editor />
               </FormControl>
               <FormControl>
-                <FormLabel
-                  color={textColor}
-                  pt={"16px"}
-                  ms="4px"
-                  fontSize="xs"
-                  fontWeight="bold"
-                >
-                  Area
-                </FormLabel>
                 <FormInput
                   fontSize="xs"
                   ms="4px"
@@ -202,6 +185,7 @@ const AddParcelStep1 = ({ onClose, isOpen, nextTab, onSubmit }) => {
                   type="text"
                   name="area"
                   placeholder="Area of the parcel"
+                  label="Area"
                 />
               </FormControl>
 

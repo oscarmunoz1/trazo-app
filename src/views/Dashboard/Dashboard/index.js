@@ -148,7 +148,11 @@ export default function DashboardView() {
             description={establishment?.description}
             image={
               <Image
-                src={`http://localhost:8000${establishment?.image}`}
+                src={
+                  establishment?.image
+                    ? `http://localhost:8000${establishment?.image}`
+                    : imagePrimavera
+                }
                 alt="establishment image"
                 width="100%"
                 height="100%"
@@ -166,7 +170,7 @@ export default function DashboardView() {
             backgroundImage={imageFarm}
             title={"Work with certifications"}
             description={
-              "Trood works with registered and accredited professionals who, through an electronic signature, certify that a certain event occurred in a certain way."
+              "traceit works with registered and accredited professionals who, through an electronic signature, certify that a certain event occurred in a certain way."
             }
           />
         ) : (

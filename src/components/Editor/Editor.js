@@ -95,6 +95,7 @@ const Editor = (props) => {
       <Controller
         name="description"
         control={control}
+        mb="100px"
         render={({ field }) => (
           <ReactQuill
             {...field}

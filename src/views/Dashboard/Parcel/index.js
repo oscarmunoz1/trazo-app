@@ -72,7 +72,7 @@ export default function ParcelView() {
             description={data?.description}
             image={
               <Image
-                src={data?.image}
+                src={data?.image || imageParcel1}
                 alt="chakra image"
                 minWidth={{ md: "300px", lg: "auto" }}
                 objectFit={"cover"}

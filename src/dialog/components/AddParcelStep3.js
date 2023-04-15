@@ -22,7 +22,7 @@ import {
 import { FormProvider, useForm } from "react-hook-form";
 // Custom components
 import React, { useEffect, useState } from "react";
-import { object, string } from "zod";
+import { boolean, object, string } from "zod";
 import { useDispatch, useSelector } from "react-redux";
 
 import { BsFillCloudLightningRainFill } from "react-icons/bs";
@@ -43,8 +43,25 @@ import { useParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = object({
-  contactNumber: string().min(1, "Contact Number is required"),
-  address: string().min(1, "Address is required"),
+  certificate: boolean(),
+  contactNumber: string().refine((value, context) => {
+    // Access the switchValue field value from the form context
+    const { certificate } = context?.formState?.values || {};
+    // Conditionally validate inputValue based on certificate
+    if (certificate) {
+      return z.string().min(1).check(value); // apply validation if certificate is true
+    }
+    return true; // skip validation if certificate is false
+  }),
+  address: string().refine((value, context) => {
+    // Access the certificate field value from the form context
+    const { certificate } = context?.formState?.values || {};
+    // Conditionally validate inputValue based on certificate
+    if (certificate) {
+      return z.string().min(1).check(value); // apply validation if certificate is true
+    }
+    return true; // skip validation if certificate is false
+  }),
 });
 
 const AddEventStep3 = ({ onClose }) => {
@@ -70,10 +87,13 @@ const AddEventStep3 = ({ onClose }) => {
     reset,
     handleSubmit,
     register,
+    watch,
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
   const onSubmit = (data) => {
+    console.log(data);
+    debugger;
     createEvent({
       ...currentParcel,
       ...data,
@@ -92,6 +112,8 @@ const AddEventStep3 = ({ onClose }) => {
       onClose();
     }
   }, [isSuccess, data]);
+
+  const certificateValue = watch("certificate");
 
   return (
     <Card>
@@ -119,9 +141,14 @@ const AddEventStep3 = ({ onClose }) => {
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
                 <FormControl display="flex" alignItems="center" mb="25px">
-                  <Switch id="remember-login" colorScheme="green" me="10px" />
+                  <Switch
+                    id="certificate"
+                    colorScheme="green"
+                    me="10px"
+                    {...register("certificate")}
+                  />
                   <FormLabel
-                    htmlFor="remember-login"
+                    htmlFor="certificate"
                     mb="0"
                     ms="1"
                     fontWeight="normal"
@@ -129,9 +156,6 @@ const AddEventStep3 = ({ onClose }) => {
                     Yes, I want to certify this parcel
                   </FormLabel>
                 </FormControl>
-                <FormLabel color={textColor} fontSize="xs" fontWeight="bold">
-                  Contact number
-                </FormLabel>
                 <FormInput
                   fontSize="xs"
                   ms="4px"
@@ -139,11 +163,9 @@ const AddEventStep3 = ({ onClose }) => {
                   type="text"
                   placeholder="Contact number of the parcel"
                   name="contactNumber"
-                  mb="25px"
+                  label="Contact number"
+                  disabled={!certificateValue}
                 />
-                <FormLabel color={textColor} fontSize="xs" fontWeight="bold">
-                  Address
-                </FormLabel>
                 <FormInput
                   fontSize="xs"
                   ms="4px"
@@ -151,6 +173,8 @@ const AddEventStep3 = ({ onClose }) => {
                   type="text"
                   placeholder="Address of the parcel"
                   name="address"
+                  label="Address"
+                  disabled={!certificateValue}
                 />
                 <Flex justify="space-between" width={"100%"}>
                   <Button

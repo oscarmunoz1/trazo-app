@@ -77,7 +77,11 @@ const CarouselHorizontal = ({ title, description, data }) => {
             data.map((parcel) => (
               <CarouselCard
                 id={parcel.id}
-                image={`http://localhost:8000${parcel.image}`}
+                image={
+                  parcel.image
+                    ? `http://localhost:8000${parcel.image}`
+                    : imageParcel1
+                }
                 name={parcel.name}
                 category={parcel.product}
                 description={parcel.description || ""}
