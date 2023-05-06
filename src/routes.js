@@ -28,6 +28,7 @@ import {
 
 import Alerts from "views/Pages/Alerts/index";
 import Billing from "views/Pages/Account/Billing/index";
+import { BsFillClipboardCheckFill } from "react-icons/bs";
 import CRM from "views/Dashboard/CRM";
 import Calendar from "views/Applications/Calendar/index";
 import Charts from "views/Pages/Charts/index";
@@ -62,133 +63,159 @@ import Wizard from "views/Applications/Wizard/index";
 const dashRoutes = [
   {
     name: "Home",
-    path: "/dashboard",
+    path: "/dashboard/establishment",
     icon: <HomeIcon color="inherit" />,
     authIcon: <HomeIcon color="inherit" />,
     layout: "/admin",
-    component: Overview,
     collapse: true,
     isHome: true,
     isDashboard: true,
   },
   {
-    name: "Ecommerce",
-    path: "/ecommerce",
-    icon: <CartIcon color="inherit" />,
+    name: "Certifications",
+    path: "/dashboard/certifications",
+    icon: <BsFillClipboardCheckFill color="inherit" />,
+    authIcon: <BsFillClipboardCheckFill color="inherit" />,
+    layout: "/admin",
     collapse: true,
+    isCertifications: true,
+    items: [
+      {
+        name: "Parcels",
+        path: "/dashboard/establishment/certifications/parcels",
+        secondPath: (id) =>
+          `/dashboard/establishment/${id}/certifications/parcels`,
+        secondaryNavbar: true,
+        layout: "/admin",
+      },
+      {
+        name: "Events",
+        path: "/dashboard/establishment/certifications/events",
+        secondPath: (id) =>
+          `/dashboard/establishment/${id}/certifications/events`,
+        secondaryNavbar: true,
+        layout: "/admin",
+      },
+    ],
+  },
+  // {
+  //   name: "Ecommerce",
+  //   path: "/ecommerce",
+  //   icon: <CartIcon color="inherit" />,
+  //   collapse: true,
 
-    items: [
-      {
-        name: "Products",
-        path: "/products",
-        collapse: true,
-        authIcon: <DocumentIcon color="inherit" />,
-        items: [
-          {
-            name: "New Product",
-            component: NewProduct,
-            secondaryNavbar: true,
-            path: "/ecommerce/products/new-product",
-            layout: "/admin",
-          },
-          {
-            name: "Edit Product",
-            component: EditProduct,
-            path: "/ecommerce/products/edit-product",
-            layout: "/admin",
-          },
-          {
-            name: "Product Page",
-            component: ProductPage,
-            path: "/ecommerce/products/product-page",
-            layout: "/admin",
-          },
-        ],
-      },
-      {
-        name: "Orders",
-        path: "/orders",
-        collapse: true,
-        authIcon: <StatsIcon color="inherit" />,
-        items: [
-          {
-            name: "Order List",
-            component: OrderList,
-            path: "/ecommerce/orders/order-list",
-            layout: "/admin",
-          },
-          {
-            name: "Order Details",
-            component: OrderDetails,
-            path: "/ecommerce/orders/order-details",
-            layout: "/admin",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    name: "Authentication",
-    path: "/authentication",
-    icon: <PersonIcon color="inherit" />,
-    collapse: true,
-    items: [
-      {
-        name: "Sign In",
-        path: "/authentication/sign-in",
-        collapse: true,
-        authIcon: <DocumentIcon color="inherit" />,
-        items: [
-          {
-            name: "Basic",
-            secondaryNavbar: true,
-            component: SignInBasic,
-            path: "/authentication/sign-in/basic",
-            layout: "/auth",
-          },
-          {
-            name: "Cover",
-            component: SignInCover,
-            path: "/authentication/sign-in/cover",
-            layout: "/auth",
-          },
-          {
-            name: "Illustration",
-            component: SignInIllustration,
-            path: "/authentication/sign-in/illustration",
-            layout: "/auth",
-          },
-        ],
-      },
-      {
-        name: "Sign Up",
-        path: "/authentication/sign-up",
-        collapse: true,
-        authIcon: <DocumentIcon color="inherit" />,
-        items: [
-          {
-            name: "Basic",
-            secondaryNavbar: true,
-            component: SignUpBasic,
-            path: "/authentication/sign-up/basic",
-            layout: "/auth",
-          },
-          {
-            name: "Cover",
-            component: SignUpCover,
-            path: "/authentication/sign-up/cover",
-            layout: "/auth",
-          },
-          {
-            name: "Illustration",
-            component: SignUpIllustration,
-            path: "/authentication/sign-up/illustration",
-            layout: "/auth",
-          },
-        ],
-      },
-    ],
-  },
+  //   items: [
+  //     {
+  //       name: "Products",
+  //       path: "/products",
+  //       collapse: true,
+  //       authIcon: <DocumentIcon color="inherit" />,
+  //       items: [
+  //         {
+  //           name: "New Product",
+  //           component: NewProduct,
+  //           secondaryNavbar: true,
+  //           path: "/ecommerce/products/new-product",
+  //           layout: "/admin",
+  //         },
+  //         {
+  //           name: "Edit Product",
+  //           component: EditProduct,
+  //           path: "/ecommerce/products/edit-product",
+  //           layout: "/admin",
+  //         },
+  //         {
+  //           name: "Product Page",
+  //           component: ProductPage,
+  //           path: "/ecommerce/products/product-page",
+  //           layout: "/admin",
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       name: "Orders",
+  //       path: "/orders",
+  //       collapse: true,
+  //       authIcon: <StatsIcon color="inherit" />,
+  //       items: [
+  //         {
+  //           name: "Order List",
+  //           component: OrderList,
+  //           path: "/ecommerce/orders/order-list",
+  //           layout: "/admin",
+  //         },
+  //         {
+  //           name: "Order Details",
+  //           component: OrderDetails,
+  //           path: "/ecommerce/orders/order-details",
+  //           layout: "/admin",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: "Authentication",
+  //   path: "/authentication",
+  //   icon: <PersonIcon color="inherit" />,
+  //   collapse: true,
+  //   items: [
+  //     {
+  //       name: "Sign In",
+  //       path: "/authentication/sign-in",
+  //       collapse: true,
+  //       authIcon: <DocumentIcon color="inherit" />,
+  //       items: [
+  //         {
+  //           name: "Basic",
+  //           secondaryNavbar: true,
+  //           component: SignInBasic,
+  //           path: "/authentication/sign-in/basic",
+  //           layout: "/auth",
+  //         },
+  //         {
+  //           name: "Cover",
+  //           component: SignInCover,
+  //           path: "/authentication/sign-in/cover",
+  //           layout: "/auth",
+  //         },
+  //         {
+  //           name: "Illustration",
+  //           component: SignInIllustration,
+  //           path: "/authentication/sign-in/illustration",
+  //           layout: "/auth",
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       name: "Sign Up",
+  //       path: "/authentication/sign-up",
+  //       collapse: true,
+  //       authIcon: <DocumentIcon color="inherit" />,
+  //       items: [
+  //         {
+  //           name: "Basic",
+  //           secondaryNavbar: true,
+  //           component: SignUpBasic,
+  //           path: "/authentication/sign-up/basic",
+  //           layout: "/auth",
+  //         },
+  //         {
+  //           name: "Cover",
+  //           component: SignUpCover,
+  //           path: "/authentication/sign-up/cover",
+  //           layout: "/auth",
+  //         },
+  //         {
+  //           name: "Illustration",
+  //           component: SignUpIllustration,
+  //           path: "/authentication/sign-up/illustration",
+  //           layout: "/auth",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
 ];
 
 export default dashRoutes;

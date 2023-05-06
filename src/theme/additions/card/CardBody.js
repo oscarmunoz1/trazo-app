@@ -19,6 +19,7 @@ const CardBody = {
   baseStyle: {
     display: "flex",
     width: "100%",
+    backgroundColor: "transparent",
   },
 };
 

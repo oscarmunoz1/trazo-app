@@ -12,10 +12,12 @@ import {
 import { NavLink, useNavigate } from "react-router-dom";
 
 import React from "react";
+import { useParams } from "react-router-dom";
 
-const CarouselCard = ({ id, image, name, category, avatars, description }) => {
+const CarouselCard = ({ id, image, name, category, avatars }) => {
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
+  const { establishmentId } = useParams();
   const navigate = useNavigate();
 
   return (
@@ -50,15 +52,6 @@ const CarouselCard = ({ id, image, name, category, avatars, description }) => {
         <Text fontSize="lg" color={textColor} fontWeight="bold" mb="10px">
           {category}
         </Text>
-        <Text
-          fontSize="sm"
-          color="gray.500"
-          fontWeight="400"
-          mb="20px"
-          height={"32px"}
-        >
-          {description}
-        </Text>
         <Flex justifyContent="space-between">
           {/* <NavLink to={`/admin/dashboard/establishment/1/parcel/${id}`}> */}
           <Button
@@ -69,9 +62,12 @@ const CarouselCard = ({ id, image, name, category, avatars, description }) => {
             fontSize="xs"
             px="1.5rem"
             onClick={() => {
-              navigate(`/admin/dashboard/establishment/1/parcel/${id}`, {
-                replace: true,
-              });
+              navigate(
+                `/admin/dashboard/establishment/${establishmentId}/parcel/${id}`,
+                {
+                  replace: true,
+                }
+              );
             }}
           >
             VIEW PARCEL

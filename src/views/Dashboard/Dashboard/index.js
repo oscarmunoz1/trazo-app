@@ -146,6 +146,9 @@ export default function DashboardView() {
             title={"Establishment Profile"}
             name={establishment?.name}
             description={establishment?.description}
+            state={establishment?.state}
+            city={establishment?.city}
+            zone={establishment?.zone}
             image={
               <Image
                 src={

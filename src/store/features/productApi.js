@@ -1,4 +1,4 @@
-import { LOGIN_URL, PARCEL_URL, USER_DATA_URL } from "../../config";
+import { LOGIN_URL, PARCEL_URL, PRODUCT_URL } from "../../config";
 
 //   import { EmployeeType } from "../../types/employees";
 import baseApi from "./baseApi";
@@ -25,8 +25,19 @@ const productApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: (result) => (result ? ["Parcel"] : []),
     }),
+    getProducts: build.query({
+      query: () => ({
+        url: PRODUCT_URL,
+        method: "GET",
+        credentials: "include",
+      }),
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetParcelQuery, useCreateParcelMutation } = productApi;
+export const {
+  useGetParcelQuery,
+  useCreateParcelMutation,
+  useGetProductsQuery,
+} = productApi;

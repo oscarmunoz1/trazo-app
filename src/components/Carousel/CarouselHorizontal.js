@@ -32,7 +32,7 @@ const CarouselHorizontal = ({ title, description, data }) => {
   const textColor = useColorModeValue("gray.700", "white");
 
   return (
-    <Card p="16px" minH={"515px"}>
+    <Card p="16px">
       <CardHeader p="12px 5px" mb="12px">
         <Flex justify={"space-between"} width={"100%"}>
           <Flex direction="column">
@@ -67,14 +67,14 @@ const CarouselHorizontal = ({ title, description, data }) => {
         </Flex>
       </CardHeader>
       <CardBody px="5px">
-        <Grid
-          templateColumns={{ sm: "1fr", md: "1fr 1fr", xl: "repeat(4, 1fr)" }}
-          templateRows={{ sm: "1fr 1fr 1fr auto", md: "1fr 1fr", xl: "1fr" }}
-          gap="24px"
-          overflowX="scroll"
-        >
-          {data &&
-            data.map((parcel) => (
+        {data && data.length > 0 ? (
+          <Grid
+            templateColumns={{ sm: "1fr", md: "1fr 1fr", xl: "repeat(4, 1fr)" }}
+            templateRows={{ sm: "1fr 1fr 1fr auto", md: "1fr 1fr", xl: "1fr" }}
+            gap="24px"
+            overflowX="scroll"
+          >
+            {data.map((parcel) => (
               <CarouselCard
                 id={parcel.id}
                 image={
@@ -84,11 +84,24 @@ const CarouselHorizontal = ({ title, description, data }) => {
                 }
                 name={parcel.name}
                 category={parcel.product}
-                description={parcel.description || ""}
                 avatars={[avatar2, avatar4, avatar6]}
               />
             ))}
-        </Grid>
+          </Grid>
+        ) : (
+          <Flex width={"100%"} height={"70px"} justifyContent="center">
+            <Text
+              display={"flex"}
+              fontSize={"md"}
+              fontWeight={"300"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              textAlign={"center"}
+            >
+              No parcels yet, start by creating the first parcel.
+            </Text>
+          </Flex>
+        )}
       </CardBody>
       <AddParcelModal title="Create Parcel" onClose={onClose} isOpen={isOpen} />
     </Card>

@@ -15,9 +15,17 @@ import { BsArrowRight } from "react-icons/bs";
 // Custom components
 import Card from "./Card.js";
 import CardBody from "./CardBody.js";
-import ParcelModal from "dialog/ParcelModal.js";
+import InformationModal from "dialog/InformationModal.js";
 
-const CardWithImage = ({ title, name, description, image }) => {
+const CardWithImage = ({
+  title,
+  name,
+  description,
+  image,
+  state,
+  zone,
+  city,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const textColor = useColorModeValue("gray.700", "white");
@@ -37,9 +45,6 @@ const CardWithImage = ({ title, name, description, image }) => {
             </Text>
             <Text fontSize="lg" color={textColor} fontWeight="bold" pb=".5rem">
               {name}
-            </Text>
-            <Text fontSize="sm" color="gray.400" fontWeight="normal">
-              {description}
             </Text>
             <Spacer />
             <Flex align="center">
@@ -73,9 +78,12 @@ const CardWithImage = ({ title, name, description, image }) => {
                   _hover={{ transform: "translateX(20%)" }}
                 />
               </Button>
-              <ParcelModal
+              <InformationModal
                 title={title}
                 name={name}
+                state={state}
+                zone={zone}
+                city={city}
                 description={description}
                 image={image}
                 onClose={onClose}

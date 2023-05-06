@@ -70,6 +70,9 @@ export default function ParcelView() {
             }`}
             name={data?.name}
             description={data?.description}
+            state={establishment?.state}
+            city={establishment?.city}
+            zone={establishment?.zone}
             image={
               <Image
                 src={data?.image || imageParcel1}

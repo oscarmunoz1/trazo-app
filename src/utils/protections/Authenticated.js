@@ -26,7 +26,6 @@ const Authenticated = ({ history }) => {
 
   useEffect(() => {
     const id = Number(establishmentId);
-    // if (data && status === "fulfilled") {
 
     if (currentUser?.companies.length > 0) {
       if (
@@ -42,8 +41,6 @@ const Authenticated = ({ history }) => {
         }
       }
     }
-
-    // }
   }, [currentCompany, establishmentId, navigate, currentUser]);
 
   useEffect(() => {

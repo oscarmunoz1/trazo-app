@@ -93,7 +93,6 @@ const AddEventStep3 = ({ onClose }) => {
 
   const onSubmit = (data) => {
     console.log(data);
-    debugger;
     createEvent({
       ...currentParcel,
       ...data,

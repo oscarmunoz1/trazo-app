@@ -32,6 +32,10 @@ const Card = {
       width: "100%",
       boxShadow: "0px 3.5px 5.5px rgba(0, 0, 0, 0.02)",
       borderRadius: "15px",
+      transition: "all .2s ease-in-out",
+      "&:hover": {
+        transform: "scale(1.03)",
+      },
     }),
   },
   defaultProps: {

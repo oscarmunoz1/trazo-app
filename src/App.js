@@ -3,6 +3,7 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import AdminLayout from "layouts/Admin.js";
 import AuthLayout from "layouts/Auth.js";
 import Authenticated from "./utils/protections/Authenticated";
+import CertificationsView from "views/Dashboard/Certifications";
 import CheckAuth from "./utils/protections/CheckAuth";
 import DashboardView from "views/Dashboard/Dashboard";
 // import DashboardView from "./views/Dashboard/Dashboard";
@@ -52,6 +53,16 @@ const App = () => {
               path="establishment/:establishmentId/parcel/:parcelId"
               exact
               element={<ParcelView />}
+            />
+            <Route
+              path="establishment/:establishmentId/certifications/parcels"
+              exact
+              element={<CertificationsView />}
+            />
+            <Route
+              path="establishment/:establishmentId/certifications/events"
+              exact
+              element={<CertificationsView />}
             />
             <Route
               path="*"
