@@ -1,10 +1,10 @@
 // Chakra imports
 import { Stack, Td, Text, Tr, useColorModeValue } from "@chakra-ui/react";
+
 import React from "react";
 
 const SalesRow = ({ state, name, sales, value, bounce }) => {
-
-    const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue("gray.700", "white");
 
   return (
     <Tr>

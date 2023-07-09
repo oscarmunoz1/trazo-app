@@ -51,6 +51,8 @@ import { useSelector } from "react-redux";
 
 function SidebarResponsive(props) {
   const [dynamicRoutes, setDynamicRoutes] = useState([]);
+  const [certificationsRoutes, setCertificationsRoutes] = useState([]);
+  const [commercialDynamicRoutes, setCommercialDynamicRoutes] = useState([]);
   // this is for the rest of the collapses
   //  BRAND
   //  Chakra Color Mode
@@ -77,27 +79,75 @@ function SidebarResponsive(props) {
           name: e.name,
           path: `/dashboard/establishment/${e.id}`,
           collapse: true,
-          establihmentId: e.id,
+          establishmentId: e.id,
           authIcon: <HomeIcon color="inherit" />,
-
           layout: "/admin",
+          isDashboard: true,
+          regex: new RegExp(
+            `^\\/admin\\/dashboard\\/establishment\\/${e.id}(\\/parcel\\/[0-9]+)?$`
+          ),
           items: e?.parcels?.map((p) => {
             return {
               name: p.name,
               path: `/dashboard/establishment/${e.id}/parcel/${p.id}`,
               component: Overview,
               layout: "/admin",
+              isDashboard: true,
+              regex: new RegExp(
+                `^\\/admin\\/dashboard\\/establishment\\/${e.id}\\/parcel\\/${p.id}$`
+              ),
             };
           }),
         };
       });
+
+    const certificationsRoutes = establishments && [
+      {
+        name: "Parcels",
+        path: `/dashboard/establishment/${establishments[0].id}/certifications/parcels`,
+        secondaryNavbar: true,
+        layout: "/admin",
+        // regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/certifications\/parcels$/,
+        regex: new RegExp(
+          `^\\/admin\\/dashboard\\/establishment\\/${establishments[0].id}\\/certifications\\/parcels$`
+        ),
+      },
+      {
+        name: "Events",
+        path: `/dashboard/establishment/${establishments[0].id}/certifications/events`,
+        secondaryNavbar: true,
+        layout: "/admin",
+        regex: new RegExp(
+          `^\\/admin\\/dashboard\\/establishment\\/${establishments[0].id}\\/certifications\\/events$`
+        ),
+      },
+    ];
+
+    const commercialDynamicRoutes =
+      establishments &&
+      establishments.map((e) => {
+        return {
+          name: e.name,
+          path: `/dashboard/establishment/${e.id}/commercial`,
+          establishmentId: e.id,
+          authIcon: <HomeIcon color="inherit" />,
+          regex: new RegExp(
+            `^\\/admin\\/dashboard\\/establishment\\/${e.id}\\/commercial$`
+          ),
+          layout: "/admin",
+          items: [],
+        };
+      });
+
     if (establishments) {
       setDynamicRoutes(dynamicRoutes);
+      setCertificationsRoutes(certificationsRoutes);
+      setCommercialDynamicRoutes(commercialDynamicRoutes);
     }
   }, [establishments]);
 
-  const activeRoute = (routeName) => {
-    return location.pathname.includes(routeName);
+  const activeRoute = (regex) => {
+    return regex.test(location.pathname);
   };
 
   const createAccordionLinks = (routes) => {
@@ -108,16 +158,8 @@ function SidebarResponsive(props) {
         <NavLink to={prop.layout + prop.path}>
           <ListItem pt="5px" ms="26px" key={index}>
             <Text
-              color={
-                activeRoute(prop.path.toLowerCase(), prop.isDashboard)
-                  ? activeColor
-                  : inactiveColor
-              }
-              fontWeight={
-                activeRoute(prop.path.toLowerCase(), prop.isDashboard)
-                  ? "bold"
-                  : "normal"
-              }
+              color={activeRoute(prop.regex) ? activeColor : inactiveColor}
+              fontWeight={activeRoute(prop.regex) ? "bold" : "normal"}
               fontSize="sm"
             >
               {prop.name}
@@ -182,12 +224,12 @@ function SidebarResponsive(props) {
                 px={prop.icon ? null : "0px"}
                 py={prop.icon ? "12px" : null}
                 bg={
-                  activeRoute(prop.path, prop.isDashboard) && prop.icon
+                  activeRoute(prop.regex) && prop.icon
                     ? activeAccordionBg
                     : "transparent"
                 }
               >
-                {activeRoute(prop.path, prop.isDashboard) ? (
+                {activeRoute(prop.regex) ? (
                   <Button
                     boxSize="initial"
                     justifyContent="flex-start"
@@ -219,7 +261,7 @@ function SidebarResponsive(props) {
                         >
                           {prop.icon}
                         </IconBox>
-                        {prop.establihmentId ? (
+                        {prop.establishmentId ? (
                           <NavLink color="red" to={prop.layout + prop.path}>
                             <Text
                               color={activeColor}
@@ -291,7 +333,7 @@ function SidebarResponsive(props) {
                     ) : (
                       <HStack spacing={"26px"} ps={"10px"} ms={"0px"}>
                         <Icon as={FaCircle} w="6px" color="green.400" />
-                        {prop.establihmentId ? (
+                        {prop.establishmentId ? (
                           <NavLink color="red" to={prop.layout + prop.path}>
                             <Text
                               color={inactiveColor}
@@ -319,15 +361,29 @@ function SidebarResponsive(props) {
                 <AccordionIcon color="gray.400" />
               </AccordionButton>
               <AccordionPanel pe={prop.icon ? null : "0px"} pb="8px">
-                {dynamicRoutes && (
+                {(dynamicRoutes ||
+                  certificationsRoutes ||
+                  commercialDynamicRoutes) && (
                   <List>
                     {
                       prop.icon
                         ? createLinks(
-                            prop.isDashboard ? dynamicRoutes : prop.items
+                            prop.isDashboard && !prop.items
+                              ? dynamicRoutes
+                              : prop.isCertifications
+                              ? certificationsRoutes
+                              : prop.isCommercial
+                              ? commercialDynamicRoutes
+                              : prop.items
                           ) // for bullet accordion links
                         : createAccordionLinks(
-                            prop.isDashboard ? dynamicRoutes : prop.items
+                            prop.isDashboard && !prop.items
+                              ? dynamicRoutes
+                              : prop.isCertifications
+                              ? certificationsRoutes
+                              : prop.isCommercial
+                              ? commercialDynamicRoutes
+                              : prop.items
                           ) // for non-bullet accordion links
                     }
                   </List>
@@ -353,15 +409,9 @@ function SidebarResponsive(props) {
                   </IconBox>
                   <Text
                     color={
-                      activeRoute(prop.path.toLowerCase(), prop.isDashboard)
-                        ? activeColor
-                        : inactiveColor
+                      activeRoute(prop.regex) ? activeColor : inactiveColor
                     }
-                    fontWeight={
-                      activeRoute(prop.name, prop.isDashboard)
-                        ? "bold"
-                        : "normal"
-                    }
+                    fontWeight={activeRoute(prop.regex) ? "bold" : "normal"}
                     fontSize="sm"
                   >
                     {prop.name}
@@ -373,24 +423,14 @@ function SidebarResponsive(props) {
                 <HStack spacing="22px" py="5px" px="10px">
                   <Icon
                     as={FaCircle}
-                    w={
-                      activeRoute(prop.path.toLowerCase(), prop.isDashboard)
-                        ? "10px"
-                        : "6px"
-                    }
+                    w={activeRoute(prop.regex) ? "10px" : "6px"}
                     color="green.400"
                   />
                   <Text
                     color={
-                      activeRoute(prop.path.toLowerCase(), prop.isDashboard)
-                        ? activeColor
-                        : inactiveColor
+                      activeRoute(prop.regex) ? activeColor : inactiveColor
                     }
-                    fontWeight={
-                      activeRoute(prop.path.toLowerCase(), prop.isDashboard)
-                        ? "bold"
-                        : "normal"
-                    }
+                    fontWeight={activeRoute(prop.regex) ? "bold" : "normal"}
                   >
                     {prop.name}
                   </Text>

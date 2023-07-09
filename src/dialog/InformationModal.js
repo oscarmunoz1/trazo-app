@@ -37,11 +37,10 @@ const InformationModal = ({
         <ModalHeader>{name}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Flex flexDirection={"row"} justifyContent={"space-between"}>
-            <Text fontSize="sm" color="gray.400" fontWeight="bold">
-              {city || zone || ""}, {state}
-            </Text>
-
+          {/* <Text fontSize="sm" color="gray.400" fontWeight="bold">
+            {city || zone || ""}, {state}
+          </Text> */}
+          <Flex flexDirection={"column"}>
             <Flex
               bg="green.300"
               align="center"
@@ -49,13 +48,16 @@ const InformationModal = ({
               borderRadius="15px"
               width="320px"
               height="240px"
+              alignSelf="flex-end"
             >
               {image}
             </Flex>
+            <div
+              flex-grow={1}
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
           </Flex>
-          <Flex mr={"10"} ml={"10"} mb={"5"} mt="5">
-            <div dangerouslySetInnerHTML={{ __html: description }} />
-          </Flex>
+          <Flex mr={"10"} ml={"10"} mb={"5"} mt="5"></Flex>
         </ModalBody>
 
         <ModalFooter>

@@ -68,9 +68,9 @@ export default function Dashboard(props) {
           name: e.name,
           path: `/dashboard/establishment/${e.id}`,
           collapse: true,
-          establihmentId: e.id,
+          establishmentId: e.id,
           authIcon: <HomeIcon color="inherit" />,
-
+          regex: /^\/dashboard\/establishment\/[0-9]+(\/parcel\/[0-9]+)?$/,
           layout: "/admin",
           items: e?.parcels?.map((p) => {
             return {
@@ -78,6 +78,7 @@ export default function Dashboard(props) {
               path: `/dashboard/establishment/${e.id}/parcel/${p.id}`,
               component: Overview,
               layout: "/admin",
+              regex: /^\/dashboard\/establishment\/[0-9]+\/parcel\/[0-9]+$/,
             };
           }),
         };
@@ -93,6 +94,7 @@ export default function Dashboard(props) {
   const getRoute = () => {
     return window.location.pathname !== "/admin/full-screen-maps";
   };
+
   const getActiveRoute = (routes) => {
     let activeRoute = "Home";
     for (let i = 0; i < routes?.length; i++) {
@@ -120,6 +122,7 @@ export default function Dashboard(props) {
     }
     return activeRoute;
   };
+
   const getActiveNavbar = (routes) => {
     let activeNavbar = false;
     for (let i = 0; i < routes?.length; i++) {
@@ -147,6 +150,7 @@ export default function Dashboard(props) {
     }
     return activeNavbar;
   };
+
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
       if (prop.layout === "/admin") {
@@ -158,6 +162,9 @@ export default function Dashboard(props) {
           />
         );
       }
+      // if (prop.isCommercial) {
+      //   return getRoutes(dynamicRoutes);
+      // }
       if (prop.collapse) {
         return getRoutes(prop.isDashboard ? dynamicRoutes : prop.items);
       }

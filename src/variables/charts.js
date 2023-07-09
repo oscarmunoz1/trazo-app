@@ -95,12 +95,12 @@ export const barChartOptionsDefault = {
 
 export const lineChartDataDefault = [
   {
-    name: "Mobile apps",
+    name: "Number of scans",
     data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
   },
   {
-    name: "Websites",
-    data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
+    name: "Number of sales",
+    data: [20, 30, 200, 150, 330, 120, 220, 110, 200],
   },
 ];
 
@@ -823,11 +823,14 @@ export const lineChartOptionsCharts1 = {
 export const lineChartDataCharts2 = [
   {
     name: "Mobile apps",
-    data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+    data: [450, 200, 300, 220, 500, 250, 400, 230, 500],
   },
+];
+
+export const lineChartDataCharts22 = [
   {
-    name: "Websites",
-    data: [400, 500, 40, 140, 290, 290, 340, 230, 400],
+    name: "Mobile apps",
+    data: [300, 200, 320, 220, 200, 150, 200, 130, 400],
   },
 ];
 
@@ -912,8 +915,8 @@ export const lineChartOptionsCharts2 = {
 
 export const barChartDataCharts1 = [
   {
-    name: "Sales by age",
-    data: [20, 30, 40, 20, 45, 30],
+    name: "Average",
+    data: [2, 3, 4, 2, 4.5],
   },
 ];
 
@@ -939,7 +942,7 @@ export const barChartOptionsCharts1 = {
     theme: "dark",
   },
   xaxis: {
-    categories: ["16-20", "21-25", "26-30", "31-35", "36-42", "42+"],
+    categories: ["Apple", "Tomato", "Orange", "Banana", "Potato"],
     show: true,
     labels: {
       show: true,
@@ -981,7 +984,7 @@ export const barChartOptionsCharts1 = {
   },
   fill: {
     type: "gradient",
-    colors: ["#151928"],
+    colors: ["#38A169"],
   },
   dataLabels: {
     enabled: false,
@@ -1077,12 +1080,12 @@ export const barChartOptionsCharts2 = {
 
 export const lineBarChartData = [
   {
-    name: "Organic Search",
+    name: "Scans",
     type: "bar",
     data: [440, 505, 414, 671, 160, 550, 350, 138],
   },
   {
-    name: "Referral",
+    name: "Sales",
     type: "line",
     data: [232, 421, 352, 273, 143, 222, 173, 311],
   },

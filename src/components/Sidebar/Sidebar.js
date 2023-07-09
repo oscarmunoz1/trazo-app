@@ -67,67 +67,6 @@ import SidebarHelp from "./SidebarHelp";
 import logo from "assets/img/traceit.png";
 import { useSelector } from "react-redux";
 
-// export const dynamicRoutes = [
-//   {
-//     name: "La Primavera",
-//     path: "/dashboard/establishment/1",
-//     collapse: true,
-//     establihmentId: 1,
-//     authIcon: <HomeIcon color="inherit" />,
-//     layout: "/admin",
-//     items: [
-//       {
-//         name: "Parcel #1",
-//         path: "/dashboard/establishment/1/parcel/1",
-//         component: Overview,
-//         layout: "/admin",
-//       },
-//       {
-//         name: "Parcel #2",
-//         path: "/dashboard/establishment/1/parcel/2",
-//         component: Overview,
-//         layout: "/admin",
-//       },
-//       {
-//         name: "Parcel #3",
-//         path: "/dashboard/establishment/1/parcel/3",
-//         component: Overview,
-//         layout: "/admin",
-//       },
-//     ],
-//   },
-//   {
-//     name: "La Ilusión",
-//     path: "/dashboard/establishment/2",
-//     collapse: true,
-//     establihmentId: 2,
-//     authIcon: <HomeIcon color="inherit" />,
-//     layout: "/admin",
-//     items: [
-//       {
-//         name: "Parcel #1",
-//         path: "/dashboard/establishment/2/parcel/1",
-//         component: Overview,
-//         layout: "/admin",
-//       },
-//       {
-//         name: "Parcel #2",
-//         path: "/dashboard/establishment/2/parcel/2",
-//         component: Overview,
-//         layout: "/admin",
-//       },
-//       {
-//         name: "Parcel #3",
-//         path: "/dashboard/establishment/2/parcel/3",
-//         component: Overview,
-//         layout: "/admin",
-//       },
-//     ],
-//   },
-// ];
-
-// FUNCTIONS
-
 function Sidebar(props) {
   // to check for active links and opened collapses
   let location = useLocation();
@@ -136,6 +75,7 @@ function Sidebar(props) {
 
   const [dynamicRoutes, setDynamicRoutes] = useState([]);
   const [certificationsRoutes, setCertificationsRoutes] = useState([]);
+  const [commercialDynamicRoutes, setCommercialDynamicRoutes] = useState([]);
 
   const establishments = useSelector(
     (state) => state.company.currentCompany?.establishments
@@ -147,9 +87,8 @@ function Sidebar(props) {
 
   let variantChange = "0.2s linear";
 
-  // verifies if routeName is the one active (in browser input)
-  const activeRoute = (routeName) => {
-    return location.pathname.includes(routeName);
+  const activeRoute = (regex) => {
+    return regex.test(location.pathname);
   };
 
   useEffect(() => {
@@ -160,39 +99,69 @@ function Sidebar(props) {
           name: e.name,
           path: `/dashboard/establishment/${e.id}`,
           collapse: true,
-          establihmentId: e.id,
+          establishmentId: e.id,
           authIcon: <HomeIcon color="inherit" />,
-
           layout: "/admin",
+          isDashboard: true,
+          regex: new RegExp(
+            `^\\/admin\\/dashboard\\/establishment\\/${e.id}(\\/parcel\\/[0-9]+)?$`
+          ),
           items: e?.parcels?.map((p) => {
             return {
               name: p.name,
               path: `/dashboard/establishment/${e.id}/parcel/${p.id}`,
               component: Overview,
               layout: "/admin",
+              isDashboard: true,
+              regex: new RegExp(
+                `^\\/admin\\/dashboard\\/establishment\\/${e.id}\\/parcel\\/${p.id}$`
+              ),
             };
           }),
         };
       });
+
     const certificationsRoutes = establishments && [
       {
         name: "Parcels",
         path: `/dashboard/establishment/${establishments[0].id}/certifications/parcels`,
         secondaryNavbar: true,
         layout: "/admin",
+        regex: new RegExp(
+          `^\\/admin\\/dashboard\\/establishment\\/${establishments[0].id}\\/certifications\\/parcels$`
+        ),
       },
       {
         name: "Events",
         path: `/dashboard/establishment/${establishments[0].id}/certifications/events`,
-
         secondaryNavbar: true,
         layout: "/admin",
+        regex: new RegExp(
+          `^\\/admin\\/dashboard\\/establishment\\/${establishments[0].id}\\/certifications\\/events$`
+        ),
       },
     ];
+
+    const commercialDynamicRoutes =
+      establishments &&
+      establishments.map((e) => {
+        return {
+          name: e.name,
+          path: `/dashboard/establishment/${e.id}/commercial`,
+          establishmentId: e.id,
+          authIcon: <HomeIcon color="inherit" />,
+          regex: new RegExp(
+            `^\\/admin\\/dashboard\\/establishment\\/${e.id}\\/commercial$`
+          ),
+          layout: "/admin",
+          items: [],
+        };
+      });
 
     if (establishments) {
       setDynamicRoutes(dynamicRoutes);
       setCertificationsRoutes(certificationsRoutes);
+      setCommercialDynamicRoutes(commercialDynamicRoutes);
     }
   }, [establishments]);
 
@@ -247,13 +216,13 @@ function Sidebar(props) {
                 align="center"
                 justify="center"
                 boxShadow={
-                  activeRoute(prop.path, prop.isDashboard) && prop.icon
+                  activeRoute(prop.regex) && prop.icon
                     ? sidebarActiveShadow
                     : null
                 }
                 _hover={{
                   boxShadow:
-                    activeRoute(prop.path, prop.isDashboard) && prop.icon
+                    activeRoute(prop.regex) && prop.icon
                       ? sidebarActiveShadow
                       : null,
                 }}
@@ -265,12 +234,12 @@ function Sidebar(props) {
                 px={prop.icon ? null : "0px"}
                 py={prop.icon ? "12px" : null}
                 bg={
-                  activeRoute(prop.path, prop.isDashboard) && prop.icon
+                  activeRoute(prop.regex) && prop.icon
                     ? activeAccordionBg
                     : "transparent"
                 }
               >
-                {activeRoute(prop.path, prop.isDashboard) ? (
+                {activeRoute(prop.regex) ? (
                   <Button
                     boxSize="initial"
                     justifyContent="flex-start"
@@ -329,7 +298,7 @@ function Sidebar(props) {
                           color="green.400"
                           display={sidebarWidth === 275 ? "block" : "none"}
                         />
-                        {prop.establihmentId ? (
+                        {prop.establishmentId ? (
                           <NavLink color="red" to={prop.layout + prop.path}>
                             <Text color={activeColor} my="auto" fontSize="sm">
                               {sidebarWidth === 275 ? prop.name : prop.name[0]}
@@ -401,7 +370,7 @@ function Sidebar(props) {
                           color="green.400"
                           display={sidebarWidth === 275 ? "block" : "none"}
                         />
-                        {prop.establihmentId ? (
+                        {prop.establishmentId ? (
                           <NavLink color="red" to={prop.layout + prop.path}>
                             <Text
                               color={inactiveColor}
@@ -449,22 +418,28 @@ function Sidebar(props) {
                 pb="8px"
                 ps={prop.icon ? null : sidebarWidth === 275 ? null : "8px"}
               >
-                {dynamicRoutes && (
+                {(dynamicRoutes ||
+                  certificationsRoutes ||
+                  commercialDynamicRoutes) && (
                   <List>
                     {
                       prop.icon
                         ? createLinks(
-                            prop.isDashboard
+                            prop.isDashboard && !prop.items
                               ? dynamicRoutes
                               : prop.isCertifications
                               ? certificationsRoutes
+                              : prop.isCommercial
+                              ? commercialDynamicRoutes
                               : prop.items
                           ) // for bullet accordion links
                         : createAccordionLinks(
-                            prop.isDashboard
+                            prop.isDashboard && !prop.items
                               ? dynamicRoutes
                               : prop.isCertifications
                               ? certificationsRoutes
+                              : prop.isCommercial
+                              ? commercialDynamicRoutes
                               : prop.items
                           ) // for non-bullet accordion links
                     }
@@ -491,15 +466,9 @@ function Sidebar(props) {
                   </IconBox>
                   <Text
                     color={
-                      activeRoute(prop.path.toLowerCase(), prop.isDashboard)
-                        ? activeColor
-                        : inactiveColor
+                      activeRoute(prop.regex) ? activeColor : inactiveColor
                     }
-                    fontWeight={
-                      activeRoute(prop.name, prop.isDashboard)
-                        ? "bold"
-                        : "normal"
-                    }
+                    fontWeight={activeRoute(prop.regex) ? "bold" : "normal"}
                     fontSize="sm"
                   >
                     {prop.name}
@@ -511,7 +480,7 @@ function Sidebar(props) {
                 <HStack
                   spacing={
                     sidebarWidth === 275
-                      ? activeRoute(prop.path.toLowerCase(), prop.isDashboard)
+                      ? activeRoute(prop.regex)
                         ? "22px"
                         : "26px"
                       : "8px"
@@ -521,25 +490,15 @@ function Sidebar(props) {
                 >
                   <Icon
                     as={FaCircle}
-                    w={
-                      activeRoute(prop.path.toLowerCase(), prop.isDashboard)
-                        ? "10px"
-                        : "6px"
-                    }
+                    w={activeRoute(prop.regex) ? "10px" : "6px"}
                     color="green.400"
                     display={sidebarWidth === 275 ? "block" : "none"}
                   />
                   <Text
                     color={
-                      activeRoute(prop.path.toLowerCase(), prop.isDashboard)
-                        ? activeColor
-                        : inactiveColor
+                      activeRoute(prop.regex) ? activeColor : inactiveColor
                     }
-                    fontWeight={
-                      activeRoute(prop.path.toLowerCase(), prop.isDashboard)
-                        ? "bold"
-                        : "normal"
-                    }
+                    fontWeight={activeRoute(prop.regex) ? "bold" : "normal"}
                   >
                     {sidebarWidth === 275 ? prop.name : prop.name[0]}
                   </Text>
@@ -565,16 +524,8 @@ function Sidebar(props) {
           >
             <Text
               mb="4px"
-              color={
-                activeRoute(prop.path.toLowerCase(), prop.isDashboard)
-                  ? activeColor
-                  : inactiveColor
-              }
-              fontWeight={
-                activeRoute(prop.path.toLowerCase(), prop.isDashboard)
-                  ? "bold"
-                  : "normal"
-              }
+              color={activeRoute(prop.regex) ? activeColor : inactiveColor}
+              fontWeight={activeRoute(prop.regex) ? "bold" : "normal"}
               fontSize="sm"
             >
               {sidebarWidth === 275 ? prop.name : prop.name[0]}
@@ -610,18 +561,6 @@ function Sidebar(props) {
         alignItems="center"
         fontSize="11px"
       >
-        {/* <CreativeTimLogo
-          w={sidebarWidth === 275 ? "32px" : "40px"}
-          h={sidebarWidth === 275 ? "32px" : "40px"}
-          me="10px"
-        /> */}
-        {/* <Text
-          fontSize="xs"
-          mt="3px"
-          display={sidebarWidth === 275 ? "block" : "none"}
-        >
-          {logoText}
-        </Text> */}
         <Image
           src={logo}
           alt="traceit logo"

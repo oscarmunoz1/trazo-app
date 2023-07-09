@@ -70,6 +70,17 @@ const dashRoutes = [
     collapse: true,
     isHome: true,
     isDashboard: true,
+    regex: /^\/admin\/dashboard\/establishment\/[0-9]+(\/parcel\/[0-9]+)?$/,
+  },
+  {
+    name: "Commercial Info",
+    path: "/dashboard/establishment",
+    icon: <BsFillClipboardCheckFill color="inherit" />,
+    authIcon: <BsFillClipboardCheckFill color="inherit" />,
+    layout: "/admin",
+    collapse: true,
+    isCommercial: true,
+    regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/commercial$/,
   },
   {
     name: "Certifications",
@@ -79,6 +90,7 @@ const dashRoutes = [
     layout: "/admin",
     collapse: true,
     isCertifications: true,
+    regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/certifications(\/parcels)?(\/events)?$/,
     items: [
       {
         name: "Parcels",
@@ -87,6 +99,7 @@ const dashRoutes = [
           `/dashboard/establishment/${id}/certifications/parcels`,
         secondaryNavbar: true,
         layout: "/admin",
+        regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/certifications\/parcels$/,
       },
       {
         name: "Events",
@@ -95,6 +108,7 @@ const dashRoutes = [
           `/dashboard/establishment/${id}/certifications/events`,
         secondaryNavbar: true,
         layout: "/admin",
+        regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/certifications\/events$/,
       },
     ],
   },
