@@ -491,9 +491,7 @@ function SidebarResponsive(props) {
             onClick={onOpen}
           />
           <Drawer
-            placement={
-              document.documentElement.dir === "rtl" ? "right" : "left"
-            }
+            placement={"left"}
             isOpen={isOpen}
             onClose={onClose}
             finalFocusRef={btnRef}

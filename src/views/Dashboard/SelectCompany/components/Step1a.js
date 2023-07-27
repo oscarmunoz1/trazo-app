@@ -116,7 +116,7 @@ export default function Step1a({ onSubmitStep1, image, setImage }) {
       </CardHeader>
       <CardBody justifyContent={"center"}>
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)} style={{ width: "75%" }}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Flex direction="column" w="100%">
               <Flex direction={{ sm: "column", md: "row" }} w="100%">
                 <Box

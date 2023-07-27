@@ -27,7 +27,10 @@ const Authenticated = ({ history }) => {
   useEffect(() => {
     const id = Number(establishmentId);
 
-    if (currentUser?.companies.length > 0) {
+    if (
+      (establishmentId || pathname == "/admin/dashboard/") &&
+      currentUser?.companies.length > 0
+    ) {
       if (
         currentCompany &&
         currentCompany.establishments &&

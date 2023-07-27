@@ -618,20 +618,12 @@ function Sidebar(props) {
           {isWindows ? (
             <Scrollbars
               autoHide
-              renderTrackVertical={
-                document.documentElement.dir === "rtl"
-                  ? renderTrackRTL
-                  : renderTrack
-              }
+              renderTrackVertical={renderTrack}
               renderThumbVertical={useColorModeValue(
                 renderThumbLight,
                 renderThumbDark
               )}
-              renderView={
-                document.documentElement.dir === "rtl"
-                  ? renderViewRTL
-                  : renderView
-              }
+              renderView={renderView}
             >
               {sidebarContent}
             </Scrollbars>

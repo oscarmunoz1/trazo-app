@@ -43,6 +43,15 @@ const companyApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: (result) => (result ? ["Establishment"] : []),
     }),
+    editEstablishment: build.mutation({
+      query: ({ establishmentId, establishmentData }) => ({
+        url: ESTABLISHMENT_URL(establishmentId),
+        method: "PATCH",
+        credentials: "include",
+        body: establishmentData,
+      }),
+      invalidatesTags: (result) => (result ? ["Establishment"] : []),
+    }),
   }),
   overrideExisting: false,
 });
@@ -51,4 +60,5 @@ export const {
   useGetCompanyQuery,
   useCreateCompanyMutation,
   useCreateEstablishmentMutation,
+  useEditEstablishmentMutation,
 } = companyApi;

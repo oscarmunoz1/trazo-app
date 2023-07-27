@@ -20,6 +20,24 @@ export const companySlice = createSlice({
     setCompanyEstablishment: (state, action) => {
       state.currentCompany.establishments = [action.payload];
     },
+    addCompanyEstablishment: (state, action) => {
+      state.currentCompany.establishments = [
+        ...state.currentCompany.establishments,
+        action.payload,
+      ];
+      state.currentEstablishment = action.payload;
+    },
+    editCompanyEstablishment: (state, action) => {
+      state.currentCompany.establishments = [
+        ...(state.currentCompany.establishments &&
+          state.currentCompany.establishments.map((establishment) => {
+            if (establishment.id === action.payload.id) {
+              return action.payload;
+            }
+            return establishment;
+          })),
+      ];
+    },
     setEstablishmentParcel: (state, action) => {
       const { establishmentId, parcel } = action.payload;
       const establishment = state.currentCompany.establishments.find(
@@ -41,5 +59,7 @@ export const {
   setCompany,
   clearCurrentCompany,
   setCompanyEstablishment,
+  addCompanyEstablishment,
+  editCompanyEstablishment,
   setEstablishmentParcel,
 } = companySlice.actions;

@@ -31,14 +31,14 @@ import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import productImage1 from "assets/img/product-page-1.png";
 
-const ProductImage = () => {
+const CameraCard = () => {
   const textColor = useColorModeValue("gray.700", "white");
 
   return (
     <Card>
-      <CardHeader mb="42px">
-        <Text color={textColor} fontSize="lg" fontWeight="bold">
-          Product Image
+      <CardHeader mb="12px" flexDirection="column">
+        <Text fontSize="sm" color="gray.500" fontWeight="400">
+          QR code should be in the center of the package
         </Text>
       </CardHeader>
       <CardBody>
@@ -50,26 +50,26 @@ const ProductImage = () => {
           >
             <Image src={productImage1} w="100%" h="100%" />
           </Box>
-          <Flex>
-            <Button
-              variant="no-hover"
-              bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-              w={{ sm: "75px", md: "100px" }}
-              h="35px"
-              me="12px"
-            >
-              <Text fontSize="xs" color="#fff" fontWeight="bold">
-                EDIT
-              </Text>
-            </Button>
+          <Flex alignSelf={"flex-end"}>
             <Button
               variant="no-hover"
               bg="gray.100"
               w={{ sm: "75px", md: "100px" }}
               h="35px"
+              me="12px"
             >
               <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                REMOVE
+                DISCARD
+              </Text>
+            </Button>
+            <Button
+              variant="no-hover"
+              bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+              w={{ sm: "75px", md: "100px" }}
+              h="35px"
+            >
+              <Text fontSize="xs" color="#fff" fontWeight="bold">
+                CAPTURE
               </Text>
             </Button>
           </Flex>
@@ -79,4 +79,4 @@ const ProductImage = () => {
   );
 };
 
-export default ProductImage;
+export default CameraCard;

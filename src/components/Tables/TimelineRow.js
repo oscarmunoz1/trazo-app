@@ -17,7 +17,7 @@ import { FaEllipsisH } from "react-icons/fa";
 import RecordModal from "dialog/RecordModal.js";
 
 function TimelineRow(props) {
-  const { logo, title, date, color, index, arrLength } = props;
+  const { logo, title, date, color, isLast } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const menuButtonRef = useRef();
   const textColor = useColorModeValue("gray.700", "white.300");
@@ -38,7 +38,7 @@ function TimelineRow(props) {
           right={""}
           left={"-8px"}
         />
-        <Box w="2px" bg="gray.200" h={"100%"} minH={"48px"}></Box>
+        {!isLast && <Box w="2px" bg="gray.200" h={"100%"} minH={"48px"}></Box>}
       </Flex>
       <Flex direction="column" justifyContent="flex-start" h="100%" w="100%">
         <Flex

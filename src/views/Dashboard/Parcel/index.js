@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { dashboardTableData, timelineData } from "variables/general";
 import { useDispatch, useSelector } from "react-redux";
 
+import BgMusicCard from "assets/img/BgMusicCard.png";
 import Card from "components/Card/Card.js";
 import CardWithImage from "components/Card/CardWithImage";
 import CardWithMap from "./components/CardWithMap";
@@ -75,7 +76,7 @@ export default function ParcelView() {
             zone={establishment?.zone}
             image={
               <Image
-                src={data?.image || imageParcel1}
+                src={data?.image || BgMusicCard}
                 alt="chakra image"
                 minWidth={{ md: "300px", lg: "auto" }}
                 objectFit={"cover"}

@@ -8,8 +8,10 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useNavigate, useParams } from "react-router-dom";
 
 import AddParcelModal from "dialog/AddParcelModal";
+import BgMusicCard from "assets/img/BgMusicCard.png";
 // Custom components
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
@@ -27,6 +29,8 @@ import imageParcel3 from "assets/img/ImageParcel3.png";
 
 const CarouselHorizontal = ({ title, description, data }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
+  const { establishmentId } = useParams();
 
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
@@ -50,7 +54,11 @@ const CarouselHorizontal = ({ title, description, data }) => {
             bg="transparent"
             color="gray.500"
             borderRadius="15px"
-            onClick={onOpen}
+            onClick={() =>
+              navigate(
+                `/admin/dashboard/establishment/${establishmentId}/parcel/add`
+              )
+            }
           >
             <Flex
               direction="column"
@@ -80,7 +88,7 @@ const CarouselHorizontal = ({ title, description, data }) => {
                 image={
                   parcel.image
                     ? `http://localhost:8000${parcel.image}`
-                    : imageParcel1
+                    : BgMusicCard
                 }
                 name={parcel.name}
                 category={parcel.product}

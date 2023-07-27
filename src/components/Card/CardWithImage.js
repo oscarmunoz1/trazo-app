@@ -16,6 +16,7 @@ import { BsArrowRight } from "react-icons/bs";
 import Card from "./Card.js";
 import CardBody from "./CardBody.js";
 import InformationModal from "dialog/InformationModal.js";
+import { useNavigate } from "react-router-dom";
 
 const CardWithImage = ({
   title,
@@ -25,8 +26,10 @@ const CardWithImage = ({
   state,
   zone,
   city,
+  readMoreLink,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
 
   const textColor = useColorModeValue("gray.700", "white");
 
@@ -53,7 +56,7 @@ const CardWithImage = ({
                 variant="no-hover"
                 bg="transparent"
                 my={{ sm: "1.5rem", lg: "0px" }}
-                onClick={onOpen}
+                onClick={() => navigate(readMoreLink)}
               >
                 <Text
                   fontSize="sm"

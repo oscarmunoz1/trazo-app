@@ -116,8 +116,8 @@ export default function AdminNavbar(props) {
       borderRadius="16px"
       display="flex"
       minH="75px"
-      left={document.documentElement.dir === "rtl" ? "30px" : ""}
-      right={document.documentElement.dir === "rtl" ? "" : "30px"}
+      left={""}
+      right={"30px"}
       justifyContent={{ xl: "center" }}
       lineHeight="25.6px"
       mx="auto"
@@ -149,7 +149,7 @@ export default function AdminNavbar(props) {
         <Box mb={{ sm: "8px", md: "0px" }}>
           <Breadcrumb>
             <BreadcrumbItem color={mainText}>
-              <BreadcrumbLink href="#" color={secondaryText}>
+              <BreadcrumbLink href="/admin/dashboard/" color={secondaryText}>
                 Pages
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -180,33 +180,7 @@ export default function AdminNavbar(props) {
             {brandText}
           </Link> */}
         </Box>
-        {toggleSidebar ? (
-          <Icon
-            as={CgMenuRight}
-            w="100px"
-            h="20px"
-            ms="20px"
-            cursor="pointer"
-            display={{ sm: "none", xl: "block" }}
-            onClick={() => {
-              setSidebarWidth(sidebarWidth === 275 ? 120 : 275);
-              setToggleSidebar(!toggleSidebar);
-            }}
-          />
-        ) : (
-          <HamburgerIcon
-            w="100px"
-            h="20px"
-            ms="20px"
-            color={props.secondary ? "white" : mainText}
-            cursor="pointer"
-            display={{ sm: "none", xl: "block" }}
-            onClick={() => {
-              setSidebarWidth(sidebarWidth === 275 ? 120 : 275);
-              setToggleSidebar(!toggleSidebar);
-            }}
-          />
-        )}
+
         <Box ms="auto" w={{ sm: "100%", md: "unset" }}>
           <AdminNavbarLinks
             onOpen={props.onOpen}

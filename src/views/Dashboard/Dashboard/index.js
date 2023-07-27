@@ -18,7 +18,7 @@ import {
   HomeIcon,
   WalletIcon,
 } from "components/Icons/Icons.js";
-import { NavLink, useLocation, useParams } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import {
   dashboardTableData,
@@ -37,15 +37,15 @@ import { FaPlus } from "react-icons/fa";
 import LineChart from "components/Charts/LineChart";
 import MiniStatistics from "./components/MiniStatistics";
 import SalesOverview from "./components/SalesOverview";
+import bgImage from "assets/img/basic-auth.png";
 // assets
 import imageFarm from "assets/img/imageFarm.png";
-import imagePrimavera from "assets/img/imagePrimavera.png";
 import logoChakra from "assets/svg/logo-white.svg";
 import { useSelector } from "react-redux";
 
 export default function DashboardView() {
   const { establishmentId } = useParams();
-
+  const navigate = useNavigate();
   const [currentEstablishmentId, setCurrentEstablishmentId] = useState(null);
   const [establishment, setEstablishment] = useState(null);
 
@@ -79,10 +79,13 @@ export default function DashboardView() {
       establishment = establishments.filter(
         (establishment) => establishment.id.toString() === establishmentId
       )[0];
-      setCurrentEstablishmentId(establishmentId);
       setEstablishment(establishment);
     }
   }, [establishmentId, establishments]);
+
+  const toggleAddEstablishment = () => {
+    navigate("/admin/dashboard/establishment/add");
+  };
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
@@ -120,6 +123,7 @@ export default function DashboardView() {
           bg="transparent"
           color="gray.500"
           borderRadius="15px"
+          onClick={toggleAddEstablishment}
         >
           <Flex
             direction="column"
@@ -149,12 +153,13 @@ export default function DashboardView() {
             state={establishment?.state}
             city={establishment?.city}
             zone={establishment?.zone}
+            readMoreLink={`/admin/dashboard/establishment/${establishment?.id}/profile`}
             image={
               <Image
                 src={
                   establishment?.image
                     ? `http://localhost:8000${establishment?.image}`
-                    : imagePrimavera
+                    : bgImage
                 }
                 alt="establishment image"
                 width="100%"
