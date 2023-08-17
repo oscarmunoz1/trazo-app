@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { PRODUCER, SUPERUSER } from "./config";
 import { useEffect, useState } from "react";
 
 import AddEstablishment from "views/Dashboard/Dashboard/Establishment/AddEstablishment";
@@ -15,6 +16,7 @@ import DetailEvent from "views/Dashboard/Dashboard/Event/DetailEvent";
 import FinishProduction from "views/Dashboard/Dashboard/Production/FinishProduction";
 import NotAuthenticated from "./utils/protections/NotAuthenticated";
 import ParcelView from "views/Dashboard/Parcel";
+import Pricing from "views/Pages/Pricing/index";
 import ProductDetail from "views/Scan/ProductDetail/ProductDetail";
 import ProfileEstablishment from "views/Dashboard/Dashboard/Establishment/ProfileEstablishment";
 import ProfileParcel from "views/Dashboard/Dashboard/Parcel/ProfileParcel";
@@ -24,6 +26,7 @@ import SelectCompanyView from "views/Dashboard/SelectCompany";
 import SignIn from "views/Authentication/SignIn/SignInIllustration";
 import SignInApp from "views/Authentication/SignIn/SignInBasic";
 import SignUp from "views/Authentication/SignUp/SignUpBasic";
+import Unauthorized from "./views/Applications/DataTables/index";
 import UpdateEvent from "views/Dashboard/Dashboard/Event/UpdateEvent";
 import UpdateProduction from "views/Dashboard/Dashboard/Production/UpdateProduction";
 import VerifyEmail from "./views/Authentication/SignUp/VerifyEmail";
@@ -79,7 +82,7 @@ const App = () => {
             </>
           )}
         </Route>
-        <Route element={<Authenticated />}>
+        <Route element={<Authenticated allowedRoles={[PRODUCER, SUPERUSER]} />}>
           {subdomain ? (
             <>
               <Route
@@ -206,6 +209,9 @@ const App = () => {
           ) : (
             <Route path="*" element={() => <Navigate to="/" replace />} />
           )}
+        </Route>
+        <Route path="pricing" element={<AuthLayout />}>
+          <Route path="" exact element={<Pricing />} />
         </Route>
         <Route
           path="*"

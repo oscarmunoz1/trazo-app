@@ -91,7 +91,7 @@ function Pricing() {
         textAlign="center"
         justifyContent="center"
         align="center"
-        mt="6.5rem"
+        mt="9.5rem"
         mb="38px"
       >
         <Text fontSize="3xl" color="white" fontWeight="bold">
