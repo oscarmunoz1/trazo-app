@@ -1,7 +1,7 @@
 import { CSRF_HEADER_KEY, CSRF_TOKEN } from "../../config";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-import customFetchBase from "../api/customFetchBase";
+import customFetchBase from "./customFetchBase";
 
 // import { cookie } from "react-cookie";
 

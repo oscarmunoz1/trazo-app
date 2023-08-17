@@ -1,6 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import customFetchBase from "./customFetchBase";
-import { setUser } from "../features/user.slice";
+import { setUser } from "../features/userSlice";
 
 export const userApi = createApi({
   reducerPath: "userApi",

@@ -26,7 +26,7 @@ import {
 import {
   useCreateCompanyMutation,
   useCreateEstablishmentMutation,
-} from "store/features/companyApi";
+} from "store/api/companyApi";
 import { useDispatch, useSelector } from "react-redux";
 
 // assets
@@ -45,11 +45,11 @@ import Step1a from "./components/Step1a";
 import Step2a from "./components/Step2a";
 import avatar4 from "assets/img/avatars/avatar4.png";
 import { clearForm } from "store/features/formSlice";
-import { createCompany } from "store/features/companyApi";
+import { createCompany } from "store/api/companyApi";
 import imageMap from "assets/img/imageMap.png";
 import imageParcel1 from "assets/img/ImageParcel1.png";
-import { setUserCompany } from "store/features/user.slice";
-import { useGetParcelQuery } from "store/features/productApi";
+import { setUserCompany } from "store/features/userSlice";
+import { useGetParcelQuery } from "store/api/productApi";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";

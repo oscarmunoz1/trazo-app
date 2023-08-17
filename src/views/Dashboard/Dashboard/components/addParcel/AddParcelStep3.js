@@ -38,7 +38,7 @@ import { SlChemistry } from "react-icons/sl";
 import WeatherTab from "./WeatherTab.js";
 import { setEstablishmentParcel } from "store/features/companySlice.js";
 import { setForm } from "store/features/formSlice";
-import { useCreateParcelMutation } from "store/features/productApi.js";
+import { useCreateParcelMutation } from "store/api/productApi.js";
 import { useParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 

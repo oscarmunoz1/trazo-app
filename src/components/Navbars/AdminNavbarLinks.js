@@ -46,11 +46,11 @@ import avatar1 from "assets/img/avatars/avatar1.png";
 import avatar2 from "assets/img/avatars/avatar2.png";
 import avatar3 from "assets/img/avatars/avatar3.png";
 import { clearCurrentCompany } from "store/features/companySlice";
-import { clearUser } from "store/features/user.slice";
+import { clearUser } from "store/features/userSlice";
 import { logout as logoutAction } from "store/features/authSlice";
 import routes from "routes.js";
 import { useDispatch } from "react-redux";
-import { useLogoutMutation } from "store/features/authApi";
+import { useLogoutMutation } from "store/api/authApi";
 import { useNavigate } from "react-router-dom";
 
 export default function HeaderLinks(props) {

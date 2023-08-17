@@ -39,7 +39,7 @@ import imageMap from "assets/img/imageMap.png";
 import parcel1 from "assets/img/ImageParcel1.png";
 import { setForm } from "store/features/formSlice";
 import { useDispatch } from "react-redux";
-import { useGetParcelQuery } from "store/features/productApi";
+import { useGetParcelQuery } from "store/api/productApi";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";

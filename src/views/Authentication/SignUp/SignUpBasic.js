@@ -22,7 +22,7 @@ import { TypeOf, object, string } from "zod";
 import BgSignUp from "assets/img/basic-auth.png";
 import FormInput from "components/Forms/FormInput";
 import { useNavigate } from "react-router-dom";
-import { useSignUpMutation } from "store/features/authApi";
+import { useSignUpMutation } from "store/api/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const registerSchema = object({

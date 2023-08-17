@@ -23,7 +23,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import TimelineRow from "components/Tables/TimelineRow";
 import { setCurrentHistory } from "store/features/historySlice";
-import { useGetCurrentHistoryQuery } from "store/features/historyApi";
+import { useGetCurrentHistoryQuery } from "store/api/historyApi";
 
 const TrackList = ({ amount }) => {
   const textColor = useColorModeValue("gray.700", "white");

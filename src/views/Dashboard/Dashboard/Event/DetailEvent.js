@@ -46,9 +46,9 @@ import productPage1 from "assets/img/ProductImage1.png";
 import productPage2 from "assets/img/ProductImage2.png";
 import productPage3 from "assets/img/ProductImage3.png";
 import productPage4 from "assets/img/ProductImage4.png";
-import { useGetEventQuery } from "store/features/historyApi";
+import { useGetEventQuery } from "store/api/historyApi";
 import { useSelector } from "react-redux";
-import { useSignUpMutation } from "store/features/authApi";
+import { useSignUpMutation } from "store/api/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 function ProfileEstablishment() {

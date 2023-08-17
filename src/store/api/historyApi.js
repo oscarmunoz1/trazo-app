@@ -10,7 +10,7 @@ import {
   SCANS_BY_ESTABLISHMENT_URL,
 } from "../../config";
 
-import baseApi from "./baseApi";
+import baseApi from "../api/baseApi";
 
 export const historyApi = baseApi.injectEndpoints({
   endpoints: (build) => ({

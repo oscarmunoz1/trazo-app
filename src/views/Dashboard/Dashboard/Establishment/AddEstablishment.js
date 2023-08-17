@@ -26,7 +26,7 @@ import CardHeader from "components/Card/CardHeader";
 import EditEstablishment from "../components/forms/EditEstablishment";
 import FormInput from "components/Forms/FormInput";
 import NewEstablishment from "../components/forms/NewEstablishment";
-import { useSignUpMutation } from "store/features/authApi";
+import { useSignUpMutation } from "store/api/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 function AddEstablishment({ isEdit = false }) {

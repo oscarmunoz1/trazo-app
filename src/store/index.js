@@ -1,12 +1,12 @@
 import authReducer from "./features/authSlice";
-import { baseApi } from "./features/baseApi";
-import companyReducer from "./features/companySlice";
+import { baseApi } from "./api/baseApi";
+import companyReducer from "store/features/companySlice";
 import { configureStore } from "@reduxjs/toolkit";
 import formReducer from "./features/formSlice";
 import historySlice from "./features/historySlice";
 import { logout } from "./features/authSlice";
 import productReducer from "./features/productSlice";
-import userReducer from "./features/user.slice";
+import userReducer from "./features/userSlice";
 
 export const store = configureStore({
   reducer: {

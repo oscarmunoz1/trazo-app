@@ -26,7 +26,7 @@ import CardHeader from "components/Card/CardHeader";
 import EditParcel from "../components/forms/EditParcel";
 import FormInput from "components/Forms/FormInput";
 import NewParcel from "../components/forms/NewParcel";
-import { useSignUpMutation } from "store/features/authApi";
+import { useSignUpMutation } from "store/api/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 function AddParcel({ isEdit = false }) {

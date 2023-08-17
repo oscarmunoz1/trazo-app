@@ -10,7 +10,7 @@ import {
 //   import { EmployeeType } from "../../types/employees";
 import baseApi from "./baseApi";
 import { logout as logoutUser } from "store/features/authSlice";
-import { setCompany } from "./companySlice";
+import { setCompany } from "store/features/companySlice";
 
 export const productApi = baseApi.injectEndpoints({
   endpoints: (build) => ({

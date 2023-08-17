@@ -30,7 +30,7 @@ import IconBox from "components/Icons/IconBox";
 import { MdModeEdit } from "react-icons/md";
 import parcel1 from "assets/img/ImageParcel1.png";
 import { setForm } from "store/features/formSlice";
-import { useGetProductsQuery } from "store/features/productApi";
+import { useGetProductsQuery } from "store/api/productApi";
 import { useParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 

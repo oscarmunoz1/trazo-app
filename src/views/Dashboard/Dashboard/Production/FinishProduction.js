@@ -26,7 +26,7 @@ import CardHeader from "components/Card/CardHeader";
 import FinishProductionForm from "../components/forms/FinishProduction";
 import FormInput from "components/Forms/FormInput";
 import NewProduction from "../components/forms/NewProduction";
-import { useSignUpMutation } from "store/features/authApi";
+import { useSignUpMutation } from "store/api/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 function FinishProduction() {

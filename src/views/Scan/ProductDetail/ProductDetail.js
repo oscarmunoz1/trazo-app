@@ -47,7 +47,7 @@ import { TypeOf, object, string } from "zod";
 import {
   useCommentHistoryMutation,
   useGetPublicHistoryQuery,
-} from "store/features/historyApi";
+} from "store/api/historyApi";
 import { useNavigate, useParams } from "react-router-dom";
 
 import BgSignUp from "assets/img/basic-auth.png";

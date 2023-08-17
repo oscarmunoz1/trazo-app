@@ -68,11 +68,11 @@ import { addCompanyEstablishment } from "store/features/companySlice";
 import avatar4 from "assets/img/avatars/avatar4.png";
 import imageMap from "assets/img/imageMap.png";
 import { set } from "date-fns";
-import { useCreateEstablishmentMutation } from "store/features/companyApi";
-import { useCreateEventMutation } from "store/features/historyApi";
-import { useCreateProductionMutation } from "store/features/historyApi";
+import { useCreateEstablishmentMutation } from "store/api/companyApi";
+import { useCreateEventMutation } from "store/api/historyApi";
+import { useCreateProductionMutation } from "store/api/historyApi";
 import { useDropzone } from "react-dropzone";
-import { useGetEstablishmentProductsQuery } from "store/features/productApi";
+import { useGetEstablishmentProductsQuery } from "store/api/productApi";
 import { useGoogleMap } from "@react-google-maps/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 

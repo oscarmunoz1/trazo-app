@@ -65,8 +65,8 @@ import ProfileBgImage from "assets/img/ProfileBackground.png";
 import avatar4 from "assets/img/avatars/avatar4.png";
 import imageMap from "assets/img/imageMap.png";
 import { setEstablishmentParcel } from "store/features/companySlice";
-import { useCreateEstablishmentMutation } from "store/features/companyApi";
-import { useCreateParcelMutation } from "store/features/productApi.js";
+import { useCreateEstablishmentMutation } from "store/api/companyApi";
+import { useCreateParcelMutation } from "store/api/productApi.js";
 import { useDropzone } from "react-dropzone";
 import { zodResolver } from "@hookform/resolvers/zod";
 

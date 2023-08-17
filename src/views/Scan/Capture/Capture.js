@@ -22,7 +22,7 @@ import BgSignUp from "assets/img/basic-auth.png";
 import CameraCard from "./components/CameraCard";
 import FormInput from "components/Forms/FormInput";
 import { useNavigate } from "react-router-dom";
-import { useSignUpMutation } from "store/features/authApi";
+import { useSignUpMutation } from "store/api/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // Assets

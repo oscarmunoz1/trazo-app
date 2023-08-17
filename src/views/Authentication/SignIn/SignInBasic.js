@@ -40,7 +40,7 @@ import { login } from "store/features/authSlice";
 // Assets
 import signInImage from "assets/img/signInImage.png";
 import { useDispatch } from "react-redux";
-import { useLoginMutation } from "store/features/authApi";
+import { useLoginMutation } from "store/api/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const loginSchema = object({

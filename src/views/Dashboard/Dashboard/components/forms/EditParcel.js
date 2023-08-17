@@ -51,7 +51,7 @@ import { clearForm, setForm } from "store/features/formSlice";
 import {
   useCreateParcelMutation,
   useGetParcelQuery,
-} from "store/features/productApi";
+} from "store/api/productApi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -70,7 +70,7 @@ import avatar4 from "assets/img/avatars/avatar4.png";
 import imageMap from "assets/img/imageMap.png";
 import { setEstablishmentParcel } from "store/features/companySlice";
 import { setParcel } from "store/features/productSlice";
-import { useCreateEstablishmentMutation } from "store/features/companyApi";
+import { useCreateEstablishmentMutation } from "store/api/companyApi";
 import { useDropzone } from "react-dropzone";
 import { zodResolver } from "@hookform/resolvers/zod";
 

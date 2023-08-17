@@ -62,7 +62,7 @@ import avatar4 from "assets/img/avatars/avatar4.png";
 import { editCompanyEstablishment } from "store/features/companySlice";
 import imageMap from "assets/img/imageMap.png";
 import { useDropzone } from "react-dropzone";
-import { useEditEstablishmentMutation } from "store/features/companyApi";
+import { useEditEstablishmentMutation } from "store/api/companyApi";
 import { useGoogleMap } from "@react-google-maps/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 

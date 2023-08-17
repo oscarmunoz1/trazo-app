@@ -14,7 +14,7 @@ import TrackList from "./components/TrackList";
 import imageMap from "assets/img/imageMap.png";
 import imageParcel1 from "assets/img/ImageParcel1.png";
 import { setParcel } from "store/features/productSlice";
-import { useGetParcelQuery } from "store/features/productApi";
+import { useGetParcelQuery } from "store/api/productApi";
 import { useParams } from "react-router-dom";
 
 export default function ParcelView() {

@@ -9,7 +9,7 @@ import {
 import React, { useEffect } from "react";
 
 import { LOGIN_PAGE_URL } from "config/routes";
-import { useGetCompanyQuery } from "store/features/companyApi";
+import { useGetCompanyQuery } from "store/api/companyApi";
 import { useSelector } from "react-redux";
 
 const Authenticated = ({ history }) => {

@@ -8,8 +8,8 @@ import {
 import baseApi from "./baseApi";
 import { companyApi } from "./companyApi";
 import { logout as logoutUser } from "store/features/authSlice";
-import { setCompany } from "../features/companySlice";
-import { setUser } from "../features/user.slice";
+import { setCompany } from "store/features/companySlice";
+import { setUser } from "store/features/userSlice";
 //   import { EmployeeType } from "../../types/employees";
 import { useMutation } from "@reduxjs/toolkit/query/react";
 

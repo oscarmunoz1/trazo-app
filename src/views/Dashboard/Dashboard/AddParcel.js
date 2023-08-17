@@ -28,7 +28,7 @@ import CardHeader from "components/Card/CardHeader";
 import FormInput from "components/Forms/FormInput";
 import NewParcel from "./components/forms/NewParcel";
 import { useNavigate } from "react-router-dom";
-import { useSignUpMutation } from "store/features/authApi";
+import { useSignUpMutation } from "store/api/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 function AddParcel() {

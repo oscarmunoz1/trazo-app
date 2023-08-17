@@ -23,7 +23,7 @@ import avatar1 from "assets/img/avatars/avatar1.png";
 import avatar2 from "assets/img/avatars/avatar10.png";
 import avatar3 from "assets/img/avatars/avatar2.png";
 import { convertToObject } from "typescript";
-import { useGetParcelHistoriesQuery } from "store/features/historyApi";
+import { useGetParcelHistoriesQuery } from "store/api/historyApi";
 
 const HistoryCard = ({ title, amount, captions }) => {
   const textColor = useColorModeValue("gray.700", "white");

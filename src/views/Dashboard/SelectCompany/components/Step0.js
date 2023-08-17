@@ -32,7 +32,7 @@ import { RocketIcon } from "components/Icons/Icons";
 import avatar4 from "assets/img/avatars/avatar4.png";
 import imageMap from "assets/img/imageMap.png";
 import imageParcel1 from "assets/img/ImageParcel1.png";
-import { useGetParcelQuery } from "store/features/productApi";
+import { useGetParcelQuery } from "store/api/productApi";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 

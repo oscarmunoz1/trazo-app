@@ -26,7 +26,7 @@ import CardHeader from "components/Card/CardHeader";
 import EditEvent from "../components/forms/EditEvent";
 import FormInput from "components/Forms/FormInput";
 import NewEvent from "../components/forms/NewEvent";
-import { useSignUpMutation } from "store/features/authApi";
+import { useSignUpMutation } from "store/api/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 function UpdateEvent({ isEdit = false }) {

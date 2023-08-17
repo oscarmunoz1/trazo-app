@@ -25,7 +25,7 @@ import {
   useGetEstablishmentHistoriesQuery,
   useGetEstablishmentProductsQuery,
   useGetEstablishmentScansVsSalesChartInfoQuery,
-} from "store/features/productApi";
+} from "store/api/productApi";
 
 import BarChart from "components/Charts/BarChart";
 import Card from "components/Card/Card";
@@ -39,10 +39,10 @@ import MiniStatistics from "../Dashboard/components/MiniStatistics";
 import Reviews from "./components/Reviews";
 import SalesOverview from "./components/SalesOverview";
 import ScansList from "./components/ScansList";
-import { historyApi } from "store/features/historyApi";
-import { productApi } from "store/features/productApi";
+import { historyApi } from "store/api/historyApi";
+import { productApi } from "store/api/productApi";
 import { scansData } from "variables/general";
-import { useGetScansByEstablishmentQuery } from "store/features/historyApi";
+import { useGetScansByEstablishmentQuery } from "store/api/historyApi";
 import { useSelector } from "react-redux";
 
 // Custom icons
