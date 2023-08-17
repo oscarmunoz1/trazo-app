@@ -82,36 +82,36 @@ const dashRoutes = [
     isCommercial: true,
     regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/commercial$/,
   },
-  {
-    name: "Certifications",
-    path: "/dashboard/certifications",
-    icon: <BsFillClipboardCheckFill color="inherit" />,
-    authIcon: <BsFillClipboardCheckFill color="inherit" />,
-    layout: "/admin",
-    collapse: true,
-    isCertifications: true,
-    regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/certifications(\/parcels)?(\/events)?$/,
-    items: [
-      {
-        name: "Parcels",
-        path: "/dashboard/establishment/certifications/parcels",
-        secondPath: (id) =>
-          `/dashboard/establishment/${id}/certifications/parcels`,
-        secondaryNavbar: true,
-        layout: "/admin",
-        regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/certifications\/parcels$/,
-      },
-      {
-        name: "Events",
-        path: "/dashboard/establishment/certifications/events",
-        secondPath: (id) =>
-          `/dashboard/establishment/${id}/certifications/events`,
-        secondaryNavbar: true,
-        layout: "/admin",
-        regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/certifications\/events$/,
-      },
-    ],
-  },
+  // {
+  //   name: "Certifications",
+  //   path: "/dashboard/certifications",
+  //   icon: <BsFillClipboardCheckFill color="inherit" />,
+  //   authIcon: <BsFillClipboardCheckFill color="inherit" />,
+  //   layout: "/admin",
+  //   collapse: true,
+  //   isCertifications: true,
+  //   regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/certifications(\/parcels)?(\/events)?$/,
+  //   items: [
+  //     {
+  //       name: "Parcels",
+  //       path: "/dashboard/establishment/certifications/parcels",
+  //       secondPath: (id) =>
+  //         `/dashboard/establishment/${id}/certifications/parcels`,
+  //       secondaryNavbar: true,
+  //       layout: "/admin",
+  //       regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/certifications\/parcels$/,
+  //     },
+  //     {
+  //       name: "Events",
+  //       path: "/dashboard/establishment/certifications/events",
+  //       secondPath: (id) =>
+  //         `/dashboard/establishment/${id}/certifications/events`,
+  //       secondaryNavbar: true,
+  //       layout: "/admin",
+  //       regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/certifications\/events$/,
+  //     },
+  //   ],
+  // },
   // {
   //   name: "Ecommerce",
   //   path: "/ecommerce",

@@ -25,7 +25,7 @@ const FormInput = ({ name, label, placeholder, disabled, ...otherProps }) => {
           fullWidth
           sx={{ mb: 2 }}
           isInvalid={!!errors[name]}
-          minH={"80px"}
+          // minH={"80px"}
         >
           <FormLabel
             mb="4px"

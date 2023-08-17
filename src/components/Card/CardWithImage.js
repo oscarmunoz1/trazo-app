@@ -15,7 +15,6 @@ import { BsArrowRight } from "react-icons/bs";
 // Custom components
 import Card from "./Card.js";
 import CardBody from "./CardBody.js";
-import InformationModal from "dialog/InformationModal.js";
 import { useNavigate } from "react-router-dom";
 
 const CardWithImage = ({
@@ -81,17 +80,6 @@ const CardWithImage = ({
                   _hover={{ transform: "translateX(20%)" }}
                 />
               </Button>
-              <InformationModal
-                title={title}
-                name={name}
-                state={state}
-                zone={zone}
-                city={city}
-                description={description}
-                image={image}
-                onClose={onClose}
-                isOpen={isOpen}
-              />
             </Flex>
           </Flex>
           <Spacer />

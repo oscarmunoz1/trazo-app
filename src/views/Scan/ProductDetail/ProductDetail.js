@@ -20,6 +20,7 @@ import {
   Tbody,
   Td,
   Text,
+  Textarea,
   Th,
   Thead,
   Tr,
@@ -27,11 +28,27 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { BsStarFill, BsStarHalf } from "react-icons/bs";
-import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
-import { FaRegCheckCircle, FaRegDotCircle } from "react-icons/fa";
+import {
+  FaFacebook,
+  FaInstagram,
+  FaRegCheckCircle,
+  FaRegDotCircle,
+  FaTwitter,
+} from "react-icons/fa";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import {
+  GoogleMap,
+  Polygon,
+  useJsApiLoader,
+  useLoadScript,
+} from "@react-google-maps/api";
 import React, { useEffect, useState } from "react";
 import { TypeOf, object, string } from "zod";
+import {
+  useCommentHistoryMutation,
+  useGetPublicHistoryQuery,
+} from "store/features/historyApi";
+import { useNavigate, useParams } from "react-router-dom";
 
 import BgSignUp from "assets/img/basic-auth.png";
 import Card from "components/Card/Card";
@@ -39,6 +56,7 @@ import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 // import CameraCard from "./components/CameraCard";
 import FormInput from "components/Forms/FormInput";
+import HTMLRenderer from "components/Utils/HTMLRenderer";
 import ImageParcel1 from "assets/img/ImageParcel1.png";
 import ProfileInformation from "./components/ProfileInformation";
 import TimelineRow from "components/Tables/TimelineRow";
@@ -46,8 +64,6 @@ import productPage1 from "assets/img/ProductImage1.png";
 import productPage2 from "assets/img/ProductImage2.png";
 import productPage3 from "assets/img/ProductImage3.png";
 import productPage4 from "assets/img/ProductImage4.png";
-import { useNavigate } from "react-router-dom";
-import { useSignUpMutation } from "store/features/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // Assets
@@ -68,6 +84,10 @@ const registerSchema = object({
   message: "Passwords do not match",
 });
 
+const options = {
+  googleMapApiKey: "AIzaSyCLHij6DjbLLkhTsTvrRhwuKf8ZGXrx-Q8",
+};
+
 function Capture() {
   const titleColor = useColorModeValue("green.300", "green.200");
   const textColor = useColorModeValue("gray.700", "white");
@@ -75,6 +95,12 @@ function Capture() {
   const bgIcons = useColorModeValue("green.200", "rgba(255, 255, 255, 0.5)");
   const navigate = useNavigate();
   const [currentImage, setCurrentImage] = useState(productPage1);
+  const { historyId } = useParams();
+  const [commentValue, setCommentValue] = useState("");
+
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: options.googleMapApiKey,
+  });
 
   const methods = useForm({
     resolver: zodResolver(registerSchema),
@@ -83,11 +109,11 @@ function Capture() {
   const currentHistory = [
     {
       id: 60,
-      name: "La Primavera",
+      name: "Nombre del evento realizado",
       description: "<p>x</p>",
       date: "2023-07-16T15:48:00Z",
       image: null,
-      certified: false,
+      certified: true,
       index: 1,
       type: "HW",
       temperature: 12,
@@ -99,7 +125,7 @@ function Capture() {
     },
     {
       id: 61,
-      name: "La Primavera",
+      name: "Nombre del evento realizado",
       description: "<p>x</p>",
       date: "2023-07-16T15:48:00Z",
       image: null,
@@ -115,7 +141,23 @@ function Capture() {
     },
     {
       id: 62,
-      name: "La Primavera",
+      name: "Nombre del evento realizado",
+      description: "<p>x</p>",
+      date: "2023-07-16T15:48:00Z",
+      image: null,
+      certified: true,
+      index: 1,
+      type: "HW",
+      temperature: 12,
+      humidity: 12,
+      time_period: null,
+      observation: null,
+      history: 35,
+      created_by: null,
+    },
+    {
+      id: 64,
+      name: "Nombre del evento realizado",
       description: "<p>x</p>",
       date: "2023-07-16T15:48:00Z",
       image: null,
@@ -130,12 +172,60 @@ function Capture() {
       created_by: null,
     },
     {
-      id: 64,
-      name: "La Primavera",
+      id: 60,
+      name: "Nombre del evento realizado",
+      description: "<p>x</p>",
+      date: "2023-07-16T15:48:00Z",
+      image: null,
+      certified: true,
+      index: 1,
+      type: "HW",
+      temperature: 12,
+      humidity: 12,
+      time_period: null,
+      observation: null,
+      history: 35,
+      created_by: null,
+    },
+    {
+      id: 61,
+      name: "Nombre del evento realizado",
       description: "<p>x</p>",
       date: "2023-07-16T15:48:00Z",
       image: null,
       certified: false,
+      index: 1,
+      type: "HW",
+      temperature: 12,
+      humidity: 12,
+      time_period: null,
+      observation: null,
+      history: 35,
+      created_by: null,
+    },
+    {
+      id: 62,
+      name: "Nombre del evento realizado",
+      description: "<p>x</p>",
+      date: "2023-07-16T15:48:00Z",
+      image: null,
+      certified: true,
+      index: 1,
+      type: "HW",
+      temperature: 12,
+      humidity: 12,
+      time_period: null,
+      observation: null,
+      history: 35,
+      created_by: null,
+    },
+    {
+      id: 64,
+      name: "Nombre del evento realizado",
+      description: "<p>x</p>",
+      date: "2023-07-16T15:48:00Z",
+      image: null,
+      certified: true,
       index: 1,
       type: "HW",
       temperature: 12,
@@ -153,16 +243,24 @@ function Capture() {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
-  const [
-    registerUser,
-    { isLoading, isSuccess, error, isError },
-  ] = useSignUpMutation();
+  const {
+    data: historyData,
+    error,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetPublicHistoryQuery(historyId || "", {
+    skip: historyId === undefined,
+  });
 
   useEffect(() => {
-    if (isSuccess) {
-      navigate("/auth/verifyemail");
+    if (historyId) {
+      refetch();
     }
-  }, [isLoading]);
+  }, [historyId, refetch]);
+
+  console.log(historyData);
+  console.log(historyId);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -170,9 +268,33 @@ function Capture() {
     }
   }, [isSubmitSuccessful]);
 
-  const onSubmitHandler = (values) => {
-    registerUser(values);
+  const [
+    createComment,
+    {
+      data: dataComment,
+      error: errorComment,
+      isSuccess: isSuccessComment,
+      isLoading: isLoadingComment,
+    },
+  ] = useCommentHistoryMutation();
+
+  const onSubmitHandler = () => {
+    if (commentValue) {
+      createComment({
+        comment: commentValue,
+        scanId: historyData.history_scan,
+      });
+    }
   };
+
+  useEffect(() => {
+    if (isSuccessComment) {
+      setCommentValue("");
+    }
+  }, [isSuccessComment]);
+
+  const html =
+    "<h1><strong>La Primavera!!</strong></h1><p><br></p><p>Este <em>establecimiento rural</em> se encuentra ubicado en las afueras de un pequeño pueblo en una zona montañosa, rodeado de colinas y campos verdes. La casa principal es una construcción de madera de dos pisos con un amplio porche en la entrada. Junto a la casa hay varios <u>edificios más pequeños, como un granero, una</u> cochera y un gallinero.</p><p><br></p><h2><em><u>Parcels</u></em>:</h2><p><br></p><ul><li><strong><em><u>Parcel 1</u></em></strong></li><li><strong><em><u>Parcel 2</u></em></strong></li><li><strong><em><u>Parcel 3</u></em></strong></li></ul><p><br></p><p>En el terreno hay un huerto donde se cultivan verduras y frutas de temporada, así como una pequeña área de pastoreo para unas cuantas&nbsp;<strong>vacas y ovejas</strong>. También hay un estanque cercano donde se crían peces y patos. El ambiente es tranquilo y relajado, con el sonido de los pájaros y del viento soplando a través de los árboles. El aire es fresco y limpio, y se pueden disfrutar de hermosas vistas panorámicas de los alrededores. La gente que trabaja en el establecimiento es amable y acogedora, y siempre están dispuestos a compartir un poco de su estilo de vida rural con los visitantes.</p>";
 
   return (
     <Flex
@@ -219,10 +341,10 @@ function Capture() {
           Here you can find all the information about the product you scanned.
         </Text>
       </Flex>
-      <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
+      <Flex alignItems="center" justifyContent="center" mb="60px" mt="-30px">
         <Card
           mt={{ md: "75px" }}
-          w={{ sm: "100%", md: "98%", lg: "95%" }}
+          w={{ sm: "100%", md: "80%", lg: "75%" }}
           p={{ sm: "16px", md: "32px", lg: "48px" }}
           boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px"
         >
@@ -235,16 +357,16 @@ function Capture() {
             <Flex direction="column" w="100%">
               <Flex
                 direction={{ sm: "column", lg: "row" }}
-                mb={{ sm: "42px", lg: "84px" }}
+                mb={{ sm: "22px", lg: "44px" }}
               >
                 <Flex
                   direction="column"
-                  me={{ lg: "70px", xl: "120px" }}
+                  me={{ lg: "20px", xl: "40px" }}
                   mb={{ sm: "24px", lg: "0px" }}
                 >
                   <Box
-                    w={{ sm: "275px", md: "670px", lg: "450px", xl: "600px" }}
-                    h={{ sm: "200px", md: "500px", lg: "330px", xl: "500px" }}
+                    w={{ sm: "305px", md: "370px", lg: "350px", xl: "550px" }}
+                    h={{ sm: "220px", md: "300px", lg: "230px", xl: "433px" }}
                     mb="26px"
                     mx={{ sm: "auto", lg: "0px" }}
                   >
@@ -335,13 +457,13 @@ function Capture() {
                     fontWeight="bold"
                     mb="12px"
                   >
-                    Orange
+                    {historyData?.product}
                   </Text>
                   <Stack
                     direction="row"
                     spacing="12px"
                     color="orange.300"
-                    mb="30px"
+                    mb="16px"
                   >
                     <Icon as={BsStarFill} w="26px" h="26px" />
                     <Icon as={BsStarFill} w="26px" h="26px" />
@@ -358,13 +480,13 @@ function Capture() {
                     fontSize="3xl"
                     mb="12px"
                   >
-                    La Primavera
+                    {historyData?.company}
                   </Text>
                   <Badge
                     colorScheme="green"
                     w="95px"
                     h="28px"
-                    mb="40px"
+                    mb="36px"
                     borderRadius="15px"
                     display="flex"
                     alignItems="center"
@@ -372,28 +494,139 @@ function Capture() {
                   >
                     CERTIFIED
                   </Badge>
-                  <ProfileInformation
-                    title={"Product Information"}
-                    country={"Uruguay"}
-                    description={
-                      "Hi, I’m Esthera Jackson, Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality)."
-                    }
-                    establishment={"La Esperanza"}
-                    parcel={"Parcel #1"}
-                    email={"esthera@simmmple.com"}
-                    location={"United States"}
-                  />
 
-                  <Flex direction="column" width={"100%"}>
-                    <Text
-                      fontSize="lg"
-                      color={textColor}
-                      fontWeight="bold"
-                      pb="24px"
-                    >
-                      Events
-                    </Text>
-                    {currentHistory?.map((event, index, arr) => {
+                  <Flex direction="column">
+                    <Flex align="center" mb="15px">
+                      <Text
+                        fontSize="md"
+                        color={textColor}
+                        fontWeight="bold"
+                        me="10px"
+                      >
+                        Location:{" "}
+                      </Text>
+                      <Text fontSize="md" color="gray.500" fontWeight="400">
+                        {historyData?.location}
+                      </Text>
+                    </Flex>
+                    <Flex align="center" mb="15px">
+                      <Text
+                        fontSize="md"
+                        color={textColor}
+                        fontWeight="bold"
+                        me="10px"
+                      >
+                        Establishment:{" "}
+                      </Text>
+                      <Text fontSize="md" color="gray.500" fontWeight="400">
+                        <Link
+                          textDecoration={"underline"}
+                          href="https://chakra-ui.com"
+                        >
+                          {historyData?.establishment}
+                        </Link>
+                      </Text>
+                    </Flex>
+                    <Flex align="center" mb="15px">
+                      <Text
+                        fontSize="md"
+                        color={textColor}
+                        fontWeight="bold"
+                        me="10px"
+                      >
+                        Parcel:{" "}
+                      </Text>
+                      <Text fontSize="md" color="gray.500" fontWeight="400">
+                        <Link
+                          textDecoration={"underline"}
+                          href="https://chakra-ui.com"
+                        >
+                          {historyData?.parcel}
+                        </Link>
+                      </Text>
+                    </Flex>
+                    <Flex align="center" mb="15px">
+                      <Text
+                        fontSize="md"
+                        color={textColor}
+                        fontWeight="bold"
+                        me="10px"
+                      >
+                        Production:{" "}
+                      </Text>
+                      <Text fontSize="md" color="gray.500" fontWeight="400">
+                        13/04/2021 - 16/07/2021
+                      </Text>
+                    </Flex>
+                    <Flex align="center" mb="15px">
+                      <Text
+                        fontSize="md"
+                        color={textColor}
+                        fontWeight="bold"
+                        me="10px"
+                      >
+                        Social Media:{" "}
+                      </Text>
+                      <Flex>
+                        <Link
+                          href="#"
+                          color="green.400"
+                          fontSize="lg"
+                          me="10px"
+                          _hover={{ color: "green.400" }}
+                        >
+                          <Icon as={FaFacebook} />
+                        </Link>
+                        <Link
+                          href="#"
+                          color="green.400"
+                          fontSize="lg"
+                          me="10px"
+                          _hover={{ color: "green.400" }}
+                        >
+                          <Icon as={FaInstagram} />
+                        </Link>
+                        <Link
+                          href="#"
+                          color="green.400"
+                          fontSize="lg"
+                          me="10px"
+                          _hover={{ color: "green.400" }}
+                        >
+                          <Icon as={FaTwitter} />
+                        </Link>
+                      </Flex>
+                    </Flex>
+                  </Flex>
+                </Flex>
+              </Flex>
+
+              <Flex px="24px" pb="24px">
+                <HTMLRenderer htmlString={html} />
+              </Flex>
+              <Flex
+                pt={"24px"}
+                direction={{ sm: "column", md: "column", lg: "row" }}
+              >
+                <Flex
+                  px="24px"
+                  width={{ md: "100%", lg: "50%" }}
+                  direction={"column"}
+                >
+                  <Text
+                    fontSize="xl"
+                    color={textColor}
+                    fontWeight="bold"
+                    pb="24px"
+                  >
+                    Events
+                  </Text>
+                  <Flex
+                    direction="column"
+                    width={"100%"}
+                    paddingBottom={"24px"}
+                  >
+                    {historyData?.events?.map((event, index, arr) => {
                       return (
                         <TimelineRow
                           key={event.id}
@@ -410,20 +643,117 @@ function Capture() {
                       );
                     })}
                   </Flex>
-
-                  <Button
-                    variant="no-hover"
-                    bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                    w={{ sm: "240px", md: "100%", lg: "240px" }}
-                    h="50px"
-                    mx={{ sm: "auto", md: "0px" }}
-                    color="#fff"
-                    fontSize="xs"
-                    fontWeight="bold"
-                  >
-                    I BOUGHT IT
-                  </Button>
                 </Flex>
+                <Flex
+                  width={{ md: "100%", lg: "50%" }}
+                  direction="column"
+                  h="300px"
+                  px="24px"
+                  height={"340px"}
+                >
+                  <Text
+                    fontSize="xl"
+                    color={textColor}
+                    fontWeight="bold"
+                    pb="24px"
+                  >
+                    Parcel location
+                  </Text>
+                  {isLoaded && (
+                    <GoogleMap
+                      mapContainerStyle={{
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: "10px",
+                      }}
+                      zoom={16}
+                      center={{
+                        lat: -31.27006513500534,
+                        lng: -57.199462864720985,
+                      }}
+                      mapTypeId="satellite"
+                    >
+                      <Polygon
+                        path={[
+                          { lat: -31.26835838901041, lng: -57.202751722067966 },
+                          {
+                            lat: -31.271918579848123,
+                            lng: -57.201694589349295,
+                          },
+                          { lat: -31.27094552584586, lng: -57.19690586848693 },
+                          { lat: -31.269076616200664, lng: -57.19727631670458 },
+                        ]}
+                        options={{
+                          fillColor: "#ff0000",
+                          fillOpacity: 0.35,
+                          strokeColor: "#ff0000",
+                          strokeOpacity: 1,
+                          strokeWeight: 2,
+                        }}
+                      />
+                    </GoogleMap>
+                  )}
+                </Flex>
+              </Flex>
+              <Flex justifyContent={"center"} py="44px">
+                <Button
+                  variant="no-hover"
+                  bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+                  w={{ sm: "240px", md: "100%", lg: "240px" }}
+                  h="50px"
+                  mx={{ sm: "auto", md: "0px" }}
+                  color="#fff"
+                  fontSize="xs"
+                  fontWeight="bold"
+                >
+                  I BOUGHT IT
+                </Button>
+              </Flex>
+              <Flex pt="14px" pb="34px">
+                <FormControl>
+                  <FormLabel color={textColor} fontWeight="bold" fontSize="md">
+                    Share your initial product impression
+                  </FormLabel>
+                  {isSuccessComment ? (
+                    <Flex justifyContent={"center"} my="34px">
+                      <Text
+                        fontSize="md"
+                        color={"green.500"}
+                        fontWeight="normal"
+                      >
+                        Comment sent successfully!
+                      </Text>
+                    </Flex>
+                  ) : (
+                    <Textarea
+                      placeholder="Your first impression here..."
+                      minH="120px"
+                      fontSize="14px"
+                      borderRadius="15px"
+                      value={commentValue}
+                      onChange={(e) => setCommentValue(e.target.value)}
+                    />
+                  )}
+
+                  <Flex mt="24px" justifyContent={"flex-end"}>
+                    <Button
+                      variant="no-hover"
+                      bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+                      w={{ sm: "120px", md: "120px", lg: "120px" }}
+                      h="50px"
+                      mx={{ sm: "auto", md: "0px" }}
+                      color="#fff"
+                      fontSize="xs"
+                      fontWeight="bold"
+                      disabled={
+                        isLoadingComment || !commentValue || isSuccessComment
+                      }
+                      onClick={() => onSubmitHandler()}
+                    >
+                      SEND
+                    </Button>
+                  </Flex>
+                </FormControl>
               </Flex>
               <Text fontSize="lg" color={textColor} fontWeight="bold" mb="24px">
                 Similar Products

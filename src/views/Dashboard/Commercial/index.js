@@ -14,13 +14,18 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { NavLink, useLocation, useMatch, useParams } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   barChartDataCharts1,
   barChartOptionsCharts1,
   lineBarChartData,
   lineBarChartOptions,
 } from "variables/charts";
+import {
+  useGetEstablishmentHistoriesQuery,
+  useGetEstablishmentProductsQuery,
+  useGetEstablishmentScansVsSalesChartInfoQuery,
+} from "store/features/productApi";
 
 import BarChart from "components/Charts/BarChart";
 import Card from "components/Card/Card";
@@ -32,9 +37,12 @@ import LineBarChart from "components/Charts/LineBarChart";
 import LineChart from "components/Charts/LineChart";
 import MiniStatistics from "../Dashboard/components/MiniStatistics";
 import Reviews from "./components/Reviews";
-import SalesByCountry from "./components/SalesByCountry";
 import SalesOverview from "./components/SalesOverview";
+import ScansList from "./components/ScansList";
+import { historyApi } from "store/features/historyApi";
+import { productApi } from "store/features/productApi";
 import { scansData } from "variables/general";
+import { useGetScansByEstablishmentQuery } from "store/features/historyApi";
 import { useSelector } from "react-redux";
 
 // Custom icons
@@ -43,7 +51,13 @@ import { useSelector } from "react-redux";
 export default function CommercialView() {
   const textColor = useColorModeValue("gray.700", "white");
   const { establishmentId } = useParams();
-
+  const chartRef = useRef(null);
+  const [filters, setFilters] = useState({
+    parcel: null,
+    product: null,
+    production: null,
+    period: { id: "week", name: "This week" },
+  });
   const [currentEstablishmentId, setCurrentEstablishmentId] = useState(null);
   const [establishment, setEstablishment] = useState(null);
   const [currentView, setCurrentView] = useState(null);
@@ -54,19 +68,46 @@ export default function CommercialView() {
     (state) => state.company.currentCompany?.establishments
   );
 
+  const { data: dataEstablishmentScans } = useGetScansByEstablishmentQuery(
+    {
+      establishmentId: currentEstablishmentId,
+      period: filters.period.id,
+      productId: filters.product?.id,
+      parcelId: filters.parcel?.id,
+      productionId: filters.production?.id,
+    },
+    { skip: !currentEstablishmentId || !filters?.period }
+  );
+
+  const {
+    data: dataEstablishmentScansVsSaleInfo,
+    isFetching,
+  } = useGetEstablishmentScansVsSalesChartInfoQuery(
+    {
+      establishmentId: currentEstablishmentId,
+      periodId: filters.period.id,
+      productId: filters.product?.id,
+      parcelId: filters.parcel?.id,
+      productionId: filters.production?.id,
+    },
+    { skip: !currentEstablishmentId || !filters?.period }
+  );
+
+  const [
+    fetchScansByEstablishment,
+    { data: filteredScans, isLoading: isLoadingScans },
+  ] = historyApi.endpoints.getScansByEstablishment.useLazyQuery();
+
+  const [
+    getEstablishmentProducts,
+    { data: establishmentProducts, isLoading: isLoadingEstablishmentProducts },
+  ] = productApi.endpoints.getEstablishmentProducts.useLazyQuery();
+
   // to check for active links and opened collapses
   let location = useLocation();
 
   const iconBoxInside = useColorModeValue("white", "white");
   let mainText = useColorModeValue("gray.700", "gray.200");
-
-  // verifies if routeName is the one active (in browser input)
-  const activeRoute = (routeName, isDashboard = false) => {
-    if (isDashboard) {
-      return location.pathname.startsWith(routeName) ? "active" : "";
-    }
-    return location.pathname === routeName ? "active" : "";
-  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -80,21 +121,98 @@ export default function CommercialView() {
       )[0];
       setCurrentEstablishmentId(establishmentId);
       setEstablishment(establishment);
+      setFilters({
+        parcel: null,
+        product: null,
+        production: null,
+        period: { id: "week", name: "This week" },
+      });
     }
   }, [establishmentId, establishments]);
 
-  const parcelsMatch = useMatch("certifications/parcels");
-  const eventsMatch = useMatch("certifications/events");
+  const { data: dataProducts } = useGetEstablishmentProductsQuery(
+    { establishmentId: currentEstablishmentId },
+    { skip: !currentEstablishmentId }
+  );
+
+  const { data: dataHistories } = useGetEstablishmentHistoriesQuery(
+    {
+      establishmentId: currentEstablishmentId,
+      periodId: filters.period?.id,
+      parcelId: filters.parcel?.id,
+      productId: filters.product?.id,
+    },
+    {
+      skip:
+        !currentEstablishmentId ||
+        !filters?.period ||
+        !filters?.parcel ||
+        !filters?.product,
+    }
+  );
+
+  const onParcelFilterChange = (parcel) => {
+    setFilters({
+      ...filters,
+      parcel: parcel ? { id: parcel.id, name: parcel.name } : null,
+    });
+    getEstablishmentProducts({
+      establishmentId: currentEstablishmentId,
+      parcelId: parcel?.id,
+    });
+  };
+
+  const onProductFilterChange = (product) => {
+    setFilters({
+      ...filters,
+      product: product ? { id: product.id, name: product.name } : null,
+    });
+  };
+
+  const onProductionFilterChange = (production) => {
+    console.log(production);
+    setFilters({
+      ...filters,
+      production: production
+        ? { id: production.id, period: production.period }
+        : null,
+    });
+  };
+
+  const onPeriodFilterChange = (period) => {
+    setFilters({
+      ...filters,
+      period: period ? { id: period.id, name: period.name } : null,
+    });
+  };
 
   useEffect(() => {
-    if (parcelsMatch) {
-      setCurrentView("parcels");
-    } else if (eventsMatch) {
-      setCurrentView("events");
-    } else {
-      setCurrentView("parcels");
+    if (dataEstablishmentScansVsSaleInfo && chartRef.current) {
+      chartRef.current.chart.updateSeries([
+        {
+          name: "Scans",
+          type: "bar",
+          data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series,
+        },
+        {
+          name: "Sales",
+          type: "line",
+          data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series.map(
+            (series) => (series > 2 ? series - 2 : 0)
+          ),
+        },
+      ]);
+      chartRef.current.chart.updateOptions({
+        ...lineBarChartOptions,
+        xaxis: {
+          ...lineBarChartOptions.xaxis,
+          categories: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.options?.map(
+            (option) => option.toString()
+          ),
+        },
+      });
     }
-  }, [parcelsMatch, eventsMatch]);
+  }, [dataEstablishmentScansVsSaleInfo]);
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
@@ -112,7 +230,7 @@ export default function CommercialView() {
         {establishments ? (
           establishments.map((prop, key) => (
             <NavLink
-              to={`/admin/dashboard/establishment/${prop.id}/certifications/${currentView}`}
+              to={`/admin/dashboard/establishment/${prop.id}/commercial/`}
             >
               <MiniStatistics
                 key={key}
@@ -154,19 +272,31 @@ export default function CommercialView() {
                       as={Button}
                       rightIcon={<IoIosArrowDown />}
                       color="gray.700"
-                      w="155px"
+                      width="fit-content"
                       h="35px"
                       bg="#fff"
+                      minW="155px"
                       fontSize="xs"
                     >
-                      ALL PARCELS
+                      {filters.parcel ? filters.parcel.name : "ALL PARCELS"}
                     </MenuButton>
                     <MenuList>
-                      <MenuItem color="gray.500">All</MenuItem>
+                      <MenuItem
+                        onClick={() => onParcelFilterChange(null)}
+                        color="gray.500"
+                      >
+                        All Parcels
+                      </MenuItem>
                       <MenuDivider />
-                      <MenuItem color="gray.500">Parcel #1</MenuItem>
-                      <MenuItem color="gray.500">Parcel #2</MenuItem>
-                      <MenuItem color="gray.500">Parcel #3</MenuItem>
+                      {establishment &&
+                        establishment.parcels.map((parcel) => (
+                          <MenuItem
+                            onClick={() => onParcelFilterChange(parcel)}
+                            color="gray.500"
+                          >
+                            {parcel.name}
+                          </MenuItem>
+                        ))}
                     </MenuList>
                   </Menu>
                 </Stack>
@@ -182,19 +312,41 @@ export default function CommercialView() {
                       as={Button}
                       rightIcon={<IoIosArrowDown />}
                       color="gray.700"
-                      w="155px"
+                      width="fit-content"
                       h="35px"
                       bg="#fff"
+                      minW="155px"
                       fontSize="xs"
                     >
-                      ALL PRODUCTS
+                      {filters.product ? filters.product.name : "ALL PRODUCTS"}
                     </MenuButton>
                     <MenuList>
-                      <MenuItem color="gray.500">All</MenuItem>
+                      <MenuItem
+                        onClick={() => onProductFilterChange(null)}
+                        color="gray.500"
+                      >
+                        All Products
+                      </MenuItem>
                       <MenuDivider />
-                      <MenuItem color="gray.500">Banana</MenuItem>
-                      <MenuItem color="gray.500">Potato</MenuItem>
-                      <MenuItem color="gray.500">Apple</MenuItem>
+                      {filters?.parcel
+                        ? establishmentProducts &&
+                          establishmentProducts.map((product) => (
+                            <MenuItem
+                              onClick={() => onProductFilterChange(product)}
+                              color="gray.500"
+                            >
+                              {product.name}
+                            </MenuItem>
+                          ))
+                        : dataProducts &&
+                          dataProducts.map((product) => (
+                            <MenuItem
+                              onClick={() => onProductFilterChange(product)}
+                              color="gray.500"
+                            >
+                              {product.name}
+                            </MenuItem>
+                          ))}
                     </MenuList>
                   </Menu>
                 </Stack>
@@ -210,19 +362,39 @@ export default function CommercialView() {
                       as={Button}
                       rightIcon={<IoIosArrowDown />}
                       color="gray.700"
-                      w="155px"
+                      minW="155px"
                       h="35px"
                       bg="#fff"
                       fontSize="xs"
+                      width="fit-content"
+                      disabled={
+                        filters.product == null || filters.parcel == null
+                      }
                     >
-                      ALL PRODUCTIONS
+                      {filters.production
+                        ? filters.production.period
+                        : "ALL PRODUCTIONS"}
                     </MenuButton>
                     <MenuList>
-                      <MenuItem color="gray.500">All</MenuItem>
+                      <MenuItem
+                        onClick={() => onProductionFilterChange(null)}
+                        color="gray.500"
+                      >
+                        All Productions
+                      </MenuItem>
                       <MenuDivider />
-                      <MenuItem color="gray.500">20/03/2021</MenuItem>
+                      {dataHistories &&
+                        dataHistories.map((history) => (
+                          <MenuItem
+                            onClick={() => onProductionFilterChange(history)}
+                            color="gray.500"
+                          >
+                            {history.period}
+                          </MenuItem>
+                        ))}
+                      {/* <MenuItem color="gray.500">20/03/2021</MenuItem>
                       <MenuItem color="gray.500">20/07/2021</MenuItem>
-                      <MenuItem color="gray.500">20/09/2021</MenuItem>
+                      <MenuItem color="gray.500">20/09/2021</MenuItem> */}
                     </MenuList>
                   </Menu>
                 </Stack>
@@ -242,49 +414,52 @@ export default function CommercialView() {
                   h="35px"
                   bg="#fff"
                   fontSize="xs"
+                  width="fit-content"
+                  minW="125px"
                 >
-                  THIS WEEK
+                  {filters.period.name.toUpperCase()}
                 </MenuButton>
                 <MenuList>
-                  <MenuItem color="gray.500">This week</MenuItem>
-                  <MenuItem color="gray.500">This month</MenuItem>
-                  <MenuItem color="gray.500">This year</MenuItem>
+                  <MenuItem
+                    onClick={() =>
+                      onPeriodFilterChange({ id: "week", name: "This week" })
+                    }
+                    color="gray.500"
+                  >
+                    This week
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() =>
+                      onPeriodFilterChange({ id: "month", name: "This month" })
+                    }
+                    color="gray.500"
+                  >
+                    This month
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() =>
+                      onPeriodFilterChange({ id: "year", name: "This year" })
+                    }
+                    color="gray.500"
+                  >
+                    This year
+                  </MenuItem>
                 </MenuList>
               </Menu>
             </Stack>
           </Flex>
-          {/* <Card px="0px">
-            <CardBody overflowX={{ sm: "scroll", "2xl": "hidden" }}> */}
-          {/* <Grid
-              gap={{ sm: "50px", "2xl": "70px" }}
-              templateColumns={{ sm: "repeat(12, 1fr)", lg: "repeat(12, 1fr)" }}
-            > */}
-
-          {/* </Grid> */}
-          {/* </CardBody>
-          </Card> */}
         </Flex>
         <Flex flexDirection={"row"} gap="24px">
-          <Flex flex={1}>
-            <SalesByCountry
+          <Flex flex={2}>
+            <ScansList
               title={"Scans"}
               labels={["Date", "Product", "Location", "Parcel", "Comment"]}
-              salesData={scansData}
+              scansData={dataEstablishmentScans}
             />
           </Flex>
-          <Flex flexDirection={"column"} flex={2} gap={"24px"}>
-            {/* <SalesOverview
-              title={"Numbers of scans and sales"}
-              percentage={5}
-              chart={
-                <LineChart
-                  chartData={lineChartDataDefault}
-                  chartOptions={lineChartOptionsDefault}
-                />
-              }
-            /> */}
+          <Flex flexDirection={"column"} flex={1.5} gap={"24px"}>
             <Flex flex={1}>
-              <Card px="0px" pb="0px">
+              <Card px="0px" pb="0px" height="346px">
                 <CardHeader mb="34px" px="22px">
                   <Text color={textColor} fontSize="lg" fontWeight="bold">
                     Numbers of scans and sales
@@ -292,10 +467,40 @@ export default function CommercialView() {
                 </CardHeader>
                 <CardBody h="100%">
                   <Box w="100%" h="100%">
-                    <LineBarChart
-                      chartData={lineBarChartData}
-                      chartOptions={lineBarChartOptions}
-                    />
+                    {isFetching ? (
+                      <p>hola</p>
+                    ) : (
+                      <LineBarChart
+                        chartRef={chartRef}
+                        chartData={lineBarChartData.map((data) => {
+                          if (data.name === "Sales") {
+                            return {
+                              name: data.name,
+                              type: data.type,
+                              data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series.map(
+                                (serie) => (serie > 2 ? serie - 2 : 0)
+                              ),
+                            };
+                          }
+                          return {
+                            name: data.name,
+                            type: data.type,
+                            data:
+                              dataEstablishmentScansVsSaleInfo?.scans_vs_sales
+                                .series,
+                          };
+                        })}
+                        chartOptions={{
+                          ...lineBarChartOptions,
+                          xaxis: {
+                            ...lineBarChartOptions.xaxis,
+                            categories: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.options?.map(
+                              (option) => option.toString()
+                            ),
+                          },
+                        }}
+                      />
+                    )}
                   </Box>
                 </CardBody>
               </Card>

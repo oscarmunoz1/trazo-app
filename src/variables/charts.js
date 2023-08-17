@@ -1082,12 +1082,12 @@ export const lineBarChartData = [
   {
     name: "Scans",
     type: "bar",
-    data: [440, 505, 414, 671, 160, 550, 350, 138],
+    data: [440, 505, 414, 671, 160, 550, 350, 400],
   },
   {
     name: "Sales",
     type: "line",
-    data: [232, 421, 352, 273, 143, 222, 173, 311],
+    data: [4, 10, 0, 0, 12, 0, 0],
   },
 ];
 

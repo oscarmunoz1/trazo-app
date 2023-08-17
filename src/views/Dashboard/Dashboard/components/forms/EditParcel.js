@@ -48,6 +48,10 @@ import { GoogleMap, Polygon, useLoadScript } from "@react-google-maps/api";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { boolean, object, string } from "zod";
 import { clearForm, setForm } from "store/features/formSlice";
+import {
+  useCreateParcelMutation,
+  useGetParcelQuery,
+} from "store/features/productApi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -65,8 +69,8 @@ import ProfileBgImage from "assets/img/ProfileBackground.png";
 import avatar4 from "assets/img/avatars/avatar4.png";
 import imageMap from "assets/img/imageMap.png";
 import { setEstablishmentParcel } from "store/features/companySlice";
+import { setParcel } from "store/features/productSlice";
 import { useCreateEstablishmentMutation } from "store/features/companyApi";
-import { useCreateParcelMutation } from "store/features/productApi.js";
 import { useDropzone } from "react-dropzone";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -156,7 +160,7 @@ function NewParcel() {
   const navigate = useNavigate();
   const currentCompany = useSelector((state) => state.company.currentCompany);
 
-  const { establishmentId } = useParams();
+  const { establishmentId, parcelId } = useParams();
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: options.googleMapApiKey,
@@ -178,7 +182,39 @@ function NewParcel() {
 
   const { getRootProps, getInputProps } = useDropzone();
 
-  const currentParcel = useSelector((state) => state.form.currentForm?.parcel);
+  const currentParcel = useSelector((state) => state.product.currentParcel);
+
+  const {
+    data: parcelData,
+    error: errorParcel,
+    isLoading: isLoadingParcel,
+    isFetching,
+    refetch,
+  } = useGetParcelQuery(parcelId, {
+    skip: parcelId === undefined || currentParcel?.id === parcelId,
+  });
+
+  useEffect(() => {
+    if (parcelData) dispatch(setParcel(parcelData));
+  }, [parcelData]);
+
+  useEffect(() => {
+    if (parcelData) {
+      dispatch(setForm({ parcel: parcelData }));
+    }
+  }, [parcelData]);
+
+  useEffect(() => {
+    if (currentParcel) {
+      setInfoValues("name", currentParcel.name || "");
+      setInfoValues("area", currentParcel.area.toString() || "");
+      setDescriptionValues("description", currentParcel.description);
+    }
+  }, [currentParcel]);
+
+  const establishments = useSelector(
+    (state) => state.company.currentCompany?.establishments
+  );
 
   const infoMethods = useForm({
     resolver: zodResolver(formSchemaInfo),
@@ -187,6 +223,7 @@ function NewParcel() {
   const {
     reset,
     handleSubmit,
+    setValue: setInfoValues,
     formState: { errors, isSubmitSuccessful },
   } = infoMethods;
 
@@ -197,6 +234,7 @@ function NewParcel() {
   const {
     reset: descriptionReset,
     handleSubmit: descriptionSubmit,
+    setValue: setDescriptionValues,
   } = descriptionMethods;
 
   const onSubmitInfo = (data) => {

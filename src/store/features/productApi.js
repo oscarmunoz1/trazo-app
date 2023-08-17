@@ -1,11 +1,18 @@
-import { LOGIN_URL, PARCEL_URL, PRODUCT_URL } from "../../config";
+import {
+  ESTABLISHMENT_CHART_SCANS_VS_SALES_INFO_URL,
+  ESTABLISHMENT_HISTORIES_URL,
+  ESTABLISHMENT_PRODUCTS_URL,
+  LOGIN_URL,
+  PARCEL_URL,
+  PRODUCT_URL,
+} from "../../config";
 
 //   import { EmployeeType } from "../../types/employees";
 import baseApi from "./baseApi";
 import { logout as logoutUser } from "store/features/authSlice";
 import { setCompany } from "./companySlice";
 
-const productApi = baseApi.injectEndpoints({
+export const productApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getParcel: build.query({
       query: (parcelId) => ({
@@ -32,6 +39,44 @@ const productApi = baseApi.injectEndpoints({
         credentials: "include",
       }),
     }),
+    getEstablishmentProducts: build.query({
+      query: ({ establishmentId, parcelId }) => ({
+        url:
+          ESTABLISHMENT_PRODUCTS_URL(establishmentId) +
+          (parcelId ? `?parcel=${parcelId}` : ""),
+        method: "GET",
+        credentials: "include",
+      }),
+    }),
+    getEstablishmentHistories: build.query({
+      query: ({ establishmentId, parcelId, productId, periodId }) => ({
+        url:
+          ESTABLISHMENT_HISTORIES_URL(establishmentId) +
+          (parcelId ? `?parcel=${parcelId}` : "") +
+          (productId ? `&product=${productId}` : "") +
+          (periodId ? `&period=${periodId}` : ""),
+        method: "GET",
+        credentials: "include",
+      }),
+    }),
+    getEstablishmentScansVsSalesChartInfo: build.query({
+      query: ({
+        establishmentId,
+        parcelId,
+        productId,
+        periodId,
+        productionId,
+      }) => ({
+        url:
+          ESTABLISHMENT_CHART_SCANS_VS_SALES_INFO_URL(establishmentId) +
+          (periodId ? `?period=${periodId}` : "") +
+          (parcelId ? `&parcel=${parcelId}` : "") +
+          (productionId ? `&production=${productionId}` : "") +
+          (productId ? `&product=${productId}` : ""),
+        method: "GET",
+        credentials: "include",
+      }),
+    }),
   }),
   overrideExisting: false,
 });
@@ -40,4 +85,7 @@ export const {
   useGetParcelQuery,
   useCreateParcelMutation,
   useGetProductsQuery,
+  useGetEstablishmentProductsQuery,
+  useGetEstablishmentHistoriesQuery,
+  useGetEstablishmentScansVsSalesChartInfoQuery,
 } = productApi;

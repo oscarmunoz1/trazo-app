@@ -16,6 +16,7 @@
 */
 
 import React, { Component } from "react";
+
 import Chart from "react-apexcharts";
 
 class LineBarChart extends Component {
@@ -24,6 +25,7 @@ class LineBarChart extends Component {
     this.state = {
       chartData: [],
       chartOptions: {},
+      chartRef: null,
     };
   }
 
@@ -31,12 +33,14 @@ class LineBarChart extends Component {
     this.setState({
       chartData: this.props.chartData,
       chartOptions: this.props.chartOptions,
+      chartRef: this.props.chartRef,
     });
   }
 
   render() {
     return (
       <Chart
+        ref={this.props.chartRef}
         options={this.state.chartOptions}
         series={this.state.chartData}
         type="line"

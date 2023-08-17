@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import AddParcelModal from "dialog/AddParcelModal";
 import BgMusicCard from "assets/img/BgMusicCard.png";
 // Custom components
 import Card from "components/Card/Card";
@@ -80,7 +79,6 @@ const CarouselHorizontal = ({ title, description, data }) => {
             templateColumns={{ sm: "1fr", md: "1fr 1fr", xl: "repeat(4, 1fr)" }}
             templateRows={{ sm: "1fr 1fr 1fr auto", md: "1fr 1fr", xl: "1fr" }}
             gap="24px"
-            overflowX="scroll"
           >
             {data.map((parcel) => (
               <CarouselCard
@@ -91,7 +89,7 @@ const CarouselHorizontal = ({ title, description, data }) => {
                     : BgMusicCard
                 }
                 name={parcel.name}
-                category={parcel.product}
+                category={parcel.product || "-"}
                 avatars={[avatar2, avatar4, avatar6]}
               />
             ))}
@@ -111,7 +109,6 @@ const CarouselHorizontal = ({ title, description, data }) => {
           </Flex>
         )}
       </CardBody>
-      <AddParcelModal title="Create Parcel" onClose={onClose} isOpen={isOpen} />
     </Card>
   );
 };

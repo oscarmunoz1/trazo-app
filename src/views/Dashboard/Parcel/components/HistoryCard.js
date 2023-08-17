@@ -11,6 +11,7 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { useNavigate, useParams } from "react-router-dom";
 
 // Custom components
 import Card from "components/Card/Card.js";
@@ -22,20 +23,23 @@ import avatar1 from "assets/img/avatars/avatar1.png";
 import avatar2 from "assets/img/avatars/avatar10.png";
 import avatar3 from "assets/img/avatars/avatar2.png";
 import { convertToObject } from "typescript";
-import { useGetHistoryQuery } from "store/features/historyApi";
-import { useParams } from "react-router-dom";
+import { useGetParcelHistoriesQuery } from "store/features/historyApi";
 
 const HistoryCard = ({ title, amount, captions }) => {
   const textColor = useColorModeValue("gray.700", "white");
+  const navigate = useNavigate();
 
-  const { parcelId } = useParams();
+  const { parcelId, establishmentId } = useParams();
 
-  const { data, error, isLoading, isFetching, refetch } = useGetHistoryQuery(
-    parcelId || "",
-    {
-      skip: parcelId === undefined,
-    }
-  );
+  const {
+    data,
+    error,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetParcelHistoriesQuery(parcelId, {
+    skip: parcelId === undefined,
+  });
 
   return (
     <Card
@@ -46,7 +50,7 @@ const HistoryCard = ({ title, amount, captions }) => {
       <CardHeader p="12px 0px 28px 0px">
         <Flex direction="column">
           <Text fontSize="lg" color={textColor} fontWeight="bold" pb=".5rem">
-            {title}
+            Productions
           </Text>
           <Flex align="center">
             <Icon
@@ -101,6 +105,11 @@ const HistoryCard = ({ title, amount, captions }) => {
                       ? "green.300"
                       : "blue.400"
                   }
+                  onClick={() => {
+                    navigate(
+                      `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${history.id}`
+                    );
+                  }}
                 />
               );
             })}
@@ -116,7 +125,7 @@ const HistoryCard = ({ title, amount, captions }) => {
             alignItems={"center"}
             textAlign={"center"}
           >
-            No histories yet, start by finishing the current history.
+            No productions yet, start by finishing the current production.
           </Text>
         </Flex>
       )}

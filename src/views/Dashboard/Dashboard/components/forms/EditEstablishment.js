@@ -264,9 +264,10 @@ function EditEstablishment() {
       bg={bgColor}
       boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
       borderRadius="15px"
+      maxW={{ md: "90%", lg: "80%" }}
     >
       <Tabs variant="unstyled" mt="24px" alignSelf="center">
-        <TabList display="flex" align="center">
+        <TabList display="flex" align="center" justifyContent={"center"}>
           <Tab
             ref={mainInfoTab}
             _focus="none"

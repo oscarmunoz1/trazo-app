@@ -108,7 +108,6 @@ const AddEventStep3 = ({ onClose }) => {
           establishmentId: parseInt(establishmentId),
         })
       );
-      onClose();
     }
   }, [isSuccess, data]);
 

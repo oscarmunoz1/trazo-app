@@ -14,14 +14,14 @@ import {
 import React, { useRef } from "react";
 
 import { FaEllipsisH } from "react-icons/fa";
-import RecordModal from "dialog/RecordModal.js";
+import { useNavigate } from "react-router-dom";
 
 function TimelineRow(props) {
-  const { logo, title, date, color, isLast } = props;
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { logo, title, date, color, isLast, url } = props;
   const menuButtonRef = useRef();
   const textColor = useColorModeValue("gray.700", "white.300");
   const bgIconColor = useColorModeValue("white.300", "gray.700");
+  const navigate = useNavigate();
 
   return (
     <Flex alignItems="center" minH="78px" justifyContent="start" mb="5px">
@@ -53,12 +53,7 @@ function TimelineRow(props) {
             bg: "gray.100",
           }}
           cursor="pointer"
-          onClick={(e) => {
-            if (e.target === menuButtonRef.current) {
-              return;
-            }
-            onOpen();
-          }}
+          onClick={() => navigate(url)}
         >
           <Flex direction="column" w="100%">
             <Text fontSize="sm" color={textColor} fontWeight="bold">
@@ -73,7 +68,7 @@ function TimelineRow(props) {
               {date}
             </Text>
           </Flex>
-          <Menu>
+          {/* <Menu>
             <MenuButton variant="outline" ref={menuButtonRef}>
               <Button
                 p="0px"
@@ -92,15 +87,9 @@ function TimelineRow(props) {
               <MenuItem>Open Closed Tab</MenuItem>
               <MenuItem>Open File...</MenuItem>
             </MenuList>
-          </Menu>
+          </Menu> */}
         </Flex>
       </Flex>
-      <RecordModal
-        title={title}
-        name={"name"}
-        onClose={onClose}
-        isOpen={isOpen}
-      />
     </Flex>
   );
 }

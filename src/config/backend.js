@@ -13,9 +13,19 @@ export const ESTABLISHMENT_URL = (id) =>
   id ? `${ROOT_URL}/establishments/${id}/` : `${ROOT_URL}/establishments/`;
 export const PARCEL_URL = (id) =>
   id ? `${ROOT_URL}/parcels/${id}/` : `${ROOT_URL}/parcels/`;
+export const ESTABLISHMENT_PRODUCTS_URL = (establishmentId) =>
+  `${ROOT_URL}/establishments/${establishmentId}/products/`;
+export const ESTABLISHMENT_HISTORIES_URL = (establishmentId) =>
+  `${ROOT_URL}/establishments/${establishmentId}/histories/`;
+export const ESTABLISHMENT_CHART_SCANS_VS_SALES_INFO_URL = (establishmentId) =>
+  `${ROOT_URL}/establishments/${establishmentId}/get_charts_data/`;
+export const SCANS_BY_ESTABLISHMENT_URL = (establishmentId) =>
+  `${ROOT_URL}/scans/list_scans_by_establishment/?establishment=${establishmentId}`;
 export const PRODUCT_URL = `${ROOT_URL}/products/`;
 
-export const HISTORY_URL = (parcelId) =>
+export const HISTORY_URL = (historyId) =>
+  historyId ? `${ROOT_URL}/histories/${historyId}/` : `${ROOT_URL}/histories/`;
+export const PARCEL_HISTORY_URL = (parcelId) =>
   `${ROOT_URL}/parcels/${parcelId}/history/`;
 export const CURRENT_HISTORY = (parcelId) =>
   `${ROOT_URL}/parcels/${parcelId}/current_history/`;
@@ -23,3 +33,11 @@ export const FINISH_HISTORY = (parcelId) =>
   `${ROOT_URL}/parcels/${parcelId}/finish_history/`;
 export const EVENT_URL = (eventId) =>
   eventId ? `${ROOT_URL}/events/${eventId}/` : `${ROOT_URL}/events/`;
+export const PRODUCTION_URL = (productionId) =>
+  productionId
+    ? `${ROOT_URL}/histories/${productionId}/`
+    : `${ROOT_URL}/histories/`;
+export const PUBLIC_HISTORY_URL = (historyId) =>
+  `${ROOT_URL}/histories/${historyId}/public_history/`;
+export const COMMENT_HISTORY_URL = (scanId) =>
+  `${ROOT_URL}/scans/${scanId}/comment/`;

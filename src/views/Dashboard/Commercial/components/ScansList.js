@@ -17,6 +17,8 @@
 
 // Chakra imports
 import {
+  Button,
+  Flex,
   Table,
   Tbody,
   Text,
@@ -33,16 +35,30 @@ import CardHeader from "components/Card/CardHeader.js";
 import React from "react";
 import ScansRow from "components/Tables/ScansRow";
 
-const SalesByCountry = ({ title, labels, salesData }) => {
+const ScansList = ({ title, labels, scansData }) => {
   // Chakra Color Mode
   const textColor = useColorModeValue("gray.700", "white");
 
   return (
-    <Card px="0px">
+    <Card px="0px" height="780px">
       <CardHeader px="22px" mb="32px">
-        <Text color={textColor} fontSize="lg" fontWeight="bold">
-          {title}
-        </Text>
+        <Flex w="100%" justifyContent="space-between">
+          <Text color={textColor} fontSize="lg" fontWeight="bold">
+            {title}
+          </Text>
+          <Button
+            colorScheme="teal"
+            borderColor="green.400"
+            color="green.400"
+            variant="outline"
+            fontSize="xs"
+            w="100px"
+            h="35px"
+            mt={{ sm: "16px", md: "0px" }}
+          >
+            VIEW ALL
+          </Button>
+        </Flex>
       </CardHeader>
       <CardBody overflowX={{ sm: "scroll", md: "hidden" }}>
         <Table variant="simple">
@@ -64,9 +80,10 @@ const SalesByCountry = ({ title, labels, salesData }) => {
             </Tr>
           </Thead>
           <Tbody>
-            {salesData.map((sale) => {
-              return <ScansRow {...sale} />;
-            })}
+            {scansData &&
+              scansData.map((sale) => {
+                return <ScansRow {...sale} />;
+              })}
           </Tbody>
         </Table>
       </CardBody>
@@ -74,4 +91,4 @@ const SalesByCountry = ({ title, labels, salesData }) => {
   );
 };
 
-export default SalesByCountry;
+export default ScansList;

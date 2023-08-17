@@ -574,11 +574,13 @@ function Sidebar(props) {
   );
   let links = <>{createLinks(routes)}</>;
   let sidebarContent = (
-    <Box>
-      <Box mb="20px">{brand}</Box>
-      <Stack direction="column" mb="40px">
-        <Box>{links}</Box>
-      </Stack>
+    <Box justifyContent={"space-between"}>
+      <Flex direction={"column"}>
+        <Box mb="20px">{brand}</Box>
+        <Stack direction="column" mb="40px">
+          <Box>{links}</Box>
+        </Stack>
+      </Flex>
       <SidebarHelp sidebarWidth={sidebarWidth} />
     </Box>
   );

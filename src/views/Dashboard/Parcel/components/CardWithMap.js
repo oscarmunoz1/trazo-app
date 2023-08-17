@@ -38,7 +38,11 @@ const CardWithBackground = ({ backgroundImage }) => {
         borderRadius="15px"
       >
         <GoogleMap
-          mapContainerStyle={{ width: "100%", height: "100%" }}
+          mapContainerStyle={{
+            width: "100%",
+            height: "100%",
+            borderRadius: "10px",
+          }}
           zoom={16}
           center={{ lat: -31.27006513500534, lng: -57.199462864720985 }}
           mapTypeId="satellite"

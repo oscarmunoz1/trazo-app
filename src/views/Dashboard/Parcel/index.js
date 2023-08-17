@@ -74,6 +74,7 @@ export default function ParcelView() {
             state={establishment?.state}
             city={establishment?.city}
             zone={establishment?.zone}
+            readMoreLink={`/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/profile`}
             image={
               <Image
                 src={data?.image || BgMusicCard}

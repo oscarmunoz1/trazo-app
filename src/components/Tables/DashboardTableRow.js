@@ -31,7 +31,7 @@ import {
 import React from "react";
 
 function DashboardTableRow(props) {
-  const { logo, name, members, budget, progression, color } = props;
+  const { logo, name, members, budget, progression, color, onClick } = props;
   const textColor = useColorModeValue("gray.700", "white");
   return (
     <Tr
@@ -47,6 +47,7 @@ function DashboardTableRow(props) {
         },
       }}
       cursor="pointer"
+      onClick={onClick}
     >
       <Td minWidth={{ sm: "250px" }} pl="0px">
         <Flex

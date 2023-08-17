@@ -23,13 +23,13 @@ import BgSignUp from "assets/img/basic-auth.png";
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
-import EditEstablishment from "./components/forms/EditEstablishment";
+import EditEvent from "../components/forms/EditEvent";
 import FormInput from "components/Forms/FormInput";
-import NewEstablishment from "./components/forms/NewEstablishment";
+import NewEvent from "../components/forms/NewEvent";
 import { useSignUpMutation } from "store/features/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-function AddEstablishment({ isEdit = false }) {
+function UpdateEvent({ isEdit = false }) {
   const titleColor = useColorModeValue("green.300", "green.200");
   const textColor = useColorModeValue("gray.700", "white");
   const bgColor = useColorModeValue("white", "gray.700");
@@ -68,7 +68,7 @@ function AddEstablishment({ isEdit = false }) {
         pt={"55px"}
       >
         <Text fontSize="4xl" color="white" fontWeight="bold">
-          Add a new Establishment
+          {isEdit ? "Edit the selected Event" : "Add a new Event"}
         </Text>
         <Text
           fontSize="md"
@@ -78,14 +78,16 @@ function AddEstablishment({ isEdit = false }) {
           mb="26px"
           w={{ base: "90%", sm: "60%", lg: "40%", xl: "25%" }}
         >
-          Complete the form below to add a new establishment to your company.
+          {isEdit
+            ? "Modify the form below to edit the selected event."
+            : "Complete the form below to add a new event to your parcel history."}
         </Text>
       </Flex>
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
-        {isEdit ? <EditEstablishment /> : <NewEstablishment />}
+        {isEdit ? <EditEvent /> : <NewEvent />}
       </Flex>
     </Flex>
   );
 }
 
-export default AddEstablishment;
+export default UpdateEvent;

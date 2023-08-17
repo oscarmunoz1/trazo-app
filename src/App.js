@@ -1,8 +1,8 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import AddEstablishment from "views/Dashboard/Dashboard/AddEstablishment";
-import AddParcel from "views/Dashboard/Dashboard/AddParcel";
+import AddEstablishment from "views/Dashboard/Dashboard/Establishment/AddEstablishment";
+import AddParcel from "views/Dashboard/Dashboard/Parcel/AddParcel";
 import AdminLayout from "layouts/Admin.js";
 import AuthLayout from "layouts/Auth.js";
 import Authenticated from "./utils/protections/Authenticated";
@@ -11,15 +11,21 @@ import CertificationsView from "views/Dashboard/Certifications";
 import CheckAuth from "./utils/protections/CheckAuth";
 import CommercialView from "views/Dashboard/Commercial";
 import DashboardView from "views/Dashboard/Dashboard";
+import DetailEvent from "views/Dashboard/Dashboard/Event/DetailEvent";
+import FinishProduction from "views/Dashboard/Dashboard/Production/FinishProduction";
 import NotAuthenticated from "./utils/protections/NotAuthenticated";
 import ParcelView from "views/Dashboard/Parcel";
 import ProductDetail from "views/Scan/ProductDetail/ProductDetail";
-import ProfileEstablishment from "views/Dashboard/Dashboard/ProfileEstablishment";
+import ProfileEstablishment from "views/Dashboard/Dashboard/Establishment/ProfileEstablishment";
+import ProfileParcel from "views/Dashboard/Dashboard/Parcel/ProfileParcel";
+import ProfileProduction from "views/Dashboard/Dashboard/Production/ProfileProduction";
 import React from "react";
 import SelectCompanyView from "views/Dashboard/SelectCompany";
 import SignIn from "views/Authentication/SignIn/SignInIllustration";
 import SignInApp from "views/Authentication/SignIn/SignInBasic";
 import SignUp from "views/Authentication/SignUp/SignUpBasic";
+import UpdateEvent from "views/Dashboard/Dashboard/Event/UpdateEvent";
+import UpdateProduction from "views/Dashboard/Dashboard/Production/UpdateProduction";
 import VerifyEmail from "./views/Authentication/SignUp/VerifyEmail";
 
 const App = () => {
@@ -68,7 +74,7 @@ const App = () => {
               </Route>
               <Route path="/" element={<AuthLayout />}>
                 <Route path="capture" element={<Capture />} />
-                <Route path=":uuid" element={<ProductDetail />} />
+                <Route path="history/:historyId" element={<ProductDetail />} />
               </Route>
             </>
           )}
@@ -86,6 +92,9 @@ const App = () => {
                   exact
                   element={<SelectCompanyView />}
                 />
+
+                {/* Establishment Routes */}
+
                 <Route
                   path="establishment/add"
                   exact
@@ -106,6 +115,9 @@ const App = () => {
                   exact
                   element={<ProfileEstablishment />}
                 />
+
+                {/* Parcel Routes */}
+
                 <Route
                   path="establishment/:establishmentId/parcel/add"
                   exact
@@ -117,10 +129,59 @@ const App = () => {
                   element={<ParcelView />}
                 />
                 <Route
-                  path="establishment/:establishmentId/parcel/:parcelId"
+                  path="establishment/:establishmentId/parcel/:parcelId/change"
                   exact
-                  element={<CommercialView />}
+                  element={<AddParcel isEdit={true} />}
                 />
+                <Route
+                  path="establishment/:establishmentId/parcel/:parcelId/profile"
+                  exact
+                  element={<ProfileParcel />}
+                />
+
+                {/* Event Routes */}
+
+                <Route
+                  path="establishment/:establishmentId/parcel/:parcelId/event/add"
+                  exact
+                  element={<UpdateEvent />}
+                />
+                <Route
+                  path="establishment/:establishmentId/parcel/:parcelId/event/:eventId"
+                  exact
+                  element={<DetailEvent />}
+                />
+                <Route
+                  path="establishment/:establishmentId/parcel/:parcelId/event/:eventId/change"
+                  exact
+                  element={<AddEstablishment isEdit={true} />}
+                />
+
+                {/* Production Routes */}
+
+                <Route
+                  path="establishment/:establishmentId/parcel/:parcelId/production/add"
+                  exact
+                  element={<UpdateProduction />}
+                />
+                <Route
+                  path="establishment/:establishmentId/parcel/:parcelId/production/:productionId"
+                  exact
+                  element={<ProfileProduction />}
+                />
+                <Route
+                  path="establishment/:establishmentId/parcel/:parcelId/production/:productionId/change"
+                  exact
+                  element={<UpdateProduction isEdit={true} />}
+                />
+                <Route
+                  path="establishment/:establishmentId/parcel/:parcelId/production/:productionId/finish"
+                  exact
+                  element={<FinishProduction />}
+                />
+
+                {/* Certification Routes */}
+
                 <Route
                   path="establishment/:establishmentId/certifications/parcels"
                   exact

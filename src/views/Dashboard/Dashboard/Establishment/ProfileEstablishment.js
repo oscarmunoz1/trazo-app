@@ -41,7 +41,7 @@ import CardHeader from "components/Card/CardHeader";
 import FormInput from "components/Forms/FormInput";
 import HTMLRenderer from "components/Utils/HTMLRenderer";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
-import NewEstablishment from "./components/forms/NewEstablishment";
+import NewEstablishment from "../components/forms/NewEstablishment";
 import productPage1 from "assets/img/ProductImage1.png";
 import productPage2 from "assets/img/ProductImage2.png";
 import productPage3 from "assets/img/ProductImage3.png";
@@ -130,7 +130,7 @@ function ProfileEstablishment() {
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
         <Card
           mt={{ md: "24px" }}
-          w={{ sm: "95%", md: "90%", lg: "85%" }}
+          maxWidth={{ sm: "95%", md: "85%", lg: "80%" }}
           px="0px"
           pt={{ sm: "16px", md: "32px", lg: "0px" }}
           boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px"
@@ -142,17 +142,14 @@ function ProfileEstablishment() {
               py={{ md: "12px" }}
               px="24px"
             >
-              <Button
-                p="0px"
-                bg="transparent"
-                mb={{ sm: "10px", md: "0px" }}
-                me={{ md: "12px" }}
-              >
-                <Flex color="red.500" cursor="pointer" align="center" p="12px">
+              <Button p="0px" bg="transparent" mb={{ sm: "10px", md: "0px" }}>
+                <Flex
+                  color={textColor}
+                  cursor="pointer"
+                  align="center"
+                  p="12px"
+                >
                   <Icon as={FaTrashAlt} me="4px" />
-                  <Text fontSize="sm" fontWeight="semibold">
-                    DELETE
-                  </Text>
                 </Flex>
               </Button>
               <Button
@@ -171,9 +168,6 @@ function ProfileEstablishment() {
                   p="12px"
                 >
                   <Icon as={FaPencilAlt} me="4px" />
-                  <Text fontSize="sm" fontWeight="semibold">
-                    EDIT
-                  </Text>
                 </Flex>
               </Button>
             </Flex> */}
@@ -199,10 +193,10 @@ function ProfileEstablishment() {
                       color={textColor}
                       cursor="pointer"
                       align="center"
-                      p="12px"
+                      p="4px"
                     >
-                      <Icon as={FaPencilAlt} me="4px" />
-                      <Text fontSize="sm" fontWeight="semibold">
+                      {/* <Icon as={FaPencilAlt} me="4px" /> */}
+                      <Text fontSize="sm" fontWeight="500">
                         EDIT
                       </Text>
                     </Flex>
@@ -212,10 +206,10 @@ function ProfileEstablishment() {
                       color="red.500"
                       cursor="pointer"
                       align="center"
-                      p="12px"
+                      p="4px"
                     >
-                      <Icon as={FaTrashAlt} me="4px" />
-                      <Text fontSize="sm" fontWeight="semibold">
+                      {/* <Icon as={FaTrashAlt} me="4px" /> */}
+                      <Text fontSize="sm" fontWeight="500">
                         DELETE
                       </Text>
                     </Flex>
@@ -459,7 +453,7 @@ function ProfileEstablishment() {
                   </Flex>
                 </Flex>
               </Flex>
-              <Flex>
+              <Flex px="24px" pb="24px">
                 <HTMLRenderer htmlString={establishment?.description} />
               </Flex>
             </Flex>
