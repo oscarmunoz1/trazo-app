@@ -42,7 +42,7 @@ export default function Footer() {
         }}
         mb={{ base: "20px", xl: "0px" }}
       >
-        &copy; {1900 + new Date().getYear()},{" "}
+        &copy; {1900 + new Date().getYear()}
       </Text>
       <List display="flex">
         <ListItem
@@ -52,7 +52,7 @@ export default function Footer() {
           }}
         >
           <Link color="gray.400" href="https://www.creative-tim.com">
-            Creative Tim
+            Learn
           </Link>
         </ListItem>
         <ListItem
@@ -62,7 +62,7 @@ export default function Footer() {
           }}
         >
           <Link color="gray.400" href="https://www.simmmple.com">
-            Simmmple
+            Why us?
           </Link>
         </ListItem>
         <ListItem
@@ -85,7 +85,7 @@ export default function Footer() {
             href="#license"
             href="https://www.creative-tim.com/license?"
           >
-            License
+            Contact
           </Link>
         </ListItem>
       </List>

@@ -136,41 +136,6 @@ function ProfileEstablishment() {
           boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px"
         >
           <CardHeader justifyContent="end">
-            {/* <Flex
-              direction={{ sm: "column", md: "row" }}
-              align="flex-start"
-              py={{ md: "12px" }}
-              px="24px"
-            >
-              <Button p="0px" bg="transparent" mb={{ sm: "10px", md: "0px" }}>
-                <Flex
-                  color={textColor}
-                  cursor="pointer"
-                  align="center"
-                  p="12px"
-                >
-                  <Icon as={FaTrashAlt} me="4px" />
-                </Flex>
-              </Button>
-              <Button
-                p="0px"
-                bg="transparent"
-                onClick={() =>
-                  navigate(
-                    `/admin/dashboard/establishment/${establishmentId}/change`
-                  )
-                }
-              >
-                <Flex
-                  color={textColor}
-                  cursor="pointer"
-                  align="center"
-                  p="12px"
-                >
-                  <Icon as={FaPencilAlt} me="4px" />
-                </Flex>
-              </Button>
-            </Flex> */}
             <Flex p="24px" align="center" justify="center">
               <Menu isOpen={isOpen1} onClose={onClose1}>
                 <MenuButton onClick={onOpen1} alignSelf="flex-start">

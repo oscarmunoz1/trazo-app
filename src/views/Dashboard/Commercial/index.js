@@ -42,6 +42,7 @@ import ScansList from "./components/ScansList";
 import { historyApi } from "store/api/historyApi";
 import { productApi } from "store/api/productApi";
 import { scansData } from "variables/general";
+import { useGetEstablishmentProductReputationQuery } from "store/api/reviewApi";
 import { useGetScansByEstablishmentQuery } from "store/api/historyApi";
 import { useSelector } from "react-redux";
 
@@ -52,6 +53,7 @@ export default function CommercialView() {
   const textColor = useColorModeValue("gray.700", "white");
   const { establishmentId } = useParams();
   const chartRef = useRef(null);
+  const reputationChartRef = useRef(null);
   const [filters, setFilters] = useState({
     parcel: null,
     product: null,
@@ -92,6 +94,22 @@ export default function CommercialView() {
     },
     { skip: !currentEstablishmentId || !filters?.period }
   );
+
+  const {
+    data: dataEstablishmentProductsReputation,
+    isFetching: isFetchingEstablishmentProductsReputation,
+  } = useGetEstablishmentProductReputationQuery(
+    {
+      establishmentId: currentEstablishmentId,
+      periodId: filters.period.id,
+      productId: filters.product?.id,
+      parcelId: filters.parcel?.id,
+      productionId: filters.production?.id,
+    },
+    { skip: !currentEstablishmentId || !filters?.period }
+  );
+
+  console.log(dataEstablishmentProductsReputation);
 
   const [
     fetchScansByEstablishment,
@@ -213,6 +231,29 @@ export default function CommercialView() {
       });
     }
   }, [dataEstablishmentScansVsSaleInfo]);
+
+  useEffect(() => {
+    if (
+      dataEstablishmentProductsReputation != undefined &&
+      reputationChartRef.current
+    ) {
+      reputationChartRef.current.chart.updateSeries([
+        {
+          name: "Average",
+          data:
+            dataEstablishmentProductsReputation?.products_reputation?.series,
+        },
+      ]);
+      reputationChartRef.current.chart.updateOptions({
+        ...barChartOptionsCharts1,
+        xaxis: {
+          ...barChartOptionsCharts1.xaxis,
+          categories:
+            dataEstablishmentProductsReputation?.products_reputation?.options,
+        },
+      });
+    }
+  }, [dataEstablishmentProductsReputation]);
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
@@ -467,40 +508,36 @@ export default function CommercialView() {
                 </CardHeader>
                 <CardBody h="100%">
                   <Box w="100%" h="100%">
-                    {isFetching ? (
-                      <p>hola</p>
-                    ) : (
-                      <LineBarChart
-                        chartRef={chartRef}
-                        chartData={lineBarChartData.map((data) => {
-                          if (data.name === "Sales") {
-                            return {
-                              name: data.name,
-                              type: data.type,
-                              data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series.map(
-                                (serie) => (serie > 2 ? serie - 2 : 0)
-                              ),
-                            };
-                          }
+                    <LineBarChart
+                      chartRef={chartRef}
+                      chartData={lineBarChartData.map((data) => {
+                        if (data.name === "Sales") {
                           return {
                             name: data.name,
                             type: data.type,
-                            data:
-                              dataEstablishmentScansVsSaleInfo?.scans_vs_sales
-                                .series,
-                          };
-                        })}
-                        chartOptions={{
-                          ...lineBarChartOptions,
-                          xaxis: {
-                            ...lineBarChartOptions.xaxis,
-                            categories: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.options?.map(
-                              (option) => option.toString()
+                            data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series.map(
+                              (serie) => (serie > 2 ? serie - 2 : 0)
                             ),
-                          },
-                        }}
-                      />
-                    )}
+                          };
+                        }
+                        return {
+                          name: data.name,
+                          type: data.type,
+                          data:
+                            dataEstablishmentScansVsSaleInfo?.scans_vs_sales
+                              .series,
+                        };
+                      })}
+                      chartOptions={{
+                        ...lineBarChartOptions,
+                        xaxis: {
+                          ...lineBarChartOptions.xaxis,
+                          categories: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.options?.map(
+                            (option) => option.toString()
+                          ),
+                        },
+                      }}
+                    />
                   </Box>
                 </CardBody>
               </Card>
@@ -515,8 +552,29 @@ export default function CommercialView() {
                 <CardBody h="100%">
                   <Box w="100%" h="100%">
                     <BarChart
-                      chartData={barChartDataCharts1}
-                      chartOptions={barChartOptionsCharts1}
+                      chartRef={reputationChartRef}
+                      chartData={
+                        dataEstablishmentProductsReputation != null &&
+                        barChartDataCharts1.map((chart) => {
+                          return {
+                            name: chart.name,
+                            data:
+                              dataEstablishmentProductsReputation
+                                ?.products_reputation?.series,
+                          };
+                        })
+                      }
+                      chartOptions={
+                        dataEstablishmentProductsReputation != null && {
+                          ...barChartOptionsCharts1,
+                          xaxis: {
+                            ...barChartOptionsCharts1?.xaxis,
+                            categories:
+                              dataEstablishmentProductsReputation
+                                ?.products_reputation?.options,
+                          },
+                        }
+                      }
                     />
                   </Box>
                 </CardBody>
@@ -526,36 +584,6 @@ export default function CommercialView() {
         </Flex>
         <Flex gap={"20px"}>
           <Reviews />
-          {/* <Card px="0px" pb="0px" minH={"350px"}>
-            <CardHeader mb="34px" px="22px">
-              <Text color={textColor} fontSize="lg" fontWeight="bold">
-                Line chart with gradient
-              </Text>
-            </CardHeader>
-            <CardBody h="100%">
-              <Box w="100%" h="100%">
-                <LineChart
-                  chartData={lineChartDataCharts2}
-                  chartOptions={lineChartOptionsCharts2}
-                />
-              </Box>
-            </CardBody>
-          </Card>
-          <Card px="0px" pb="0px" minH={"350px"}>
-            <CardHeader mb="34px" px="22px">
-              <Text color={textColor} fontSize="lg" fontWeight="bold">
-                Line chart with gradient
-              </Text>
-            </CardHeader>
-            <CardBody h="100%">
-              <Box w="100%" h="100%">
-                <LineChart
-                  chartData={lineChartDataCharts22}
-                  chartOptions={lineChartOptionsCharts2}
-                />
-              </Box>
-            </CardBody>
-          </Card> */}
         </Flex>
       </Flex>
     </Flex>

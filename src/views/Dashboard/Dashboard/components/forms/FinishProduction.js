@@ -162,7 +162,6 @@ function FinishProduction() {
   );
 
   const onSubmitBasic = (data) => {
-    debugger;
     finishCurrentHistory({ parcelId: currentParcelId, historyData: data });
   };
 

@@ -23,6 +23,14 @@ export const SCANS_BY_ESTABLISHMENT_URL = (establishmentId) =>
   `${ROOT_URL}/scans/list_scans_by_establishment/?establishment=${establishmentId}`;
 export const PRODUCT_URL = `${ROOT_URL}/products/`;
 
+export const LAST_REVIEWS_URL = (establishmentId) =>
+  `${ROOT_URL}/establishments/${establishmentId}/last_reviews/`;
+export const PRODUCT_REPUTATION_URL = (establishmentId) =>
+  `${ROOT_URL}/establishments/${establishmentId}/products_reputation/`;
+export const PRODUCT_REPUTATION_PERCENTAGE_URL = (establishmentId) =>
+  `${ROOT_URL}/establishments/${establishmentId}/rating_reviews_percentage/`;
+export const REVIEW_URL = (reviewId) =>
+  reviewId ? `${ROOT_URL}/reviews/${reviewId}/` : `${ROOT_URL}/reviews/`;
 export const HISTORY_URL = (historyId) =>
   historyId ? `${ROOT_URL}/histories/${historyId}/` : `${ROOT_URL}/histories/`;
 export const PARCEL_HISTORY_URL = (parcelId) =>

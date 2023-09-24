@@ -4,6 +4,7 @@ import {
   Button,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Heading,
   Image,
@@ -13,16 +14,74 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import React, { useEffect } from "react";
+import { object, string } from "zod";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import React from "react";
+import FormInput from "components/Forms/FormInput";
 // Assets
 import illustration from "assets/img/illustration-auth.png";
+import { login } from "store/features/authSlice";
+import { useDispatch } from "react-redux";
+import { useLoginMutation } from "store/api/authApi";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const loginSchema = object({
+  email: string()
+    .min(1, "Email address is required")
+    .email("Email Address is invalid"),
+  password: string()
+    .min(1, "Password is required")
+    .min(8, "Password must be more than 8 characters")
+    .max(32, "Password must be less than 32 characters"),
+});
 
 function SignIn() {
   // Chakra color mode
   const titleColor = useColorModeValue("green.400", "teal.200");
   const textColor = useColorModeValue("gray.400", "white");
   const illustrationBackground = useColorModeValue("gray.50", "gray.700");
+
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const methods = useForm({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const [
+    signIn,
+    { data, isError, error, isLoading, isSuccess },
+  ] = useLoginMutation();
+
+  const {
+    reset,
+    handleSubmit,
+    formState: { errors, isSubmitSuccessful },
+  } = methods;
+
+  useEffect(() => {
+    if (data && isSuccess) {
+      const next = location.state?.next || "/admin/dashboard/";
+      dispatch(login(data));
+      navigate(next, { replace: true });
+      window.location.href = next;
+    }
+  }, [data, isSuccess]);
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful]);
+
+  const onSubmitHandler = (values) => {
+    signIn(values);
+  };
+
   return (
     <Flex position="relative" mb="40px">
       <Flex
@@ -60,64 +119,57 @@ function SignIn() {
             >
               Enter your email and password to sign in
             </Text>
-            <FormControl>
-              <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-                Email
-              </FormLabel>
-              <Input
-                borderRadius="15px"
-                mb="24px"
-                fontSize="sm"
-                type="text"
-                placeholder="Your email adress"
-                size="lg"
-              />
-              <FormLabel
-                ms="4px"
-                fontSize="sm"
-                fontWeight="normal"
-                color="gray.1300"
-              >
-                Password
-              </FormLabel>
-              <Input
-                borderRadius="15px"
-                mb="36px"
-                fontSize="sm"
-                type="password"
-                placeholder="Your password"
-                size="lg"
-              />
-              <FormControl display="flex" alignItems="center">
-                <Switch id="remember-login" colorScheme="teal" me="10px" />
-                <FormLabel
-                  htmlFor="remember-login"
-                  mb="0"
-                  ms="1"
-                  fontWeight="normal"
-                >
-                  Remember me
-                </FormLabel>
-              </FormControl>
-              <Button
-                fontSize="sm"
-                type="submit"
-                bg="green.400"
-                w="100%"
-                h="45"
-                mb="20px"
-                color="white"
-                mt="20px"
-                _hover={{
-                  bg: "teal.200",
-                }}
-                _active={{
-                  bg: "teal.400",
-                }}
-              >
-                SIGN IN
-              </Button>
-            </FormControl>
+            <FormProvider {...methods}>
+              <form onSubmit={handleSubmit(onSubmitHandler)}>
+                <FormControl isInvalid={isError}>
+                  <FormInput
+                    name="email"
+                    label="Email"
+                    placeholder="Your email address"
+                  />
+                  <FormInput
+                    name="password"
+                    label="Password"
+                    placeholder="Your password"
+                    type="password"
+                  />
+                  {isError && (
+                    <FormErrorMessage pl="4px">
+                      {error.data.detail}
+                    </FormErrorMessage>
+                  )}
+                  <FormControl display="flex" alignItems="center">
+                    <Switch id="remember-login" colorScheme="green" me="10px" />
+                    <FormLabel
+                      htmlFor="remember-login"
+                      mb="0"
+                      ms="1"
+                      fontWeight="normal"
+                    >
+                      Remember me
+                    </FormLabel>
+                  </FormControl>
+                  <Button
+                    fontSize="10px"
+                    type="submit"
+                    bg="green.300"
+                    w="100%"
+                    h="45"
+                    mb="20px"
+                    color="white"
+                    mt="20px"
+                    _hover={{
+                      bg: "green.200",
+                    }}
+                    _active={{
+                      bg: "green.400",
+                    }}
+                  >
+                    SIGN IN
+                  </Button>
+                </FormControl>
+              </form>
+            </FormProvider>
             <Flex
               flexDirection="column"
               justifyContent="center"

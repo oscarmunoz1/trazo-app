@@ -24,6 +24,10 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import {
+  useGetEstablishmentLastReviewsQuery,
+  useGetEstablishmentProductReputationPercentageQuery,
+} from "store/api/reviewApi";
 
 // Custom components
 import Card from "components/Card/Card";
@@ -31,9 +35,23 @@ import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import GeneralCard from "./GeneralCard";
 import React from "react";
+import { useParams } from "react-router-dom";
 
 const Reviews = () => {
   const textColor = useColorModeValue("gray.700", "white");
+  const { establishmentId } = useParams();
+
+  const { data: reviews } = useGetEstablishmentLastReviewsQuery({
+    establishmentId,
+  });
+
+  const {
+    data: reviewsPercentage,
+  } = useGetEstablishmentProductReputationPercentageQuery({
+    establishmentId,
+  });
+
+  console.log(reviewsPercentage);
 
   return (
     <Card>
@@ -52,13 +70,13 @@ const Reviews = () => {
                     Positive Reviews
                   </Text>
                   <Text fontSize="md" color="gray.400" fontWeight="500">
-                    80%
+                    {reviewsPercentage?.positive}%
                   </Text>
                 </Flex>
                 <Progress
                   colorScheme="teal"
                   size="sm"
-                  value={80}
+                  value={reviewsPercentage?.positive}
                   borderRadius="15px"
                 ></Progress>
               </Flex>
@@ -68,13 +86,13 @@ const Reviews = () => {
                     Neutral Reviews
                   </Text>
                   <Text fontSize="md" color="gray.400" fontWeight="500">
-                    17%
+                    {reviewsPercentage?.neutral}%
                   </Text>
                 </Flex>
                 <Progress
                   colorScheme="gray"
                   size="sm"
-                  value={17}
+                  value={reviewsPercentage?.neutral}
                   borderRadius="15px"
                 ></Progress>
               </Flex>
@@ -84,22 +102,25 @@ const Reviews = () => {
                     Negative Reviews
                   </Text>
                   <Text fontSize="md" color="gray.400" fontWeight="500">
-                    3%
+                    {reviewsPercentage?.negative}%
                   </Text>
                 </Flex>
                 <Progress
                   colorScheme="red"
                   size="sm"
-                  value={3}
+                  value={reviewsPercentage?.negative}
                   borderRadius="15px"
                 ></Progress>
               </Flex>
             </Stack>
           </Flex>
           <Flex flexDirection={"column"} gap="16px" width={"100%"} flex={2}>
+            {/* <GeneralCard />
             <GeneralCard />
-            <GeneralCard />
-            <GeneralCard />
+            <GeneralCard /> */}
+            {reviews?.map((review) => (
+              <GeneralCard key={review.id} review={review} />
+            ))}
             <Button
               variant="no-hover"
               borderRadius="12px"

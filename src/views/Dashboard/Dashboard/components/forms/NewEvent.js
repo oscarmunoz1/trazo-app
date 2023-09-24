@@ -55,14 +55,18 @@ import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import CardWithMap from "../CardWithMap";
+import ChemicalTab from "./ChemicalTab";
 import Editor from "components/Editor/Editor";
 import FormInput from "components/Forms/FormInput";
+import GeneralTab from "./GeneralTab";
 import Header from "views/Pages/Profile/Overview/components/Header";
+import ProductionTab from "./ProductionTab";
+// import ProductionTab from "./ProductionTab";
 import ProfileBgImage from "assets/img/ProfileBackground.png";
 import { RocketIcon } from "components/Icons/Icons";
 import Select from "react-select";
 import { SlChemistry } from "react-icons/sl";
-import { WeatherTab } from "./WeatherTab";
+import WeatherTab from "./WeatherTab";
 import { addCompanyEstablishment } from "store/features/companySlice";
 import avatar4 from "assets/img/avatars/avatar4.png";
 import imageMap from "assets/img/imageMap.png";
@@ -100,7 +104,6 @@ const styles = {
 };
 
 const formSchemaBasic = object({
-  name: string().min(1, "Name is required"),
   date: string().min(1, "Date is required"),
 });
 
@@ -236,7 +239,7 @@ function NewEstablishment() {
       setForm({
         event: {
           ...currentEvent,
-          type: data.type,
+          ...data,
         },
       })
     );
@@ -541,61 +544,7 @@ function NewEstablishment() {
                     style={{ width: "100%" }}
                   >
                     <Stack direction="column" spacing="20px" w="100%">
-                      <Stack
-                        direction={{ sm: "column", md: "row" }}
-                        spacing="30px"
-                      >
-                        <FormControl>
-                          <FormInput
-                            name="name"
-                            label="Name"
-                            placeholder="Event name"
-                            fontSize="xs"
-                          />
-                        </FormControl>
-                        <FormControl>
-                          <FormInput
-                            fontSize="xs"
-                            label="Date"
-                            type="datetime-local"
-                            name="date"
-                            placeholder="Select date and time"
-                          />
-                        </FormControl>
-                      </Stack>
-                      <Flex>
-                        <FormControl>
-                          <FormLabel
-                            pl={"12px"}
-                            fontSize="xs"
-                            fontWeight="bold"
-                            mb={"4px"}
-                          >
-                            Select the others Parcels to which the event was
-                            applied
-                          </FormLabel>
-                          <Select
-                            // value={parcels?.filter((v) => v.isFixed)}
-                            value={value}
-                            isMulti
-                            styles={styles}
-                            isClearable={value?.some((v) => !v.isFixed)}
-                            name="colors"
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                            onChange={onChange}
-                            options={parcels}
-                          />
-                        </FormControl>
-                      </Flex>
-                      <Flex
-                        direction="column"
-                        justify="center"
-                        textAlign="center"
-                        w="80%"
-                        mx="auto"
-                        mt="10px"
-                      >
+                      <Flex direction="column" w="80%" mt="10px">
                         <FormLabel
                           ms="4px"
                           fontSize="xs"
@@ -648,7 +597,7 @@ function NewEstablishment() {
                             }
                             onClick={() => setActiveButton(1)}
                           >
-                            CHEMICAL
+                            PRODUCTION
                           </Button>
                           <Button
                             variant="no-hover"
@@ -667,9 +616,75 @@ function NewEstablishment() {
                             }
                             onClick={() => setActiveButton(2)}
                           >
+                            CHEMICAL
+                          </Button>
+                          <Button
+                            variant="no-hover"
+                            w="135px"
+                            h="40px"
+                            fontSize="xs"
+                            boxShadow={
+                              activeButton === 3
+                                ? "0px 2px 5.5px rgba(0, 0, 0, 0.06)"
+                                : "none"
+                            }
+                            bg={
+                              activeButton === 3
+                                ? bgActiveButton
+                                : "transparent"
+                            }
+                            onClick={() => setActiveButton(3)}
+                          >
                             OTHER
                           </Button>
                         </Flex>
+                      </Flex>
+                      {/* <Stack
+                        direction={{ sm: "column", md: "row" }}
+                        spacing="30px"
+                      > */}
+                      {/* <FormControl>
+                          <FormInput
+                            name="name"
+                            label="Name"
+                            placeholder="Event name"
+                            fontSize="xs"
+                          />
+                        </FormControl> */}
+                      <FormControl>
+                        <FormInput
+                          fontSize="xs"
+                          label="Date"
+                          type="datetime-local"
+                          name="date"
+                          placeholder="Select date and time"
+                        />
+                      </FormControl>
+                      {/* </Stack> */}
+                      <Flex>
+                        <FormControl>
+                          <FormLabel
+                            pl={"12px"}
+                            fontSize="xs"
+                            fontWeight="bold"
+                            mb={"4px"}
+                          >
+                            Select the others Parcels to which the event was
+                            applied
+                          </FormLabel>
+                          <Select
+                            // value={parcels?.filter((v) => v.isFixed)}
+                            value={value}
+                            isMulti
+                            styles={styles}
+                            isClearable={value?.some((v) => !v.isFixed)}
+                            name="colors"
+                            className="basic-multi-select"
+                            classNamePrefix="select"
+                            onChange={onChange}
+                            options={parcels}
+                          />
+                        </FormControl>
                       </Flex>
 
                       <Button
@@ -699,7 +714,7 @@ function NewEstablishment() {
                 </Text>
               </CardHeader>
               <CardBody>
-                <FormProvider {...mainInfoMethods}>
+                {/* <FormProvider {...mainInfoMethods}>
                   <form
                     onSubmit={mainInfoSubmit(onSubmitMainInfo)}
                     style={{ width: "100%" }}
@@ -862,7 +877,28 @@ function NewEstablishment() {
                       </Flex>
                     </Flex>
                   </form>
-                </FormProvider>
+                </FormProvider> */}
+                {activeButton === 0 ? (
+                  <WeatherTab
+                    onSubmitHandler={onSubmitMainInfo}
+                    onPrev={() => basicTab.current.click()}
+                  />
+                ) : activeButton === 1 ? (
+                  <ProductionTab
+                    onSubmitHandler={onSubmitMainInfo}
+                    onPrev={() => basicTab.current.click()}
+                  />
+                ) : activeButton === 2 ? (
+                  <ChemicalTab
+                    onSubmitHandler={onSubmitMainInfo}
+                    onPrev={() => basicTab.current.click()}
+                  />
+                ) : (
+                  <GeneralTab
+                    onSubmitHandler={onSubmitMainInfo}
+                    onPrev={() => basicTab.current.click()}
+                  />
+                )}
               </CardBody>
             </Card>
           </TabPanel>

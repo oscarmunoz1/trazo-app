@@ -17,6 +17,7 @@
 
 // Chakra imports
 import {
+  Box,
   Button,
   CircularProgress,
   Flex,
@@ -45,14 +46,20 @@ import {
 } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { GoogleMap, Polygon, useLoadScript } from "@react-google-maps/api";
-import React, { useEffect, useReducer, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import { boolean, object, string } from "zod";
 import { clearForm, setForm } from "store/features/formSlice";
-import {
-  useCreateParcelMutation,
-  useGetParcelQuery,
-} from "store/api/productApi";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  useGetParcelQuery,
+  useUpdateParcelMutation,
+} from "store/api/productApi";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { BsCircleFill } from "react-icons/bs";
@@ -161,6 +168,7 @@ function NewParcel() {
   const currentCompany = useSelector((state) => state.company.currentCompany);
 
   const { establishmentId, parcelId } = useParams();
+  const [files, setFiles] = useState([]);
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: options.googleMapApiKey,
@@ -180,7 +188,12 @@ function NewParcel() {
   const mediaTab = useRef();
   const certificationTab = useRef();
 
-  const { getRootProps, getInputProps } = useDropzone();
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    // onDrop,
+    // accept: "image/*", // Accepted file types
+    maxFiles: 5, // Maximum number of files
+    // maxSize: 1024 * 1024 * 5, // Maximum file size (5 MB)
+  });
 
   const currentParcel = useSelector((state) => state.product.currentParcel);
 
@@ -276,16 +289,25 @@ function NewParcel() {
   const certificateValue = watch("certificate");
 
   const [
-    createParcel,
+    updateParcel,
     { data, error, isSuccess, isLoading },
-  ] = useCreateParcelMutation();
+  ] = useUpdateParcelMutation();
 
   const onSubmitCertificate = (data) => {
     console.log(data);
-    createParcel({
-      ...currentParcel,
-      ...data,
-      establishment: parseInt(establishmentId),
+    const { product, ...currentParcelData } = currentParcel;
+    if (product) {
+      currentParcelData["product"] = product;
+    }
+
+    updateParcel({
+      parcelId,
+      parcelData: {
+        ...currentParcelData,
+        ...data,
+        establishment: parseInt(establishmentId),
+        album: { images: acceptedFiles },
+      },
     });
   };
 
@@ -298,7 +320,9 @@ function NewParcel() {
         })
       );
       dispatch(clearForm());
-      navigate(`/admin/dashboard/establishment/${establishmentId}`);
+      navigate(
+        `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/profile`
+      );
     }
   }, [isSuccess]);
 
@@ -796,15 +820,55 @@ function NewParcel() {
                     border="1px dashed #E2E8F0"
                     borderRadius="15px"
                     w="100%"
-                    minH="130px"
+                    maxWidth={"980px"}
+                    // minH="130px"
                     cursor="pointer"
+                    overflowY={"auto"}
+                    minH={"175px"}
+                    // p="60px"
                     {...getRootProps({ className: "dropzone" })}
                   >
                     <Input {...getInputProps()} />
                     <Button variant="no-hover">
-                      <Text color="gray.400" fontWeight="normal">
-                        Drop files here to upload
-                      </Text>
+                      {acceptedFiles.length > 0 ? (
+                        // <Text fontSize="sm" color="green">
+                        //   {files.length} file(s) selected:
+                        //   {files.map((file) => (
+                        //     <span key={file.path}> {file.name},</span>
+                        //   ))}
+                        // </Text>
+                        <Flex gap="20px" p="20px" flexWrap={"wrap"}>
+                          {/* <Stack spacing={2}> */}
+                          {acceptedFiles.map((file, index) => (
+                            <Box key={index}>
+                              <img
+                                src={URL.createObjectURL(file)} // Create a preview URL for the image
+                                alt={file.name}
+                                style={{
+                                  width: "150px",
+                                  height: "100px",
+                                  borderRadius: "15px",
+                                  objectFit: "contain",
+                                }}
+                              />
+                              <Text
+                                color="gray.400"
+                                fontWeight="normal"
+                                maxWidth="150px"
+                                textOverflow={"ellipsis"}
+                                overflow={"hidden"}
+                              >
+                                {file.name}
+                              </Text>
+                            </Box>
+                          ))}
+                          {/* </Stack> */}
+                        </Flex>
+                      ) : (
+                        <Text color="gray.400" fontWeight="normal">
+                          Drop files here to upload
+                        </Text>
+                      )}
                     </Button>
                   </Flex>
                   <Flex justify="space-between">
@@ -920,7 +984,7 @@ function NewParcel() {
                             mt="24px"
                             w={{ sm: "75px", lg: "100px" }}
                             h="35px"
-                            onClick={() => prevTab.current.click()}
+                            onClick={() => mediaTab.current.click()}
                           >
                             <Text
                               fontSize="xs"

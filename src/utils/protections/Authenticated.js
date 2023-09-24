@@ -27,7 +27,9 @@ const Authenticated = ({ allowedRoles }) => {
     const id = Number(establishmentId);
 
     if (
-      (establishmentId || pathname == "/admin/dashboard/") &&
+      (establishmentId ||
+        pathname == "/admin/dashboard" ||
+        pathname == "/admin/dashboard/") &&
       currentUser?.companies.length > 0
     ) {
       if (
@@ -51,25 +53,21 @@ const Authenticated = ({ allowedRoles }) => {
     }
   }, [currentUser, navigate]);
 
-  const nextUrl = LOGIN_PAGE_URL + "?next=" + pathname;
+  const nextUrl =
+    LOGIN_PAGE_URL + (pathname !== "/" ? "?next=" + pathname : "");
 
   return isLoading === false &&
     isAuthenticated &&
     allowedRoles.includes(currentUser?.user_type) ? (
     <Outlet />
   ) : isLoading === false && isAuthenticated === false ? (
-    <Navigate
-      to={nextUrl}
-      state={{
-        next: pathname,
-      }}
-    />
-  ) : (
-    isLoading === false &&
-    isAuthenticated &&
-    currentUser &&
-    !allowedRoles.includes(currentUser.user_type) && <Navigate to="/pricing" />
-  );
+    <Navigate to={nextUrl} state={{ next: pathname }} />
+  ) : // ) : isLoading === false &&
+  //   isAuthenticated &&
+  //   currentUser &&
+  //   !allowedRoles.includes(currentUser.user_type) ? (
+  //   <Navigate to="/pricing" />
+  null;
 };
 
 export default Authenticated;

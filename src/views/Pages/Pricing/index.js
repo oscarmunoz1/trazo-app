@@ -50,8 +50,8 @@ import zohoLogo from "assets/svg/zoho-logo.svg";
 
 function Pricing() {
   const [activeButton, setActiveButton] = useState({
-    monthly: true,
-    yearly: false,
+    plans: true,
+    extras: false,
   });
 
   const textColor = useColorModeValue("gray.700", "white");
@@ -115,14 +115,12 @@ function Pricing() {
             h="40px"
             fontSize="xs"
             boxShadow={
-              activeButton.monthly
-                ? "0px 2px 5.5px rgba(0, 0, 0, 0.06)"
-                : "none"
+              activeButton.plans ? "0px 2px 5.5px rgba(0, 0, 0, 0.06)" : "none"
             }
-            bg={activeButton.monthly ? bgActiveButton : "transparent"}
-            onClick={() => setActiveButton({ monthly: true, yearly: false })}
+            bg={activeButton.plans ? bgActiveButton : "transparent"}
+            onClick={() => setActiveButton({ plans: true, extras: false })}
           >
-            MONTHLY
+            PLANS
           </Button>
           <Button
             variant="no-hover"
@@ -130,12 +128,12 @@ function Pricing() {
             h="40px"
             fontSize="xs"
             boxShadow={
-              activeButton.yearly ? "0px 2px 5.5px rgba(0, 0, 0, 0.06)" : "none"
+              activeButton.extras ? "0px 2px 5.5px rgba(0, 0, 0, 0.06)" : "none"
             }
-            bg={activeButton.yearly ? bgActiveButton : "transparent"}
-            onClick={() => setActiveButton({ monthly: false, yearly: true })}
+            bg={activeButton.extras ? bgActiveButton : "transparent"}
+            onClick={() => setActiveButton({ plans: false, extras: true })}
           >
-            YEARLY
+            EXTRAS
           </Button>
         </Flex>
         <Stack
@@ -144,305 +142,438 @@ function Pricing() {
           mt="50px"
           mb="80px"
         >
-          <Card
-            boxShadow={"0px 2px 5.5px rgba(0, 0, 0, 0.1)"}
-            w={{ sm: "300px", md: "650px", lg: "300px" }}
-          >
-            <CardHeader mb="30px">
-              <Flex direction="column" w="100%" align="center">
-                <Tag size="sm">STARTER</Tag>
-                <Text color={textColor} fontSize="5xl" fontWeight="bold">
-                  {activeButton.monthly ? "$59" : "$119"}
-                </Text>
-              </Flex>
-            </CardHeader>
-            <CardBody>
-              <Flex direction="column" w="100%">
-                <Stack direction="column" spacing="16px" w="100%" mb="35px">
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaCheckCircle}
-                      mr="8px"
-                      color="green.400"
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      2 Team Members
+          {activeButton.plans ? (
+            <>
+              <Card
+                boxShadow={"0px 2px 5.5px rgba(0, 0, 0, 0.1)"}
+                w={{ sm: "300px", md: "650px", lg: "300px" }}
+              >
+                <CardHeader mb="30px">
+                  <Flex direction="column" w="100%" align="center">
+                    <Tag size="sm">BASIC</Tag>
+                    <Text color={textColor} fontSize="5xl" fontWeight="bold">
+                      {activeButton.plans ? "$59" : "$250"}
                     </Text>
                   </Flex>
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaCheckCircle}
-                      mr="8px"
-                      color="green.400"
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      20GB Cloud Storage
+                </CardHeader>
+                <CardBody>
+                  <Flex
+                    direction="column"
+                    w="100%"
+                    justifyContent={"space-between"}
+                  >
+                    <Stack direction="column" spacing="16px" w="100%" mb="35px">
+                      <Flex align="center">
+                        <Icon
+                          w="20px"
+                          h="20px"
+                          as={FaCheckCircle}
+                          mr="8px"
+                          color="green.400"
+                        />
+                        <Text
+                          color="gray.500"
+                          fontWeight="normal"
+                          fontSize="md"
+                        >
+                          1 Company
+                        </Text>
+                      </Flex>
+                      <Flex align="center">
+                        <Icon
+                          w="20px"
+                          h="20px"
+                          as={FaCheckCircle}
+                          mr="8px"
+                          color="green.400"
+                        />
+                        <Text
+                          color="gray.500"
+                          fontWeight="normal"
+                          fontSize="md"
+                        >
+                          1 Establishment
+                        </Text>
+                      </Flex>
+                      <Flex align="center">
+                        <Icon
+                          w="20px"
+                          h="20px"
+                          as={FaCheckCircle}
+                          mr="8px"
+                          color="green.400"
+                        />
+                        <Text
+                          color="gray.500"
+                          fontWeight="normal"
+                          fontSize="md"
+                        >
+                          1 Parcel
+                        </Text>
+                      </Flex>
+                      <Flex align="center">
+                        <Icon
+                          w="20px"
+                          h="20px"
+                          as={FaCheckCircle}
+                          mr="8px"
+                          color="green.400"
+                        />
+                        <Text
+                          color="gray.500"
+                          fontWeight="normal"
+                          fontSize="md"
+                        >
+                          2 Productions/year
+                        </Text>
+                      </Flex>
+                    </Stack>
+                    <Button
+                      variant="no-hover"
+                      fontSize="xs"
+                      bg={bgButton}
+                      color="#fff"
+                    >
+                      JOIN NOW
+                    </Button>
+                  </Flex>
+                </CardBody>
+              </Card>
+              <Card
+                boxShadow={"0px 2px 5.5px rgba(0, 0, 0, 0.1)"}
+                w={{ sm: "300px", md: "650px", lg: "300px" }}
+              >
+                <CardHeader mb="30px">
+                  <Flex direction="column" w="100%" align="center">
+                    <Tag size="sm">STANDARD</Tag>
+                    <Text color={textColor} fontSize="5xl" fontWeight="bold">
+                      {activeButton.plans ? "$89" : "$530"}
                     </Text>
                   </Flex>
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaTimesCircle}
-                      mr="8px"
-                      color={bgTimesIcon}
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      Integration Help
+                </CardHeader>
+                <CardBody>
+                  <Flex
+                    direction="column"
+                    w="100%"
+                    justifyContent={"space-between"}
+                  >
+                    <Stack direction="column" spacing="16px" w="100%" mb="35px">
+                      <Flex align="center">
+                        <Icon
+                          w="20px"
+                          h="20px"
+                          as={FaCheckCircle}
+                          mr="8px"
+                          color="green.400"
+                        />
+                        <Text
+                          color="gray.500"
+                          fontWeight="normal"
+                          fontSize="md"
+                        >
+                          1 Company
+                        </Text>
+                      </Flex>
+                      <Flex align="center">
+                        <Icon
+                          w="20px"
+                          h="20px"
+                          as={FaCheckCircle}
+                          mr="8px"
+                          color="green.400"
+                        />
+                        <Text
+                          color="gray.500"
+                          fontWeight="normal"
+                          fontSize="md"
+                        >
+                          1 Establishment
+                        </Text>
+                      </Flex>
+                      <Flex align="center">
+                        <Icon
+                          w="20px"
+                          h="20px"
+                          as={FaCheckCircle}
+                          mr="8px"
+                          color="green.400"
+                        />
+                        <Text
+                          color="gray.500"
+                          fontWeight="normal"
+                          fontSize="md"
+                        >
+                          Establishment full description
+                        </Text>
+                      </Flex>
+                      <Flex align="center">
+                        <Icon
+                          w="20px"
+                          h="20px"
+                          as={FaCheckCircle}
+                          mr="8px"
+                          color="green.400"
+                        />
+                        <Text
+                          color="gray.500"
+                          fontWeight="normal"
+                          fontSize="md"
+                        >
+                          2 Parcels
+                        </Text>
+                      </Flex>
+                      <Flex align="center">
+                        <Icon
+                          w="20px"
+                          h="20px"
+                          as={FaCheckCircle}
+                          mr="8px"
+                          color="green.400"
+                        />
+                        <Text
+                          color="gray.500"
+                          fontWeight="normal"
+                          fontSize="md"
+                        >
+                          4 Productions/year
+                        </Text>
+                      </Flex>
+                    </Stack>
+                    <Button
+                      variant="no-hover"
+                      fontSize="xs"
+                      bg={bgButton}
+                      color="#fff"
+                    >
+                      JOIN NOW
+                    </Button>
+                  </Flex>
+                </CardBody>
+              </Card>
+              <Card
+                boxShadow={"0px 2px 5.5px rgba(0, 0, 0, 0.1)"}
+                w={{ sm: "300px", md: "650px", lg: "300px" }}
+              >
+                <CardHeader mb="30px">
+                  <Flex direction="column" w="100%" align="center">
+                    <Tag size="sm">CORPORATE</Tag>
+                    <Text color={textColor} fontSize="5xl" fontWeight="bold">
+                      {activeButton.plans ? "$99" : "$1200"}
                     </Text>
                   </Flex>
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaTimesCircle}
-                      mr="8px"
-                      color={bgTimesIcon}
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      Sketch Files
-                    </Text>
+                </CardHeader>
+                <CardBody>
+                  <Flex
+                    direction="column"
+                    w="100%"
+                    justifyContent={"space-between"}
+                  >
+                    <Stack direction="column" spacing="16px" w="100%" mb="35px">
+                      <Flex align="center">
+                        <Icon
+                          w="20px"
+                          h="20px"
+                          as={FaCheckCircle}
+                          mr="8px"
+                          color="green.400"
+                        />
+                        <Text
+                          color="gray.500"
+                          fontWeight="normal"
+                          fontSize="md"
+                        >
+                          1 Company
+                        </Text>
+                      </Flex>
+                      <Flex align="center">
+                        <Icon
+                          w="20px"
+                          h="20px"
+                          as={FaCheckCircle}
+                          mr="8px"
+                          color="green.400"
+                        />
+                        <Text
+                          color="gray.500"
+                          fontWeight="normal"
+                          fontSize="md"
+                        >
+                          2 Establishments
+                        </Text>
+                      </Flex>
+                      <Flex align="center">
+                        <Icon
+                          w="20px"
+                          h="20px"
+                          as={FaCheckCircle}
+                          mr="8px"
+                          color="green.400"
+                        />
+                        <Text
+                          color="gray.500"
+                          fontWeight="normal"
+                          fontSize="md"
+                        >
+                          Establishment full description
+                        </Text>
+                      </Flex>
+                      <Flex align="center">
+                        <Icon
+                          w="20px"
+                          h="20px"
+                          as={FaCheckCircle}
+                          mr="8px"
+                          color="green.400"
+                        />
+                        <Text
+                          color="gray.500"
+                          fontWeight="normal"
+                          fontSize="md"
+                        >
+                          4 Parcels per Establishment
+                        </Text>
+                      </Flex>
+                      <Flex align="center">
+                        <Icon
+                          w="20px"
+                          h="20px"
+                          as={FaCheckCircle}
+                          mr="8px"
+                          color="green.400"
+                        />
+                        <Text
+                          color="gray.500"
+                          fontWeight="normal"
+                          fontSize="md"
+                        >
+                          8 Productions/year
+                        </Text>
+                      </Flex>
+                    </Stack>
+                    <Button
+                      variant="no-hover"
+                      fontSize="xs"
+                      bg={bgButton}
+                      color="#fff"
+                    >
+                      JOIN NOW
+                    </Button>
                   </Flex>
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaTimesCircle}
-                      mr="8px"
-                      color={bgTimesIcon}
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      API Access
-                    </Text>
-                  </Flex>
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaTimesCircle}
-                      mr="8px"
-                      color={bgTimesIcon}
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      Complete Documentation
-                    </Text>
-                  </Flex>
-                </Stack>
-                <Button
-                  variant="no-hover"
-                  fontSize="xs"
-                  bg={bgButton}
-                  color="#fff"
+                </CardBody>
+              </Card>
+            </>
+          ) : (
+            <Card
+              boxShadow={"0px 2px 5.5px rgba(0, 0, 0, 0.1)"}
+              w={{ sm: "300px", md: "650px", lg: "300px" }}
+            >
+              <CardHeader mb="30px">
+                <Flex direction="column" w="100%" align="center">
+                  <Tag size="sm">ADD EXTRAS INDIVIDUALLY</Tag>
+                </Flex>
+              </CardHeader>
+              <CardBody>
+                <Flex
+                  direction="column"
+                  w="100%"
+                  justifyContent={"space-between"}
                 >
-                  JOIN NOW
-                </Button>
-              </Flex>
-            </CardBody>
-          </Card>
-          <Card
-            boxShadow={"0px 2px 5.5px rgba(0, 0, 0, 0.1)"}
-            w={{ sm: "300px", md: "650px", lg: "300px" }}
-          >
-            <CardHeader mb="30px">
-              <Flex direction="column" w="100%" align="center">
-                <Tag size="sm">PREMIUM</Tag>
-                <Text color={textColor} fontSize="5xl" fontWeight="bold">
-                  {activeButton.monthly ? "$89" : "$159"}
-                </Text>
-              </Flex>
-            </CardHeader>
-            <CardBody>
-              <Flex direction="column" w="100%">
-                <Stack direction="column" spacing="16px" w="100%" mb="35px">
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaCheckCircle}
-                      mr="8px"
-                      color="green.400"
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      10 Team Members
-                    </Text>
-                  </Flex>
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaCheckCircle}
-                      mr="8px"
-                      color="green.400"
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      40GB Cloud Storage
-                    </Text>
-                  </Flex>
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaCheckCircle}
-                      mr="8px"
-                      color="green.400"
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      Integration Help
-                    </Text>
-                  </Flex>
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaCheckCircle}
-                      mr="8px"
-                      color="green.400"
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      Sketch Files
-                    </Text>
-                  </Flex>
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaTimesCircle}
-                      mr="8px"
-                      color={bgTimesIcon}
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      API Access
-                    </Text>
-                  </Flex>
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaTimesCircle}
-                      mr="8px"
-                      color={bgTimesIcon}
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      Complete Documentation
-                    </Text>
-                  </Flex>
-                </Stack>
-                <Button
-                  variant="no-hover"
-                  fontSize="xs"
-                  bg="green.400"
-                  color="#fff"
-                >
-                  TRY PREMIUM
-                </Button>
-              </Flex>
-            </CardBody>
-          </Card>
-          <Card
-            boxShadow={"0px 2px 5.5px rgba(0, 0, 0, 0.1)"}
-            w={{ sm: "300px", md: "650px", lg: "300px" }}
-          >
-            <CardHeader mb="30px">
-              <Flex direction="column" w="100%" align="center">
-                <Tag size="sm">ENTERPRISE</Tag>
-                <Text color={textColor} fontSize="5xl" fontWeight="bold">
-                  {activeButton.monthly ? "$99" : "$399"}
-                </Text>
-              </Flex>
-            </CardHeader>
-            <CardBody>
-              <Flex direction="column" w="100%">
-                <Stack direction="column" spacing="16px" w="100%" mb="35px">
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaCheckCircle}
-                      mr="8px"
-                      color="green.400"
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      Unlimited Team Members
-                    </Text>
-                  </Flex>
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaCheckCircle}
-                      mr="8px"
-                      color="green.400"
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      100GB Cloud Storage
-                    </Text>
-                  </Flex>
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaCheckCircle}
-                      mr="8px"
-                      color="green.400"
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      Integration Help
-                    </Text>
-                  </Flex>
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaCheckCircle}
-                      mr="8px"
-                      color="green.400"
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      Sketch Files
-                    </Text>
-                  </Flex>
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaCheckCircle}
-                      mr="8px"
-                      color="green.400"
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      API Access
-                    </Text>
-                  </Flex>
-                  <Flex align="center">
-                    <Icon
-                      w="20px"
-                      h="20px"
-                      as={FaCheckCircle}
-                      mr="8px"
-                      color="green.400"
-                    />
-                    <Text color="gray.500" fontWeight="normal" fontSize="md">
-                      Complete Documentation
-                    </Text>
-                  </Flex>
-                </Stack>
-                <Button
-                  variant="no-hover"
-                  fontSize="xs"
-                  bg={bgButton}
-                  color="#fff"
-                >
-                  JOIN NOW
-                </Button>
-              </Flex>
-            </CardBody>
-          </Card>
+                  <Stack direction="column" spacing="16px" w="100%" mb="35px">
+                    <Flex align="center">
+                      <Icon
+                        w="20px"
+                        h="20px"
+                        as={FaCheckCircle}
+                        mr="8px"
+                        color="green.400"
+                      />
+                      <Text color="gray.500" fontWeight="normal" fontSize="md">
+                        1 Company{" "}
+                      </Text>
+                      <Text
+                        color={textColor}
+                        pl="12px"
+                        fontSize="2xl"
+                        fontWeight="bold"
+                      >
+                        $2000
+                      </Text>
+                    </Flex>
+                    <Flex align="center">
+                      <Icon
+                        w="20px"
+                        h="20px"
+                        as={FaCheckCircle}
+                        mr="8px"
+                        color="green.400"
+                      />
+                      <Text color="gray.500" fontWeight="normal" fontSize="md">
+                        1 Establishment{" "}
+                      </Text>
+                      <Text
+                        color={textColor}
+                        pl="12px"
+                        fontSize="2xl"
+                        fontWeight="bold"
+                      >
+                        $1300
+                      </Text>
+                    </Flex>
+                    <Flex align="center">
+                      <Icon
+                        w="20px"
+                        h="20px"
+                        as={FaCheckCircle}
+                        mr="8px"
+                        color="green.400"
+                      />
+                      <Text color="gray.500" fontWeight="normal" fontSize="md">
+                        1 Parcel{" "}
+                      </Text>
+                      <Text
+                        color={textColor}
+                        pl="12px"
+                        fontSize="2xl"
+                        fontWeight="bold"
+                      >
+                        $300
+                      </Text>
+                    </Flex>
+                    <Flex align="center">
+                      <Icon
+                        w="20px"
+                        h="20px"
+                        as={FaCheckCircle}
+                        mr="8px"
+                        color="green.400"
+                      />
+                      <Text color="gray.500" fontWeight="normal" fontSize="md">
+                        1 Production{" "}
+                      </Text>
+                      <Text
+                        color={textColor}
+                        pl="12px"
+                        fontSize="2xl"
+                        fontWeight="bold"
+                      >
+                        $100
+                      </Text>
+                    </Flex>
+                  </Stack>
+                  <Button
+                    variant="no-hover"
+                    fontSize="xs"
+                    bg={bgButton}
+                    color="#fff"
+                  >
+                    ADD
+                  </Button>
+                </Flex>
+              </CardBody>
+            </Card>
+          )}
         </Stack>
-        <Flex direction="column" mb="110px" justify="center" align="center">
+        {/* <Flex direction="column" mb="110px" justify="center" align="center">
           <Text
             color="gray.300"
             fontWeight="bold"
@@ -694,7 +825,7 @@ function Pricing() {
               </Text>
             </AccordionPanel>
           </AccordionItem>
-        </Accordion>
+        </Accordion> */}
       </Flex>
     </Flex>
   );

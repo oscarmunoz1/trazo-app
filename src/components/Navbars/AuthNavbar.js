@@ -33,20 +33,35 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { CreativeTimLogo, RocketIcon } from "components/Icons/Icons";
+import {
+  CreativeTimLogo,
+  ProfileIcon,
+  RocketIcon,
+} from "components/Icons/Icons";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { AiFillStar } from "react-icons/ai";
 import { GoChevronDown } from "react-icons/go";
 import IconBox from "components/Icons/IconBox";
 import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
-import React from "react";
 import SidebarResponsive from "components/Sidebar/SidebarResponsive";
 import bgCard from "assets/img/background-card-reports.png";
+import { clearCurrentCompany } from "store/features/companySlice";
+import { clearUser } from "store/features/userSlice";
 import logoTraceit from "assets/img/traceit.png";
+import { logout as logoutAction } from "store/features/authSlice";
 import routes from "routes.js";
+import { useLogoutMutation } from "store/api/authApi";
+import { useNavigate } from "react-router-dom";
 
 export default function AuthNavbar(props) {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isLoadingAuth = useSelector((state) => state.auth.isLoading);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [open, setOpen] = React.useState(false);
   const {
     isOpen: isOpenPages,
@@ -65,6 +80,26 @@ export default function AuthNavbar(props) {
     onOpen: onOpenApplication,
     onClose: onCloseApplication,
   } = useDisclosure();
+
+  const [
+    logout,
+    { isLoading, isSuccess, error, isError },
+  ] = useLogoutMutation();
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(logoutAction());
+      dispatch(clearCurrentCompany());
+      dispatch(clearUser());
+      setTimeout(() => {
+        navigate("/auth/signin", { replace: true });
+      }, 1);
+    }
+  }, [dispatch, isSuccess, navigate]);
 
   const {
     isOpen: isOpenEcommerce,
@@ -110,6 +145,7 @@ export default function AuthNavbar(props) {
 
   // Chakra color mode
   let mainText = useColorModeValue("gray.700", "gray.200");
+  let navbarIcon = useColorModeValue("gray.500", "gray.200");
   let navbarBg = useColorModeValue(
     "linear-gradient(112.83deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.8) 110.84%)",
     "linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)"
@@ -345,7 +381,7 @@ export default function AuthNavbar(props) {
 
   var brand = (
     <Link
-      href={`${process.env.PUBLIC_URL}/#/`}
+      href={`${process.env.PUBLIC_URL}/`}
       target="_blank"
       display="flex"
       lineHeight="100%"
@@ -364,188 +400,6 @@ export default function AuthNavbar(props) {
     </Link>
   );
 
-  // const linksAuth = (
-  //   <HStack display={{ sm: "none", lg: "flex" }} spacing="12px">
-  //     <Stack
-  //       direction="row"
-  //       spacing="4px"
-  //       align="center"
-  //       color="#fff"
-  //       fontWeight="bold"
-  //       onMouseEnter={onOpenPages}
-  //       onMouseLeave={onClosePages}
-  //       cursor="pointer"
-  //       position="relative"
-  //     >
-  //       <Text fontSize="sm" color={mainText}>
-  //         Pages
-  //       </Text>
-  //       <Icon
-  //         as={GoChevronDown}
-  //         color={mainText}
-  //         w="14px"
-  //         h="14px"
-  //         fontWeight="2000"
-  //       />
-  //       <Menu isOpen={isOpenPages}>
-  //         <MenuList
-  //           p="22px"
-  //           minW="550px"
-  //           cursor="default"
-  //           borderRadius="15px"
-  //           position="absolute"
-  //           top="30px"
-  //           left="-10px"
-  //         >
-  //           <Grid templateColumns="repeat(3, 1fr)" gap="16px">
-  //             {createPagesLinks(routes)}
-  //           </Grid>
-  //         </MenuList>
-  //       </Menu>
-  //     </Stack>
-  //     <Stack
-  //       direction="row"
-  //       spacing="4px"
-  //       align="center"
-  //       color="#fff"
-  //       fontWeight="bold"
-  //       onMouseEnter={onOpenAuth}
-  //       onMouseLeave={onCloseAuth}
-  //       cursor="pointer"
-  //       position="relative"
-  //     >
-  //       <Text fontSize="sm" color={mainText}>
-  //         Authentications
-  //       </Text>
-  //       <Icon
-  //         as={GoChevronDown}
-  //         color={mainText}
-  //         w="14px"
-  //         h="14px"
-  //         fontWeight="2000"
-  //       />
-  //       <Menu isOpen={isOpenAuth}>
-  //         <MenuList
-  //           p="22px"
-  //           minW="450px"
-  //           cursor="default"
-  //           borderRadius="15px"
-  //           position="absolute"
-  //           top="30px"
-  //           left="-10px"
-  //         >
-  //           <Stack direction="row" spacing="24px">
-  //             <Flex
-  //               direction="column"
-  //               justify="center"
-  //               align="center"
-  //               bgImage={bgCard}
-  //               maxW="220px"
-  //               minH="230px"
-  //               borderRadius="15px"
-  //             >
-  //               <IconBox
-  //                 bg="white"
-  //                 color="white"
-  //                 borderRadius="50%"
-  //                 h="50px"
-  //                 w="50px"
-  //                 mb="12px"
-  //               >
-  //                 <Icon as={AiFillStar} w="25px" h="25px" color="green.400" />
-  //               </IconBox>
-  //               <Text
-  //                 fontSize="xl"
-  //                 fontWeight="bold"
-  //                 color="#fff"
-  //                 maxW="80%"
-  //                 textAlign="center"
-  //               >
-  //                 Explore our utilities pages
-  //               </Text>
-  //             </Flex>
-  //             <Grid templateColumns="1fr" gap="16px">
-  //               {createAuthLinks(authObject.items)}
-  //             </Grid>
-  //           </Stack>
-  //         </MenuList>
-  //       </Menu>
-  //     </Stack>
-  //     <Stack
-  //       direction="row"
-  //       spacing="4px"
-  //       align="center"
-  //       color="#fff"
-  //       fontWeight="bold"
-  //       onMouseEnter={onOpenApplication}
-  //       onMouseLeave={onCloseApplication}
-  //       cursor="pointer"
-  //       position="relative"
-  //     >
-  //       <Text fontSize="sm" color={mainText}>
-  //         Application
-  //       </Text>
-  //       <Icon
-  //         as={GoChevronDown}
-  //         color={mainText}
-  //         w="14px"
-  //         h="14px"
-  //         fontWeight="2000"
-  //       />
-  //       <Menu isOpen={isOpenApplication}>
-  //         <MenuList
-  //           p="22px"
-  //           cursor="default"
-  //           borderRadius="15px"
-  //           position="absolute"
-  //           top="30px"
-  //           left="-10px"
-  //         >
-  //           <Grid templateColumns="1fr" gap="16px">
-  //             {createApplicationLinks(applicationsObject.items)}
-  //           </Grid>
-  //         </MenuList>
-  //       </Menu>
-  //     </Stack>
-  //     <Stack
-  //       direction="row"
-  //       spacing="4px"
-  //       align="center"
-  //       color="#fff"
-  //       fontWeight="bold"
-  //       onMouseEnter={onOpenEcommerce}
-  //       onMouseLeave={onCloseEcommerce}
-  //       cursor="pointer"
-  //       position="relative"
-  //     >
-  //       <Text fontSize="sm" color={mainText}>
-  //         Ecommerce
-  //       </Text>
-  //       <Icon
-  //         as={GoChevronDown}
-  //         color={mainText}
-  //         w="14px"
-  //         h="14px"
-  //         fontWeight="2000"
-  //       />
-  //       <Menu isOpen={isOpenEcommerce}>
-  //         <MenuList
-  //           p="22px"
-  //           minW="350px"
-  //           cursor="default"
-  //           borderRadius="15px"
-  //           position="absolute"
-  //           top="30px"
-  //           left="-10px"
-  //         >
-  //           <Grid templateColumns="repeat(2, 1fr)" gap="16px">
-  //             {createEcommerceLinks(ecommerceObject.items)}
-  //           </Grid>
-  //         </MenuList>
-  //       </Menu>
-  //     </Stack>
-  //   </HStack>
-  // );
   return (
     <Flex
       position={navbarPosition}
@@ -577,23 +431,38 @@ export default function AuthNavbar(props) {
           />
         </Box>
         {/* {linksAuth} */}
-        <Link href="https://www.creative-tim.com/product/purity-ui-dashboard-pro">
+        {isLoadingAuth === false && isAuthenticated ? (
           <Button
-            bg={bgButton}
-            color={colorButton}
-            fontSize="xs"
-            variant="no-hover"
-            borderRadius="35px"
-            px="30px"
-            color="#fff"
-            display={{
-              sm: "none",
-              lg: "flex",
-            }}
+            ms="0px"
+            px="0px"
+            me={{ sm: "2px", md: "16px" }}
+            color={navbarIcon}
+            variant="transparent-with-icon"
+            leftIcon={
+              <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
+            }
+            onClick={handleLogout}
           >
-            Buy Now
+            <Text display={{ sm: "none", md: "flex" }}>Sign Out</Text>
           </Button>
-        </Link>
+        ) : (
+          <Link href="http://localhost:3000/pricing">
+            <Button
+              bg={bgButton}
+              color={colorButton}
+              fontSize="xs"
+              variant="no-hover"
+              borderRadius="35px"
+              px="30px"
+              display={{
+                sm: "none",
+                lg: "flex",
+              }}
+            >
+              Buy Now
+            </Button>
+          </Link>
+        )}
       </Flex>
     </Flex>
   );

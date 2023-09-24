@@ -25,7 +25,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { BsStarFill, BsStarHalf } from "react-icons/bs";
+import { BsStar, BsStarFill, BsStarHalf } from "react-icons/bs";
 
 // Custom components
 import Card from "components/Card/Card";
@@ -34,17 +34,17 @@ import CardHeader from "components/Card/CardHeader";
 import React from "react";
 import avatar4 from "assets/img/avatars/avatar4.png";
 
-const GeneralCard = () => {
+const GeneralCard = ({ review }) => {
+  // const  = review;
   const textColor = useColorModeValue("gray.700", "white");
   const bgSalaryCard = useColorModeValue("gray.50", "gray.600");
-
   return (
     <Card>
       <CardHeader mb="16px">
         <Flex justify="space-between" align="center" w={"100%"}>
           <Flex>
             <Avatar
-              src={avatar4}
+              src={review.user_avatar}
               w="40px"
               h="40px"
               mr="15px"
@@ -52,31 +52,83 @@ const GeneralCard = () => {
             />
             <Flex direction="column">
               <Text color={textColor} fontSize="md" fontWeight="bold">
-                Esthera Jackson
+                {review.user}
               </Text>
               <Text color="gray.400" fontSize="sm" fontWeight="normal">
-                2h ago
+                {review.date}
               </Text>
             </Flex>
           </Flex>
           <Stack direction="row" color="yellow.400" spacing="2px">
-            <Icon as={BsStarFill} w="12px" h="12px" />
-            <Icon as={BsStarFill} w="12px" h="12px" />
-            <Icon as={BsStarFill} w="12px" h="12px" />
-            <Icon as={BsStarFill} w="12px" h="12px" />
-            <Icon as={BsStarHalf} w="12px" h="12px" />
+            <Icon
+              as={
+                review.rating >= 1
+                  ? BsStarFill
+                  : review.rating > 0.5
+                  ? BsStarHalf
+                  : BsStar
+              }
+              w="12px"
+              h="12px"
+            />
+            <Icon
+              as={
+                review.rating >= 2
+                  ? BsStarFill
+                  : review.rating > 1.5
+                  ? BsStarHalf
+                  : BsStar
+              }
+              w="12px"
+              h="12px"
+            />
+            <Icon
+              as={
+                review.rating >= 3
+                  ? BsStarFill
+                  : review.rating > 2.5
+                  ? BsStarHalf
+                  : BsStar
+              }
+              w="12px"
+              h="12px"
+            />
+            <Icon
+              as={
+                review.rating >= 4
+                  ? BsStarFill
+                  : review.rating > 3.5
+                  ? BsStarHalf
+                  : BsStar
+              }
+              w="12px"
+              h="12px"
+            />
+            <Icon
+              as={
+                review.rating === 5
+                  ? BsStarFill
+                  : review.rating > 4.5
+                  ? BsStarHalf
+                  : BsStar
+              }
+              w="12px"
+              h="12px"
+            />
           </Stack>
         </Flex>
       </CardHeader>
       <CardBody>
         <Flex direction="column" w="100%">
           <Flex direction="column">
-            <Text color={textColor} fontSize="md" fontWeight="400" mb="4px">
-              It was a really nice product. I love the quality so much. I will
-              buy it again! Thank you for the service.
+            <Text color={textColor} fontSize="md" fontWeight="600" mb="4px">
+              {review.headline}
+            </Text>
+            <Text fontSize="md" fontWeight="400" mb="4px" color={textColor}>
+              {review.written_review}
             </Text>
             <Text color="gray.400" fontSize="sm" fontWeight="normal">
-              Apple - Parcel #1 - 21/03/2021
+              {review.production}
             </Text>
           </Flex>
         </Flex>

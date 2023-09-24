@@ -349,9 +349,9 @@ function NewParcel() {
                 width: { sm: "120px", md: "235px", lg: "235px" },
                 height: "3px",
                 bg: activeBullets.description ? textColor : "gray.200",
-                left: { sm: "12px", md: "28px" },
+                left: { sm: "12px", md: "38px" },
                 top: {
-                  sm: activeBullets.location ? "5px" : "2px",
+                  sm: activeBullets.location ? "5px" : "4px",
                   md: null,
                 },
                 position: "absolute",
@@ -371,9 +371,6 @@ function NewParcel() {
               <Text
                 color={activeBullets.location ? { textColor } : "gray.300"}
                 fontWeight={activeBullets.location ? "bold" : "normal"}
-                transition="all .3s ease"
-                fontSize="sm"
-                _hover={{ color: textColor }}
                 display={{ sm: "none", md: "block" }}
               >
                 2. Location
@@ -430,7 +427,7 @@ function NewParcel() {
                 _hover={{ color: textColor }}
                 display={{ sm: "none", md: "block" }}
               >
-                2. Description
+                3. Description
               </Text>
             </Flex>
           </Tab>
@@ -481,7 +478,7 @@ function NewParcel() {
                 _hover={{ color: textColor }}
                 display={{ sm: "none", md: "block" }}
               >
-                3. Media
+                4. Media
               </Text>
             </Flex>
           </Tab>
@@ -515,7 +512,7 @@ function NewParcel() {
                 _hover={{ color: textColor }}
                 display={{ sm: "none", md: "block" }}
               >
-                4. Certificate
+                5. Certificate
               </Text>
             </Flex>
           </Tab>

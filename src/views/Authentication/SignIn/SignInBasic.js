@@ -81,7 +81,7 @@ function SignIn() {
   useEffect(() => {
     if (data && isSuccess) {
       dispatch(login(data));
-      navigate(location.state?.next || "/dashboard");
+      navigate(location.state?.next || "/admin/dashboard");
     }
   }, [data, dispatch, isSuccess]);
 

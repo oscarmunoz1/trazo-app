@@ -32,6 +32,26 @@ export const productApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: (result) => (result ? ["Parcel"] : []),
     }),
+    updateParcel: build.mutation({
+      query: ({ parcelId, parcelData }) => {
+        const formData = new FormData();
+        formData.append("image", parcelData.album.images[0]);
+        return {
+          url: PARCEL_URL(parcelId),
+          method: "PATCH",
+          credentials: "include",
+          body: formData,
+          headers: {
+            "Content-Type":
+              "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW",
+          },
+          formData: true,
+        };
+      },
+      invalidatesTags: (result, error, { parcelId }) => [
+        { type: "Parcel", parcelId },
+      ],
+    }),
     getProducts: build.query({
       query: () => ({
         url: PRODUCT_URL,
@@ -84,6 +104,7 @@ export const productApi = baseApi.injectEndpoints({
 export const {
   useGetParcelQuery,
   useCreateParcelMutation,
+  useUpdateParcelMutation,
   useGetProductsQuery,
   useGetEstablishmentProductsQuery,
   useGetEstablishmentHistoriesQuery,

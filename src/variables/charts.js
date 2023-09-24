@@ -942,7 +942,7 @@ export const barChartOptionsCharts1 = {
     theme: "dark",
   },
   xaxis: {
-    categories: ["Apple", "Tomato", "Orange", "Banana", "Potato"],
+    categories: ["Apple"],
     show: true,
     labels: {
       show: true,

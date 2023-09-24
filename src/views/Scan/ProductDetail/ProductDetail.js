@@ -95,7 +95,7 @@ function Capture() {
   const bgIcons = useColorModeValue("green.200", "rgba(255, 255, 255, 0.5)");
   const navigate = useNavigate();
   const [currentImage, setCurrentImage] = useState(productPage1);
-  const { historyId } = useParams();
+  const { productionId } = useParams();
   const [commentValue, setCommentValue] = useState("");
 
   const { isLoaded, loadError } = useLoadScript({
@@ -249,18 +249,18 @@ function Capture() {
     isLoading,
     isFetching,
     refetch,
-  } = useGetPublicHistoryQuery(historyId || "", {
-    skip: historyId === undefined,
+  } = useGetPublicHistoryQuery(productionId || "", {
+    skip: productionId === undefined,
   });
 
   useEffect(() => {
-    if (historyId) {
+    if (productionId) {
       refetch();
     }
-  }, [historyId, refetch]);
+  }, [productionId, refetch]);
 
   console.log(historyData);
-  console.log(historyId);
+  console.log(productionId);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -705,6 +705,11 @@ function Capture() {
                   color="#fff"
                   fontSize="xs"
                   fontWeight="bold"
+                  onClick={() =>
+                    navigate(
+                      `/production/${productionId}/review/${historyData?.history_scan}`
+                    )
+                  }
                 >
                   I BOUGHT IT
                 </Button>
@@ -718,7 +723,7 @@ function Capture() {
                     <Flex justifyContent={"center"} my="34px">
                       <Text
                         fontSize="md"
-                        color={"green.500"}
+                        color={"gray.500"}
                         fontWeight="normal"
                       >
                         Comment sent successfully!

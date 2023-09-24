@@ -37,16 +37,6 @@ const ScansRow = ({ date, product, location, parcel, comment }) => {
         </Text>
       </Td>
       <Td paddingInlineStart={"20px"} paddingInlineEnd={"20px"}>
-        {/* <Text color={textColor} fontSize="sm"></Text> */}
-        {/* <Link
-          color={comment ? "green.400" : "gray.400"}
-          href=""
-          disabled={comment === ""}
-          fontSize="sm"
-          cursor={comment ? "pointer" : "not-allowed"}
-        >
-          View
-        </Link> */}
         <Button
           onClick={() => console.log("click")}
           variant="no-hover"

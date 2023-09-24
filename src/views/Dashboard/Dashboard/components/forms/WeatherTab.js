@@ -1,6 +1,7 @@
 // Chakra imports
 import {
   Button,
+  Select as ChakraSelect,
   CircularProgress,
   Flex,
   FormControl,
@@ -21,47 +22,38 @@ import { FaPlus } from "react-icons/fa";
 import FormInput from "components/Forms/FormInput";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const formSchema = object({
-  type: string().min(1, "Type is required"),
-  temperature: string()
-    .optional()
-    .transform((val) => Number(val)),
-  humidity: string()
-    .optional()
-    .transform((val) => Number(val)),
-  startDate: string().optional(),
-  endDate: string().optional(),
-  observations: string().optional(),
+const formSchemaMainInfo = object({
+  type: string().min(1, "Name is required"),
 });
 
-const WeatherTab = ({ onSubmitHandler, isLoading }) => {
+const WeatherTab = ({ onSubmitHandler, onPrev }) => {
   const bgPrevButton = useColorModeValue("gray.100", "gray.100");
   const textColor = useColorModeValue("gray.700", "white");
   const iconColor = useColorModeValue("gray.300", "gray.700");
 
-  const methods = useForm({
-    resolver: zodResolver(formSchema),
+  const mainInfoMethods = useForm({
+    resolver: zodResolver(formSchemaMainInfo),
   });
 
   const {
-    reset,
-    handleSubmit,
-    register,
+    reset: mainInfoReset,
+    handleSubmit: mainInfoSubmit,
+    errors: mainInfoErrors,
     formState: { errors, isSubmitSuccessful },
-  } = methods;
-
-  const onSubmit = (data) => {
-    onSubmitHandler(data);
-  };
+    register,
+  } = mainInfoMethods;
 
   return (
-    <FormControl>
-      <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
-          <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
+    <FormProvider {...mainInfoMethods}>
+      <form
+        onSubmit={mainInfoSubmit(onSubmitHandler)}
+        style={{ width: "100%" }}
+      >
+        <Flex direction="column" w="100%">
+          {/* <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
             Type
           </FormLabel>
-          <Select
+          <ChakraSelect
             placeholder="Select option"
             placeholderTextColor="red"
             css={{ "&::placeholder": { color: "red" } }}
@@ -82,42 +74,51 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
             <option value="HW">High Winds</option>
             <option value="HH">High Humidity</option>
             <option value="LH">Low Humidity</option>
-          </Select>
+          </ChakraSelect>
           {errors.type && (
             <Text fontSize="sm" color="red.500" mt={"0.5rem"}>
               {errors.type.message}
             </Text>
-          )}
+          )} */}
           <Flex gap={"20px"}>
             <Flex flexDir={"column"} flexGrow={1}>
               <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-                Temperature
+                Type
               </FormLabel>
-              <FormInput
-                fontSize="sm"
-                ms="4px"
-                borderRadius="15px"
-                type="text"
-                placeholder="Volume of the product"
-                mb="24px"
-                size="lg"
-                name="temperature"
-              />
+              <ChakraSelect
+                placeholder="Select option"
+                placeholderTextColor="red"
+                css={{ "&::placeholder": { color: "red" } }}
+                mb={errors.type ? "12px" : "24px"}
+                borderColor={errors.type && "red.500"}
+                boxShadow={errors.type && "0 0 0 1px red.500"}
+                borderWidth={errors.type && "2px"}
+                ml="4px"
+                height={"40px"}
+                borderRadius={"15px"}
+                fontSize={"0.875rem"}
+                mt="4px"
+                {...register("type")}
+              >
+                <option value="FR">Frost</option>
+                <option value="DR">Drought</option>
+                <option value="HW">Heat Wave</option>
+                <option value="TS">Tropical Storm</option>
+                <option value="HW">High Winds</option>
+                <option value="HH">High Humidity</option>
+                <option value="LH">Low Humidity</option>
+              </ChakraSelect>
+              {errors.type && (
+                <Text fontSize="sm" color="red.500" mt={"0.5rem"}>
+                  {errors.type.message}
+                </Text>
+              )}
             </Flex>
             <Flex flexDir={"column"} flexGrow={1}>
               <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-                Humidity
+                Volume
               </FormLabel>
-              <FormInput
-                fontSize="sm"
-                ms="4px"
-                borderRadius="15px"
-                type="text"
-                placeholder="Area"
-                mb="24px"
-                size="lg"
-                name="humidity"
-              />
+              <FormInput type="text" placeholder="Volume" name="volume" />
             </Flex>
           </Flex>
           <Flex flexDir={"column"}>
@@ -189,37 +190,30 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
               mt="24px"
               w={{ sm: "75px", lg: "100px" }}
               h="35px"
+              onClick={onPrev}
             >
               <Text fontSize="xs" color="gray.700" fontWeight="bold">
                 PREV
               </Text>
             </Button>
+
             <Button
               variant="no-hover"
               bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
               alignSelf="flex-end"
               mt="24px"
-              w={{ sm: "75px", lg: "100px" }}
+              w="100px"
               h="35px"
               type="submit"
             >
-              {isLoading ? (
-                <CircularProgress
-                  isIndeterminate
-                  value={1}
-                  color="#313860"
-                  size="25px"
-                />
-              ) : (
-                <Text fontSize="xs" color="#fff" fontWeight="bold">
-                  SEND
-                </Text>
-              )}
+              <Text fontSize="xs" color="#fff" fontWeight="bold">
+                NEXT
+              </Text>
             </Button>
           </Flex>
-        </form>
-      </FormProvider>
-    </FormControl>
+        </Flex>
+      </form>
+    </FormProvider>
   );
 };
 
