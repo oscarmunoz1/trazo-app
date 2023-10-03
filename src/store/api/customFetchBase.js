@@ -9,7 +9,7 @@ import { CSRF_HEADER_KEY, CSRF_TOKEN } from "../../config";
 import { Mutex } from "async-mutex";
 
 // const baseUrl = `${process.env.REACT_APP_SERVER_ENDPOINT}/api/`;
-const baseUrl = "http://localhost:8000/";
+const baseUrl = "http://18.218.86.192/";
 
 // Create a new mutex
 const mutex = new Mutex();

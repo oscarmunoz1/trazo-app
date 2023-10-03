@@ -5,7 +5,7 @@ import customFetchBase from "./customFetchBase";
 
 // import { cookie } from "react-cookie";
 
-const baseUrl = "http://localhost:8000/";
+const baseUrl = "http://18.218.86.192/";
 
 export const baseApi = createApi({
   baseQuery: customFetchBase,

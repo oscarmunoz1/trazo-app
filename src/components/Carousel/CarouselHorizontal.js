@@ -85,7 +85,7 @@ const CarouselHorizontal = ({ title, description, data }) => {
                 id={parcel.id}
                 image={
                   parcel.image
-                    ? `http://localhost:8000${parcel.image}`
+                    ? `http://18.218.86.192${parcel.image}`
                     : BgMusicCard
                 }
                 name={parcel.name}

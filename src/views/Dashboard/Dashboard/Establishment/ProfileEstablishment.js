@@ -203,7 +203,7 @@ function ProfileEstablishment() {
                     <Image
                       src={
                         establishment?.image
-                          ? `http://localhost:8000${establishment?.image}`
+                          ? `http://18.218.86.192${establishment?.image}`
                           : productPage1
                       }
                       w="100%"
@@ -224,7 +224,7 @@ function ProfileEstablishment() {
                       <Image
                         src={
                           establishment?.image
-                            ? `http://localhost:8000${establishment?.image}`
+                            ? `http://18.218.86.192${establishment?.image}`
                             : productPage1
                         }
                         w="100%"
