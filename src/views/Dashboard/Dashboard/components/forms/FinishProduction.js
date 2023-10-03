@@ -222,7 +222,7 @@ function FinishProduction() {
                           ms="4px"
                           borderRadius="15px"
                           type="text"
-                          placeholder="Area"
+                          placeholder="Lot number"
                           mb="24px"
                           size="lg"
                           name="lot_id"

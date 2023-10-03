@@ -58,11 +58,23 @@ const App = () => {
               element={<Navigate to="/admin/dashboard" replace />}
             />
           ) : (
-            <Route
-              path="*"
-              exact
-              element={<Navigate to="/pricing" replace />}
-            />
+            <>
+              <Route path="/auth" element={<AuthLayout />}>
+                <Route path="signin" exact element={<SignIn />} key={1} />
+                <Route path="signup" exact key={2} element={<SignUp />} />
+                <Route
+                  path="verifyemail"
+                  exact
+                  key={2}
+                  element={<VerifyEmail />}
+                />
+              </Route>
+              <Route
+                path="*"
+                exact
+                element={<Navigate to="/pricing" replace />}
+              />
+            </>
           )}
           <Route path="/capture" element={<Capture />} />
           <Route
@@ -74,6 +86,10 @@ const App = () => {
         <Route element={<Authenticated allowedRoles={[PRODUCER, SUPERUSER]} />}>
           {subdomain && (
             <>
+              {/* <Route
+                path="/"
+                element={<Navigate to="/admin/dashboard" replace />}
+              /> */}
               <Route path="/admin/dashboard" element={<AdminLayout />}>
                 <Route
                   path="select-company"
@@ -251,6 +267,35 @@ const App = () => {
         <Route element={<AuthLayout />}>
           <Route path="/pricing" exact element={<Pricing />} />
         </Route>
+        {/* <Route
+          path="*"
+          element={() => {
+            debugger;
+            return <Navigate to="/admin/dashboard" replace />;
+          }}
+        /> */}
+        {/* {subdomain &&
+        isLoadingAuth === false &&
+        isAuthenticated &&
+        (currentUser?.user_type === PRODUCER ||
+          currentUser?.user_type === SUPERUSER) ? (
+          <Route
+            path="*"
+            exact
+            element={<Navigate to="/admin/dashboard" replace />}
+          />
+        ) : !subdomain && currentUser?.user_type === CONSUMER ? (
+          <Route path="*" exact element={<Navigate to="/home" replace />} />
+        ) : (
+          isLoadingAuth === false &&
+          !isAuthenticated && (
+            <Route
+              path="*"
+              exact
+              element={<Navigate to="/auth/signin" replace />}
+            />
+          )
+        )} */}
       </Route>
     </Routes>
   );
