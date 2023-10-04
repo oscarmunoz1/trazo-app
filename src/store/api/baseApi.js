@@ -5,7 +5,7 @@ import customFetchBase from "./customFetchBase";
 
 // import { cookie } from "react-cookie";
 
-const baseUrl = "http://18.218.86.192/";
+const baseUrl = "https://api-us-east-1.traceit.io/";
 
 export const baseApi = createApi({
   baseQuery: customFetchBase,

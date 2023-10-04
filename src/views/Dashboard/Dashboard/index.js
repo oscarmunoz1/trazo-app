@@ -158,7 +158,7 @@ export default function DashboardView() {
               <Image
                 src={
                   establishment?.image
-                    ? `http://18.218.86.192${establishment?.image}`
+                    ? `https://api-us-east-1.traceit.io${establishment?.image}`
                     : bgImage
                 }
                 alt="establishment image"

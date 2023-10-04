@@ -241,7 +241,7 @@ function ProfileProduction() {
                     <Image
                       src={
                         establishment?.image
-                          ? `http://18.218.86.192${establishment?.image}`
+                          ? `https://api-us-east-1.traceit.io${establishment?.image}`
                           : productPage1
                       }
                       w="100%"
@@ -262,7 +262,7 @@ function ProfileProduction() {
                       <Image
                         src={
                           establishment?.image
-                            ? `http://18.218.86.192${establishment?.image}`
+                            ? `https://api-us-east-1.traceit.io${establishment?.image}`
                             : productPage1
                         }
                         w="100%"
