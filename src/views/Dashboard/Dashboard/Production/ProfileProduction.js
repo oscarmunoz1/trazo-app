@@ -439,7 +439,7 @@ function ProfileProduction() {
                                 ? FaRegCheckCircle
                                 : FaRegDotCircle
                             }
-                            title={event.name}
+                            title={event.type}
                             date={new Date(event.date).toDateString()}
                             color={event.certified ? "green.300" : "blue.400"}
                             index={index}
