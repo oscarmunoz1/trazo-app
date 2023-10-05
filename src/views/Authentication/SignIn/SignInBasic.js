@@ -191,7 +191,13 @@ function SignIn() {
             >
               <Text color={textColor} fontWeight="medium">
                 Don't have an account?
-                <Link color={titleColor} as="span" ms="5px" fontWeight="bold">
+                <Link
+                  color={titleColor}
+                  as="span"
+                  ms="5px"
+                  fontWeight="bold"
+                  onClick={() => navigate("/auth/signup")}
+                >
                   Sign Up
                 </Link>
               </Text>

@@ -54,11 +54,23 @@ const App = () => {
       <Route element={<CheckAuth />}>
         <Route element={<AuthLayout />}>
           {subdomain ? (
-            <Route
-              path="*"
-              exact
-              element={<Navigate to="/admin/dashboard" replace />}
-            />
+            <>
+              <Route path="/auth">
+                <Route path="signin" exact element={<SignInApp />} key={1} />
+                <Route path="signup" exact key={2} element={<SignUp />} />
+                <Route
+                  path="verifyemail"
+                  exact
+                  key={2}
+                  element={<VerifyEmail />}
+                />
+              </Route>
+              <Route
+                path="*"
+                exact
+                element={<Navigate to="/admin/dashboard" replace />}
+              />
+            </>
           ) : (
             <>
               <Route path="/auth" element={<AuthLayout />}>

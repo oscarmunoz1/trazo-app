@@ -292,6 +292,7 @@ function SignUp() {
                 ms="5px"
                 href="#"
                 fontWeight="bold"
+                onClick={() => navigate("/auth/signin")}
               >
                 Sign In
               </Link>
