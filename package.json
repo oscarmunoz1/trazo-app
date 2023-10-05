@@ -2,7 +2,7 @@
   "name": "traceit",
   "version": "2.0.1",
   "private": true,
-  "homepage": "./",
+  "homepage": "https://app.traceit.io",
   "dependencies": {
     "@chakra-ui/icons": "^1.1.5",
     "@chakra-ui/react": "1.8.8",
