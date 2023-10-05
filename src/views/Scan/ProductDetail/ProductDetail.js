@@ -519,10 +519,7 @@ function Capture() {
                         Establishment:{" "}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
-                        <Link
-                          textDecoration={"underline"}
-                          href="https://chakra-ui.com"
-                        >
+                        <Link textDecoration={"underline"}>
                           {historyData?.establishment}
                         </Link>
                       </Text>
@@ -537,10 +534,7 @@ function Capture() {
                         Parcel:{" "}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
-                        <Link
-                          textDecoration={"underline"}
-                          href="https://chakra-ui.com"
-                        >
+                        <Link textDecoration={"underline"}>
                           {historyData?.parcel}
                         </Link>
                       </Text>

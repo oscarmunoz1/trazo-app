@@ -45,9 +45,7 @@ const ProfileInformation = ({
               Establishment:{" "}
             </Text>
             <Text fontSize="md" color="gray.500" fontWeight="400">
-              <Link textDecoration={"underline"} href="https://chakra-ui.com">
-                {establishment}
-              </Link>
+              <Link textDecoration={"underline"}>{establishment}</Link>
             </Text>
           </Flex>
           <Flex align="center" mb="18px">
@@ -55,9 +53,7 @@ const ProfileInformation = ({
               Parcel:{" "}
             </Text>
             <Text fontSize="md" color="gray.500" fontWeight="400">
-              <Link textDecoration={"underline"} href="https://chakra-ui.com">
-                {parcel}
-              </Link>
+              <Link textDecoration={"underline"}>{parcel}</Link>
             </Text>
           </Flex>
           <Flex align="center" mb="18px">

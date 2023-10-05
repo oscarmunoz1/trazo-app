@@ -51,7 +51,7 @@ export default function Footer() {
             md: "44px",
           }}
         >
-          <Link color="gray.400" href="https://www.creative-tim.com">
+          <Link color="gray.400" href="https://google.com">
             Learn
           </Link>
         </ListItem>
@@ -61,7 +61,7 @@ export default function Footer() {
             md: "44px",
           }}
         >
-          <Link color="gray.400" href="https://www.simmmple.com">
+          <Link color="gray.400" href="https://google.com">
             Why us?
           </Link>
         </ListItem>
@@ -71,20 +71,12 @@ export default function Footer() {
             md: "44px",
           }}
         >
-          <Link
-            color="gray.400"
-            href="#blog"
-            href="https://creative-tim.com/blog?"
-          >
+          <Link color="gray.400" href="https://google.com">
             Blog
           </Link>
         </ListItem>
         <ListItem>
-          <Link
-            color="gray.400"
-            href="#license"
-            href="https://www.creative-tim.com/license?"
-          >
+          <Link color="gray.400" href="https://google.com">
             Contact
           </Link>
         </ListItem>
