@@ -5,7 +5,7 @@ import customFetchBase from "./customFetchBase";
 
 // import { cookie } from "react-cookie";
 
-const baseUrl = "https://api-us-east-1.traceit.io/";
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
 export const baseApi = createApi({
   baseQuery: customFetchBase,

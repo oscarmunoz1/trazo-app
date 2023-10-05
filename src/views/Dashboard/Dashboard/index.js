@@ -158,7 +158,7 @@ export default function DashboardView() {
               <Image
                 src={
                   establishment?.image
-                    ? `https://api-us-east-1.traceit.io${establishment?.image}`
+                    ? `${process.env.REACT_APP_BACKEND_URL}${establishment?.image}`
                     : bgImage
                 }
                 alt="establishment image"

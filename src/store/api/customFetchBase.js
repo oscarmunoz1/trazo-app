@@ -8,8 +8,7 @@ import { CSRF_HEADER_KEY, CSRF_TOKEN } from "../../config";
 
 import { Mutex } from "async-mutex";
 
-// const baseUrl = `${process.env.REACT_APP_SERVER_ENDPOINT}/api/`;
-const baseUrl = "https://api-us-east-1.traceit.io/";
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
 // Create a new mutex
 const mutex = new Mutex();

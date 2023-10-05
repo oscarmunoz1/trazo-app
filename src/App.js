@@ -43,7 +43,9 @@ const App = () => {
   useEffect(() => {
     const host = window.location.host; // gets the full domain of the app
 
-    const arr = host.split(".").slice(0, host.includes("traceit.io") ? -1 : -2);
+    const arr = host
+      .split(".")
+      .slice(0, host.includes(process.env.REACT_APP_BASE_DOMAIN) ? -1 : -2);
     if (arr.length > 0) setSubDomain(arr[0]);
   }, []);
 

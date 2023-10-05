@@ -252,7 +252,7 @@ function ProfileEstablishment() {
                     <Image
                       src={
                         establishment?.image
-                          ? `https://api-us-east-1.traceit.io${establishment?.image}`
+                          ? `${process.env.REACT_APP_BACKEND_URL}${establishment?.image}`
                           : productPage1
                       }
                       w="100%"
@@ -273,7 +273,7 @@ function ProfileEstablishment() {
                       <Image
                         src={
                           establishment?.image
-                            ? `https://api-us-east-1.traceit.io${establishment?.image}`
+                            ? `${process.env.REACT_APP_BACKEND_URL}${establishment?.image}`
                             : productPage1
                         }
                         w="100%"
