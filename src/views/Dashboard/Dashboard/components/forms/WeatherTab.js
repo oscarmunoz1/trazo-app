@@ -38,10 +38,13 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
   const {
     reset: mainInfoReset,
     handleSubmit: mainInfoSubmit,
+    watch,
     errors: mainInfoErrors,
     formState: { errors, isSubmitSuccessful },
     register,
   } = mainInfoMethods;
+
+  const type = watch("type", "");
 
   return (
     <FormProvider {...mainInfoMethods}>
@@ -50,36 +53,6 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
         style={{ width: "100%" }}
       >
         <Flex direction="column" w="100%">
-          {/* <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-            Type
-          </FormLabel>
-          <ChakraSelect
-            placeholder="Select option"
-            placeholderTextColor="red"
-            css={{ "&::placeholder": { color: "red" } }}
-            mb={errors.type ? "12px" : "24px"}
-            borderColor={errors.type && "red.500"}
-            boxShadow={errors.type && "0 0 0 1px red.500"}
-            borderWidth={errors.type && "2px"}
-            ml="4px"
-            height={"3rem"}
-            borderRadius={"15px"}
-            fontSize={"0.875rem"}
-            {...register("type")}
-          >
-            <option value="FR">Frost</option>
-            <option value="DR">Drought</option>
-            <option value="HW">Heat Wave</option>
-            <option value="TS">Tropical Storm</option>
-            <option value="HW">High Winds</option>
-            <option value="HH">High Humidity</option>
-            <option value="LH">Low Humidity</option>
-          </ChakraSelect>
-          {errors.type && (
-            <Text fontSize="sm" color="red.500" mt={"0.5rem"}>
-              {errors.type.message}
-            </Text>
-          )} */}
           <Flex gap={"20px"}>
             <Flex flexDir={"column"} flexGrow={1}>
               <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
@@ -102,7 +75,8 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
               >
                 <option value="FR">Frost</option>
                 <option value="DR">Drought</option>
-                <option value="HW">Heat Wave</option>
+                <option value="HA">Hailstorms</option>
+                <option value="HT">High Temperatures</option>
                 <option value="TS">Tropical Storm</option>
                 <option value="HW">High Winds</option>
                 <option value="HH">High Humidity</option>
@@ -114,60 +88,154 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                 </Text>
               )}
             </Flex>
-            <Flex flexDir={"column"} flexGrow={1}>
-              <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-                Volume
-              </FormLabel>
-              <FormInput type="text" placeholder="Volume" name="volume" />
-            </Flex>
           </Flex>
-          <Flex flexDir={"column"}>
-            <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-              Time Period
-            </FormLabel>
-            <Flex flexDir={"row"} width={"100%"} gap={"20px"}>
-              <Flex flexDir={"column"} flexGrow={1}>
-                <FormLabel
-                  ms="4px"
-                  fontSize="xs"
-                  fontWeight="bold"
-                  mb={"0"}
-                  textAlign={"end"}
-                >
-                  From
-                </FormLabel>
+          {type === "FR" ? (
+            <Flex gap={"20px"}>
+              <FormInput
+                fontSize="xs"
+                label="Lower temperature (°F)"
+                ms="4px"
+                borderRadius="15px"
+                type="text"
+                placeholder="Temperature"
+                mb="24px"
+                name="lower_temperature"
+              />
+              <FormInput
+                fontSize="xs"
+                label="Way of protection"
+                ms="4px"
+                borderRadius="15px"
+                type="text"
+                placeholder="Not, nylon cover, irrigation, hot light, etc "
+                mb="24px"
+                name="way_of_protection"
+              />
+            </Flex>
+          ) : type === "DR" ? (
+            <Flex gap={"20px"}>
+              <FormInput
+                fontSize="xs"
+                label="Accumulated water deficit (mm)"
+                ms="4px"
+                borderRadius="15px"
+                type="text"
+                placeholder="Water deficit"
+                mb="24px"
+                name="water_deficit"
+              />
+            </Flex>
+          ) : type === "HA" ? (
+            <>
+              <Flex gap={"20px"}>
                 <FormInput
                   fontSize="xs"
+                  label="Average weight of hailstones (g)"
                   ms="4px"
                   borderRadius="15px"
-                  type="datetime-local"
-                  name="startDate"
-                  placeholder="Select date and time"
+                  type="text"
+                  placeholder="Weight"
                   mb="24px"
+                  name="weight"
                 />
-              </Flex>
-              <Flex flexDir={"column"} flexGrow={1}>
-                <FormLabel
-                  ms="4px"
-                  fontSize="xs"
-                  fontWeight="bold"
-                  mb={"0"}
-                  textAlign={"end"}
-                >
-                  To
-                </FormLabel>
                 <FormInput
                   fontSize="xs"
+                  label="Average diameter of hailstones (cm)"
                   ms="4px"
                   borderRadius="15px"
-                  type="datetime-local"
-                  name="endDate"
-                  placeholder="Select date and time"
+                  type="text"
+                  placeholder="Diameter"
                   mb="24px"
+                  name="diameter"
                 />
               </Flex>
+              <Flex gap={"20px"}>
+                <FormInput
+                  fontSize="xs"
+                  label="Duration (min)"
+                  ms="4px"
+                  borderRadius="15px"
+                  type="text"
+                  placeholder="Duration"
+                  mb="24px"
+                  name="duration"
+                />
+                <FormInput
+                  fontSize="xs"
+                  label="Way of protection"
+                  ms="4px"
+                  borderRadius="15px"
+                  type="text"
+                  placeholder="Not, net, etc"
+                  mb="24px"
+                  name="way_of_protection"
+                />
+              </Flex>
+            </>
+          ) : type === "HT" ? (
+            <Flex gap={"20px"} direction={"column"}>
+              <FormInput
+                fontSize="xs"
+                label="Highest temperature (°F)"
+                ms="4px"
+                borderRadius="15px"
+                type="text"
+                placeholder="Temperature"
+                mb="24px"
+                name="highest_temperature"
+              />
+              <Flex flexDir={"column"}>
+                <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
+                  Time Period
+                </FormLabel>
+                <Flex flexDir={"row"} width={"100%"} gap={"20px"}>
+                  <Flex flexDir={"column"} flexGrow={1}>
+                    <FormLabel
+                      ms="4px"
+                      fontSize="xs"
+                      fontWeight="bold"
+                      mb={"0"}
+                      textAlign={"end"}
+                    >
+                      From
+                    </FormLabel>
+                    <FormInput
+                      fontSize="xs"
+                      ms="4px"
+                      borderRadius="15px"
+                      type="datetime-local"
+                      name="startDate"
+                      placeholder="Select date and time"
+                      mb="24px"
+                    />
+                  </Flex>
+                  <Flex flexDir={"column"} flexGrow={1}>
+                    <FormLabel
+                      ms="4px"
+                      fontSize="xs"
+                      fontWeight="bold"
+                      mb={"0"}
+                      textAlign={"end"}
+                    >
+                      To
+                    </FormLabel>
+                    <FormInput
+                      fontSize="xs"
+                      ms="4px"
+                      borderRadius="15px"
+                      type="datetime-local"
+                      name="endDate"
+                      placeholder="Select date and time"
+                      mb="24px"
+                    />
+                  </Flex>
+                </Flex>
+              </Flex>
             </Flex>
-          </Flex>
+          ) : (
+            <></>
+          )}
+
           <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
             Observations
           </FormLabel>
