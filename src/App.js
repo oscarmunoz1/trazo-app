@@ -46,7 +46,7 @@ const App = () => {
     const arr = host
       .split(".")
       .slice(0, host.includes(process.env.REACT_APP_BASE_DOMAIN) ? -1 : -2);
-    if (arr.length > 0) setSubDomain(arr[0]);
+    if (arr.length > 0) setSubDomain(arr[0] === "app");
   }, []);
 
   console.log("subdomain", subdomain);

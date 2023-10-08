@@ -319,7 +319,7 @@ function ProfileEstablishment() {
                   >
                     {currentCompany?.name}
                   </Text>
-                  <Badge
+                  {/* <Badge
                     colorScheme="green"
                     w="95px"
                     h="28px"
@@ -330,7 +330,7 @@ function ProfileEstablishment() {
                     justifyContent="center"
                   >
                     CERTIFIED
-                  </Badge>
+                  </Badge> */}
                   <Flex direction="column">
                     <Flex align="center" mb="10px">
                       <Text

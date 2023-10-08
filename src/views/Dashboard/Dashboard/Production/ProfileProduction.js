@@ -350,7 +350,7 @@ function ProfileProduction() {
                   >
                     {historyData?.product}
                   </Text>
-                  <Badge
+                  {/* <Badge
                     colorScheme="green"
                     w="95px"
                     h="28px"
@@ -361,7 +361,7 @@ function ProfileProduction() {
                     justifyContent="center"
                   >
                     CERTIFIED
-                  </Badge>
+                  </Badge> */}
                   <Flex direction="column">
                     <Flex align="center" mb="10px">
                       <Text

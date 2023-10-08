@@ -24,6 +24,28 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchemaMainInfo = object({
   type: string().min(1, "Name is required"),
+  lower_temperature: string()
+    .optional()
+    .transform((val) => Number(val)),
+  way_of_protection: string().optional(),
+  water_deficit: string()
+    .optional()
+    .transform((val) => Number(val)),
+  weight: string()
+    .optional()
+    .transform((val) => Number(val)),
+  diameter: string()
+    .optional()
+    .transform((val) => Number(val)),
+  duration: string()
+    .optional()
+    .transform((val) => Number(val)),
+  highest_temperature: string()
+    .optional()
+    .transform((val) => Number(val)),
+  start_date: string().optional(),
+  end_date: string().optional(),
+  observation: string().optional(),
 });
 
 const WeatherTab = ({ onSubmitHandler, onPrev }) => {
@@ -46,12 +68,56 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
 
   const type = watch("type", "");
 
+  const onSubmit = (data) => {
+    switch (type) {
+      case "FR":
+        data = {
+          type: data.type,
+          lower_temperature: data.lower_temperature,
+          way_of_protection: data.way_of_protection,
+          observation: data.observation,
+        };
+        break;
+      case "DR":
+        data = {
+          type: data.type,
+          water_deficit: data.water_deficit,
+          observation: data.observation,
+        };
+        break;
+      case "HA":
+        data = {
+          type: data.type,
+          weight: data.weight,
+          diameter: data.diameter,
+          duration: data.duration,
+          way_of_protection: data.way_of_protection,
+          observation: data.observation,
+        };
+        break;
+      case "HT":
+        data = {
+          type: data.type,
+          highest_temperature: data.highest_temperature,
+          start_date: data.start_date,
+          end_date: data.end_date,
+          observation: data.observation,
+        };
+        break;
+      default:
+        data = {
+          type: data.type,
+          observation: data.observation,
+        };
+        break;
+    }
+
+    onSubmitHandler(data);
+  };
+
   return (
     <FormProvider {...mainInfoMethods}>
-      <form
-        onSubmit={mainInfoSubmit(onSubmitHandler)}
-        style={{ width: "100%" }}
-      >
+      <form onSubmit={mainInfoSubmit(onSubmit)} style={{ width: "100%" }}>
         <Flex direction="column" w="100%">
           <Flex gap={"20px"}>
             <Flex flexDir={"column"} flexGrow={1}>
@@ -204,7 +270,7 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                       ms="4px"
                       borderRadius="15px"
                       type="datetime-local"
-                      name="startDate"
+                      name="start_date"
                       placeholder="Select date and time"
                       mb="24px"
                     />
@@ -224,7 +290,7 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                       ms="4px"
                       borderRadius="15px"
                       type="datetime-local"
-                      name="endDate"
+                      name="end_date"
                       placeholder="Select date and time"
                       mb="24px"
                     />
@@ -247,8 +313,8 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
             placeholder="Description of the event"
             mb="24px"
             size="lg"
-            name="observations"
-            {...register("observations")}
+            name="observation"
+            {...register("observation")}
           />
           <Flex justify="space-between">
             <Button
