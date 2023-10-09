@@ -552,7 +552,7 @@ function NewEstablishment() {
                           mb="4px"
                           pl="12px"
                         >
-                          What kind of event do you want to create?
+                          What kind of production do you want to create?
                         </FormLabel>
                       </Flex>
                       <Flex w={"100%"} justifyContent={"center"}>

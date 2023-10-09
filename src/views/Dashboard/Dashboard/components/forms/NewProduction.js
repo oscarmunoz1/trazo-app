@@ -76,18 +76,6 @@ import { useGetEstablishmentProductsQuery } from "store/api/productApi";
 import { useGoogleMap } from "@react-google-maps/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const colourOptions = [
-  { value: "ocean", label: "Ocean", color: "#00B8D9", isFixed: true },
-  { value: "blue", label: "Blue", color: "#0052CC", isDisabled: true },
-  { value: "purple", label: "Purple", color: "#5243AA" },
-  { value: "red", label: "Red", color: "#FF5630", isFixed: true },
-  { value: "orange", label: "Orange", color: "#FF8B00" },
-  { value: "yellow", label: "Yellow", color: "#FFC400" },
-  { value: "green", label: "Green", color: "#36B37E" },
-  { value: "forest", label: "Forest", color: "#00875A" },
-  { value: "slate", label: "Slate", color: "#253858" },
-  { value: "silver", label: "Silver", color: "#666666" },
-];
 // Custom components
 const styles = {
   container: (provided, state) => ({
@@ -109,6 +97,9 @@ const styles = {
 
 const formSchemaBasic = object({
   date: string().min(1, "Date is required"),
+  age_of_plants: string().min(1, "Age of plants is required"),
+  number_of_plants: string().min(1, "Number of plants is required"),
+  soil_ph: string().min(1, "Soil PH is required"),
 });
 
 function NewProduction() {
@@ -126,6 +117,7 @@ function NewProduction() {
   const bgTimesIcon = useColorModeValue("gray.700", "gray.500");
   // const [options, setOptions] = useState([]);
   const [value, setValue] = useState(null);
+  const [isOutdoor, setIsOutdoor] = useState(true);
   const [productValueError, setProductValueError] = useState(null);
   const [activeButton, setActiveButton] = useState(0);
   const dispatch = useDispatch();
@@ -176,6 +168,8 @@ function NewProduction() {
         isNew: value.__isNew__,
       },
       parcel: parcelId,
+      is_outdoor: isOutdoor ? true : false,
+      type: activeButton === 0 ? "OR" : "GA",
     };
     createProduction(dataProduction);
   };
@@ -231,6 +225,63 @@ function NewProduction() {
                     style={{ width: "100%" }}
                   >
                     <Stack direction="column" w="100%">
+                      <Flex direction="column" w="80%" mt="10px">
+                        <FormLabel
+                          ms="4px"
+                          fontSize="xs"
+                          fontWeight="bold"
+                          mb="4px"
+                          pl="12px"
+                        >
+                          What kind of production do you want to create?
+                        </FormLabel>
+                      </Flex>
+                      <Flex w={"100%"} justifyContent={"center"}>
+                        <Flex
+                          bg={bgButtonGroup}
+                          borderRadius="12px"
+                          w={"fit-content"}
+                        >
+                          <Button
+                            variant="no-hover"
+                            w="135px"
+                            h="40px"
+                            fontSize="xs"
+                            boxShadow={
+                              activeButton === 0
+                                ? "0px 2px 5.5px rgba(0, 0, 0, 0.06)"
+                                : "none"
+                            }
+                            bg={
+                              activeButton === 0
+                                ? bgActiveButton
+                                : "transparent"
+                            }
+                            onClick={() => setActiveButton(0)}
+                          >
+                            ORCHARD
+                          </Button>
+                          <Button
+                            variant="no-hover"
+                            w="135px"
+                            h="40px"
+                            fontSize="xs"
+                            boxShadow={
+                              activeButton === 1
+                                ? "0px 2px 5.5px rgba(0, 0, 0, 0.06)"
+                                : "none"
+                            }
+                            bg={
+                              activeButton === 1
+                                ? bgActiveButton
+                                : "transparent"
+                            }
+                            onClick={() => setActiveButton(1)}
+                          >
+                            GARDEN
+                          </Button>
+                        </Flex>
+                      </Flex>
                       <FormLabel fontSize="xs" fontWeight="bold" pl="12px">
                         Product
                       </FormLabel>
@@ -259,6 +310,98 @@ function NewProduction() {
                           name="date"
                           placeholder="Select date and time"
                         />
+                      </Flex>
+                      {activeButton === 0 ? (
+                        <>
+                          <FormInput
+                            fontSize="xs"
+                            ms="4px"
+                            borderRadius="15px"
+                            type="text"
+                            placeholder="Age of plants"
+                            name="age_of_plants"
+                            label="Age of plants (average)"
+                          />
+                          <FormInput
+                            fontSize="xs"
+                            ms="4px"
+                            borderRadius="15px"
+                            type="text"
+                            placeholder="Number of plants"
+                            name="number_of_plants"
+                            label="Number of plants (average)"
+                          />
+                          <FormInput
+                            fontSize="xs"
+                            ms="4px"
+                            borderRadius="15px"
+                            type="text"
+                            placeholder="Average Soil PH"
+                            name="soil_ph"
+                            label="Average Soil PH"
+                          />
+                        </>
+                      ) : activeButton === 1 ? (
+                        <>
+                          <FormInput
+                            fontSize="xs"
+                            ms="4px"
+                            borderRadius="15px"
+                            type="text"
+                            placeholder="Average Soil PH"
+                            name="soil_ph"
+                            label="Average Soil PH"
+                          />
+                        </>
+                      ) : null}
+                      <Flex direction="column" w="80%" pt="10px">
+                        <FormLabel
+                          ms="4px"
+                          fontSize="xs"
+                          fontWeight="bold"
+                          mb="4px"
+                          pl="12px"
+                        >
+                          Where the production will be?
+                        </FormLabel>
+                      </Flex>
+                      <Flex w={"100%"} justifyContent={"center"}>
+                        <Flex
+                          bg={bgButtonGroup}
+                          borderRadius="12px"
+                          w={"fit-content"}
+                        >
+                          <Button
+                            variant="no-hover"
+                            w="135px"
+                            h="40px"
+                            fontSize="xs"
+                            boxShadow={
+                              isOutdoor
+                                ? "0px 2px 5.5px rgba(0, 0, 0, 0.06)"
+                                : "none"
+                            }
+                            bg={isOutdoor ? bgActiveButton : "transparent"}
+                            onClick={() => setIsOutdoor(true)}
+                          >
+                            OUTDOOR
+                          </Button>
+                          <Button
+                            variant="no-hover"
+                            w="135px"
+                            h="40px"
+                            fontSize="xs"
+                            boxShadow={
+                              !isOutdoor
+                                ? "0px 2px 5.5px rgba(0, 0, 0, 0.06)"
+                                : "none"
+                            }
+                            bg={!isOutdoor ? bgActiveButton : "transparent"}
+                            onClick={() => setIsOutdoor(false)}
+                          >
+                            INDOOR
+                          </Button>
+                        </Flex>
                       </Flex>
                       <Flex gap={"25px"} justifyContent={"flex-end"}>
                         <Button
