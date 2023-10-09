@@ -224,7 +224,11 @@ const App = () => {
             // )}
           )}
         </Route>
-        <Route element={<Authenticated allowedRoles={[CONSUMER]} />}>
+        <Route
+          element={
+            <Authenticated allowedRoles={[CONSUMER, PRODUCER, SUPERUSER]} />
+          }
+        >
           <Route element={<AuthLayout />}>
             <Route path="/home" exact element={<Capture />} />
             <Route path="/capture" element={<Capture />} />
