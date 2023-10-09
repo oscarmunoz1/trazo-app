@@ -293,9 +293,6 @@ function Capture() {
     }
   }, [isSuccessComment]);
 
-  const html =
-    "<h1><strong>La Primavera!!</strong></h1><p><br></p><p>Este <em>establecimiento rural</em> se encuentra ubicado en las afueras de un pequeño pueblo en una zona montañosa, rodeado de colinas y campos verdes. La casa principal es una construcción de madera de dos pisos con un amplio porche en la entrada. Junto a la casa hay varios <u>edificios más pequeños, como un granero, una</u> cochera y un gallinero.</p><p><br></p><h2><em><u>Parcels</u></em>:</h2><p><br></p><ul><li><strong><em><u>Parcel 1</u></em></strong></li><li><strong><em><u>Parcel 2</u></em></strong></li><li><strong><em><u>Parcel 3</u></em></strong></li></ul><p><br></p><p>En el terreno hay un huerto donde se cultivan verduras y frutas de temporada, así como una pequeña área de pastoreo para unas cuantas&nbsp;<strong>vacas y ovejas</strong>. También hay un estanque cercano donde se crían peces y patos. El ambiente es tranquilo y relajado, con el sonido de los pájaros y del viento soplando a través de los árboles. El aire es fresco y limpio, y se pueden disfrutar de hermosas vistas panorámicas de los alrededores. La gente que trabaja en el establecimiento es amable y acogedora, y siempre están dispuestos a compartir un poco de su estilo de vida rural con los visitantes.</p>";
-
   return (
     <Flex
       direction="column"
@@ -596,7 +593,7 @@ function Capture() {
               </Flex>
 
               <Flex px="24px" pb="24px">
-                <HTMLRenderer htmlString={html} />
+                <HTMLRenderer htmlString={historyData?.description} />
               </Flex>
               <Flex
                 pt={"24px"}
@@ -627,7 +624,7 @@ function Capture() {
                           logo={
                             event.certified ? FaRegCheckCircle : FaRegDotCircle
                           }
-                          title={event.name}
+                          title={event.type}
                           date={new Date(event.date).toDateString()}
                           color={event.certified ? "green.300" : "blue.400"}
                           index={index}
