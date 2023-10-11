@@ -31,7 +31,7 @@ import {
 import React from "react";
 
 function DashboardTableRow(props) {
-  const { logo, name, members, budget, progression, color, onClick } = props;
+  const { logo, name, members, product, progression, color, onClick } = props;
   const textColor = useColorModeValue("gray.700", "white");
   return (
     <Tr
@@ -68,6 +68,11 @@ function DashboardTableRow(props) {
           </Text>
         </Flex>
       </Td>
+      <Td>
+        <Text fontSize="md" color={textColor} fontWeight="400" pb=".5rem">
+          {product}
+        </Text>
+      </Td>
 
       <Td>
         <AvatarGroup size="sm">
@@ -83,11 +88,7 @@ function DashboardTableRow(props) {
           })}
         </AvatarGroup>
       </Td>
-      <Td>
-        <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-          {budget}
-        </Text>
-      </Td>
+
       <Td>
         <Flex direction="column">
           <Text

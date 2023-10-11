@@ -20,6 +20,7 @@ export const historyApi = baseApi.injectEndpoints({
     }),
     getEstablishmentLastReviews: build.query({
       query: ({
+        companyId,
         establishmentId,
         parcelId,
         productId,
@@ -27,7 +28,7 @@ export const historyApi = baseApi.injectEndpoints({
         productionId,
       }) => ({
         url:
-          LAST_REVIEWS_URL(establishmentId) +
+          LAST_REVIEWS_URL(companyId, establishmentId) +
           (periodId ? `?period=${periodId}` : "") +
           (parcelId ? `&parcel=${parcelId}` : "") +
           (productionId ? `&production=${productionId}` : "") +
@@ -38,6 +39,7 @@ export const historyApi = baseApi.injectEndpoints({
     }),
     getEstablishmentProductReputation: build.query({
       query: ({
+        companyId,
         establishmentId,
         parcelId,
         productId,
@@ -45,7 +47,7 @@ export const historyApi = baseApi.injectEndpoints({
         productionId,
       }) => ({
         url:
-          PRODUCT_REPUTATION_URL(establishmentId) +
+          PRODUCT_REPUTATION_URL(companyId, establishmentId) +
           (periodId ? `?period=${periodId}` : "") +
           (parcelId ? `&parcel=${parcelId}` : "") +
           (productionId ? `&production=${productionId}` : "") +
@@ -56,6 +58,7 @@ export const historyApi = baseApi.injectEndpoints({
     }),
     getEstablishmentProductReputationPercentage: build.query({
       query: ({
+        companyId,
         establishmentId,
         parcelId,
         productId,
@@ -63,7 +66,7 @@ export const historyApi = baseApi.injectEndpoints({
         productionId,
       }) => ({
         url:
-          PRODUCT_REPUTATION_PERCENTAGE_URL(establishmentId) +
+          PRODUCT_REPUTATION_PERCENTAGE_URL(companyId, establishmentId) +
           (periodId ? `?period=${periodId}` : "") +
           (parcelId ? `&parcel=${parcelId}` : "") +
           (productionId ? `&production=${productionId}` : "") +

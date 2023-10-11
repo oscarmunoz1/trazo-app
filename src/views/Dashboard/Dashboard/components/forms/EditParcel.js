@@ -77,7 +77,6 @@ import avatar4 from "assets/img/avatars/avatar4.png";
 import imageMap from "assets/img/imageMap.png";
 import { setEstablishmentParcel } from "store/features/companySlice";
 import { setParcel } from "store/features/productSlice";
-import { useCreateEstablishmentMutation } from "store/api/companyApi";
 import { useDropzone } from "react-dropzone";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -203,9 +202,16 @@ function NewParcel() {
     isLoading: isLoadingParcel,
     isFetching,
     refetch,
-  } = useGetParcelQuery(parcelId, {
-    skip: parcelId === undefined || currentParcel?.id === parcelId,
-  });
+  } = useGetParcelQuery(
+    { companyId: currentCompany?.id, establishmentId, parcelId },
+    {
+      skip:
+        parcelId === undefined ||
+        currentParcel?.id === parcelId ||
+        !currentCompany ||
+        !establishmentId,
+    }
+  );
 
   useEffect(() => {
     if (parcelData) dispatch(setParcel(parcelData));
@@ -302,6 +308,8 @@ function NewParcel() {
 
     updateParcel({
       parcelId,
+      companyId: currentCompany?.id,
+      establishmentId,
       parcelData: {
         ...currentParcelData,
         ...data,

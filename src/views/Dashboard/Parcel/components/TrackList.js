@@ -38,6 +38,7 @@ const TrackList = ({ amount }) => {
   const navigate = useNavigate();
 
   const currentHistory = useSelector((state) => state.history.currentHistory);
+  const currentCompany = useSelector((state) => state.company.currentCompany);
 
   const { establishmentId, parcelId } = useParams();
 
@@ -53,9 +54,16 @@ const TrackList = ({ amount }) => {
     isLoading,
     isFetching,
     refetch,
-  } = useGetCurrentHistoryQuery(parcelId || "", {
-    skip: parcelId === undefined,
-  });
+  } = useGetCurrentHistoryQuery(
+    {
+      companyId: currentCompany?.id,
+      establishmentId,
+      parcelId: parcelId || "",
+    },
+    {
+      skip: !parcelId || !currentCompany || !establishmentId,
+    }
+  );
 
   useEffect(() => {
     if (data) dispatch(setCurrentHistory(data));

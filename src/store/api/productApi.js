@@ -15,8 +15,8 @@ import { setCompany } from "store/features/companySlice";
 export const productApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getParcel: build.query({
-      query: (parcelId) => ({
-        url: PARCEL_URL(parcelId),
+      query: ({ companyId, establishmentId, parcelId }) => ({
+        url: PARCEL_URL(companyId, establishmentId, parcelId),
         method: "GET",
         credentials: "include",
       }),
@@ -24,20 +24,20 @@ export const productApi = baseApi.injectEndpoints({
         result ? [{ type: "Parcel", parcelId }] : [],
     }),
     createParcel: build.mutation({
-      query: (parcel) => ({
-        url: PARCEL_URL(),
+      query: ({ companyId, establishmentId, parcelData }) => ({
+        url: PARCEL_URL(companyId, establishmentId),
         method: "POST",
         credentials: "include",
-        body: parcel,
+        body: parcelData,
       }),
       invalidatesTags: (result) => (result ? ["Parcel"] : []),
     }),
     updateParcel: build.mutation({
-      query: ({ parcelId, parcelData }) => {
+      query: ({ companyId, establishmentId, parcelId, parcelData }) => {
         const formData = new FormData();
         formData.append("image", parcelData.album.images[0]);
         return {
-          url: PARCEL_URL(parcelId),
+          url: PARCEL_URL(companyId, establishmentId, parcelId),
           method: "PATCH",
           credentials: "include",
           body: formData,
@@ -60,18 +60,24 @@ export const productApi = baseApi.injectEndpoints({
       }),
     }),
     getEstablishmentProducts: build.query({
-      query: ({ establishmentId, parcelId }) => ({
+      query: ({ companyId, establishmentId, parcelId }) => ({
         url:
-          ESTABLISHMENT_PRODUCTS_URL(establishmentId) +
+          ESTABLISHMENT_PRODUCTS_URL(companyId, establishmentId) +
           (parcelId ? `?parcel=${parcelId}` : ""),
         method: "GET",
         credentials: "include",
       }),
     }),
     getEstablishmentHistories: build.query({
-      query: ({ establishmentId, parcelId, productId, periodId }) => ({
+      query: ({
+        companyId,
+        establishmentId,
+        parcelId,
+        productId,
+        periodId,
+      }) => ({
         url:
-          ESTABLISHMENT_HISTORIES_URL(establishmentId) +
+          ESTABLISHMENT_HISTORIES_URL(companyId, establishmentId) +
           (parcelId ? `?parcel=${parcelId}` : "") +
           (productId ? `&product=${productId}` : "") +
           (periodId ? `&period=${periodId}` : ""),
@@ -81,6 +87,7 @@ export const productApi = baseApi.injectEndpoints({
     }),
     getEstablishmentScansVsSalesChartInfo: build.query({
       query: ({
+        companyId,
         establishmentId,
         parcelId,
         productId,
@@ -88,7 +95,10 @@ export const productApi = baseApi.injectEndpoints({
         productionId,
       }) => ({
         url:
-          ESTABLISHMENT_CHART_SCANS_VS_SALES_INFO_URL(establishmentId) +
+          ESTABLISHMENT_CHART_SCANS_VS_SALES_INFO_URL(
+            companyId,
+            establishmentId
+          ) +
           (periodId ? `?period=${periodId}` : "") +
           (parcelId ? `&parcel=${parcelId}` : "") +
           (productionId ? `&production=${productionId}` : "") +

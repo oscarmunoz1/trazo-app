@@ -36,22 +36,35 @@ import CardHeader from "components/Card/CardHeader";
 import GeneralCard from "./GeneralCard";
 import React from "react";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Reviews = () => {
   const textColor = useColorModeValue("gray.700", "white");
   const { establishmentId } = useParams();
 
-  const { data: reviews } = useGetEstablishmentLastReviewsQuery({
-    establishmentId,
-  });
+  const currentCompany = useSelector((state) => state.company.currentCompany);
+
+  const { data: reviews } = useGetEstablishmentLastReviewsQuery(
+    {
+      companyId: currentCompany?.id,
+      establishmentId,
+    },
+    {
+      skip: !currentCompany || !establishmentId,
+    }
+  );
 
   const {
     data: reviewsPercentage,
-  } = useGetEstablishmentProductReputationPercentageQuery({
-    establishmentId,
-  });
-
-  console.log(reviewsPercentage);
+  } = useGetEstablishmentProductReputationPercentageQuery(
+    {
+      companyId: currentCompany?.id,
+      establishmentId,
+    },
+    {
+      skip: !currentCompany || !establishmentId,
+    }
+  );
 
   return (
     <Card>

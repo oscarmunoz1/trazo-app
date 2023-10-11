@@ -69,10 +69,8 @@ import { addCompanyEstablishment } from "store/features/companySlice";
 import avatar4 from "assets/img/avatars/avatar4.png";
 import imageMap from "assets/img/imageMap.png";
 import { set } from "date-fns";
-import { useCreateEstablishmentMutation } from "store/api/companyApi";
 import { useDropzone } from "react-dropzone";
 import { useFinishCurrentHistoryMutation } from "store/api/historyApi.js";
-import { useGetEstablishmentProductsQuery } from "store/api/productApi";
 import { useGoogleMap } from "@react-google-maps/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -139,6 +137,8 @@ function FinishProduction() {
 
   const navigate = useNavigate();
 
+  const currentCompany = useSelector((state) => state.company.currentCompany);
+
   const { parcelId, establishmentId } = useParams();
 
   const [
@@ -162,7 +162,12 @@ function FinishProduction() {
   );
 
   const onSubmitBasic = (data) => {
-    finishCurrentHistory({ parcelId: currentParcelId, historyData: data });
+    finishCurrentHistory({
+      companyId: currentCompany?.id,
+      establishmentId,
+      parcelId: currentParcelId,
+      historyData: data,
+    });
   };
 
   useEffect(() => {

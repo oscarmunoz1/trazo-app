@@ -15,8 +15,8 @@ import baseApi from "../api/baseApi";
 export const historyApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getCurrentHistory: build.query({
-      query: (parcelId) => ({
-        url: CURRENT_HISTORY(parcelId),
+      query: ({ companyId, establishmentId, parcelId }) => ({
+        url: CURRENT_HISTORY(companyId, establishmentId, parcelId),
         method: "GET",
         credentials: "include",
       }),
@@ -24,8 +24,8 @@ export const historyApi = baseApi.injectEndpoints({
         result ? [{ type: "History", parcelId }] : [],
     }),
     finishCurrentHistory: build.mutation({
-      query: ({ parcelId, historyData }) => ({
-        url: FINISH_HISTORY(parcelId),
+      query: ({ companyId, establishmentId, parcelId, historyData }) => ({
+        url: FINISH_HISTORY(companyId, establishmentId, parcelId),
         method: "POST",
         credentials: "include",
         body: historyData,
@@ -34,9 +34,9 @@ export const historyApi = baseApi.injectEndpoints({
         result ? [{ type: "History", parcelId }] : [],
     }),
     getParcelHistories: build.query({
-      query: (parcelId) => {
+      query: ({ companyId, establishmentId, parcelId }) => {
         return {
-          url: PARCEL_HISTORY_URL(parcelId),
+          url: PARCEL_HISTORY_URL(companyId, establishmentId, parcelId),
           method: "GET",
           credentials: "include",
         };
@@ -54,8 +54,8 @@ export const historyApi = baseApi.injectEndpoints({
         result ? [{ type: "History", historyId }] : [],
     }),
     getEvent: build.query({
-      query: (eventId) => ({
-        url: EVENT_URL(eventId),
+      query: ({ companyId, establishmentId, parcelId, eventId }) => ({
+        url: EVENT_URL(companyId, establishmentId, parcelId, eventId),
         method: "GET",
         credentials: "include",
       }),
@@ -100,6 +100,7 @@ export const historyApi = baseApi.injectEndpoints({
     }),
     getScansByEstablishment: build.query({
       query: ({
+        companyId,
         establishmentId,
         parcelId,
         productId,
@@ -107,7 +108,8 @@ export const historyApi = baseApi.injectEndpoints({
         period,
       }) => ({
         url:
-          SCANS_BY_ESTABLISHMENT_URL(establishmentId) +
+          SCANS_BY_ESTABLISHMENT_URL(companyId, establishmentId) +
+          (parcelId || productId || productionId || period ? "?" : "") +
           (parcelId ? `&parcel=${parcelId} ` : ``) +
           (productId ? `&product=${productId} ` : ``) +
           (productionId ? `&production=${productionId} ` : ``) +

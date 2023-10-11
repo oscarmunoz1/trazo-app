@@ -240,6 +240,7 @@ function EditEstablishment() {
 
   const onSubmitSocials = (data) => {
     editEstablishment({
+      companyId: currentCompany.id,
       establishmentId,
       establishmentData: {
         ...currentEstablishment,

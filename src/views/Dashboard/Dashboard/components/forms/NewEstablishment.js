@@ -246,10 +246,13 @@ function NewEstablishment() {
       })
     );
     createEstablishment({
-      ...currentEstablishment,
-      ...(data?.facebook && { facebook: data.facebook }),
-      ...(data?.instagram && { instagram: data.instagram }),
-      company: currentCompany.id,
+      companyId: currentCompany.id,
+      establishment: {
+        ...currentEstablishment,
+        ...(data?.facebook && { facebook: data.facebook }),
+        ...(data?.instagram && { instagram: data.instagram }),
+        company: currentCompany.id,
+      },
     });
   };
 

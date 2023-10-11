@@ -68,7 +68,6 @@ import { addCompanyEstablishment } from "store/features/companySlice";
 import avatar4 from "assets/img/avatars/avatar4.png";
 import imageMap from "assets/img/imageMap.png";
 import { set } from "date-fns";
-import { useCreateEstablishmentMutation } from "store/api/companyApi";
 import { useCreateEventMutation } from "store/api/historyApi";
 import { useCreateProductionMutation } from "store/api/historyApi";
 import { useDropzone } from "react-dropzone";
@@ -139,6 +138,8 @@ function NewProduction() {
 
   const currentHistory = useSelector((state) => state.history.currentHistory);
 
+  const currentCompany = useSelector((state) => state.company.currentCompany);
+
   console.log("currentHistory", currentHistory);
 
   const [
@@ -196,9 +197,15 @@ function NewProduction() {
   const {
     data: dataProducts,
     isSuccess: isSuccessProducts,
-  } = useGetEstablishmentProductsQuery({
-    establishmentId,
-  });
+  } = useGetEstablishmentProductsQuery(
+    {
+      companyId: currentCompany?.id,
+      establishmentId,
+    },
+    {
+      skip: !currentCompany || !establishmentId,
+    }
+  );
 
   useEffect(() => {
     if (isSuccessProducts) {

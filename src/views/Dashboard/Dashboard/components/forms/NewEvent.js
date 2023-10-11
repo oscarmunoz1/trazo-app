@@ -70,7 +70,6 @@ import WeatherTab from "./WeatherTab";
 import { addCompanyEstablishment } from "store/features/companySlice";
 import avatar4 from "assets/img/avatars/avatar4.png";
 import imageMap from "assets/img/imageMap.png";
-import { useCreateEstablishmentMutation } from "store/api/companyApi";
 import { useCreateEventMutation } from "store/api/historyApi";
 import { useDropzone } from "react-dropzone";
 import { useGoogleMap } from "@react-google-maps/api";

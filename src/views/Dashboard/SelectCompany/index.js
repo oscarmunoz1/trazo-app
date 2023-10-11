@@ -126,7 +126,10 @@ export default function SelectCompany() {
       dispatch(setCompany(dataCompany));
       const { id, name } = dataCompany;
       dispatch(setUserCompany({ id, name }));
-      createEstablishment({ ...currentEstablishment, company: dataCompany.id });
+      createEstablishment({
+        companyId: dataCompany.id,
+        establishment: { ...currentEstablishment, company: dataCompany.id },
+      });
     }
   }, [isSuccessCompany]);
 

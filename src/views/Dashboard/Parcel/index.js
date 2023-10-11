@@ -24,6 +24,8 @@ export default function ParcelView() {
   const mainText = useColorModeValue("gray.700", "gray.200");
   const cardColor = useColorModeValue("white", "gray.700");
 
+  const currentCompany = useSelector((state) => state.company.currentCompany);
+
   const establishment = useSelector(
     (state) =>
       state.company.currentCompany?.establishments.filter(
@@ -32,9 +34,9 @@ export default function ParcelView() {
   );
 
   const { data, error, isLoading, isFetching, refetch } = useGetParcelQuery(
-    parcelId || "",
+    { parcelId, establishmentId, companyId: currentCompany?.id },
     {
-      skip: parcelId === undefined,
+      skip: !parcelId || !establishmentId || !currentCompany,
     }
   );
 
@@ -101,7 +103,7 @@ export default function ParcelView() {
         <HistoryCard
           title={"History"}
           amount={30}
-          captions={["Time frame", "Members", "Performance", "Certified"]}
+          captions={["Time frame", "Product", "Members", "Certified"]}
         />
       </Grid>
     </Flex>

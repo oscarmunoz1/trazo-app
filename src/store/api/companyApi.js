@@ -6,25 +6,19 @@ import baseApi from "./baseApi";
 import { logout as logoutUser } from "store/features/authSlice";
 import { setCompany } from "store/features/companySlice";
 
-//   import { ProfileFormType, UserInfoType } from "../../types/user";
-
-//   import { generateProfile } from "../helpers";
-
 const companyApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getCompany: build.query({
-      query: (companyID) => ({
-        url: COMPANY_URL(companyID),
+      query: (companyId) => ({
+        url: COMPANY_URL(companyId),
         method: "GET",
         credentials: "include",
       }),
-      providesTags: (result, error, companyID) =>
-        result ? [{ type: "Company", companyID }] : [],
+      providesTags: (result, error, companyId) =>
+        result ? [{ type: "Company", companyId }] : [],
     }),
     createCompany: build.mutation({
       query: (formData) => {
-        // formData.append("file", file);
-
         return {
           url: COMPANY_URL(),
           method: "POST",
@@ -35,8 +29,8 @@ const companyApi = baseApi.injectEndpoints({
       invalidatesTags: (result) => (result ? ["Company"] : []),
     }),
     createEstablishment: build.mutation({
-      query: (establishment) => ({
-        url: ESTABLISHMENT_URL(),
+      query: ({ companyId, establishment }) => ({
+        url: ESTABLISHMENT_URL(companyId),
         method: "POST",
         credentials: "include",
         body: establishment,
@@ -44,8 +38,8 @@ const companyApi = baseApi.injectEndpoints({
       invalidatesTags: (result) => (result ? ["Establishment"] : []),
     }),
     editEstablishment: build.mutation({
-      query: ({ establishmentId, establishmentData }) => ({
-        url: ESTABLISHMENT_URL(establishmentId),
+      query: ({ companyId, establishmentId, establishmentData }) => ({
+        url: ESTABLISHMENT_URL(companyId, establishmentId),
         method: "PATCH",
         credentials: "include",
         body: establishmentData,

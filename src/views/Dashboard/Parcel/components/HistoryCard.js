@@ -24,10 +24,13 @@ import avatar2 from "assets/img/avatars/avatar10.png";
 import avatar3 from "assets/img/avatars/avatar2.png";
 import { convertToObject } from "typescript";
 import { useGetParcelHistoriesQuery } from "store/api/historyApi";
+import { useSelector } from "react-redux";
 
 const HistoryCard = ({ title, amount, captions }) => {
   const textColor = useColorModeValue("gray.700", "white");
   const navigate = useNavigate();
+
+  const currentCompany = useSelector((state) => state.company.currentCompany);
 
   const { parcelId, establishmentId } = useParams();
 
@@ -37,9 +40,12 @@ const HistoryCard = ({ title, amount, captions }) => {
     isLoading,
     isFetching,
     refetch,
-  } = useGetParcelHistoriesQuery(parcelId, {
-    skip: parcelId === undefined,
-  });
+  } = useGetParcelHistoriesQuery(
+    { companyId: currentCompany?.id, establishmentId, parcelId },
+    {
+      skip: !parcelId || !establishmentId || !currentCompany,
+    }
+  );
 
   return (
     <Card
@@ -98,7 +104,7 @@ const HistoryCard = ({ title, amount, captions }) => {
                       : FaRegDotCircle
                   }
                   members={[avatar1, avatar2, avatar3]}
-                  budget={`$${history.earning}`}
+                  product={history.product}
                   progression={history.certificate_percentage}
                   color={
                     history.certificate_percentage === 100

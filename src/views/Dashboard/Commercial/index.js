@@ -70,15 +70,18 @@ export default function CommercialView() {
     (state) => state.company.currentCompany?.establishments
   );
 
+  const currentCompany = useSelector((state) => state.company.currentCompany);
+
   const { data: dataEstablishmentScans } = useGetScansByEstablishmentQuery(
     {
+      companyId: currentCompany?.id,
       establishmentId: currentEstablishmentId,
       period: filters.period.id,
       productId: filters.product?.id,
       parcelId: filters.parcel?.id,
       productionId: filters.production?.id,
     },
-    { skip: !currentEstablishmentId || !filters?.period }
+    { skip: !currentEstablishmentId || !filters?.period || !currentCompany }
   );
 
   const {
@@ -86,13 +89,14 @@ export default function CommercialView() {
     isFetching,
   } = useGetEstablishmentScansVsSalesChartInfoQuery(
     {
+      companyId: currentCompany?.id,
       establishmentId: currentEstablishmentId,
       periodId: filters.period.id,
       productId: filters.product?.id,
       parcelId: filters.parcel?.id,
       productionId: filters.production?.id,
     },
-    { skip: !currentEstablishmentId || !filters?.period }
+    { skip: !currentCompany || !currentEstablishmentId || !filters?.period }
   );
 
   const {
@@ -100,13 +104,14 @@ export default function CommercialView() {
     isFetching: isFetchingEstablishmentProductsReputation,
   } = useGetEstablishmentProductReputationQuery(
     {
+      companyId: currentCompany?.id,
       establishmentId: currentEstablishmentId,
       periodId: filters.period.id,
       productId: filters.product?.id,
       parcelId: filters.parcel?.id,
       productionId: filters.production?.id,
     },
-    { skip: !currentEstablishmentId || !filters?.period }
+    { skip: !currentEstablishmentId || !filters?.period || !currentCompany }
   );
 
   console.log(dataEstablishmentProductsReputation);
@@ -149,12 +154,13 @@ export default function CommercialView() {
   }, [establishmentId, establishments]);
 
   const { data: dataProducts } = useGetEstablishmentProductsQuery(
-    { establishmentId: currentEstablishmentId },
-    { skip: !currentEstablishmentId }
+    { companyId: currentCompany?.id, establishmentId: currentEstablishmentId },
+    { skip: !currentEstablishmentId || !currentCompany }
   );
 
   const { data: dataHistories } = useGetEstablishmentHistoriesQuery(
     {
+      companyId: currentCompany?.id,
       establishmentId: currentEstablishmentId,
       periodId: filters.period?.id,
       parcelId: filters.parcel?.id,
@@ -162,6 +168,7 @@ export default function CommercialView() {
     },
     {
       skip:
+        !currentCompany ||
         !currentEstablishmentId ||
         !filters?.period ||
         !filters?.parcel ||
@@ -175,6 +182,7 @@ export default function CommercialView() {
       parcel: parcel ? { id: parcel.id, name: parcel.name } : null,
     });
     getEstablishmentProducts({
+      companyId: currentCompany?.id,
       establishmentId: currentEstablishmentId,
       parcelId: parcel?.id,
     });
@@ -188,7 +196,6 @@ export default function CommercialView() {
   };
 
   const onProductionFilterChange = (production) => {
-    console.log(production);
     setFilters({
       ...filters,
       production: production

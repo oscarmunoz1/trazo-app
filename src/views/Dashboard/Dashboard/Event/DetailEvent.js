@@ -61,6 +61,9 @@ function ProfileEstablishment() {
   const { establishmentId, parcelId, eventId } = useParams();
   const [establishment, setEstablishment] = useState(null);
   const [parcel, setParcel] = useState(null);
+
+  const currentCompany = useSelector((state) => state.company.currentCompany);
+
   const {
     isOpen: isOpen1,
     onOpen: onOpen1,
@@ -68,17 +71,15 @@ function ProfileEstablishment() {
   } = useDisclosure();
 
   const { data, error, isLoading, isFetching, refetch } = useGetEventQuery(
-    eventId,
+    { companyId: currentCompany.id, establishmentId, parcelId, eventId },
     {
-      skip: eventId === undefined,
+      skip: !eventId || !parcelId || !establishmentId || !currentCompany.id,
     }
   );
 
   const establishments = useSelector(
     (state) => state.company.currentCompany?.establishments
   );
-
-  const currentCompany = useSelector((state) => state.company.currentCompany);
 
   useEffect(() => {
     let establishment;

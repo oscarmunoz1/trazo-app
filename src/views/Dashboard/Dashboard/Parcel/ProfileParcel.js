@@ -80,9 +80,16 @@ function ProfileEstablishment() {
     isLoading,
     isFetching,
     refetch,
-  } = useGetParcelQuery(parcelId, {
-    skip: parcelId === undefined || currentParcel?.id === parcelId,
-  });
+  } = useGetParcelQuery(
+    { companyId: currentCompany?.id, establishmentId, parcelId },
+    {
+      skip:
+        parcelId === undefined ||
+        currentParcel?.id === parcelId ||
+        !currentCompany ||
+        !establishmentId,
+    }
+  );
 
   useEffect(() => {
     let establishment;
