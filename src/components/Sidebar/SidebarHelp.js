@@ -37,10 +37,7 @@ const SidebarHelp = ({ sidebarWidth }) => {
       >
         Please check our docs
       </Text>
-      <Link
-        w="100%"
-        href="https://demos.creative-tim.com/docs-purity-ui-dashboard/"
-      >
+      <Link w="100%" href="https://google.com/">
         <Button
           fontSize="10px"
           fontWeight="bold"

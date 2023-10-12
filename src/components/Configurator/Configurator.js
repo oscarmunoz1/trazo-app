@@ -71,73 +71,15 @@ export default function Configurator(props) {
           <DrawerHeader pt="24px" px="24px">
             <DrawerCloseButton />
             <Text fontSize="xl" fontWeight="bold" mt="16px">
-              Purity UI Configurator
+              Profile Settings
             </Text>
             <Text fontSize="md" mb="16px">
-              See your dashboard options.
+              Configure your profile settings.
             </Text>
             <HSeparator />
           </DrawerHeader>
           <DrawerBody w="340px" ps="24px" pe="40px">
             <Flex flexDirection="column">
-              <Box>
-                <Text fontSize="md" fontWeight="600">
-                  Sidenav Type
-                </Text>
-                <Text fontSize="sm" mb="16px">
-                  Choose between 2 different sidenav types.
-                </Text>
-                <Flex>
-                  <Button
-                    w="50%"
-                    p="8px 32px"
-                    me="8px"
-                    colorScheme="teal"
-                    borderColor="green.400"
-                    color="green.400"
-                    variant="outline"
-                    fontSize="xs"
-                    onClick={props.onTransparent}
-                  >
-                    Transparent
-                  </Button>
-                  <Button
-                    type="submit"
-                    bg="green.400"
-                    w="50%"
-                    p="8px 32px"
-                    mb={5}
-                    _hover="green.400"
-                    color="white"
-                    fontSize="xs"
-                    onClick={props.onOpaque}
-                  >
-                    Opaque
-                  </Button>
-                </Flex>
-              </Box>
-              <Box
-                display={fixedDisplay}
-                justifyContent="space-between "
-                mb="16px"
-              >
-                <Text fontSize="md" fontWeight="600" mb="4px">
-                  Navbar Fixed
-                </Text>
-                <Switch
-                  colorScheme="teal"
-                  isChecked={switched}
-                  onChange={(event) => {
-                    if (switched === true) {
-                      props.onSwitch(false);
-                      setSwitched(false);
-                    } else {
-                      props.onSwitch(true);
-                      setSwitched(true);
-                    }
-                  }}
-                />
-              </Box>
               <Flex
                 justifyContent="space-between"
                 alignItems="center"
@@ -152,113 +94,6 @@ export default function Configurator(props) {
               </Flex>
 
               <HSeparator />
-              <Box mt="24px">
-                <Text fontSize="md" fontWeight="600">
-                  Sidenav Type
-                </Text>
-                <Text fontSize="sm" mb="16px">
-                  Choose between 2 different sidenav types.
-                </Text>
-                <Box>
-                  <Link
-                    href="https://www.creative-tim.com/product/purity-ui-dashboard-pro"
-                    w="100%"
-                    mb="16px"
-                  >
-                    <Button
-                      type="submit"
-                      bg="green.400"
-                      w="50%"
-                      mb={5}
-                      _hover="green.400"
-                      color="white"
-                      fontSize="xs"
-                      w="100%"
-                      mb="16px"
-                      px="30px"
-                    >
-                      Buy Now
-                    </Button>
-                  </Link>
-                  <Link
-                    href="https://www.creative-tim.com/product/purity-ui-dashboard"
-                    w="100%"
-                    mb="16px"
-                  >
-                    <Button
-                      w="100%"
-                      mb="16px"
-                      bg={bgButton}
-                      color={colorButton}
-                      fontSize="xs"
-                      variant="no-hover"
-                      px="30px"
-                    >
-                      Free Download
-                    </Button>
-                  </Link>
-                  <Link
-                    href="https://demos.creative-tim.com/docs-purity-ui-dashboard/"
-                    w="100%"
-                  >
-                    <Button
-                      w="100%"
-                      bg={secondaryButtonBg}
-                      border="1px solid"
-                      borderColor={secondaryButtonBorder}
-                      color={secondaryButtonColor}
-                      fontSize="xs"
-                      variant="no-hover"
-                      px="20px"
-                      mb="16px"
-                    >
-                      <Text textDecorationColor="none">Documentation</Text>
-                    </Button>
-                  </Link>
-                </Box>
-                <Flex
-                  justifyContent="center"
-                  alignItems="center"
-                  w="100%"
-                  mb="16px"
-                >
-                  <GitHubButton
-                    href="https://github.com/creativetimofficial/ct-purity-ui-dashboard-pro"
-                    data-icon="octicon-star"
-                    data-show-count="true"
-                    aria-label="Star creativetimofficial/purity-ui-dashboard on GitHub"
-                  >
-                    Star
-                  </GitHubButton>
-                </Flex>
-                <Box w="100%">
-                  <Text mb="6px" textAlign="center">
-                    Thank you for sharing!
-                  </Text>
-                  <Flex justifyContent="center" alignContent="center">
-                    <Link
-                      isExternal="true"
-                      href="https://twitter.com/intent/tweet?url=https://demos.creative-tim.com/purity-ui-dashboard-pro/&text=Check%20Purity%20UI%20Dashboard%20PRO%20made%20by%20@CreativeTim%20&%20@simmmple_web"
-                    >
-                      <Button
-                        colorScheme="twitter"
-                        leftIcon={<FaTwitter />}
-                        me="10px"
-                      >
-                        <Text>Tweet</Text>
-                      </Button>
-                    </Link>
-                    <Link
-                      isExternal="true"
-                      href="https://www.facebook.com/sharer/sharer.php?u=https://demos.creative-tim.com/purity-ui-dashboard-pro/"
-                    >
-                      <Button colorScheme="facebook" leftIcon={<FaFacebook />}>
-                        <Text>Share</Text>
-                      </Button>
-                    </Link>
-                  </Flex>
-                </Box>
-              </Box>
             </Flex>
           </DrawerBody>
         </DrawerContent>

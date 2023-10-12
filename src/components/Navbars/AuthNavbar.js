@@ -422,13 +422,15 @@ export default function AuthNavbar(props) {
       <Flex w="100%" justifyContent={{ sm: "start", lg: "space-between" }}>
         {brand}
         <Box ms={{ base: "auto", lg: "0px" }} display={{ lg: "none" }}>
-          <SidebarResponsive
-            logoText={props.logoText}
-            secondary={props.secondary}
-            routes={routes}
-            // logo={logo}
-            {...rest}
-          />
+          {isLoadingAuth === false && isAuthenticated && (
+            <SidebarResponsive
+              logoText={props.logoText}
+              secondary={props.secondary}
+              routes={routes}
+              // logo={logo}
+              {...rest}
+            />
+          )}
         </Box>
         {/* {linksAuth} */}
         {isLoadingAuth === false && isAuthenticated ? (
