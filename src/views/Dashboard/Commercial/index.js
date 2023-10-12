@@ -217,14 +217,12 @@ export default function CommercialView() {
         {
           name: "Scans",
           type: "bar",
-          data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series,
+          data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series.scans,
         },
         {
           name: "Sales",
           type: "line",
-          data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series.map(
-            (series) => (series > 2 ? series - 2 : 0)
-          ),
+          data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series.sales,
         },
       ]);
       chartRef.current.chart.updateOptions({
@@ -522,9 +520,9 @@ export default function CommercialView() {
                           return {
                             name: data.name,
                             type: data.type,
-                            data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series.map(
-                              (serie) => (serie > 2 ? serie - 2 : 0)
-                            ),
+                            data:
+                              dataEstablishmentScansVsSaleInfo?.scans_vs_sales
+                                ?.series.sales,
                           };
                         }
                         return {
@@ -532,7 +530,7 @@ export default function CommercialView() {
                           type: data.type,
                           data:
                             dataEstablishmentScansVsSaleInfo?.scans_vs_sales
-                              .series,
+                              .series.scans,
                         };
                       })}
                       chartOptions={{
