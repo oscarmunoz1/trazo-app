@@ -195,6 +195,10 @@ function NewParcel() {
   });
 
   const currentParcel = useSelector((state) => state.product.currentParcel);
+  const currentParcelForm = useSelector(
+    (state) => state.form.currentForm?.parcel
+  );
+  debugger;
 
   const {
     data: parcelData,
@@ -270,7 +274,7 @@ function NewParcel() {
     dispatch(
       setForm({
         parcel: {
-          ...currentParcel,
+          ...currentParcelForm,
           description: data.description,
         },
       })
@@ -305,14 +309,20 @@ function NewParcel() {
     if (product) {
       currentParcelData["product"] = product;
     }
-
+    debugger;
+    console.log({
+      ...currentParcelData,
+      ...currentParcelForm,
+      establishment: parseInt(establishmentId),
+      album: { images: acceptedFiles },
+    });
     updateParcel({
       parcelId,
       companyId: currentCompany?.id,
       establishmentId,
       parcelData: {
         ...currentParcelData,
-        ...data,
+        ...currentParcelForm,
         establishment: parseInt(establishmentId),
         album: { images: acceptedFiles },
       },

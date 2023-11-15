@@ -448,7 +448,7 @@ export default function AuthNavbar(props) {
             <Text display={{ sm: "none", md: "flex" }}>Sign Out</Text>
           </Button>
         ) : (
-          <Link href="http://localhost:3000/pricing">
+          <Link href={`${process.env.REACT_APP_BASE_URL}pricing`}>
             <Button
               bg={bgButton}
               color={colorButton}

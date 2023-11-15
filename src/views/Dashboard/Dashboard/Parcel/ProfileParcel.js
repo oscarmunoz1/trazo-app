@@ -34,6 +34,7 @@ import React, { useEffect, useState } from "react";
 import { TypeOf, object, string } from "zod";
 import { useNavigate, useParams } from "react-router-dom";
 
+import BgMusicCard from "assets/img/BgMusicCard.png";
 import BgSignUp from "assets/img/basic-auth.png";
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
@@ -219,11 +220,7 @@ function ProfileEstablishment() {
                     mx={{ sm: "auto", lg: "0px" }}
                   >
                     <Image
-                      src={
-                        establishment?.image
-                          ? `${process.env.REACT_APP_BACKEND_URL}${establishment?.image}`
-                          : productPage1
-                      }
+                      src={establishment?.image || BgMusicCard}
                       w="100%"
                       h="100%"
                       borderRadius="15px"
@@ -240,11 +237,7 @@ function ProfileEstablishment() {
                       h={{ sm: "36px", md: "90px", lg: "60px" }}
                     >
                       <Image
-                        src={
-                          establishment?.image
-                            ? `${process.env.REACT_APP_BACKEND_URL}${establishment?.image}`
-                            : productPage1
-                        }
+                        src={establishment?.image || productPage1}
                         w="100%"
                         h="100%"
                         borderRadius="15px"

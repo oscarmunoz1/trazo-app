@@ -156,11 +156,7 @@ export default function DashboardView() {
             readMoreLink={`/admin/dashboard/establishment/${establishment?.id}/profile`}
             image={
               <Image
-                src={
-                  establishment?.image
-                    ? `${process.env.REACT_APP_BACKEND_URL}${establishment?.image}`
-                    : bgImage
-                }
+                src={establishment?.image || bgImage}
                 alt="establishment image"
                 width="100%"
                 height="100%"

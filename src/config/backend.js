@@ -19,6 +19,8 @@ export const PARCEL_URL = (companyId, establishmentId, parcelId = null) =>
   parcelId
     ? `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/parcels/${parcelId}/`
     : `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/parcels/`;
+export const PARCEL_UPDATE_URL = (companyId, establishmentId, parcelId) =>
+  `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/parcels/${parcelId}/update_parcel/`;
 export const ESTABLISHMENT_PRODUCTS_URL = (companyId, establishmentId) =>
   `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/products/`;
 export const ESTABLISHMENT_HISTORIES_URL = (companyId, establishmentId) =>

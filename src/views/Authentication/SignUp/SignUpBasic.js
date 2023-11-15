@@ -246,7 +246,7 @@ function SignUp() {
                   placeholder="Confirm your password"
                   type="password"
                 />
-                <FormControl display="flex" alignItems="center" mb="24px">
+                {/* <FormControl display="flex" alignItems="center" mb="24px">
                   <Switch id="remember-login" colorScheme="green" me="10px" />
                   <FormLabel
                     htmlFor="remember-login"
@@ -255,8 +255,9 @@ function SignUp() {
                   >
                     Remember me
                   </FormLabel>
-                </FormControl>
+                </FormControl> */}
                 <Button
+                  mt="12px"
                   type="submit"
                   bg="green.300"
                   fontSize="10px"

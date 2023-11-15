@@ -3,6 +3,7 @@ import {
   ESTABLISHMENT_HISTORIES_URL,
   ESTABLISHMENT_PRODUCTS_URL,
   LOGIN_URL,
+  PARCEL_UPDATE_URL,
   PARCEL_URL,
   PRODUCT_URL,
 } from "../../config";
@@ -34,16 +35,31 @@ export const productApi = baseApi.injectEndpoints({
     }),
     updateParcel: build.mutation({
       query: ({ companyId, establishmentId, parcelId, parcelData }) => {
+        debugger;
         const formData = new FormData();
-        formData.append("image", parcelData.album.images[0]);
+        parcelData.album.images.forEach((file) => {
+          formData.append("album", file);
+        });
+        debugger;
+
+        for (const [key, value] of Object.entries(parcelData)) {
+          if (key !== "album") {
+            formData.append(key, value);
+          }
+        }
+
+        debugger;
         return {
           url: PARCEL_URL(companyId, establishmentId, parcelId),
           method: "PATCH",
           credentials: "include",
+
           body: formData,
           headers: {
             "Content-Type":
-              "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW",
+              "multipart/form-data; boundary=----WebKitFormBoundaryXofNuTAW9CyJMamA",
+            // "Accept-Encoding": "gzip, deflate, br",
+            // Accept: "application/json",
           },
           formData: true,
         };

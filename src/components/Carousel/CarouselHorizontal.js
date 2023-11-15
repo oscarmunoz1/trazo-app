@@ -83,11 +83,7 @@ const CarouselHorizontal = ({ title, description, data }) => {
             {data.map((parcel) => (
               <CarouselCard
                 id={parcel.id}
-                image={
-                  parcel.image
-                    ? `${process.env.REACT_APP_BACKEND_URL}${parcel.image}`
-                    : BgMusicCard
-                }
+                image={parcel.image || BgMusicCard}
                 name={parcel.name}
                 category={parcel.product || "-"}
                 avatars={[avatar2, avatar4, avatar6]}
