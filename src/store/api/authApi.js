@@ -1,68 +1,52 @@
-import {
-  LOGIN_URL,
-  SIGNUP_URL,
-  USER_DATA_URL,
-  VERIFY_EMAIL_URL,
-} from "../../config";
+import { LOGIN_URL, SIGNUP_URL, USER_DATA_URL, VERIFY_EMAIL_URL } from '../../config';
 
-import baseApi from "./baseApi";
-import { companyApi } from "./companyApi";
-import { logout as logoutUser } from "store/features/authSlice";
-import { setCompany } from "store/features/companySlice";
-import { setUser } from "store/features/userSlice";
-//   import { EmployeeType } from "../../types/employees";
-import { useMutation } from "@reduxjs/toolkit/query/react";
-
-//   import { ProfileFormType, UserInfoType } from "../../types/user";
-
-//   import { generateProfile } from "../helpers";
+import baseApi from './baseApi';
+import { setCompany } from 'store/features/companySlice';
+import { setUser } from 'store/features/userSlice';
 
 const authApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     login: build.mutation({
       query: ({ email, password }) => ({
         url: LOGIN_URL,
-        method: "POST",
+        method: 'POST',
         body: { email: email.toLowerCase(), password },
-        credentials: "include",
+        credentials: 'include'
       }),
       async onQueryStarted(userId, { dispatch, queryFulfilled }) {
         try {
           const result = await queryFulfilled;
           dispatch(setUser(result.data.user));
           const { data } = await dispatch(
-            baseApi.endpoints.getCompany.initiate(
-              result.data.user["companies"][0].id
-            )
+            baseApi.endpoints.getCompany.initiate(result.data.user['companies'][0].id)
           );
           dispatch(setCompany(data));
         } catch (error) {
           console.error(error);
         }
-      },
+      }
     }),
     signUp: build.mutation({
       query(data) {
         return {
           url: SIGNUP_URL,
-          method: "POST",
-          body: data,
+          method: 'POST',
+          body: data
         };
-      },
+      }
     }),
     logout: build.mutation({
       query: () => ({
-        url: "auth/logout/",
-        method: "POST",
+        url: 'auth/logout/',
+        method: 'POST',
         body: {},
-        credentials: "include",
+        credentials: 'include',
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
       }),
-      invalidatesTags: (result) =>
-        result ? ["User", "Company", "Parcel", "History"] : [],
+      invalidatesTags: (result) => (result ? ['User', 'Company', 'Parcel', 'History'] : [])
       // transformResult: (result, queryApi, extraOptions) => {
       //   // queryApi.dispatch(logoutUser());
       //   // return { ...result, isAuthenticated: false };
@@ -73,45 +57,43 @@ const authApi = baseApi.injectEndpoints({
       query({ verificationCode }) {
         return {
           url: VERIFY_EMAIL_URL,
-          method: "POST",
+          method: 'POST',
           body: {
-            code: verificationCode,
+            code: verificationCode
           },
           headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          }
         };
-      },
+      }
     }),
     userData: build.query({
       query: () => {
         return {
           url: USER_DATA_URL,
-          method: "GET",
-          credentials: "include",
+          method: 'GET',
+          credentials: 'include'
         };
       },
-      providesTags: (result) => (result ? ["User"] : []),
+      providesTags: (result) => (result ? ['User'] : []),
       async onQueryStarted(userId, { dispatch, queryFulfilled }) {
         try {
           const result = await queryFulfilled;
           dispatch(setUser(result.data));
-          if (result.data["companies"].length > 0) {
+          if (result.data['companies'].length > 0) {
             const { data } = await dispatch(
-              baseApi.endpoints.getCompany.initiate(
-                result.data["companies"][0].id
-              )
+              baseApi.endpoints.getCompany.initiate(result.data['companies'][0].id)
             );
             dispatch(setCompany(data));
           }
         } catch (error) {
           console.error(error);
         }
-      },
-    }),
+      }
+    })
   }),
-  overrideExisting: false,
+  overrideExisting: false
 });
 
 export const {
@@ -119,5 +101,5 @@ export const {
   useLoginMutation,
   useSignUpMutation,
   useLogoutMutation,
-  useVerifyEmailMutation,
+  useVerifyEmailMutation
 } = authApi;
