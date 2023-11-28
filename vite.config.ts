@@ -27,19 +27,21 @@ export default defineConfig({
     // this ensures that the browser opens upon server start
     open: true,
     // this sets a default port to 3000  
-    port: 3000, 
+    port: 3000,
   },
   resolve: {
-    alias: [{ find: "views", replacement: resolve(__dirname, "./src/views") },
-    { find: "components", replacement: resolve(__dirname, "./src/components") },
-    { find: "utils", replacement: resolve(__dirname, "./src/utils") },
-    { find: "assets", replacement: resolve(__dirname, "./src/assets") },
-    { find: "store", replacement: resolve(__dirname, "./src/store") },
-    { find: "layouts", replacement: resolve(__dirname, "./src/layouts") },
-    { find: "routes.jsx", replacement: resolve(__dirname, "./src/routes.jsx") },
-    { find: "variables", replacement: resolve(__dirname, "./src/variables") },
-    { find: "config", replacement: resolve(__dirname, "./src/config") },
-    { find: "contexts", replacement: resolve(__dirname, "./src/contexts") },
-    { find: "theme", replacement: resolve(__dirname, "./src/theme") }]
+    alias: [
+      { find: "views", replacement: resolve(__dirname, "./src/views") },
+      { find: "components", replacement: resolve(__dirname, "./src/components") },
+      { find: "utils", replacement: resolve(__dirname, "./src/utils") },
+      { find: "assets", replacement: resolve(__dirname, "./src/assets") },
+      { find: "store", replacement: resolve(__dirname, "./src/store") },
+      { find: "layouts", replacement: resolve(__dirname, "./src/layouts") },
+      { find: "routes.jsx", replacement: resolve(__dirname, "./src/routes.jsx") },
+      { find: "variables", replacement: resolve(__dirname, "./src/variables") },
+      { find: "config", replacement: resolve(__dirname, "./src/config") },
+      { find: "contexts", replacement: resolve(__dirname, "./src/contexts") },
+      { find: "theme", replacement: resolve(__dirname, "./src/theme") }
+    ]
   }
 })

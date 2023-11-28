@@ -4,7 +4,7 @@ import {
   DocumentIcon,
   GlobeIcon,
   WalletIcon,
-} from "components/Icons/Icons.jsx";
+} from "components/Icons/Icons.tsx";
 // Chakra imports
 import {
   Flex,

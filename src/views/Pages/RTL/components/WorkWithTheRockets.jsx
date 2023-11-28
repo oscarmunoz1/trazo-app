@@ -12,8 +12,8 @@ import {
 // react icons
 import { BsArrowRight } from "react-icons/bs";
 // Custom components
-import Card from "components/Card/Card.jsx";
-import CardBody from "components/Card/CardBody.jsx";
+import Card from "components/Card/Card";
+import CardBody from "components/Card/CardBody.tsx";
 import React from "react";
 
 const WorkWithTheRockets = ({ title, description, backgroundImage }) => {

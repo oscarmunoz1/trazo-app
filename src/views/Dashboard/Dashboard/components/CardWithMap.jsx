@@ -14,8 +14,8 @@ import React, { useRef } from "react";
 // react icons
 import { BsArrowRight } from "react-icons/bs";
 // Custom components
-import Card from "components/Card/Card.jsx";
-import CardBody from "components/Card/CardBody.jsx";
+import Card from "components/Card/Card";
+import CardBody from "components/Card/CardBody.tsx";
 
 const options = {
   googleMapApiKey: "AIzaSyCLHij6DjbLLkhTsTvrRhwuKf8ZGXrx-Q8",

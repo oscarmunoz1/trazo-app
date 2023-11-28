@@ -56,7 +56,7 @@ import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import FormInput from "components/Forms/FormInput";
-import { HSeparator } from "components/Separator/Separator.jsx";
+import { HSeparator } from "components/Separator/Separator";
 import HTMLRenderer from "components/Utils/HTMLRenderer";
 import ImageParcel1 from "assets/img/ImageParcel1.png";
 import TimelineRow from "components/Tables/TimelineRow";

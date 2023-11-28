@@ -14,8 +14,8 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 
 // Custom components
-import Card from "components/Card/Card.jsx";
-import CardHeader from "components/Card/CardHeader.jsx";
+import Card from "components/Card/Card";
+import CardHeader from "components/Card/CardHeader.tsx";
 import DashboardTableRow from "components/Tables/DashboardTableRow";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import React from "react";

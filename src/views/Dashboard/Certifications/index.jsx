@@ -14,9 +14,9 @@ import {
 import { NavLink, useLocation, useMatch, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 
-import Card from "components/Card/Card.jsx";
+import Card from "components/Card/Card";
 // Custom icons
-import { HomeIcon } from "components/Icons/Icons.jsx";
+import { HomeIcon } from "components/Icons/Icons.tsx";
 import MiniStatistics from "../Dashboard/components/MiniStatistics";
 // assets
 import { useSelector } from "react-redux";

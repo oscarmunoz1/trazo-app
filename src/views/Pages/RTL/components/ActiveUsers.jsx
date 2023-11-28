@@ -4,13 +4,13 @@ import {
   RocketIcon,
   StatsIcon,
   WalletIcon,
-} from "components/Icons/Icons.jsx";
+} from "components/Icons/Icons.tsx";
 // Chakra imports
 import { Flex, SimpleGrid, Text, useColorModeValue } from "@chakra-ui/react";
 
 // Custom components
-import Card from "components/Card/Card.jsx";
-import CardBody from "components/Card/CardBody.jsx";
+import Card from "components/Card/Card";
+import CardBody from "components/Card/CardBody.tsx";
 import ChartStatistics from "views/Dashboard/Default/components/ChartStatistics";
 import React from "react";
 

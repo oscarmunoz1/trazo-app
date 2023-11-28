@@ -29,7 +29,6 @@ import {
   renderThumbDark,
   renderThumbLight,
   renderTrack,
-  renderTrackRTL,
   renderView,
   renderViewRTL,
 } from "components/Scrollbar/Scrollbar";

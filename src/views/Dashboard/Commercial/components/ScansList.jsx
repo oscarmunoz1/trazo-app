@@ -29,9 +29,9 @@ import {
 } from "@chakra-ui/react";
 
 // Custom components
-import Card from "components/Card/Card.jsx";
-import CardBody from "components/Card/CardBody.jsx";
-import CardHeader from "components/Card/CardHeader.jsx";
+import Card from "components/Card/Card";
+import CardBody from "components/Card/CardBody.tsx";
+import CardHeader from "components/Card/CardHeader.tsx";
 import React from "react";
 import ScansRow from "components/Tables/ScansRow";
 

@@ -31,7 +31,7 @@ import BarChart from "components/Charts/BarChart";
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
-import { HomeIcon } from "components/Icons/Icons.jsx";
+import { HomeIcon } from "components/Icons/Icons.tsx";
 import { IoIosArrowDown } from "react-icons/io";
 import LineBarChart from "components/Charts/LineBarChart";
 import LineChart from "components/Charts/LineChart";

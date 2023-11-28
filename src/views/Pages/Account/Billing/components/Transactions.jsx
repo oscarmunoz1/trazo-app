@@ -2,9 +2,9 @@
 import { Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
 
 // Custom components
-import Card from "components/Card/Card.jsx";
-import CardBody from "components/Card/CardBody.jsx";
-import CardHeader from "components/Card/CardHeader.jsx";
+import Card from "components/Card/Card";
+import CardBody from "components/Card/CardBody.tsx";
+import CardHeader from "components/Card/CardHeader.tsx";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import React from "react";
 import TransactionRow from "components/Tables/TransactionRow";

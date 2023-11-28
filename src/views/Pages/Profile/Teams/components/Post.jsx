@@ -30,11 +30,11 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import Card from "components/Card/Card.jsx";
-import CardBody from "components/Card/CardBody.jsx";
-import CardHeader from "components/Card/CardHeader.jsx";
+import Card from "components/Card/Card";
+import CardBody from "components/Card/CardBody.tsx";
+import CardHeader from "components/Card/CardHeader.tsx";
 import { FaCommentDots } from "react-icons/fa";
-import { HSeparator } from "components/Separator/Separator.jsx";
+import { HSeparator } from "components/Separator/Separator";
 import { IoMdShareAlt } from "react-icons/io";
 import React from "react";
 import avatar1 from "assets/img/avatars/avatar1.png";

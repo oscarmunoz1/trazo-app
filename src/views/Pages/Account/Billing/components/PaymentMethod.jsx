@@ -9,9 +9,9 @@ import {
 } from "@chakra-ui/react";
 
 // Custom components
-import Card from "components/Card/Card.jsx";
-import CardBody from "components/Card/CardBody.jsx";
-import CardHeader from "components/Card/CardHeader.jsx";
+import Card from "components/Card/Card";
+import CardBody from "components/Card/CardBody.tsx";
+import CardHeader from "components/Card/CardHeader.tsx";
 import { FaPencilAlt } from "react-icons/fa";
 import IconBox from "components/Icons/IconBox";
 import React from "react";

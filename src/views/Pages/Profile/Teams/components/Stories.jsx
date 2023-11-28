@@ -25,8 +25,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import Card from "components/Card/Card.jsx";
-import CardBody from "components/Card/CardBody.jsx";
+import Card from "components/Card/Card";
+import CardBody from "components/Card/CardBody.tsx";
 import { FaPlus } from "react-icons/fa";
 import React from "react";
 import avatar1 from "assets/img/avatars/avatar1.png";

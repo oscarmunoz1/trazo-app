@@ -27,17 +27,17 @@ import { Outlet, Route } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 
 // Layout components
-import AdminNavbar from "components/Navbars/AdminNavbar.jsx";
+import AdminNavbar from "components/Navbars/AdminNavbar";
 import Configurator from "components/Configurator/Configurator";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin";
-import Footer from "components/Footer/Footer.jsx";
+import Footer from "components/Footer/Footer.tsx";
 import { HomeIcon } from "components/Icons/Icons";
 // Custom components
 import MainPanel from "components/Layout/MainPanel";
 import Overview from "views/Pages/Profile/Overview/index";
 import PanelContainer from "components/Layout/PanelContainer";
 import PanelContent from "components/Layout/PanelContent";
-import Sidebar from "components/Sidebar/Sidebar.jsx";
+import Sidebar from "components/Sidebar/Sidebar";
 import { SidebarContext } from "contexts/SidebarContext";
 // import { dynamicRoutes } from "components/Sidebar/Sidebar";
 import routes from "routes.jsx";

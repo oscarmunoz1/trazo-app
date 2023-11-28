@@ -17,9 +17,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
 // Custom components
-import Card from "components/Card/Card.jsx";
-import CardBody from "components/Card/CardBody.jsx";
-import CardHeader from "components/Card/CardHeader.jsx";
+import Card from "components/Card/Card";
+import CardBody from "components/Card/CardBody.tsx";
+import CardHeader from "components/Card/CardHeader.tsx";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import TimelineRow from "components/Tables/TimelineRow";
 import { setCurrentHistory } from "store/features/historySlice";

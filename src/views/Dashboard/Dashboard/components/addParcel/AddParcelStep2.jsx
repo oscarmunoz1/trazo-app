@@ -26,7 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { BsFillCloudLightningRainFill } from "react-icons/bs";
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
-import CardFooter from "components/Card/CardFooter.jsx";
+import CardFooter from "components/Card/CardFooter.tsx";
 import CardHeader from "components/Card/CardHeader";
 import ChemicalTab from "./ChemicalTab.jsx";
 import { FaPlus } from "react-icons/fa";

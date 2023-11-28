@@ -2,8 +2,8 @@
 import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 
 // Custom components
-import Card from "components/Card/Card.jsx";
-import CardHeader from "components/Card/CardHeader.jsx";
+import Card from "components/Card/Card";
+import CardHeader from "components/Card/CardHeader.tsx";
 import React from "react";
 
 const SalesOverview = ({ title, percentage, chart }) => {

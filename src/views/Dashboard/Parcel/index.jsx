@@ -5,7 +5,7 @@ import { dashboardTableData, timelineData } from "variables/general";
 import { useDispatch, useSelector } from "react-redux";
 
 import BgMusicCard from "assets/img/BgMusicCard.png";
-import Card from "components/Card/Card.jsx";
+import Card from "components/Card/Card";
 import CardWithImage from "components/Card/CardWithImage";
 import CardWithMap from "./components/CardWithMap";
 import HistoryCard from "./components/HistoryCard";

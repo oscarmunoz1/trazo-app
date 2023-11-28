@@ -25,8 +25,8 @@ import { Box, ChakraProvider, Portal } from "@chakra-ui/react";
 import { Outlet, Route } from "react-router-dom";
 
 // core components
-import AuthNavbar from "components/Navbars/AuthNavbar.jsx";
-import Footer from "components/Footer/Footer.jsx";
+import AuthNavbar from "components/Navbars/AuthNavbar";
+import Footer from "components/Footer/Footer";
 import React from "react";
 import theme from "theme/theme.js";
 

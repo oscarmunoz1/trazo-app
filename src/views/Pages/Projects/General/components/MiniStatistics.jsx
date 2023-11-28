@@ -9,8 +9,8 @@ import {
 } from "@chakra-ui/react";
 
 // Custom components
-import Card from "components/Card/Card.jsx";
-import CardBody from "components/Card/CardBody.jsx";
+import Card from "components/Card/Card";
+import CardBody from "components/Card/CardBody.tsx";
 import IconBox from "components/Icons/IconBox";
 import React from "react";
 

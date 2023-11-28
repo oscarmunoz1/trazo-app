@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 
 import AddEstablishment from "views/Dashboard/Dashboard/Establishment/AddEstablishment";
 import AddParcel from "views/Dashboard/Dashboard/Parcel/AddParcel";
-import AdminLayout from "layouts/Admin.jsx";
-import AuthLayout from "layouts/Auth.jsx";
+import AdminLayout from "layouts/Admin";
+import AuthLayout from "layouts/Auth";
 import Authenticated from "./utils/protections/Authenticated";
 import Capture from "views/Scan/Capture/Capture";
 import CertificationsView from "views/Dashboard/Certifications";

@@ -23,7 +23,7 @@ import {
   JiraLogo,
   SlackLogo,
   SpotifyLogo,
-} from "components/Icons/Icons.jsx";
+} from "components/Icons/Icons.tsx";
 import { DocumentIcon, RocketIcon, SettingsIcon } from "components/Icons/Icons";
 import {
   FaArrowDown,
