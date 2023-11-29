@@ -53,6 +53,7 @@ import { HomeIcon } from 'components/Icons/Icons';
 import IconBox from 'components/Icons/IconBox';
 import Overview from 'views/Pages/Profile/Overview/index';
 import { RootState } from 'store';
+import { Route } from 'types/common';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { SidebarContext } from 'contexts/SidebarContext';
 import SidebarHelp from './SidebarHelp';
@@ -100,7 +101,7 @@ function Sidebar(props: SidebarProps) {
   };
 
   useEffect(() => {
-    const dynamicRoutes =
+    const dynamicRoutes: Route[] =
       establishments &&
       establishments.map((e: EstablishmentType) => {
         return {
@@ -191,7 +192,7 @@ function Sidebar(props: SidebarProps) {
       inactiveColor = useColorModeValue('gray.400', 'gray.400');
       sidebarActiveShadow = 'none';
     }
-    return routes?.map((prop, index) => {
+    return routes?.map((prop: Route, index: number) => {
       if (prop.category) {
         return (
           <>
@@ -459,7 +460,7 @@ function Sidebar(props: SidebarProps) {
     });
   };
 
-  const createAccordionLinks = (routes) => {
+  const createAccordionLinks = (routes: Route[] | undefined) => {
     let inactiveColor = useColorModeValue('gray.400', 'gray.400');
     let activeColor = useColorModeValue('gray.700', 'white');
     return routes?.map((prop, index) => {

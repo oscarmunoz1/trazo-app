@@ -1,29 +1,36 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { Company, Establishment } from 'types/company';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
-  currentCompany: null,
+type CompanyState = {
+  currentCompany: Company | {};
+  currentEstablishment: Establishment | {};
+};
+
+const initialState: CompanyState = {
+  currentCompany: {},
+  currentEstablishment: {}
 };
 
 export const companySlice = createSlice({
   initialState,
-  name: "companySlice",
+  name: 'companySlice',
   reducers: {
-    setCompany: (state, action) => {
+    setCompany: (state, action: PayloadAction<Company | {}>) => {
       state.currentCompany = action.payload;
     },
-    setEstablishment: (state, action) => {
+    setEstablishment: (state, action: PayloadAction<Establishment | {}>) => {
       state.currentEstablishment = action.payload;
     },
     clearCurrentCompany: (state) => {
-      state.currentCompany = null;
+      state.currentCompany = {};
     },
-    setCompanyEstablishment: (state, action) => {
+    setCompanyEstablishment: (state: CompanyState, action: PayloadAction<Establishment | {}>) => {
       state.currentCompany.establishments = [action.payload];
     },
     addCompanyEstablishment: (state, action) => {
       state.currentCompany.establishments = [
         ...state.currentCompany.establishments,
-        action.payload,
+        action.payload
       ];
       state.currentEstablishment = action.payload;
     },
@@ -35,7 +42,7 @@ export const companySlice = createSlice({
               return action.payload;
             }
             return establishment;
-          })),
+          }))
       ];
     },
     setEstablishmentParcel: (state, action) => {
@@ -49,8 +56,8 @@ export const companySlice = createSlice({
         }
         establishment.parcels.push(parcel);
       }
-    },
-  },
+    }
+  }
 });
 
 export default companySlice.reducer;
@@ -61,5 +68,5 @@ export const {
   setCompanyEstablishment,
   addCompanyEstablishment,
   editCompanyEstablishment,
-  setEstablishmentParcel,
+  setEstablishmentParcel
 } = companySlice.actions;

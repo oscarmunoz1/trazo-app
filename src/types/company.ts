@@ -1,4 +1,4 @@
-interface Company {
+export interface Company {
   id: string;
   name: string;
   address: string;
@@ -35,4 +35,4 @@ interface Establishment {
   employees: Employee[];
 }
 
-export type { Company, Employee, Establishment };
+// export { Company, Employee, Establishment };

@@ -1,11 +1,10 @@
-import { Button, Flex, Link, Text } from "@chakra-ui/react";
+import { Button, Flex, Link, Text } from '@chakra-ui/react';
 
-import IconBox from "components/Icons/IconBox";
-import { QuestionIcon } from "@chakra-ui/icons";
-import React from "react";
-import SidebarHelpImage from "assets/img/SidebarHelpImage.png";
+import IconBox from 'components/Icons/IconBox';
+import { QuestionIcon } from '@chakra-ui/icons';
+import SidebarHelpImage from 'assets/img/SidebarHelpImage.png';
 
-const SidebarHelp = ({ sidebarWidth }) => {
+const SidebarHelp = ({ sidebarWidth }: { sidebarWidth: number }) => {
   return (
     <Flex
       borderRadius="15px"
@@ -14,10 +13,9 @@ const SidebarHelp = ({ sidebarWidth }) => {
       justifyContent="flex-start"
       alignItems="start"
       boxSize="border-box"
-      p={sidebarWidth === 275 || !sidebarWidth ? "16px" : "12px"}
-      h={sidebarWidth === 275 || !sidebarWidth ? "170px" : "auto"}
-      w={sidebarWidth === 275 || !sidebarWidth ? "100%" : "77%"}
-    >
+      p={sidebarWidth === 275 || !sidebarWidth ? '16px' : '12px'}
+      h={sidebarWidth === 275 || !sidebarWidth ? '170px' : 'auto'}
+      w={sidebarWidth === 275 || !sidebarWidth ? '100%' : '77%'}>
       <IconBox width="35px" h="35px" bg="white" mb="auto">
         <QuestionIcon color="green.400" h="18px" w="18px" />
       </IconBox>
@@ -25,16 +23,14 @@ const SidebarHelp = ({ sidebarWidth }) => {
         fontSize="sm"
         color="white"
         fontWeight="bold"
-        display={sidebarWidth === 275 || !sidebarWidth ? "block" : "none"}
-      >
+        display={sidebarWidth === 275 || !sidebarWidth ? 'block' : 'none'}>
         Need help?
       </Text>
       <Text
         fontSize="xs"
         color="white"
         mb="10px"
-        display={sidebarWidth === 275 || !sidebarWidth ? "block" : "none"}
-      >
+        display={sidebarWidth === 275 || !sidebarWidth ? 'block' : 'none'}>
         Please check our docs
       </Text>
       <Link w="100%" href="https://google.com/">
@@ -45,16 +41,15 @@ const SidebarHelp = ({ sidebarWidth }) => {
           bg="white"
           _hover="none"
           _active={{
-            bg: "white",
-            transform: "none",
-            borderColor: "transparent",
+            bg: 'white',
+            transform: 'none',
+            borderColor: 'transparent'
           }}
           _focus={{
-            boxShadow: "none",
+            boxShadow: 'none'
           }}
           color="black"
-          display={sidebarWidth === 275 || !sidebarWidth ? "block" : "none"}
-        >
+          display={sidebarWidth === 275 || !sidebarWidth ? 'block' : 'none'}>
           DOCUMENTATION
         </Button>
       </Link>

@@ -18,52 +18,47 @@
 import {
   Avatar,
   AvatarGroup,
-  Box,
   Flex,
   Icon,
   Progress,
   Td,
   Text,
   Tr,
-  useColorModeValue,
-} from "@chakra-ui/react";
+  useColorModeValue
+} from '@chakra-ui/react';
 
-import React from "react";
+type DashboardTableRowProps = {
+  logo: any;
+  name: string;
+  members: HTMLImageElement[];
+  product: string;
+  progression: number;
+  color: string;
+  onClick: () => void;
+};
 
-function DashboardTableRow(props) {
+function DashboardTableRow(props: DashboardTableRowProps) {
   const { logo, name, members, product, progression, color, onClick } = props;
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
   return (
     <Tr
       _hover={{
-        bg: "gray.100",
-        "& td:first-of-type": {
-          borderTopLeftRadius: "10px",
-          borderBottomLeftRadius: "10px",
+        bg: 'gray.100',
+        '& td:first-of-type': {
+          borderTopLeftRadius: '10px',
+          borderBottomLeftRadius: '10px'
         },
-        "& td:last-of-type": {
-          borderTopRightRadius: "10px",
-          borderBottomRightRadius: "10px",
-        },
+        '& td:last-of-type': {
+          borderTopRightRadius: '10px',
+          borderBottomRightRadius: '10px'
+        }
       }}
       cursor="pointer"
-      onClick={onClick}
-    >
-      <Td minWidth={{ sm: "250px" }} pl="0px">
-        <Flex
-          align="center"
-          py=".8rem"
-          minWidth="100%"
-          flexWrap="nowrap"
-          pl="20px"
-        >
-          <Icon as={logo} h={"24px"} w={"24px"} pe="5px" color={color} />
-          <Text
-            fontSize="md"
-            color={textColor}
-            fontWeight="bold"
-            minWidth="100%"
-          >
+      onClick={onClick}>
+      <Td minWidth={{ sm: '250px' }} pl="0px">
+        <Flex align="center" py=".8rem" minWidth="100%" flexWrap="nowrap" pl="20px">
+          <Icon as={logo} h={'24px'} w={'24px'} pe="5px" color={color} />
+          <Text fontSize="md" color={textColor} fontWeight="bold" minWidth="100%">
             {name}
           </Text>
         </Flex>
@@ -82,7 +77,7 @@ function DashboardTableRow(props) {
                 name="Ryan Florence"
                 key={member}
                 src={member}
-                _hover={{ zIndex: "3", cursor: "pointer" }}
+                _hover={{ zIndex: '3', cursor: 'pointer' }}
               />
             );
           })}
@@ -95,10 +90,9 @@ function DashboardTableRow(props) {
             fontSize="md"
             color="green.300"
             fontWeight="bold"
-            pb=".2rem"
-          >{`${progression}%`}</Text>
+            pb=".2rem">{`${progression}%`}</Text>
           <Progress
-            colorScheme={progression === 100 ? "green" : "cyan"}
+            colorScheme={progression === 100 ? 'green' : 'cyan'}
             size="xs"
             value={progression}
             borderRadius="15px"

@@ -46,7 +46,7 @@ import { clearCurrentCompany } from 'store/features/companySlice';
 import { clearUser } from 'store/features/userSlice';
 import logoTraceit from 'assets/img/traceit.png';
 import { logout as logoutAction } from 'store/features/authSlice';
-import routes from 'routes.jsx';
+import routes from 'routes.tsx';
 import { useLogoutMutation } from 'store/api/authApi';
 import { useNavigate } from 'react-router-dom';
 

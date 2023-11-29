@@ -1,10 +1,17 @@
 // Chakra imports
-import { Stack, Td, Text, Tr, useColorModeValue } from "@chakra-ui/react";
+import { Stack, Td, Text, Tr, useColorModeValue } from '@chakra-ui/react';
 
-import React from "react";
+type SalesRowProps = {
+  state: string;
+  name: string;
+  sales: string;
+  value: string;
+  bounce: string;
+};
 
-const SalesRow = ({ state, name, sales, value, bounce }) => {
-  const textColor = useColorModeValue("gray.700", "white");
+const SalesRow = (props: SalesRowProps) => {
+  const { state, name, sales, value, bounce } = props;
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
     <Tr>

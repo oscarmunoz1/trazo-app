@@ -33,23 +33,19 @@ import {
   Text,
   Th,
   Thead,
-  Tr,
-} from "@chakra-ui/react";
-import { GrFormNext, GrFormPrevious } from "react-icons/gr";
-import React, { useMemo } from "react";
-import {
-  TiArrowSortedDown,
-  TiArrowSortedUp,
-  TiArrowUnsorted,
-} from "react-icons/ti";
-import {
-  useGlobalFilter,
-  usePagination,
-  useSortBy,
-  useTable,
-} from "react-table";
+  Tr
+} from '@chakra-ui/react';
+import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
+import React, { useMemo } from 'react';
+import { TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted } from 'react-icons/ti';
+import { useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table';
 
-function SearchTable1(props) {
+type SearchTable1Props = {
+  columnsData: any;
+  tableData: any;
+};
+
+function SearchTable1(props: SearchTable1Props) {
   const { columnsData, tableData } = props;
 
   const columns = useMemo(() => columnsData, []);
@@ -58,7 +54,7 @@ function SearchTable1(props) {
   const tableInstance = useTable(
     {
       columns,
-      data,
+      data
     },
     useGlobalFilter,
     useSortBy,
@@ -79,10 +75,10 @@ function SearchTable1(props) {
     canPreviousPage,
     setPageSize,
     setGlobalFilter,
-    state,
+    state
   } = tableInstance;
 
-  const createPages = (count) => {
+  const createPages = (count: number) => {
     let arrPageCount = [];
 
     for (let i = 1; i <= count; i++) {
@@ -96,20 +92,15 @@ function SearchTable1(props) {
 
   return (
     <>
-      <Flex
-        direction="column"
-        w="100%"
-        overflowX={{ sm: "scroll", lg: "hidden" }}
-      >
+      <Flex direction="column" w="100%" overflowX={{ sm: 'scroll', lg: 'hidden' }}>
         <Flex justify="space-between" align="center" w="100%" px="22px">
           <Stack
-            direction={{ sm: "column", md: "row" }}
-            spacing={{ sm: "4px", md: "12px" }}
+            direction={{ sm: 'column', md: 'row' }}
+            spacing={{ sm: '4px', md: '12px' }}
             align="center"
             me="12px"
             my="24px"
-            minW={{ sm: "100px", md: "200px" }}
-          >
+            minW={{ sm: '100px', md: '200px' }}>
             <Select
               value={pageSize}
               onChange={(e) => setPageSize(Number(e.target.value))}
@@ -117,8 +108,7 @@ function SearchTable1(props) {
               size="sm"
               borderRadius="12px"
               maxW="75px"
-              cursor="pointer"
-            >
+              cursor="pointer">
               <option>5</option>
               <option>10</option>
               <option>15</option>
@@ -135,7 +125,7 @@ function SearchTable1(props) {
             minW="75px"
             maxW="175px"
             fontSize="sm"
-            _focus={{ borderColor: "green.400" }}
+            _focus={{ borderColor: 'green.400' }}
             onChange={(e) => setGlobalFilter(e.target.value)}
           />
         </Flex>
@@ -147,19 +137,17 @@ function SearchTable1(props) {
                   <Th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
                     pe="0px"
-                    key={index}
-                  >
+                    key={index}>
                     <Flex
                       justify="space-between"
                       align="center"
-                      fontSize={{ sm: "10px", lg: "12px" }}
-                      color="gray.400"
-                    >
-                      {column.render("Header")}
+                      fontSize={{ sm: '10px', lg: '12px' }}
+                      color="gray.400">
+                      {column.render('Header')}
                       <Icon
-                        w={{ sm: "10px", md: "14px" }}
-                        h={{ sm: "10px", md: "14px" }}
-                        color={columns.isSorted ? "gray.500" : "gray.400"}
+                        w={{ sm: '10px', md: '14px' }}
+                        h={{ sm: '10px', md: '14px' }}
+                        color={columns.isSorted ? 'gray.500' : 'gray.400'}
                         float="right"
                         as={
                           column.isSorted
@@ -182,12 +170,8 @@ function SearchTable1(props) {
                 <Tr {...row.getRowProps()} key={index}>
                   {row.cells.map((cell, index) => {
                     return (
-                      <Td
-                        {...cell.getCellProps()}
-                        fontSize={{ sm: "14px" }}
-                        key={index}
-                      >
-                        {cell.render("Cell")}
+                      <Td {...cell.getCellProps()} fontSize={{ sm: '14px' }} key={index}>
+                        {cell.render('Cell')}
                       </Td>
                     );
                   })}
@@ -197,23 +181,17 @@ function SearchTable1(props) {
           </Tbody>
         </Table>
         <Flex
-          direction={{ sm: "column", md: "row" }}
+          direction={{ sm: 'column', md: 'row' }}
           justify="space-between"
           align="center"
           px="22px"
           w="100%"
-          px={{ md: "22px" }}
-        >
-          <Text
-            fontSize="sm"
-            color="gray.500"
-            fontWeight="normal"
-            mb={{ sm: "24px", md: "0px" }}
-          >
-            Showing {pageSize * pageIndex + 1} to{" "}
+          px={{ md: '22px' }}>
+          <Text fontSize="sm" color="gray.500" fontWeight="normal" mb={{ sm: '24px', md: '0px' }}>
+            Showing {pageSize * pageIndex + 1} to{' '}
             {pageSize * (pageIndex + 1) <= tableData.length
               ? pageSize * (pageIndex + 1)
-              : tableData.length}{" "}
+              : tableData.length}{' '}
             of {tableData.length} entries
           </Text>
           <Stack direction="row" alignSelf="flex-end" spacing="4px" ms="auto">
@@ -226,15 +204,12 @@ function SearchTable1(props) {
               borderRadius="50%"
               bg="#fff"
               border="1px solid lightgray"
-              display={
-                pageSize === 5 ? "none" : canPreviousPage ? "flex" : "none"
-              }
+              display={pageSize === 5 ? 'none' : canPreviousPage ? 'flex' : 'none'}
               _hover={{
-                bg: "gray.200",
-                opacity: "0.7",
-                borderColor: "gray.500",
-              }}
-            >
+                bg: 'gray.200',
+                opacity: '0.7',
+                borderColor: 'gray.500'
+              }}>
               <Icon as={GrFormPrevious} w="16px" h="16px" color="gray.400" />
             </Button>
             {pageSize === 5 ? (
@@ -244,8 +219,7 @@ function SearchTable1(props) {
                 w="75px"
                 mx="6px"
                 defaultValue="1"
-                onChange={(e) => gotoPage(e)}
-              >
+                onChange={(e) => gotoPage(e)}>
                 <NumberInputField />
                 <NumberInputStepper>
                   <NumberIncrementStepper onClick={() => nextPage()} />
@@ -262,19 +236,15 @@ function SearchTable1(props) {
                     w="40px"
                     h="40px"
                     borderRadius="160px"
-                    bg={pageNumber === pageIndex + 1 ? "green.400" : "#fff"}
+                    bg={pageNumber === pageIndex + 1 ? 'green.400' : '#fff'}
                     border="1px solid lightgray"
                     _hover={{
-                      bg: "gray.200",
-                      opacity: "0.7",
-                      borderColor: "gray.500",
+                      bg: 'gray.200',
+                      opacity: '0.7',
+                      borderColor: 'gray.500'
                     }}
-                    key={index}
-                  >
-                    <Text
-                      fontSize="xs"
-                      color={pageNumber === pageIndex + 1 ? "#fff" : "gray.600"}
-                    >
+                    key={index}>
+                    <Text fontSize="xs" color={pageNumber === pageIndex + 1 ? '#fff' : 'gray.600'}>
                       {pageNumber}
                     </Text>
                   </Button>
@@ -290,13 +260,12 @@ function SearchTable1(props) {
               borderRadius="160px"
               bg="#fff"
               border="1px solid lightgray"
-              display={pageSize === 5 ? "none" : canNextPage ? "flex" : "none"}
+              display={pageSize === 5 ? 'none' : canNextPage ? 'flex' : 'none'}
               _hover={{
-                bg: "gray.200",
-                opacity: "0.7",
-                borderColor: "gray.500",
-              }}
-            >
+                bg: 'gray.200',
+                opacity: '0.7',
+                borderColor: 'gray.500'
+              }}>
               <Icon as={GrFormNext} w="16px" h="16px" color="gray.400" />
             </Button>
           </Stack>

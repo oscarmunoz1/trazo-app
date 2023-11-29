@@ -15,34 +15,20 @@
 
 */
 
-import {
-  Button,
-  Flex,
-  Icon,
-  Progress,
-  Td,
-  Text,
-  Tr,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Button, Flex, Icon, Progress, Td, Text, Tr, useColorModeValue } from '@chakra-ui/react';
 
-import { FaEllipsisV } from "react-icons/fa";
-import React from "react";
+import { FaEllipsisV } from 'react-icons/fa';
+import React from 'react';
 
 function DashboardTableRow(props) {
   const { logo, name, status, budget, progression } = props;
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
   return (
     <Tr>
-      <Td minWidth={{ sm: "250px" }} ps="0px">
+      <Td minWidth={{ sm: '250px' }} ps="0px">
         <Flex alignItems="center" py=".8rem" minWidth="100%" flexWrap="nowrap">
-          <Icon as={logo} h={"24px"} w={"24px"} me="18px" />
-          <Text
-            fontSize="md"
-            color={textColor}
-            fontWeight="bold"
-            minWidth="100%"
-          >
+          <Icon as={logo} h={'24px'} w={'24px'} me="18px" />
+          <Text fontSize="md" color={textColor} fontWeight="bold" minWidth="100%">
             {name}
           </Text>
         </Flex>
@@ -63,10 +49,9 @@ function DashboardTableRow(props) {
             fontSize="md"
             color="green.400"
             fontWeight="bold"
-            pb=".2rem"
-          >{`${progression}%`}</Text>
+            pb=".2rem">{`${progression}%`}</Text>
           <Progress
-            colorScheme={progression === 100 ? "teal" : "cyan"}
+            colorScheme={progression === 100 ? 'teal' : 'cyan'}
             size="xs"
             value={progression}
             borderRadius="15px"

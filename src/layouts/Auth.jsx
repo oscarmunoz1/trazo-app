@@ -28,7 +28,7 @@ import { Outlet, Route } from "react-router-dom";
 import AuthNavbar from "components/Navbars/AuthNavbar";
 import Footer from "components/Footer/Footer";
 import React from "react";
-import theme from "theme/theme.js";
+import theme from "theme/theme.ts";
 
 export default function Pages(props) {
   const { ...rest } = props;

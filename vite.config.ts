@@ -37,7 +37,7 @@ export default defineConfig({
       { find: "assets", replacement: resolve(__dirname, "./src/assets") },
       { find: "store", replacement: resolve(__dirname, "./src/store") },
       { find: "layouts", replacement: resolve(__dirname, "./src/layouts") },
-      { find: "routes.jsx", replacement: resolve(__dirname, "./src/routes.jsx") },
+      { find: "routes.tsx", replacement: resolve(__dirname, "./src/routes.tsx") },
       { find: "variables", replacement: resolve(__dirname, "./src/variables") },
       { find: "config", replacement: resolve(__dirname, "./src/config") },
       { find: "contexts", replacement: resolve(__dirname, "./src/contexts") },

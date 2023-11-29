@@ -1,13 +1,14 @@
 // Chakra imports
 import { Flex, Grid, useColorModeValue } from "@chakra-ui/react";
-import avatar4 from "assets/img/avatars/avatar4.png";
-import ProfileBgImage from "assets/img/ProfileBackground.png";
 import React, { useState } from "react";
+
 import Conversations from "./components/Conversations";
 import Header from "./components/Header";
 import PlatformSettings from "./components/PlatformSettings";
+import ProfileBgImage from "assets/img/ProfileBackground.png";
 import ProfileInformation from "./components/ProfileInformation";
 import Projects from "./components/Projects";
+import avatar4 from "assets/img/avatars/avatar4.png";
 
 function Overview() {
   // Chakra color mode
