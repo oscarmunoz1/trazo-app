@@ -28,6 +28,9 @@ export const companySlice = createSlice({
       state.currentCompany.establishments = [action.payload];
     },
     addCompanyEstablishment: (state, action) => {
+      if (!state.currentCompany.establishments) {
+        state.currentCompany.establishments = [];
+      }
       state.currentCompany.establishments = [
         ...state.currentCompany.establishments,
         action.payload

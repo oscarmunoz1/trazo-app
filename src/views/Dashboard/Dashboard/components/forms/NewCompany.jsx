@@ -18,6 +18,7 @@
 // Chakra imports
 import {
   Button,
+  CircularProgress,
   Flex,
   FormControl,
   FormLabel,
@@ -30,6 +31,7 @@ import {
   NumberInputStepper,
   Select,
   Stack,
+  Switch,
   Tab,
   TabList,
   TabPanel,
@@ -42,37 +44,40 @@ import {
   useColorModeValue
 } from '@chakra-ui/react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { GoogleMap, Polygon, useLoadScript } from '@react-google-maps/api';
 import React, { useEffect, useReducer, useRef, useState } from 'react';
+import { boolean, object, string } from 'zod';
 import { clearForm, setForm } from 'store/features/formSlice';
-import { object, string } from 'zod';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { BsCircleFill } from 'react-icons/bs';
 import Card from 'components/Card/Card';
 import CardBody from 'components/Card/CardBody';
+import CardFooter from 'components/Card/CardFooter.tsx';
 import CardHeader from 'components/Card/CardHeader';
 import CardWithMap from '../CardWithMap';
-// Custom components
 import Editor from 'components/Editor/Editor';
 import FormInput from 'components/Forms/FormInput';
 import Header from 'views/Pages/Profile/Overview/components/Header';
 import ProfileBgImage from 'assets/img/ProfileBackground.png';
 import avatar4 from 'assets/img/avatars/avatar4.png';
-import { editCompanyEstablishment } from 'store/features/companySlice';
 import imageMap from 'assets/img/imageMap.png';
+import { setCompany } from 'store/features/companySlice';
+import { setEstablishmentParcel } from 'store/features/companySlice';
+import { setUserCompany } from 'store/features/userSlice';
+import { useCreateCompanyMutation } from 'store/api/companyApi';
 import { useDropzone } from 'react-dropzone';
-import { useEditEstablishmentMutation } from 'store/api/companyApi';
-import { useGoogleMap } from '@react-google-maps/api';
 import { zodResolver } from '@hookform/resolvers/zod';
+
+// Custom components
 
 const formSchemaInfo = object({
   name: string().min(1, 'Name is required'),
+  address: string().min(1, 'Address is required'),
   country: string().min(1, 'Country is required'),
   state: string().min(1, 'State is required'),
-  city: string().min(1, 'City is required'),
-  address: string().min(1, 'Address is required'),
-  zone: string()
+  city: string().min(1, 'City is required')
 });
 
 const formSchemaDescription = object({
@@ -84,66 +89,13 @@ const formSchemaSocials = object({
   instagram: string()
 });
 
-function EditEstablishment() {
+function NewCompany() {
+  // Chakra color mode
+  const textColor = useColorModeValue('gray.700', 'white');
+  const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
   const bgColor = useColorModeValue('white', 'gray.700');
   const dispatch = useDispatch();
-  const [establishment, setEstablishment] = useState(null);
-  const [initialFormValues, setInitialFormValues] = useState(null);
-
-  const { establishmentId } = useParams();
-  const currentEstablishment = useSelector((state) => state.form.currentForm?.establishment);
   const navigate = useNavigate();
-  const currentCompany = useSelector((state) => state.company.currentCompany);
-
-  const establishments = useSelector((state) => state.company.currentCompany?.establishments);
-
-  useEffect(() => {
-    let establishment;
-    if (establishments) {
-      establishment = establishments.filter(
-        (establishment) => establishment.id.toString() === establishmentId
-      )[0];
-      setEstablishment(establishment);
-      const {
-        address,
-        zone,
-        city,
-        state,
-        country,
-        name,
-        description,
-        facebook,
-        instagram
-      } = establishment;
-      dispatch(
-        setForm({
-          establishment: {
-            address,
-            zone,
-            city,
-            country,
-            state,
-            name,
-            description,
-            facebook,
-            instagram
-          }
-        })
-      );
-    }
-  }, [establishmentId, establishments]);
-
-  useEffect(() => {
-    if (currentEstablishment) {
-      setInfoValues('name', currentEstablishment.name || '');
-      setInfoValues('country', currentEstablishment.country || '');
-      setInfoValues('state', currentEstablishment.state || '');
-      setInfoValues('city', currentEstablishment.city || '');
-      setInfoValues('address', currentEstablishment.address || '');
-      setInfoValues('zone', currentEstablishment.zone || '');
-      setDescriptionValues('description', currentEstablishment.description);
-    }
-  }, [currentEstablishment]);
 
   const [activeBullets, setActiveBullets] = useState({
     mainInfo: true,
@@ -157,24 +109,17 @@ function EditEstablishment() {
   const mediaTab = useRef();
   const socialsTab = useRef();
 
-  const { getRootProps, getInputProps } = useDropzone();
+  const currentCompany = useSelector((state) => state.form.currentForm?.company);
 
-  // Chakra color mode
-  const textColor = useColorModeValue('gray.700', 'white');
-  const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
-  const bgProfile = useColorModeValue(
-    'hsla(0,0%,100%,.8)',
-    'linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)'
-  );
+  const { getRootProps, getInputProps } = useDropzone();
 
   const infoMethods = useForm({
     resolver: zodResolver(formSchemaInfo)
   });
 
   const {
-    reset,
-    handleSubmit,
-    setValue: setInfoValues,
+    reset: infoReset,
+    handleSubmit: infoSubmit,
     formState: { errors, isSubmitSuccessful }
   } = infoMethods;
 
@@ -182,11 +127,7 @@ function EditEstablishment() {
     resolver: zodResolver(formSchemaDescription)
   });
 
-  const {
-    reset: descriptionReset,
-    handleSubmit: descriptionSubmit,
-    setValue: setDescriptionValues
-  } = descriptionMethods;
+  const { reset: descriptionReset, handleSubmit: descriptionSubmit } = descriptionMethods;
 
   const socialsMethods = useForm({
     resolver: zodResolver(formSchemaSocials)
@@ -195,19 +136,7 @@ function EditEstablishment() {
   const { reset: socialsReset, handleSubmit: socialsSubmit } = socialsMethods;
 
   const onSubmitInfo = (data) => {
-    dispatch(
-      setForm({
-        establishment: {
-          ...currentEstablishment,
-          name: data.name,
-          country: data.country,
-          state: data.state,
-          city: data.city,
-          address: data.address,
-          zone: data.zone
-        }
-      })
-    );
+    dispatch(setForm({ company: data }));
     descriptionTab.current.click();
   };
 
@@ -215,8 +144,8 @@ function EditEstablishment() {
     console.log(data);
     dispatch(
       setForm({
-        establishment: {
-          ...currentEstablishment,
+        company: {
+          ...currentCompany,
           description: data.description
         }
       })
@@ -225,45 +154,40 @@ function EditEstablishment() {
   };
 
   const [
-    editEstablishment,
+    createCompany,
     {
-      data: dataEstablishment,
-      error: errorEstablishment,
-      isSuccess: isSuccessEstablishment,
-      isLoading: isLoadingEstablishment
+      data: dataCompany,
+      error: errorCompany,
+      isSuccess: isSuccessCompany,
+      isLoading: isLoadingCompany
     }
-  ] = useEditEstablishmentMutation();
+  ] = useCreateCompanyMutation();
 
   const onSubmitSocials = (data) => {
-    editEstablishment({
-      companyId: currentCompany.id,
-      establishmentId,
-      establishmentData: {
-        ...currentEstablishment,
-        ...(data?.facebook && { facebook: data.facebook }),
-        ...(data?.instagram && { instagram: data.instagram })
-        // company: currentCompany.id,
-      }
+    createCompany({
+      ...currentCompany,
+      ...data
     });
   };
 
   useEffect(() => {
-    if (isSuccessEstablishment) {
-      dispatch(editCompanyEstablishment(dataEstablishment));
+    if (isSuccessCompany && dataCompany) {
       dispatch(clearForm());
-      navigate(`/admin/dashboard/establishment/${dataEstablishment.id}`);
+      dispatch(setCompany(dataCompany));
+      const { id, name } = dataCompany;
+      dispatch(setUserCompany({ id, name }));
+      navigate(`/admin/dashboard/establishment/add`);
     }
-  }, [isSuccessEstablishment]);
+  }, [isSuccessCompany]);
 
   return (
     <Flex
       direction="column"
       bg={bgColor}
       boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
-      borderRadius="15px"
-      maxW={{ md: '90%', lg: '80%' }}>
+      borderRadius="15px">
       <Tabs variant="unstyled" mt="24px" alignSelf="center">
-        <TabList display="flex" align="center" justifyContent={'center'}>
+        <TabList display="flex" align="center">
           <Tab
             ref={mainInfoTab}
             _focus="none"
@@ -283,10 +207,10 @@ function EditEstablishment() {
               position="relative"
               _before={{
                 content: "''",
-                width: { sm: '80px', md: '195px' },
+                width: { sm: '80px', md: '235px' },
                 height: '3px',
                 bg: activeBullets.description ? textColor : 'gray.200',
-                left: { sm: '12px', md: '50px' },
+                left: { sm: '12px', md: '42px' },
                 top: {
                   sm: activeBullets.mainInfo ? '6px' : '4px',
                   md: null
@@ -315,7 +239,7 @@ function EditEstablishment() {
           <Tab
             ref={descriptionTab}
             _focus="none"
-            w={{ sm: '80px', md: '200px' }}
+            w={{ sm: '120px', md: '250px', lg: '260px' }}
             onClick={() =>
               setActiveBullets({
                 mainInfo: true,
@@ -331,12 +255,12 @@ function EditEstablishment() {
               position="relative"
               _before={{
                 content: "''",
-                width: { sm: '80px', md: '200px' },
+                width: { sm: '120px', md: '235px', lg: '235px' },
                 height: '3px',
                 bg: activeBullets.media ? textColor : 'gray.200',
-                left: { sm: '12px', md: '46px' },
+                left: { sm: '12px', md: '38px' },
                 top: {
-                  sm: activeBullets.description ? '6px' : '4px',
+                  sm: activeBullets.description ? '5px' : '4px',
                   md: null
                 },
                 position: 'absolute',
@@ -355,8 +279,6 @@ function EditEstablishment() {
               <Text
                 color={activeBullets.description ? { textColor } : 'gray.300'}
                 fontWeight={activeBullets.description ? 'bold' : 'normal'}
-                transition="all .3s ease"
-                _hover={{ color: textColor }}
                 display={{ sm: 'none', md: 'block' }}>
                 2. Description
               </Text>
@@ -384,8 +306,11 @@ function EditEstablishment() {
                 width: { sm: '80px', md: '200px' },
                 height: '3px',
                 bg: activeBullets.socials ? textColor : 'gray.200',
-                left: { sm: '12px', md: '32px' },
-                top: { sm: activeBullets.media ? '6px' : '4px', md: null },
+                left: { sm: '12px', md: '46px' },
+                top: {
+                  sm: activeBullets.media ? '6px' : '4px',
+                  md: null
+                },
                 position: 'absolute',
                 bottom: activeBullets.media ? '40px' : '38px',
 
@@ -447,28 +372,45 @@ function EditEstablishment() {
             <Card>
               <CardHeader mb="22px">
                 <Text color={textColor} fontSize="lg" fontWeight="bold">
-                  Establishment Info
+                  Company Info
                 </Text>
               </CardHeader>
               <CardBody>
                 <FormProvider {...infoMethods}>
-                  <form onSubmit={handleSubmit(onSubmitInfo)} style={{ width: '100%' }}>
+                  <form onSubmit={infoSubmit(onSubmitInfo)} style={{ width: '100%' }}>
                     <Stack direction="column" spacing="20px" w="100%">
                       <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
                         <FormControl>
                           <FormInput
                             name="name"
                             label="Name"
-                            placeholder="Establishment name"
+                            placeholder="Company name"
                             fontSize="xs"
-                            defaultValue={currentEstablishment?.name}
                           />
                         </FormControl>
                         <FormControl>
                           <FormInput
+                            name="address"
+                            label="Address"
+                            placeholder="Company address"
+                            fontSize="xs"
+                          />
+                        </FormControl>
+                      </Stack>
+                      <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
+                        <FormControl>
+                          <FormInput
                             name="country"
                             label="Country"
-                            placeholder="Establishment country"
+                            placeholder="Company Country"
+                            fontSize="xs"
+                          />
+                        </FormControl>
+                        <FormControl>
+                          <FormInput
+                            name="city"
+                            label="City"
+                            placeholder="Company City"
                             fontSize="xs"
                           />
                         </FormControl>
@@ -478,33 +420,7 @@ function EditEstablishment() {
                           <FormInput
                             name="state"
                             label="State"
-                            placeholder="Establishment state"
-                            fontSize="xs"
-                          />
-                        </FormControl>
-                        <FormControl>
-                          <FormInput
-                            name="city"
-                            label="City"
-                            placeholder="Establishment city"
-                            fontSize="xs"
-                          />
-                        </FormControl>
-                      </Stack>
-                      <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
-                        <FormControl>
-                          <FormInput
-                            name="address"
-                            label="Address"
-                            placeholder="Establishment address"
-                            fontSize="xs"
-                          />
-                        </FormControl>
-                        <FormControl>
-                          <FormInput
-                            name="zone"
-                            label="Zone"
-                            placeholder="Establishment zone"
+                            placeholder="Company state"
                             fontSize="xs"
                           />
                         </FormControl>
@@ -528,7 +444,6 @@ function EditEstablishment() {
               </CardBody>
             </Card>
           </TabPanel>
-
           <TabPanel>
             <Card>
               <CardHeader mb="32px">
@@ -575,6 +490,7 @@ function EditEstablishment() {
               </CardBody>
             </Card>
           </TabPanel>
+
           <TabPanel>
             <Card>
               <CardHeader mb="22px">
@@ -585,7 +501,7 @@ function EditEstablishment() {
               <CardBody>
                 <Flex direction="column" w="100%">
                   <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
-                    Establishment images
+                    Company image
                   </Text>
                   <Flex
                     align="center"
@@ -599,7 +515,7 @@ function EditEstablishment() {
                     <Input {...getInputProps()} />
                     <Button variant="no-hover">
                       <Text color="gray.400" fontWeight="normal">
-                        Drop files here to upload
+                        Drop the image here to upload
                       </Text>
                     </Button>
                   </Flex>
@@ -702,4 +618,4 @@ function EditEstablishment() {
   );
 }
 
-export default EditEstablishment;
+export default NewCompany;

@@ -1,15 +1,8 @@
-import {
-  Navigate,
-  Outlet,
-  useLocation,
-  useMatch,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
-import React, { useEffect } from "react";
+import { Navigate, Outlet, useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect } from 'react';
 
-import { LOGIN_PAGE_URL } from "config/routes";
-import { useSelector } from "react-redux";
+import { LOGIN_PAGE_URL } from 'config/routes';
+import { useSelector } from 'react-redux';
 
 const Authenticated = ({ allowedRoles }) => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -26,9 +19,7 @@ const Authenticated = ({ allowedRoles }) => {
     const id = Number(establishmentId);
 
     if (
-      (establishmentId ||
-        pathname == "/admin/dashboard" ||
-        pathname == "/admin/dashboard/") &&
+      (establishmentId || pathname == '/admin/dashboard' || pathname == '/admin/dashboard/') &&
       currentUser?.companies.length > 0
     ) {
       if (
@@ -49,15 +40,18 @@ const Authenticated = ({ allowedRoles }) => {
   useEffect(() => {
     if (currentUser?.companies.length === 0) {
       navigate(`/admin/dashboard/select-company`);
+    } else if (
+      currentUser?.companies.length === 1 &&
+      currentCompany?.establishments &&
+      currentCompany.establishments.length === 0
+    ) {
+      navigate(`/admin/dashboard/establishment/add`);
     }
-  }, [currentUser, navigate]);
+  }, [currentCompany, currentUser, navigate]);
 
-  const nextUrl =
-    LOGIN_PAGE_URL + (pathname !== "/" ? "?next=" + pathname : "");
+  const nextUrl = LOGIN_PAGE_URL + (pathname !== '/' ? '?next=' + pathname : '');
 
-  return isLoading === false &&
-    isAuthenticated &&
-    allowedRoles.includes(currentUser?.user_type) ? (
+  return isLoading === false && isAuthenticated && allowedRoles.includes(currentUser?.user_type) ? (
     <Outlet />
   ) : isLoading === false && isAuthenticated === false ? (
     <Navigate to={nextUrl} state={{ next: pathname }} />

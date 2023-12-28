@@ -4,14 +4,14 @@ import {
   Box,
   Button,
   Flex,
-  Text,
   Icon,
+  Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React, { useReducer, useState} from "react";
 import { FaCube, FaPenFancy } from "react-icons/fa";
-import { IoDocumentsSharp } from "react-icons/io5";
+import React, { useReducer, useState } from "react";
 
+import { IoDocumentsSharp } from "react-icons/io5";
 
 const reducer = (state, action) => {
   if (action.type === "SWITCH_ACTIVE") {
@@ -89,7 +89,7 @@ const Header = ({
           w={{ sm: "90%", xl: "95%" }}
           justifyContent={{ sm: "center", md: "space-between" }}
           align="center"
-          backdropFilter="saturate(200%) blur(50px)"
+          backdropFilter="none"
           position="absolute"
           boxShadow="0px 2px 5.5px rgba(0, 0, 0, 0.02)"
           border="2px solid"

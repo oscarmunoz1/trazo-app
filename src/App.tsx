@@ -1,37 +1,37 @@
-import { CONSUMER, PRODUCER, SUPERUSER } from "./config";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { CONSUMER, PRODUCER, SUPERUSER } from './config';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
-import AddEstablishment from "views/Dashboard/Dashboard/Establishment/AddEstablishment";
-import AddParcel from "views/Dashboard/Dashboard/Parcel/AddParcel";
-import AdminLayout from "layouts/Admin";
-import AuthLayout from "layouts/Auth";
-import Authenticated from "./utils/protections/Authenticated";
-import Capture from "views/Scan/Capture/Capture";
-import CertificationsView from "views/Dashboard/Certifications";
-import CheckAuth from "./utils/protections/CheckAuth";
-import CommercialView from "views/Dashboard/Commercial";
-import DashboardView from "views/Dashboard/Dashboard";
-import DetailEvent from "views/Dashboard/Dashboard/Event/DetailEvent";
-import FinishProduction from "views/Dashboard/Dashboard/Production/FinishProduction";
-import NotAuthenticated from "./utils/protections/NotAuthenticated";
-import ParcelView from "views/Dashboard/Parcel";
-import Pricing from "views/Pages/Pricing/index";
-import ProductDetail from "views/Scan/ProductDetail/ProductDetail";
-import ProductReview from "views/Scan/ProductReview/ProductReview";
-import ProfileEstablishment from "views/Dashboard/Dashboard/Establishment/ProfileEstablishment";
-import ProfileParcel from "views/Dashboard/Dashboard/Parcel/ProfileParcel";
-import ProfileProduction from "views/Dashboard/Dashboard/Production/ProfileProduction";
-import React from "react";
-import SelectCompanyView from "views/Dashboard/SelectCompany";
-import SignIn from "views/Authentication/SignIn/SignInIllustration";
-import SignInApp from "views/Authentication/SignIn/SignInBasic";
-import SignUp from "views/Authentication/SignUp/SignUpBasic";
-import Unauthorized from "./views/Applications/DataTables/index";
-import UpdateEvent from "views/Dashboard/Dashboard/Event/UpdateEvent";
-import UpdateProduction from "views/Dashboard/Dashboard/Production/UpdateProduction";
-import VerifyEmail from "./views/Authentication/SignUp/VerifyEmail";
-import { useSelector } from "react-redux";
+import AddEstablishment from 'views/Dashboard/Dashboard/Establishment/AddEstablishment';
+import AddParcel from 'views/Dashboard/Dashboard/Parcel/AddParcel';
+import AdminLayout from 'layouts/Admin';
+import AuthLayout from 'layouts/Auth';
+import Authenticated from './utils/protections/Authenticated';
+import Capture from 'views/Scan/Capture/Capture';
+import CertificationsView from 'views/Dashboard/Certifications';
+import CheckAuth from './utils/protections/CheckAuth';
+import CommercialView from 'views/Dashboard/Commercial';
+import DashboardView from 'views/Dashboard/Dashboard';
+import DetailEvent from 'views/Dashboard/Dashboard/Event/DetailEvent';
+import FinishProduction from 'views/Dashboard/Dashboard/Production/FinishProduction';
+import NotAuthenticated from './utils/protections/NotAuthenticated';
+import ParcelView from 'views/Dashboard/Parcel';
+import Pricing from 'views/Pages/Pricing/index';
+import ProductDetail from 'views/Scan/ProductDetail/ProductDetail';
+import ProductReview from 'views/Scan/ProductReview/ProductReview';
+import ProfileEstablishment from 'views/Dashboard/Dashboard/Establishment/ProfileEstablishment';
+import ProfileParcel from 'views/Dashboard/Dashboard/Parcel/ProfileParcel';
+import ProfileProduction from 'views/Dashboard/Dashboard/Production/ProfileProduction';
+import React from 'react';
+import SelectCompanyView from 'views/Dashboard/Dashboard/Company/AddCompany';
+import SignIn from 'views/Authentication/SignIn/SignInIllustration';
+import SignInApp from 'views/Authentication/SignIn/SignInBasic';
+import SignUp from 'views/Authentication/SignUp/SignUpBasic';
+import Unauthorized from './views/Applications/DataTables/index';
+import UpdateEvent from 'views/Dashboard/Dashboard/Event/UpdateEvent';
+import UpdateProduction from 'views/Dashboard/Dashboard/Production/UpdateProduction';
+import VerifyEmail from './views/Authentication/SignUp/VerifyEmail';
+import { useSelector } from 'react-redux';
 
 const App = () => {
   const location = useLocation();
@@ -43,17 +43,13 @@ const App = () => {
   useEffect(() => {
     const host = window.location.host; // gets the full domain of the app
 
-    
     const arr = host
-      .split(".")
-      .slice(
-        0,
-        host.includes(import.meta.env.VITE_APP_BASE_DOMAIN) ? -1 : -2
-      );
-    if (arr.length > 0) setSubDomain(arr[0] === "app");
+      .split('.')
+      .slice(0, host.includes(import.meta.env.VITE_APP_BASE_DOMAIN) ? -1 : -2);
+    if (arr.length > 0) setSubDomain(arr[0] === 'app');
   }, []);
 
-  console.log("subdomain", subdomain);
+  console.log('subdomain', subdomain);
 
   return (
     <Routes>
@@ -64,44 +60,22 @@ const App = () => {
               <Route path="/auth">
                 <Route path="signin" exact element={<SignInApp />} key={1} />
                 <Route path="signup" exact key={2} element={<SignUp />} />
-                <Route
-                  path="verifyemail"
-                  exact
-                  key={2}
-                  element={<VerifyEmail />}
-                />
+                <Route path="verifyemail" exact key={2} element={<VerifyEmail />} />
               </Route>
-              <Route
-                path="*"
-                exact
-                element={<Navigate to="/admin/dashboard" replace />}
-              />
+              <Route path="*" exact element={<Navigate to="/admin/dashboard" replace />} />
             </>
           ) : (
             <>
               <Route path="/auth" element={<AuthLayout />}>
                 <Route path="signin" exact element={<SignIn />} key={1} />
                 <Route path="signup" exact key={2} element={<SignUp />} />
-                <Route
-                  path="verifyemail"
-                  exact
-                  key={2}
-                  element={<VerifyEmail />}
-                />
+                <Route path="verifyemail" exact key={2} element={<VerifyEmail />} />
               </Route>
-              <Route
-                path="*"
-                exact
-                element={<Navigate to="/pricing" replace />}
-              />
+              <Route path="*" exact element={<Navigate to="/pricing" replace />} />
             </>
           )}
           <Route path="/capture" element={<Capture />} />
-          <Route
-            path="/production/:productionId"
-            exact
-            element={<ProductDetail />}
-          />
+          <Route path="/production/:productionId" exact element={<ProductDetail />} />
         </Route>
         <Route element={<Authenticated allowedRoles={[PRODUCER, SUPERUSER]} />}>
           {subdomain && (
@@ -111,24 +85,12 @@ const App = () => {
                 element={<Navigate to="/admin/dashboard" replace />}
               /> */}
               <Route path="/admin/dashboard" element={<AdminLayout />}>
-                <Route
-                  path="select-company"
-                  exact
-                  element={<SelectCompanyView />}
-                />
+                <Route path="select-company" exact element={<SelectCompanyView />} />
 
                 {/* Establishment Routes */}
 
-                <Route
-                  path="establishment/add"
-                  exact
-                  element={<AddEstablishment />}
-                />
-                <Route
-                  path="establishment/:establishmentId"
-                  exact
-                  element={<DashboardView />}
-                />
+                <Route path="establishment/add" exact element={<AddEstablishment />} />
+                <Route path="establishment/:establishmentId" exact element={<DashboardView />} />
                 <Route
                   path="establishment/:establishmentId/change"
                   exact
@@ -228,19 +190,11 @@ const App = () => {
             // )}
           )}
         </Route>
-        <Route
-          element={
-            <Authenticated allowedRoles={[CONSUMER, PRODUCER, SUPERUSER]} />
-          }
-        >
+        <Route element={<Authenticated allowedRoles={[CONSUMER, PRODUCER, SUPERUSER]} />}>
           <Route element={<AuthLayout />}>
             <Route path="/home" exact element={<Capture />} />
             <Route path="/capture" element={<Capture />} />
-            <Route
-              path="/production/:productionId"
-              exact
-              element={<ProductDetail />}
-            />
+            <Route path="/production/:productionId" exact element={<ProductDetail />} />
             <Route
               path="/production/:productionId/review/:scanId"
               exact
@@ -259,12 +213,7 @@ const App = () => {
               <Route path="/auth" element={<AuthLayout />}>
                 <Route path="signin" exact element={<SignInApp />} key={1} />
                 <Route path="signup" exact key={2} element={<SignUp />} />
-                <Route
-                  path="verifyemail"
-                  exact
-                  key={2}
-                  element={<VerifyEmail />}
-                />
+                <Route path="verifyemail" exact key={2} element={<VerifyEmail />} />
               </Route>
             </>
           ) : (
@@ -272,12 +221,7 @@ const App = () => {
               <Route path="/auth" element={<AuthLayout />}>
                 <Route path="signin" exact element={<SignIn />} key={1} />
                 <Route path="signup" exact key={2} element={<SignUp />} />
-                <Route
-                  path="verifyemail"
-                  exact
-                  key={2}
-                  element={<VerifyEmail />}
-                />
+                <Route path="verifyemail" exact key={2} element={<VerifyEmail />} />
               </Route>
 
               {/* <Route

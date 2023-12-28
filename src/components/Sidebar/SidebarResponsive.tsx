@@ -100,27 +100,28 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
         };
       });
 
-    const certificationsRoutes = establishments && [
-      {
-        name: 'Parcels',
-        path: `/dashboard/establishment/${establishments[0].id}/certifications/parcels`,
-        secondaryNavbar: true,
-        layout: '/admin',
-        // regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/certifications\/parcels$/,
-        regex: new RegExp(
-          `^\\/admin\\/dashboard\\/establishment\\/${establishments[0].id}\\/certifications\\/parcels$`
-        )
-      },
-      {
-        name: 'Events',
-        path: `/dashboard/establishment/${establishments[0].id}/certifications/events`,
-        secondaryNavbar: true,
-        layout: '/admin',
-        regex: new RegExp(
-          `^\\/admin\\/dashboard\\/establishment\\/${establishments[0].id}\\/certifications\\/events$`
-        )
-      }
-    ];
+    const certificationsRoutes = establishments &&
+      establishments.length > 0 && [
+        {
+          name: 'Parcels',
+          path: `/dashboard/establishment/${establishments[0].id}/certifications/parcels`,
+          secondaryNavbar: true,
+          layout: '/admin',
+          // regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/certifications\/parcels$/,
+          regex: new RegExp(
+            `^\\/admin\\/dashboard\\/establishment\\/${establishments[0].id}\\/certifications\\/parcels$`
+          )
+        },
+        {
+          name: 'Events',
+          path: `/dashboard/establishment/${establishments[0].id}/certifications/events`,
+          secondaryNavbar: true,
+          layout: '/admin',
+          regex: new RegExp(
+            `^\\/admin\\/dashboard\\/establishment\\/${establishments[0].id}\\/certifications\\/events$`
+          )
+        }
+      ];
 
     const commercialDynamicRoutes =
       establishments &&

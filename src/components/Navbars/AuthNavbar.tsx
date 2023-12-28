@@ -143,7 +143,7 @@ export default function AuthNavbar(props: AuthNavbarProps) {
   );
   let navbarShadow = useColorModeValue('0px 7px 23px rgba(0, 0, 0, 0.05)', 'none');
   let navbarFilter = useColorModeValue('none', 'drop-shadow(0px 7px 23px rgba(0, 0, 0, 0.05))');
-  let navbarBackdrop = 'blur(21px)';
+  let navbarBackdrop = 'none';
   let bgButton = useColorModeValue(
     'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)',
     'gray.800'

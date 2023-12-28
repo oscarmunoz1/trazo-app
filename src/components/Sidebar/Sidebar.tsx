@@ -84,7 +84,7 @@ function Sidebar(props: SidebarProps) {
 
   // this is for the rest of the collapses
 
-  const [dynamicRoutes, setDynamicRoutes] = useState([]);
+  const [dynamicRoutes, setDynamicRoutes] = useState<Route[]>([]);
   const [certificationsRoutes, setCertificationsRoutes] = useState([]);
   const [commercialDynamicRoutes, setCommercialDynamicRoutes] = useState([]);
 
@@ -130,26 +130,27 @@ function Sidebar(props: SidebarProps) {
         };
       });
 
-    const certificationsRoutes = establishments && [
-      {
-        name: 'Parcels',
-        path: `/dashboard/establishment/${establishments[0].id}/certifications/parcels`,
-        secondaryNavbar: true,
-        layout: '/admin',
-        regex: new RegExp(
-          `^\\/admin\\/dashboard\\/establishment\\/${establishments[0].id}\\/certifications\\/parcels$`
-        )
-      },
-      {
-        name: 'Events',
-        path: `/dashboard/establishment/${establishments[0].id}/certifications/events`,
-        secondaryNavbar: true,
-        layout: '/admin',
-        regex: new RegExp(
-          `^\\/admin\\/dashboard\\/establishment\\/${establishments[0].id}\\/certifications\\/events$`
-        )
-      }
-    ];
+    const certificationsRoutes = establishments &&
+      establishments.length > 0 && [
+        {
+          name: 'Parcels',
+          path: `/dashboard/establishment/${establishments[0].id}/certifications/parcels`,
+          secondaryNavbar: true,
+          layout: '/admin',
+          regex: new RegExp(
+            `^\\/admin\\/dashboard\\/establishment\\/${establishments[0].id}\\/certifications\\/parcels$`
+          )
+        },
+        {
+          name: 'Events',
+          path: `/dashboard/establishment/${establishments[0].id}/certifications/events`,
+          secondaryNavbar: true,
+          layout: '/admin',
+          regex: new RegExp(
+            `^\\/admin\\/dashboard\\/establishment\\/${establishments[0].id}\\/certifications\\/events$`
+          )
+        }
+      ];
 
     const commercialDynamicRoutes =
       establishments &&
@@ -214,6 +215,7 @@ function Sidebar(props: SidebarProps) {
         );
       }
       if (prop.collapse) {
+        console.log('prop', prop);
         return (
           <Accordion allowToggle>
             <AccordionItem border="none">
@@ -463,6 +465,7 @@ function Sidebar(props: SidebarProps) {
   const createAccordionLinks = (routes: Route[] | undefined) => {
     let inactiveColor = useColorModeValue('gray.400', 'gray.400');
     let activeColor = useColorModeValue('gray.700', 'white');
+    console.log('routes11', routes);
     return routes?.map((prop, index) => {
       return (
         <NavLink to={prop.layout + prop.path}>

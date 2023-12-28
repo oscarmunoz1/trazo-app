@@ -29,8 +29,7 @@ const dashRoutes: Route[] = [
     collapse: true,
     isHome: true,
     isDashboard: true,
-    regex: /^\/admin\/dashboard\/establishment\/[0-9]+(\/parcel\/[0-9]+)?$/,
-    items: []
+    regex: /^\/admin\/dashboard\/establishment\/[0-9]+(\/parcel\/[0-9]+)?$/
   },
   {
     name: 'Commercial Info',
@@ -40,8 +39,7 @@ const dashRoutes: Route[] = [
     layout: '/admin',
     collapse: true,
     isCommercial: true,
-    regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/commercial$/,
-    items: []
+    regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/commercial$/
   }
 ];
 

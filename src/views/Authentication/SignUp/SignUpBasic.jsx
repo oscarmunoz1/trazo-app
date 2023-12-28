@@ -1,73 +1,62 @@
+import {} from '@chakra-ui/react';
+
 // Chakra imports
 import {
   Box,
   Button,
+  CircularProgress,
   Flex,
   FormControl,
-  FormLabel,
   HStack,
   Icon,
-  Input,
   Link,
-  Switch,
   Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
-import { FormProvider, useForm } from "react-hook-form";
-import React, { useEffect } from "react";
-import { object, string } from "zod";
+  useColorModeValue
+} from '@chakra-ui/react';
+import { FaApple, FaFacebook, FaGoogle } from 'react-icons/fa';
+import { FormProvider, useForm } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { object, string } from 'zod';
 
 // Assets
-import BgSignUp from "assets/img/basic-auth.png";
-import FormInput from "components/Forms/FormInput";
-import { useNavigate } from "react-router-dom";
-import { useSignUpMutation } from "store/api/authApi";
-import { zodResolver } from "@hookform/resolvers/zod";
+import BgSignUp from 'assets/img/basic-auth.png';
+import FormInput from 'components/Forms/FormInput';
+import { useNavigate } from 'react-router-dom';
+import { useSignUpMutation } from 'store/api/authApi';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const registerSchema = object({
-  first_name: string().min(1, "Full name is required").max(100),
-  last_name: string().min(1, "Full name is required").max(100),
-  email: string()
-    .min(1, "Email address is required")
-    .email("Email Address is invalid"),
+  first_name: string().min(1, 'Full name is required').max(100),
+  last_name: string().min(1, 'Full name is required').max(100),
+  email: string().min(1, 'Email address is required').email('Email Address is invalid'),
   password: string()
-    .min(1, "Password is required")
-    .min(8, "Password must be more than 8 characters")
-    .max(32, "Password must be less than 32 characters"),
-  password2: string().min(1, "Please confirm your password"),
+    .min(1, 'Password is required')
+    .min(8, 'Password must be more than 8 characters')
+    .max(32, 'Password must be less than 32 characters'),
+  password2: string().min(1, 'Please confirm your password')
 }).refine((data) => data.password === data.password2, {
-  path: ["password2"],
-  message: "Passwords do not match",
+  path: ['password2'],
+  message: 'Passwords do not match'
 });
 
 function SignUp() {
-  const titleColor = useColorModeValue("green.300", "green.200");
-  const textColor = useColorModeValue("gray.700", "white");
-  const bgColor = useColorModeValue("white", "gray.700");
-  const bgIcons = useColorModeValue("green.200", "rgba(255, 255, 255, 0.5)");
+  const titleColor = useColorModeValue('green.300', 'green.200');
+  const textColor = useColorModeValue('gray.700', 'white');
+  const bgColor = useColorModeValue('white', 'gray.700');
+  const bgIcons = useColorModeValue('green.200', 'rgba(255, 255, 255, 0.5)');
   const navigate = useNavigate();
 
   const methods = useForm({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(registerSchema)
   });
 
   const {
     reset,
     handleSubmit,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors, isSubmitSuccessful }
   } = methods;
 
-  const [
-    registerUser,
-    { isLoading, isSuccess, error, isError },
-  ] = useSignUpMutation();
-
-  useEffect(() => {
-    if (isSuccess) {
-      navigate("/auth/verifyemail");
-    }
-  }, [isLoading]);
+  const [registerUser, { isLoading, isSuccess, error, isError }] = useSignUpMutation();
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -80,17 +69,12 @@ function SignUp() {
   };
 
   return (
-    <Flex
-      direction="column"
-      alignSelf="center"
-      justifySelf="center"
-      overflow="hidden"
-    >
+    <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden">
       <Box
         position="absolute"
-        minH={{ base: "70vh", md: "50vh" }}
-        w={{ md: "calc(100vw - 50px)" }}
-        borderRadius={{ md: "15px" }}
+        minH={{ base: '70vh', md: '50vh' }}
+        w={{ md: 'calc(100vw - 50px)' }}
+        borderRadius={{ md: '15px' }}
         left="0"
         right="0"
         bgRepeat="no-repeat"
@@ -99,17 +83,15 @@ function SignUp() {
         top="0"
         bgImage={BgSignUp}
         bgSize="cover"
-        mx={{ md: "auto" }}
-        mt={{ md: "14px" }}
-      ></Box>
+        mx={{ md: 'auto' }}
+        mt={{ md: '14px' }}></Box>
       <Flex
         direction="column"
         textAlign="center"
         justifyContent="center"
         align="center"
         mt="6.5rem"
-        pt={"55px"}
-      >
+        pt={'55px'}>
         <Text fontSize="4xl" color="white" fontWeight="bold">
           Welcome!
         </Text>
@@ -119,10 +101,8 @@ function SignUp() {
           fontWeight="normal"
           mt="10px"
           mb="26px"
-          w={{ base: "90%", sm: "60%", lg: "40%", xl: "25%" }}
-        >
-          You can login by completing the form below or by using your social
-          account.
+          w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}>
+          You can login by completing the form below or by using your social account.
         </Text>
       </Flex>
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
@@ -132,121 +112,89 @@ function SignUp() {
           background="transparent"
           borderRadius="15px"
           p="40px"
-          mx={{ base: "100px" }}
+          mx={{ base: '100px' }}
           bg={bgColor}
-          boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
-        >
-          <Text
-            fontSize="xl"
-            color={textColor}
-            fontWeight="bold"
-            textAlign="center"
-            mb="22px"
-          >
-            Register With
-          </Text>
-          <HStack spacing="15px" justify="center" mb="22px">
-            <Flex
-              justify="center"
-              align="center"
-              w="75px"
-              h="75px"
-              borderRadius="15px"
-              border="1px solid lightgray"
-              cursor="pointer"
-              transition="all .25s ease"
-              _hover={{ filter: "brightness(120%)", bg: bgIcons }}
-            >
-              <Link href="#">
-                <Icon
-                  as={FaFacebook}
-                  w="30px"
-                  h="30px"
-                  _hover={{ filter: "brightness(120%)" }}
-                />
-              </Link>
-            </Flex>
-            <Flex
-              justify="center"
-              align="center"
-              w="75px"
-              h="75px"
-              borderRadius="15px"
-              border="1px solid lightgray"
-              cursor="pointer"
-              transition="all .25s ease"
-              _hover={{ filter: "brightness(120%)", bg: bgIcons }}
-            >
-              <Link href="#">
-                <Icon
-                  as={FaApple}
-                  w="30px"
-                  h="30px"
-                  _hover={{ filter: "brightness(120%)" }}
-                />
-              </Link>
-            </Flex>
-            <Flex
-              justify="center"
-              align="center"
-              w="75px"
-              h="75px"
-              borderRadius="15px"
-              border="1px solid lightgray"
-              cursor="pointer"
-              transition="all .25s ease"
-              _hover={{ filter: "brightness(120%)", bg: bgIcons }}
-            >
-              <Link href="#">
-                <Icon
-                  as={FaGoogle}
-                  w="30px"
-                  h="30px"
-                  _hover={{ filter: "brightness(120%)" }}
-                />
-              </Link>
-            </Flex>
-          </HStack>
-          <Text
-            fontSize="lg"
-            color="gray.400"
-            fontWeight="bold"
-            textAlign="center"
-            mb="22px"
-          >
-            or
-          </Text>
-          <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmitHandler)}>
-              <FormControl isInvalid={errors.name}>
-                <FormInput
-                  name="first_name"
-                  label="First Name"
-                  placeholder="Your first name"
-                />
-                <FormInput
-                  name="last_name"
-                  label="Last Name"
-                  placeholder="Your last name"
-                />
-                <FormInput
-                  name="email"
-                  label="Email"
-                  placeholder="Your email address"
-                />
-                <FormInput
-                  name="password"
-                  label="Password"
-                  placeholder="Your password"
-                  type="password"
-                />
-                <FormInput
-                  name="password2"
-                  label="Confirm Password"
-                  placeholder="Confirm your password"
-                  type="password"
-                />
-                {/* <FormControl display="flex" alignItems="center" mb="24px">
+          boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)">
+          {isSuccess ? (
+            <Text color="green.400" fontWeight="bold" textAlign="center" mb="22px">
+              Registration successful. Please check your email to verify your account.
+            </Text>
+          ) : (
+            <>
+              <Text fontSize="xl" color={textColor} fontWeight="bold" textAlign="center" mb="22px">
+                Register With
+              </Text>
+              <HStack spacing="15px" justify="center" mb="22px">
+                <Flex
+                  justify="center"
+                  align="center"
+                  w="75px"
+                  h="75px"
+                  borderRadius="15px"
+                  border="1px solid lightgray"
+                  cursor="pointer"
+                  transition="all .25s ease"
+                  _hover={{ filter: 'brightness(120%)', bg: bgIcons }}>
+                  <Link href="#">
+                    <Icon
+                      as={FaFacebook}
+                      w="30px"
+                      h="30px"
+                      _hover={{ filter: 'brightness(120%)' }}
+                    />
+                  </Link>
+                </Flex>
+                <Flex
+                  justify="center"
+                  align="center"
+                  w="75px"
+                  h="75px"
+                  borderRadius="15px"
+                  border="1px solid lightgray"
+                  cursor="pointer"
+                  transition="all .25s ease"
+                  _hover={{ filter: 'brightness(120%)', bg: bgIcons }}>
+                  <Link href="#">
+                    <Icon as={FaApple} w="30px" h="30px" _hover={{ filter: 'brightness(120%)' }} />
+                  </Link>
+                </Flex>
+                <Flex
+                  justify="center"
+                  align="center"
+                  w="75px"
+                  h="75px"
+                  borderRadius="15px"
+                  border="1px solid lightgray"
+                  cursor="pointer"
+                  transition="all .25s ease"
+                  _hover={{ filter: 'brightness(120%)', bg: bgIcons }}>
+                  <Link href="#">
+                    <Icon as={FaGoogle} w="30px" h="30px" _hover={{ filter: 'brightness(120%)' }} />
+                  </Link>
+                </Flex>
+              </HStack>
+              <Text fontSize="lg" color="gray.400" fontWeight="bold" textAlign="center" mb="22px">
+                or
+              </Text>
+              <FormProvider {...methods}>
+                <form onSubmit={handleSubmit(onSubmitHandler)}>
+                  <FormControl isInvalid={errors.name}>
+                    <FormInput name="first_name" label="First Name" placeholder="Your first name" />
+                    <FormInput name="last_name" label="Last Name" placeholder="Your last name" />
+                    <FormInput name="email" label="Email" placeholder="Your email address" />
+                    <FormInput
+                      name="password"
+                      label="Password"
+                      placeholder="Your password"
+                      type="password"
+                    />
+                    <FormInput
+                      name="password2"
+                      label="Confirm Password"
+                      placeholder="Confirm your password"
+                      type="password"
+                    />
+                    {/* <FormControl display="flex" alignItems="center" mb="24px">
                   <Switch id="remember-login" colorScheme="green" me="10px" />
                   <FormLabel
                     htmlFor="remember-login"
@@ -256,49 +204,52 @@ function SignUp() {
                     Remember me
                   </FormLabel>
                 </FormControl> */}
-                <Button
-                  mt="12px"
-                  type="submit"
-                  bg="green.300"
-                  fontSize="10px"
-                  color="white"
-                  fontWeight="bold"
-                  w="100%"
-                  h="45"
-                  mb="24px"
-                  _hover={{
-                    bg: "green.200",
-                  }}
-                  _active={{
-                    bg: "green.400",
-                  }}
-                >
-                  SIGN UP
-                </Button>
-              </FormControl>
-            </form>
-          </FormProvider>
-          <Flex
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            maxW="100%"
-            mt="0px"
-          >
-            <Text color={textColor} fontWeight="medium">
-              Already have an account?
-              <Link
-                color={titleColor}
-                as="span"
-                ms="5px"
-                href="#"
-                fontWeight="bold"
-                onClick={() => navigate("/auth/signin")}
-              >
-                Sign In
-              </Link>
-            </Text>
-          </Flex>
+                    <Button
+                      mt="12px"
+                      type="submit"
+                      bg="green.300"
+                      fontSize="10px"
+                      color="white"
+                      fontWeight="bold"
+                      w="100%"
+                      h="45"
+                      mb="24px"
+                      _hover={{
+                        bg: 'green.200'
+                      }}
+                      _active={{
+                        bg: 'green.400'
+                      }}>
+                      {isLoading ? (
+                        <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
+                      ) : (
+                        'SIGN UP'
+                      )}
+                    </Button>
+                  </FormControl>
+                </form>
+              </FormProvider>
+              <Flex
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                maxW="100%"
+                mt="0px">
+                <Text color={textColor} fontWeight="medium">
+                  Already have an account?
+                  <Link
+                    color={titleColor}
+                    as="span"
+                    ms="5px"
+                    href="#"
+                    fontWeight="bold"
+                    onClick={() => navigate('/auth/signin')}>
+                    Sign In
+                  </Link>
+                </Text>
+              </Flex>
+            </>
+          )}
         </Flex>
       </Flex>
     </Flex>

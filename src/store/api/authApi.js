@@ -54,12 +54,13 @@ const authApi = baseApi.injectEndpoints({
       // },
     }),
     verifyEmail: build.mutation({
-      query({ verificationCode }) {
+      query({ email, code }) {
         return {
           url: VERIFY_EMAIL_URL,
           method: 'POST',
           body: {
-            code: verificationCode
+            email: email.toLowerCase(),
+            code: code
           },
           headers: {
             Accept: 'application/json',

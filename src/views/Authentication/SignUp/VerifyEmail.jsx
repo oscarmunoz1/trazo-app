@@ -1,84 +1,49 @@
 // Chakra imports
-import {
-  Box,
-  Button,
-  Flex,
-  FormControl,
-  FormLabel,
-  HStack,
-  Icon,
-  Input,
-  Link,
-  Switch,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
-import { FormProvider, useForm } from "react-hook-form";
-import React, { useEffect } from "react";
-import { object, string } from "zod";
+import { Box, CircularProgress, Flex, Link, Text, useColorModeValue } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 // Assets
-import BgSignUp from "assets/img/basic-auth.png";
-import FormInput from "components/Forms/FormInput";
-import { useNavigate } from "react-router-dom";
-import { useVerifyEmailMutation } from "store/api/authApi";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-const registerSchema = object({
-  verification_code: string().min(1, "Verification code is required").max(100),
-});
+import BgSignUp from 'assets/img/basic-auth.png';
+import { set } from 'react-hook-form';
+import { useVerifyEmailMutation } from 'store/api/authApi';
 
 function SignUp() {
-  const titleColor = useColorModeValue("green.300", "green.200");
-  const textColor = useColorModeValue("gray.700", "white");
-  const bgColor = useColorModeValue("white", "gray.700");
-  const bgIcons = useColorModeValue("green.200", "rgba(255, 255, 255, 0.5)");
+  const textColor = useColorModeValue('gray.700', 'white');
+  const titleColor = useColorModeValue('green.300', 'green.200');
+  const bgColor = useColorModeValue('white', 'gray.700');
+
+  const [isLoadingVerification, setIsLoadingVerification] = useState(true);
+
   const navigate = useNavigate();
 
-  const methods = useForm({
-    resolver: zodResolver(registerSchema),
-  });
+  const [searchParams] = useSearchParams();
 
-  const {
-    reset,
-    handleSubmit,
-    formState: { errors, isSubmitSuccessful },
-  } = methods;
+  const [verifyEmail, { isLoading, isSuccess, error, isError }] = useVerifyEmailMutation();
 
-  const [
-    verifyEmail,
-    { isLoading, isSuccess, error, isError },
-  ] = useVerifyEmailMutation();
+  useEffect(() => {
+    const email = searchParams.get('email');
+    const code = searchParams.get('code');
+    if (email && code) {
+      verifyEmail({ email, code });
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/auth/verifyemail");
+      setTimeout(() => {
+        setIsLoadingVerification(false);
+      }, 2000);
     }
-  }, [isLoading]);
-
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset();
-    }
-  }, [isSubmitSuccessful]);
-
-  const onSubmitHandler = (values) => {
-    verifyEmail(values?.verification_code);
-  };
+  }, [isSuccess]);
 
   return (
-    <Flex
-      direction="column"
-      alignSelf="center"
-      justifySelf="center"
-      overflow="hidden"
-    >
+    <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden">
       <Box
         position="absolute"
-        minH={{ base: "70vh", md: "50vh" }}
-        w={{ md: "calc(100vw - 50px)" }}
-        borderRadius={{ md: "15px" }}
+        minH={{ base: '70vh', md: '50vh' }}
+        w={{ md: 'calc(100vw - 50px)' }}
+        borderRadius={{ md: '15px' }}
         left="0"
         right="0"
         bgRepeat="no-repeat"
@@ -87,17 +52,15 @@ function SignUp() {
         top="0"
         bgImage={BgSignUp}
         bgSize="cover"
-        mx={{ md: "auto" }}
-        mt={{ md: "14px" }}
-      ></Box>
+        mx={{ md: 'auto' }}
+        mt={{ md: '14px' }}></Box>
       <Flex
         direction="column"
         textAlign="center"
         justifyContent="center"
         align="center"
         mt="8.5rem"
-        mb="30px"
-      >
+        mb="30px">
         <Text fontSize="4xl" color="white" fontWeight="bold">
           Welcome back!
         </Text>
@@ -106,10 +69,9 @@ function SignUp() {
           color="white"
           fontWeight="normal"
           mt="10px"
-          w={{ base: "90%", sm: "60%", lg: "40%", xl: "30%" }}
-        >
-          We send you a verification code to your email address. Please enter
-          the code to verify your email address.
+          w={{ base: '90%', sm: '60%', lg: '40%', xl: '30%' }}>
+          You should be able to verify your email address. If you have not received the email, we
+          will gladly send you another.
         </Text>
       </Flex>
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
@@ -119,70 +81,40 @@ function SignUp() {
           background="transparent"
           borderRadius="15px"
           p="40px"
-          mx={{ base: "100px" }}
+          mx={{ base: '100px' }}
           bg={bgColor}
-          boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
-        >
-          <Text
-            fontSize="xl"
-            color={textColor}
-            fontWeight="bold"
-            textAlign="center"
-            mb="22px"
-          >
-            Enter de code
-          </Text>
-          <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmitHandler)}>
-              <FormControl isInvalid={errors.name}>
-                <FormInput
-                  name="verification_code"
-                  label="Code verification"
-                  placeholder="Your code verification"
-                  mb="24px"
-                />
+          boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)">
+          {isLoadingVerification ? (
+            <>
+              <Flex direction="column" justifyContent="center" alignItems="center" mb="20px">
+                <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
+              </Flex>
 
-                <Button
-                  type="submit"
-                  bg="green.300"
-                  fontSize="10px"
-                  color="white"
+              <Text fontSize="xl" color={textColor} fontWeight="bold" textAlign="center" mb="22px">
+                We are verifying your email address.
+              </Text>
+            </>
+          ) : (
+            <Flex
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              maxW="100%"
+              mt="0px">
+              <Text color="green.400" fontWeight="bold" textAlign="center" mb="22px">
+                Your account has been successfully verified. Now you can
+                <Link
+                  color="black"
+                  mb="22px"
+                  as="span"
+                  ms="5px"
                   fontWeight="bold"
-                  w="100%"
-                  h="45"
-                  mb="24px"
-                  _hover={{
-                    bg: "green.200",
-                  }}
-                  _active={{
-                    bg: "green.400",
-                  }}
-                >
-                  VERIFY
-                </Button>
-              </FormControl>
-            </form>
-          </FormProvider>
-          <Flex
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            maxW="100%"
-            mt="0px"
-          >
-            <Text color={textColor} fontWeight="medium">
-              Have you already verified your email?
-              <Link
-                color={titleColor}
-                as="span"
-                ms="5px"
-                href="#"
-                fontWeight="bold"
-              >
-                Sign In
-              </Link>
-            </Text>
-          </Flex>
+                  onClick={() => navigate('/auth/signin')}>
+                  Sign In
+                </Link>
+              </Text>
+            </Flex>
+          )}
         </Flex>
       </Flex>
     </Flex>

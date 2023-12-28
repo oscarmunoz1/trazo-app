@@ -34,36 +34,36 @@ import {
   TabPanels,
   Tabs,
   Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import React, { useRef, useState } from "react";
+  useColorModeValue
+} from '@chakra-ui/react';
+import React, { useRef, useState } from 'react';
 
-import { AiFillSetting } from "react-icons/ai";
-import { BsCircleFill } from "react-icons/bs";
+import { AiFillSetting } from 'react-icons/ai';
+import { BsCircleFill } from 'react-icons/bs';
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import { FaCube } from "react-icons/fa";
-import IconBox from "components/Icons/IconBox";
-import { MdModeEdit } from "react-icons/md";
-import { RocketIcon } from "components/Icons/Icons";
-import avatar4 from "assets/img/avatars/avatar4.png";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import { FaCube } from 'react-icons/fa';
+import IconBox from 'components/Icons/IconBox';
+import { MdModeEdit } from 'react-icons/md';
+import { RocketIcon } from 'components/Icons/Icons';
+import avatar4 from 'assets/img/avatars/avatar4.png';
 
 function Wizard() {
-  const textColor = useColorModeValue("gray.700", "white");
-  const bgPrevButton = useColorModeValue("gray.100", "gray.100");
-  const iconColor = useColorModeValue("gray.300", "gray.700");
+  const textColor = useColorModeValue('gray.700', 'white');
+  const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
+  const iconColor = useColorModeValue('gray.300', 'gray.700');
   const [activeBullets, setActiveBullets] = useState({
     about: true,
     account: false,
-    address: false,
+    address: false
   });
 
   const [checkboxes, setCheckboxes] = useState({
     design: false,
     code: false,
-    develop: false,
+    develop: false
   });
 
   const aboutTab = useRef();
@@ -71,52 +71,32 @@ function Wizard() {
   const addressTab = useRef();
 
   return (
-    <Flex
-      direction="column"
-      minH="100vh"
-      align="center"
-      pt={{ sm: "125px", lg: "75px" }}
-    >
-      <Flex
-        direction="column"
-        textAlign="center"
-        mb={{ sm: "25px", md: "45px" }}
-      >
+    <Flex direction="column" minH="100vh" align="center" pt={{ sm: '125px', lg: '75px' }}>
+      <Flex direction="column" textAlign="center" mb={{ sm: '25px', md: '45px' }}>
         <Text
           color={textColor}
-          fontSize={{ sm: "2xl", md: "3xl", lg: "4xl" }}
+          fontSize={{ sm: '2xl', md: '3xl', lg: '4xl' }}
           fontWeight="bold"
-          mb="8px"
-        >
+          mb="8px">
           Build your profile
         </Text>
-        <Text
-          color="gray.400"
-          fontWeight="normal"
-          fontSize={{ sm: "sm", md: "lg" }}
-        >
+        <Text color="gray.400" fontWeight="normal" fontSize={{ sm: 'sm', md: 'lg' }}>
           This information will let us know more about you.
         </Text>
       </Flex>
       <Tabs variant="unstyled" mt="24px" display="flex" flexDirection="column">
-        <TabList
-          display="flex"
-          align="center"
-          alignSelf="center"
-          justifySelf="center"
-        >
+        <TabList display="flex" align="center" alignSelf="center" justifySelf="center">
           <Tab
             ref={aboutTab}
             _focus="none"
-            w={{ sm: "120px", md: "250px", lg: "300px" }}
+            w={{ sm: '120px', md: '250px', lg: '300px' }}
             onClick={() =>
               setActiveBullets({
                 about: true,
                 account: false,
-                address: false,
+                address: false
               })
-            }
-          >
+            }>
             <Flex
               direction="column"
               justify="center"
@@ -124,30 +104,28 @@ function Wizard() {
               position="relative"
               _before={{
                 content: "''",
-                width: { sm: "120px", md: "250px", lg: "300px" },
-                height: "3px",
-                bg: activeBullets.account ? textColor : "gray.200",
-                left: { sm: "12px", md: "26px" },
-                top: { sm: activeBullets.about ? "6px" : "4px", md: null },
-                position: "absolute",
-                bottom: activeBullets.about ? "40px" : "38px",
+                width: { sm: '120px', md: '250px', lg: '300px' },
+                height: '3px',
+                bg: activeBullets.account ? textColor : 'gray.200',
+                left: { sm: '12px', md: '26px' },
+                top: { sm: activeBullets.about ? '6px' : '4px', md: null },
+                position: 'absolute',
+                bottom: activeBullets.about ? '40px' : '38px',
                 zIndex: -1,
-                transition: "all .3s ease",
-              }}
-            >
+                transition: 'all .3s ease'
+              }}>
               <Icon
                 as={BsCircleFill}
-                color={activeBullets.about ? textColor : "gray.300"}
-                w={activeBullets.about ? "16px" : "12px"}
-                h={activeBullets.about ? "16px" : "12px"}
+                color={activeBullets.about ? textColor : 'gray.300'}
+                w={activeBullets.about ? '16px' : '12px'}
+                h={activeBullets.about ? '16px' : '12px'}
                 mb="8px"
               />
               <Text
-                color={activeBullets.about ? { textColor } : "gray.300"}
-                fontWeight={activeBullets.about ? "bold" : "normal"}
-                display={{ sm: "none", md: "block" }}
-                fontSize="sm"
-              >
+                color={activeBullets.about ? { textColor } : 'gray.300'}
+                fontWeight={activeBullets.about ? 'bold' : 'normal'}
+                display={{ sm: 'none', md: 'block' }}
+                fontSize="sm">
                 About
               </Text>
             </Flex>
@@ -155,15 +133,14 @@ function Wizard() {
           <Tab
             ref={accountTab}
             _focus="none"
-            w={{ sm: "120px", md: "250px", lg: "300px" }}
+            w={{ sm: '120px', md: '250px', lg: '300px' }}
             onClick={() =>
               setActiveBullets({
                 about: true,
                 account: true,
-                address: false,
+                address: false
               })
-            }
-          >
+            }>
             <Flex
               direction="column"
               justify="center"
@@ -171,32 +148,30 @@ function Wizard() {
               position="relative"
               _before={{
                 content: "''",
-                width: { sm: "120px", md: "250px", lg: "300px" },
-                height: "3px",
-                bg: activeBullets.address ? textColor : "gray.200",
-                left: { sm: "12px", md: "28px" },
-                top: { sm: activeBullets.account ? "6px" : "4px", md: null },
-                position: "absolute",
-                bottom: activeBullets.account ? "40px" : "38px",
+                width: { sm: '120px', md: '250px', lg: '300px' },
+                height: '3px',
+                bg: activeBullets.address ? textColor : 'gray.200',
+                left: { sm: '12px', md: '28px' },
+                top: { sm: activeBullets.account ? '6px' : '4px', md: null },
+                position: 'absolute',
+                bottom: activeBullets.account ? '40px' : '38px',
                 zIndex: -1,
-                transition: "all .3s ease",
-              }}
-            >
+                transition: 'all .3s ease'
+              }}>
               <Icon
                 as={BsCircleFill}
-                color={activeBullets.account ? textColor : "gray.300"}
-                w={activeBullets.account ? "16px" : "12px"}
-                h={activeBullets.account ? "16px" : "12px"}
+                color={activeBullets.account ? textColor : 'gray.300'}
+                w={activeBullets.account ? '16px' : '12px'}
+                h={activeBullets.account ? '16px' : '12px'}
                 mb="8px"
               />
               <Text
-                color={activeBullets.account ? { textColor } : "gray.300"}
-                fontWeight={activeBullets.account ? "bold" : "normal"}
+                color={activeBullets.account ? { textColor } : 'gray.300'}
+                fontWeight={activeBullets.account ? 'bold' : 'normal'}
                 transition="all .3s ease"
                 fontSize="sm"
                 _hover={{ color: textColor }}
-                display={{ sm: "none", md: "block" }}
-              >
+                display={{ sm: 'none', md: 'block' }}>
                 Account
               </Text>
             </Flex>
@@ -204,15 +179,14 @@ function Wizard() {
           <Tab
             ref={addressTab}
             _focus="none"
-            w={{ sm: "120px", md: "250px", lg: "300px" }}
+            w={{ sm: '120px', md: '250px', lg: '300px' }}
             onClick={() =>
               setActiveBullets({
                 about: true,
                 account: true,
-                address: true,
+                address: true
               })
-            }
-          >
+            }>
             <Flex
               direction="column"
               justify="center"
@@ -220,39 +194,37 @@ function Wizard() {
               position="relative"
               _before={{
                 content: "''",
-                width: { sm: "120px", md: "250px", lg: "300px" },
-                height: "3px",
+                width: { sm: '120px', md: '250px', lg: '300px' },
+                height: '3px',
                 // bg: activeBullets.profile ? textColor : "gray.200",
-                left: { sm: "12px", md: "32px" },
-                top: { sm: activeBullets.address ? "6px" : "4px", md: null },
-                position: "absolute",
-                bottom: activeBullets.address ? "40px" : "38px",
+                left: { sm: '12px', md: '32px' },
+                top: { sm: activeBullets.address ? '6px' : '4px', md: null },
+                position: 'absolute',
+                bottom: activeBullets.address ? '40px' : '38px',
                 zIndex: -1,
-                transition: "all .3s ease",
-              }}
-            >
+                transition: 'all .3s ease'
+              }}>
               <Icon
                 as={BsCircleFill}
-                color={activeBullets.address ? textColor : "gray.300"}
-                w={activeBullets.address ? "16px" : "12px"}
-                h={activeBullets.address ? "16px" : "12px"}
+                color={activeBullets.address ? textColor : 'gray.300'}
+                w={activeBullets.address ? '16px' : '12px'}
+                h={activeBullets.address ? '16px' : '12px'}
                 mb="8px"
               />
               <Text
-                color={activeBullets.address ? { textColor } : "gray.300"}
-                fontWeight={activeBullets.address ? "bold" : "normal"}
+                color={activeBullets.address ? { textColor } : 'gray.300'}
+                fontWeight={activeBullets.address ? 'bold' : 'normal'}
                 transition="all .3s ease"
                 fontSize="sm"
                 _hover={{ color: textColor }}
-                display={{ sm: "none", md: "block" }}
-              >
+                display={{ sm: 'none', md: 'block' }}>
                 Address
               </Text>
             </Flex>
           </Tab>
         </TabList>
-        <TabPanels mt="24px" maxW={{ md: "90%", lg: "100%" }} mx="auto">
-          <TabPanel w={{ sm: "330px", md: "700px", lg: "850px" }} mx="auto">
+        <TabPanels mt="24px" maxW={{ md: '90%', lg: '100%' }} mx="auto">
+          <TabPanel w={{ sm: '330px', md: '700px', lg: '850px' }} mx="auto">
             <Card>
               <CardHeader mb="40px">
                 <Flex
@@ -261,42 +233,26 @@ function Wizard() {
                   justify="center"
                   textAlign="center"
                   w="80%"
-                  mx="auto"
-                >
-                  <Text
-                    color={textColor}
-                    fontSize="lg"
-                    fontWeight="bold"
-                    mb="4px"
-                  >
+                  mx="auto">
+                  <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
                     Let's start with the basic information
                   </Text>
                   <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                    Let us know your name and email address. Use an address you
-                    don't mind other users contacting you at
+                    Let us know your name and email address. Use an address you don't mind other
+                    users contacting you at
                   </Text>
                 </Flex>
               </CardHeader>
               <CardBody>
                 <Flex direction="column" w="100%">
-                  <Flex
-                    direction={{ sm: "column", md: "row" }}
-                    w="100%"
-                    mb="24px"
-                  >
+                  <Flex direction={{ sm: 'column', md: 'row' }} w="100%" mb="24px">
                     <Box
                       position="relative"
-                      minW={{ sm: "110px", xl: "150px" }}
-                      h={{ sm: "110px", xl: "150px" }}
-                      mx={{ sm: "auto", md: "40px", xl: "85px" }}
-                      mb={{ sm: "25px" }}
-                    >
-                      <Avatar
-                        src={avatar4}
-                        w="100%"
-                        h="100%"
-                        borderRadius="12px"
-                      />
+                      minW={{ sm: '110px', xl: '150px' }}
+                      h={{ sm: '110px', xl: '150px' }}
+                      mx={{ sm: 'auto', md: '40px', xl: '85px' }}
+                      mb={{ sm: '25px' }}>
+                      <Avatar src={avatar4} w="100%" h="100%" borderRadius="12px" />
                       <IconBox
                         bg="#fff"
                         h="35px"
@@ -305,46 +261,25 @@ function Wizard() {
                         position="absolute"
                         right="-10px"
                         bottom="-10px"
-                        cursor="pointer"
-                      >
+                        cursor="pointer">
                         <Icon as={MdModeEdit} w="15px" h="15px" color="#333" />
                       </IconBox>
                     </Box>
                     <Stack direction="column" spacing="20px" w="100%">
                       <FormControl>
-                        <FormLabel
-                          color={textColor}
-                          fontSize="xs"
-                          fontWeight="bold"
-                        >
+                        <FormLabel color={textColor} fontSize="xs" fontWeight="bold">
                           First Name
                         </FormLabel>
-                        <Input
-                          borderRadius="15px"
-                          placeholder="eg. Michael"
-                          fontSize="xs"
-                        />
+                        <Input borderRadius="15px" placeholder="eg. Michael" fontSize="xs" />
                       </FormControl>
                       <FormControl>
-                        <FormLabel
-                          color={textColor}
-                          fontSize="xs"
-                          fontWeight="bold"
-                        >
+                        <FormLabel color={textColor} fontSize="xs" fontWeight="bold">
                           Last Name
                         </FormLabel>
-                        <Input
-                          borderRadius="15px"
-                          placeholder="eg. Jackson"
-                          fontSize="xs"
-                        />
+                        <Input borderRadius="15px" placeholder="eg. Jackson" fontSize="xs" />
                       </FormControl>
                       <FormControl>
-                        <FormLabel
-                          color={textColor}
-                          fontSize="xs"
-                          fontWeight="bold"
-                        >
+                        <FormLabel color={textColor} fontSize="xs" fontWeight="bold">
                           Email Address
                         </FormLabel>
                         <Input
@@ -360,10 +295,9 @@ function Wizard() {
                     bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
                     alignSelf="flex-end"
                     mt="24px"
-                    w={{ sm: "75px", lg: "100px" }}
+                    w={{ sm: '75px', lg: '100px' }}
                     h="35px"
-                    onClick={() => accountTab.current.click()}
-                  >
+                    onClick={() => accountTab.current.click()}>
                     <Text fontSize="xs" color="#fff" fontWeight="bold">
                       NEXT
                     </Text>
@@ -372,7 +306,7 @@ function Wizard() {
               </CardBody>
             </Card>
           </TabPanel>
-          <TabPanel w={{ sm: "330px", md: "700px", lg: "850px" }} mx="auto">
+          <TabPanel w={{ sm: '330px', md: '700px', lg: '850px' }} mx="auto">
             <Card>
               <CardHeader mb="40px">
                 <Flex
@@ -381,31 +315,24 @@ function Wizard() {
                   justify="center"
                   textAlign="center"
                   w="80%"
-                  mx="auto"
-                >
-                  <Text
-                    color={textColor}
-                    fontSize="lg"
-                    fontWeight="bold"
-                    mb="4px"
-                  >
+                  mx="auto">
+                  <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
                     What kind of event are you going to record?
                   </Text>
                   <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                    If it is not within the options, you can select the other
-                    option and specify in the next step.
+                    If it is not within the options, you can select the other option and specify in
+                    the next step.
                   </Text>
                 </Flex>
               </CardHeader>
               <CardBody>
                 <Flex direction="column" w="100%">
                   <Stack
-                    direction={{ sm: "column", md: "row" }}
-                    spacing={{ sm: "20px", lg: "35px" }}
+                    direction={{ sm: 'column', md: 'row' }}
+                    spacing={{ sm: '20px', lg: '35px' }}
                     alignSelf="center"
                     justifySelf="center"
-                    mb="24px"
-                  >
+                    mb="24px">
                     <Flex direction="column" align="center">
                       <FormLabel w="150px" h="150px" cursor="pointer" mb="16px">
                         <Flex
@@ -416,15 +343,14 @@ function Wizard() {
                           transition=".5s all ease"
                           border="1px solid lightgray"
                           align="center"
-                          bg={checkboxes.design ? "green.400" : "#fff"}
-                          _hover={{ opacity: "0.8" }}
-                        >
+                          bg={checkboxes.design ? 'green.400' : '#fff'}
+                          _hover={{ opacity: '0.8' }}>
                           <Checkbox
                             onChange={() =>
                               setCheckboxes((prevCheckboxes) => {
                                 return {
                                   ...prevCheckboxes,
-                                  design: !prevCheckboxes.design,
+                                  design: !prevCheckboxes.design
                                 };
                               })
                             }
@@ -434,7 +360,7 @@ function Wizard() {
                             as={AiFillSetting}
                             w="54px"
                             h="54px"
-                            color={checkboxes.design ? "#fff" : iconColor}
+                            color={checkboxes.design ? '#fff' : iconColor}
                           />
                         </Flex>
                       </FormLabel>
@@ -452,15 +378,14 @@ function Wizard() {
                           transition=".5s all ease"
                           border="1px solid lightgray"
                           align="center"
-                          bg={checkboxes.code ? "green.400" : "#fff"}
-                          _hover={{ opacity: "0.8" }}
-                        >
+                          bg={checkboxes.code ? 'green.400' : '#fff'}
+                          _hover={{ opacity: '0.8' }}>
                           <Checkbox
                             onChange={() =>
                               setCheckboxes((prevCheckboxes) => {
                                 return {
                                   ...prevCheckboxes,
-                                  code: !prevCheckboxes.code,
+                                  code: !prevCheckboxes.code
                                 };
                               })
                             }
@@ -470,7 +395,7 @@ function Wizard() {
                             as={FaCube}
                             w="54px"
                             h="54px"
-                            color={checkboxes.code ? "#fff" : iconColor}
+                            color={checkboxes.code ? '#fff' : iconColor}
                           />
                         </Flex>
                       </FormLabel>
@@ -488,15 +413,14 @@ function Wizard() {
                           transition=".5s all ease"
                           border="1px solid lightgray"
                           align="center"
-                          bg={checkboxes.develop ? "green.400" : "#fff"}
-                          _hover={{ opacity: "0.8" }}
-                        >
+                          bg={checkboxes.develop ? 'green.400' : '#fff'}
+                          _hover={{ opacity: '0.8' }}>
                           <Checkbox
                             onChange={() =>
                               setCheckboxes((prevCheckboxes) => {
                                 return {
                                   ...prevCheckboxes,
-                                  develop: !prevCheckboxes.develop,
+                                  develop: !prevCheckboxes.develop
                                 };
                               })
                             }
@@ -506,7 +430,7 @@ function Wizard() {
                             as={RocketIcon}
                             w="54px"
                             h="54px"
-                            color={checkboxes.develop ? "#fff" : iconColor}
+                            color={checkboxes.develop ? '#fff' : iconColor}
                           />
                         </Flex>
                       </FormLabel>
@@ -522,10 +446,9 @@ function Wizard() {
                       bg={bgPrevButton}
                       alignSelf="flex-end"
                       mt="24px"
-                      w={{ sm: "75px", lg: "100px" }}
+                      w={{ sm: '75px', lg: '100px' }}
                       h="35px"
-                      onClick={() => aboutTab.current.click()}
-                    >
+                      onClick={() => aboutTab.current.click()}>
                       <Text fontSize="xs" color="gray.700" fontWeight="bold">
                         PREV
                       </Text>
@@ -535,10 +458,9 @@ function Wizard() {
                       bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
                       alignSelf="flex-end"
                       mt="24px"
-                      w={{ sm: "75px", lg: "100px" }}
+                      w={{ sm: '75px', lg: '100px' }}
                       h="35px"
-                      onClick={() => addressTab.current.click()}
-                    >
+                      onClick={() => addressTab.current.click()}>
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
                         NEXT
                       </Text>
@@ -548,7 +470,7 @@ function Wizard() {
               </CardBody>
             </Card>
           </TabPanel>
-          <TabPanel w={{ sm: "330px", md: "700px", lg: "850px" }} mx="auto">
+          <TabPanel w={{ sm: '330px', md: '700px', lg: '850px' }} mx="auto">
             <Card>
               <CardHeader mb="40px">
                 <Flex
@@ -557,19 +479,13 @@ function Wizard() {
                   justify="center"
                   textAlign="center"
                   w="80%"
-                  mx="auto"
-                >
-                  <Text
-                    color={textColor}
-                    fontSize="lg"
-                    fontWeight="bold"
-                    mb="4px"
-                  >
+                  mx="auto">
+                  <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
                     Are you living in a nice area?
                   </Text>
                   <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                    One thing I love about the later sunsets is the chance to go
-                    for a walk through the neighborhood woods before dinner
+                    One thing I love about the later sunsets is the chance to go for a walk through
+                    the neighborhood woods before dinner
                   </Text>
                 </Flex>
               </CardHeader>
@@ -577,78 +493,35 @@ function Wizard() {
                 <Flex direction="column" w="100%">
                   <Stack direction="column" spacing="20px">
                     <FormControl>
-                      <FormLabel
-                        color={textColor}
-                        fontWeight="bold"
-                        fontSize="xs"
-                      >
+                      <FormLabel color={textColor} fontWeight="bold" fontSize="xs">
                         Address 1
                       </FormLabel>
-                      <Input
-                        borderRadius="15px"
-                        placeholder="eg. Street 120"
-                        fontSize="xs"
-                      />
+                      <Input borderRadius="15px" placeholder="eg. Street 120" fontSize="xs" />
                     </FormControl>
                     <FormControl>
-                      <FormLabel
-                        color={textColor}
-                        fontWeight="bold"
-                        fontSize="xs"
-                      >
+                      <FormLabel color={textColor} fontWeight="bold" fontSize="xs">
                         Address 2
                       </FormLabel>
-                      <Input
-                        borderRadius="15px"
-                        placeholder="eg. Street 220"
-                        fontSize="xs"
-                      />
+                      <Input borderRadius="15px" placeholder="eg. Street 220" fontSize="xs" />
                     </FormControl>
-                    <Grid
-                      templateColumns={{ sm: "1fr 1fr", lg: "2fr 1fr 1fr" }}
-                      gap="30px"
-                    >
-                      <FormControl gridColumn={{ sm: "1 / 3", lg: "auto" }}>
-                        <FormLabel
-                          color={textColor}
-                          fontWeight="bold"
-                          fontSize="xs"
-                        >
+                    <Grid templateColumns={{ sm: '1fr 1fr', lg: '2fr 1fr 1fr' }} gap="30px">
+                      <FormControl gridColumn={{ sm: '1 / 3', lg: 'auto' }}>
+                        <FormLabel color={textColor} fontWeight="bold" fontSize="xs">
                           City
                         </FormLabel>
-                        <Input
-                          borderRadius="15px"
-                          placeholder="eg. Tokyo"
-                          fontSize="xs"
-                        />
+                        <Input borderRadius="15px" placeholder="eg. Tokyo" fontSize="xs" />
                       </FormControl>
                       <FormControl>
-                        <FormLabel
-                          color={textColor}
-                          fontWeight="bold"
-                          fontSize="xs"
-                        >
+                        <FormLabel color={textColor} fontWeight="bold" fontSize="xs">
                           State
                         </FormLabel>
-                        <Input
-                          borderRadius="15px"
-                          placeholder="..."
-                          fontSize="xs"
-                        />
+                        <Input borderRadius="15px" placeholder="..." fontSize="xs" />
                       </FormControl>
                       <FormControl>
-                        <FormLabel
-                          color={textColor}
-                          fontWeight="bold"
-                          fontSize="xs"
-                        >
+                        <FormLabel color={textColor} fontWeight="bold" fontSize="xs">
                           ZIP
                         </FormLabel>
-                        <Input
-                          borderRadius="15px"
-                          placeholder="7 letters"
-                          fontSize="xs"
-                        />
+                        <Input borderRadius="15px" placeholder="7 letters" fontSize="xs" />
                       </FormControl>
                     </Grid>
                   </Stack>
@@ -658,10 +531,9 @@ function Wizard() {
                       bg={bgPrevButton}
                       alignSelf="flex-end"
                       mt="24px"
-                      w={{ sm: "75px", lg: "100px" }}
+                      w={{ sm: '75px', lg: '100px' }}
                       h="35px"
-                      onClick={() => accountTab.current.click()}
-                    >
+                      onClick={() => accountTab.current.click()}>
                       <Text fontSize="xs" color="gray.700" fontWeight="bold">
                         PREV
                       </Text>
@@ -671,9 +543,8 @@ function Wizard() {
                       bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
                       alignSelf="flex-end"
                       mt="24px"
-                      w={{ sm: "75px", lg: "100px" }}
-                      h="35px"
-                    >
+                      w={{ sm: '75px', lg: '100px' }}
+                      h="35px">
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
                         SEND
                       </Text>
