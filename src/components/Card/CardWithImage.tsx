@@ -68,7 +68,7 @@ const CardWithImage = ({ title, name, image, readMoreLink }: CardWithImageProps)
             align="center"
             justify="center"
             borderRadius="15px"
-            width="320px"
+            width={{ sm: '100%', md: '320px' }}
             height="250px"
             minH={'250px'}>
             {image}

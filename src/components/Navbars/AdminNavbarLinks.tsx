@@ -103,7 +103,7 @@ export default function HeaderLinks(props: HeaderLinksProps) {
         bg={inputBg}
         borderRadius="15px"
         w={{
-          sm: '128px',
+          sm: '60%',
           md: '200px'
         }}
         me={{ sm: 'auto', md: '20px' }}

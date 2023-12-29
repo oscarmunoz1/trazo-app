@@ -96,10 +96,13 @@ export default function DashboardView() {
         padding="10px">
         Establishments
       </Text>
-      <SimpleGrid columns={{ sm: 2, md: 3, xl: 4 }} spacing="24px">
+      <Grid
+        templateColumns={{ sm: '1fr', md: '1fr 1fr', xl: 'repeat(4, 1fr)' }}
+        templateRows={{ sm: '1fr 1fr 1fr auto', md: '1fr 1fr', xl: '1fr' }}
+        gap="24px">
         {establishments ? (
           establishments.map((prop, key) => (
-            <NavLink to={`/admin/dashboard/establishment/${prop.id}`}>
+            <NavLink minW="260px" to={`/admin/dashboard/establishment/${prop.id}`}>
               <MiniStatistics
                 key={key}
                 isSelected={prop.id === establishment?.id}
@@ -128,7 +131,7 @@ export default function DashboardView() {
             </Text>
           </Flex>
         </Button>
-      </SimpleGrid>
+      </Grid>
 
       <Grid
         templateColumns={{ md: '1fr', lg: '1.8fr 1.2fr' }}

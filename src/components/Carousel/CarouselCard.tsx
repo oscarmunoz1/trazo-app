@@ -31,7 +31,12 @@ const CarouselCard = ({ id, image, name, category, buttonText, avatars }: Carous
 
   return (
     <Flex direction="column">
-      <Box w="300px" h="200px" mb="20px" position="relative" borderRadius="15px">
+      <Box
+        w={{ sm: '290px', md: '300px' }}
+        h={{ sm: '190px', md: '200px' }}
+        mb="20px"
+        position="relative"
+        borderRadius="15px">
         <Image width="100%" height="100%" objectFit="cover" src={image} borderRadius="15px" />
         <Box
           w="100%"
