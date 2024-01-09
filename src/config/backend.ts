@@ -1,4 +1,4 @@
-const ROOT_URL = "";
+const ROOT_URL = '';
 
 // Authentication and User Information URLs
 export const LOGIN_URL = `${ROOT_URL}/auth/login/`;
@@ -15,7 +15,11 @@ export const ESTABLISHMENT_URL = (companyId: string, establishmentId?: string) =
   establishmentId
     ? `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/`
     : `${ROOT_URL}/companies/${companyId}/establishments/`;
-export const PARCEL_URL = (companyId: string, establishmentId: string, parcelId: string | null = null) =>
+export const PARCEL_URL = (
+  companyId: string,
+  establishmentId: string,
+  parcelId: string | null = null
+) =>
   parcelId
     ? `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/parcels/${parcelId}/`
     : `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/parcels/`;
@@ -28,8 +32,7 @@ export const ESTABLISHMENT_HISTORIES_URL = (companyId: string, establishmentId: 
 export const ESTABLISHMENT_CHART_SCANS_VS_SALES_INFO_URL = (
   companyId: string,
   establishmentId: string
-) =>
-  `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/get_charts_data/`;
+) => `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/get_charts_data/`;
 export const SCANS_BY_ESTABLISHMENT_URL = (companyId: string, establishmentId: string) =>
   `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/scans/list_scans_by_establishment/`;
 export const PRODUCT_URL = `${ROOT_URL}/products/`;
@@ -51,15 +54,19 @@ export const CURRENT_HISTORY = (companyId: string, establishmentId: string, parc
   `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/parcels/${parcelId}/current_history/`;
 export const FINISH_HISTORY = (companyId: string, establishmentId: string, parcelId: string) =>
   `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/parcels/${parcelId}/finish_history/`;
-export const EVENT_URL = (companyId: string, establishmentId: string, parcelId: string, eventId: string) =>
+export const EVENT_URL = (
+  companyId: string,
+  establishmentId: string,
+  parcelId: string,
+  eventId: string
+) =>
   eventId
     ? `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/parcels/${parcelId}/events/${eventId}/`
     : `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/parcels/${parcelId}/events/`;
+export const EVENT_CREATE_URL = (companyId: string, establishmentId: string) =>
+  `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/events/`;
 export const PRODUCTION_URL = (productionId: string) =>
-  productionId
-    ? `${ROOT_URL}/histories/${productionId}/`
-    : `${ROOT_URL}/histories/`;
+  productionId ? `${ROOT_URL}/histories/${productionId}/` : `${ROOT_URL}/histories/`;
 export const PUBLIC_HISTORY_URL = (historyId: string) =>
   `${ROOT_URL}/histories/${historyId}/public_history/`;
-export const COMMENT_HISTORY_URL = (scanId: string) =>
-  `${ROOT_URL}/scans/${scanId}/comment/`;
+export const COMMENT_HISTORY_URL = (scanId: string) => `${ROOT_URL}/scans/${scanId}/comment/`;

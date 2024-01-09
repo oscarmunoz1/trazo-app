@@ -15,7 +15,7 @@
 
 */
 
-import { BsCircleFill, BsFillCloudLightningRainFill } from "react-icons/bs";
+import { BsCircleFill, BsFillCloudLightningRainFill } from 'react-icons/bs';
 // Chakra imports
 import {
   Button,
@@ -42,115 +42,113 @@ import {
   TagLabel,
   Text,
   Textarea,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { FormProvider, useForm } from "react-hook-form";
-import React, { useEffect, useReducer, useRef, useState } from "react";
-import { clearForm, setForm } from "store/features/formSlice";
-import { object, string } from "zod";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+  useColorModeValue
+} from '@chakra-ui/react';
+import { FormProvider, useForm } from 'react-hook-form';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
+import { clearForm, setForm } from 'store/features/formSlice';
+import { object, string } from 'zod';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import CardWithMap from "../CardWithMap";
-import ChemicalTab from "./ChemicalTab";
-import Editor from "components/Editor/Editor";
-import FormInput from "components/Forms/FormInput";
-import GeneralTab from "./GeneralTab";
-import Header from "views/Pages/Profile/Overview/components/Header";
-import ProductionTab from "./ProductionTab";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import CardWithMap from '../CardWithMap';
+import ChemicalTab from './ChemicalTab';
+import Editor from 'components/Editor/Editor';
+import FormInput from 'components/Forms/FormInput';
+import GeneralTab from './GeneralTab';
+import Header from 'views/Pages/Profile/Overview/components/Header';
+import ProductionTab from './ProductionTab';
 // import ProductionTab from "./ProductionTab";
-import ProfileBgImage from "assets/img/ProfileBackground.png";
-import { RocketIcon } from "components/Icons/Icons";
-import Select from "react-select";
-import { SlChemistry } from "react-icons/sl";
-import WeatherTab from "./WeatherTab";
-import { addCompanyEstablishment } from "store/features/companySlice";
-import avatar4 from "assets/img/avatars/avatar4.png";
-import imageMap from "assets/img/imageMap.png";
-import { useCreateEventMutation } from "store/api/historyApi";
-import { useDropzone } from "react-dropzone";
-import { useGoogleMap } from "@react-google-maps/api";
-import { zodResolver } from "@hookform/resolvers/zod";
+import ProfileBgImage from 'assets/img/ProfileBackground.png';
+import { RocketIcon } from 'components/Icons/Icons';
+import Select from 'react-select';
+import { SlChemistry } from 'react-icons/sl';
+import WeatherTab from './WeatherTab';
+import { addCompanyEstablishment } from 'store/features/companySlice';
+import avatar4 from 'assets/img/avatars/avatar4.png';
+import imageMap from 'assets/img/imageMap.png';
+import { useCreateEventMutation } from 'store/api/historyApi';
+import { useDropzone } from 'react-dropzone';
+import { useGoogleMap } from '@react-google-maps/api';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 // Custom components
 const styles = {
   multiValue: (base, state) => {
     return state.data.isFixed
-      ? { ...base, backgroundColor: "gray", borderRadius: "10px" }
-      : { ...base, borderRadius: "10px" };
+      ? { ...base, backgroundColor: 'gray', borderRadius: '10px' }
+      : { ...base, borderRadius: '10px' };
   },
   multiValueLabel: (base, state) => {
     return state.data.isFixed
-      ? { ...base, fontWeight: "bold", color: "white", paddingRight: 6 }
+      ? { ...base, fontWeight: 'bold', color: 'white', paddingRight: 6 }
       : base;
   },
   multiValueRemove: (base, state) => {
-    return state.data.isFixed ? { ...base, display: "none" } : base;
+    return state.data.isFixed ? { ...base, display: 'none' } : base;
   },
   control: (provided, state) => ({
     ...provided,
-    border: "1px solid #E2E8F0",
-    borderRadius: "15px",
-    boxShadow: "none",
-    outline: "2px solid transparent",
-    minHeight: "40px",
-    fontSize: "0.75rem;",
-    marginLeft: "4px",
-  }),
+    border: '1px solid #E2E8F0',
+    borderRadius: '15px',
+    boxShadow: 'none',
+    outline: '2px solid transparent',
+    minHeight: '40px',
+    fontSize: '0.75rem;',
+    marginLeft: '4px'
+  })
 };
 
 const formSchemaBasic = object({
-  date: string().min(1, "Date is required"),
+  date: string().min(1, 'Date is required')
 });
 
 const formSchemaMainInfo = object({
-  type: string().min(1, "Name is required"),
+  type: string().min(1, 'Name is required')
 });
 
 const formSchemaDescription = object({
-  description: string().min(1, "Description is required"),
+  description: string().min(1, 'Description is required')
 });
 
 const formSchemaSocials = object({
   facebook: string(),
-  instagram: string(),
+  instagram: string()
 });
 
 const formSchemaMedia = object({});
 
 const formSchema = object({
-  name: string().min(1, "Name is required"),
-  country: string().min(1, "Country is required"),
-  state: string().min(1, "State is required"),
-  city: string().min(1, "City is required"),
+  name: string().min(1, 'Name is required'),
+  country: string().min(1, 'Country is required'),
+  state: string().min(1, 'State is required'),
+  city: string().min(1, 'City is required'),
   zone: string(),
-  description: string().min(1, "Description is required"),
+  description: string().min(1, 'Description is required'),
   facebook: string(),
-  instagram: string(),
+  instagram: string()
 });
 
 const orderOptions = (values) => {
-  return values
-    ?.filter((v) => v.isFixed)
-    .concat(values.filter((v) => !v.isFixed));
+  return values?.filter((v) => v.isFixed).concat(values.filter((v) => !v.isFixed));
 };
 
 function NewEstablishment() {
   // Chakra color mode
-  const textColor = useColorModeValue("gray.700", "white");
-  const bgPrevButton = useColorModeValue("gray.100", "gray.100");
+  const textColor = useColorModeValue('gray.700', 'white');
+  const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
   const bgProfile = useColorModeValue(
-    "hsla(0,0%,100%,.8)",
-    "linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)"
+    'hsla(0,0%,100%,.8)',
+    'linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)'
   );
-  const bgColor = useColorModeValue("white", "gray.700");
-  const iconColor = useColorModeValue("gray.300", "gray.700");
-  const bgActiveButton = useColorModeValue("gray.200", "gray.700");
-  const bgButtonGroup = useColorModeValue("gray.50", "gray.600");
-  const bgTimesIcon = useColorModeValue("gray.700", "gray.500");
+  const bgColor = useColorModeValue('white', 'gray.700');
+  const iconColor = useColorModeValue('gray.300', 'gray.700');
+  const bgActiveButton = useColorModeValue('gray.200', 'gray.700');
+  const bgButtonGroup = useColorModeValue('gray.50', 'gray.600');
+  const bgTimesIcon = useColorModeValue('gray.700', 'gray.500');
   // const [options, setOptions] = useState([]);
   const [value, setValue] = useState(null);
   const [activeButton, setActiveButton] = useState(0);
@@ -167,7 +165,7 @@ function NewEstablishment() {
     basic: true,
     mainInfo: false,
     description: false,
-    media: false,
+    media: false
   });
 
   const basicTab = useRef();
@@ -178,35 +176,32 @@ function NewEstablishment() {
   const { getRootProps, getInputProps } = useDropzone();
 
   const parcels = useSelector((state) =>
-    state.company.currentCompany?.establishments.reduce(
-      (res_parcels, establishment) => {
-        const establishmentParcels = establishment.parcels.map((parcel) => {
-          if (parcel.id === Number(parcelId)) {
-            return {
-              value: parcel.id,
-              label: parcel.name,
-              isFixed: true,
-            };
-          }
+    state.company.currentCompany?.establishments?.reduce((res_parcels, establishment) => {
+      const establishmentParcels = establishment.parcels.map((parcel) => {
+        if (parcel.id === Number(parcelId)) {
           return {
             value: parcel.id,
             label: parcel.name,
+            isFixed: true
           };
-        });
-        return res_parcels.concat(establishmentParcels);
-      },
-      []
-    )
+        }
+        return {
+          value: parcel.id,
+          label: parcel.name
+        };
+      });
+      return res_parcels.concat(establishmentParcels);
+    }, [])
   );
 
   const basicMethods = useForm({
-    resolver: zodResolver(formSchemaBasic),
+    resolver: zodResolver(formSchemaBasic)
   });
 
   const {
     reset,
     handleSubmit,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors, isSubmitSuccessful }
   } = basicMethods;
 
   const onSubmitBasic = (data) => {
@@ -215,22 +210,22 @@ function NewEstablishment() {
         event: {
           ...data,
           parcels: value.map((v) => v.value),
-          event_type: activeButton,
-        },
+          event_type: activeButton
+        }
       })
     );
     mainInfoTab.current.click();
   };
 
   const mainInfoMethods = useForm({
-    resolver: zodResolver(formSchemaMainInfo),
+    resolver: zodResolver(formSchemaMainInfo)
   });
 
   const {
     reset: mainInfoReset,
     handleSubmit: mainInfoSubmit,
     errors: mainInfoErrors,
-    register,
+    register
   } = mainInfoMethods;
 
   const onSubmitMainInfo = (data) => {
@@ -238,21 +233,18 @@ function NewEstablishment() {
       setForm({
         event: {
           ...currentEvent,
-          ...data,
-        },
+          ...data
+        }
       })
     );
     descriptionTab.current.click();
   };
 
   const descriptionMethods = useForm({
-    resolver: zodResolver(formSchemaDescription),
+    resolver: zodResolver(formSchemaDescription)
   });
 
-  const {
-    reset: descriptionReset,
-    handleSubmit: descriptionSubmit,
-  } = descriptionMethods;
+  const { reset: descriptionReset, handleSubmit: descriptionSubmit } = descriptionMethods;
 
   const onSubmitDescription = (data) => {
     console.log(data);
@@ -260,31 +252,29 @@ function NewEstablishment() {
       setForm({
         event: {
           ...currentEvent,
-          description: data.description,
-        },
+          description: data.description
+        }
       })
     );
     mediaTab.current.click();
   };
 
   const mediaMethods = useForm({
-    resolver: zodResolver(formSchemaMedia),
+    resolver: zodResolver(formSchemaMedia)
   });
 
   const { reset: mediaReset, handleSubmit: mediaSubmit } = mediaMethods;
 
-  const [
-    createEvent,
-    { data, error, isSuccess, isLoading },
-  ] = useCreateEventMutation();
+  const [createEvent, { data, error, isSuccess, isLoading }] = useCreateEventMutation();
 
   const onSubmitMedia = (data) => {
     console.log(data);
 
     createEvent({
       ...currentEvent,
-      company: currentCompany.id,
-      parcel: parseInt(parcelId),
+      companyId: currentCompany.id,
+      establishmentId: parseInt(establishmentId),
+      parcelId: parseInt(parcelId)
     });
     // createEstablishment({
     //   ...currentEvent,
@@ -298,21 +288,19 @@ function NewEstablishment() {
     if (isSuccess) {
       // dispatch(addCompanyEstablishment(dataEstablishment));
       dispatch(clearForm());
-      navigate(
-        `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/`
-      );
+      navigate(`/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/`);
     }
   }, [isSuccess]);
 
   const onChange = (newValue, actionMeta) => {
     switch (actionMeta.action) {
-      case "remove-value":
-      case "pop-value":
+      case 'remove-value':
+      case 'pop-value':
         if (actionMeta.removedValue.isFixed) {
           return;
         }
         break;
-      case "clear":
+      case 'clear':
         newValue = parcels.filter((v) => v.isFixed);
         break;
     }
@@ -330,23 +318,21 @@ function NewEstablishment() {
       direction="column"
       bg={bgColor}
       boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
-      borderRadius="15px"
-    >
+      borderRadius="15px">
       <Tabs variant="unstyled" mt="24px" alignSelf="center">
         <TabList display="flex" align="center">
           <Tab
             ref={basicTab}
             _focus="none"
-            w={{ sm: "80px", md: "200px" }}
+            w={{ sm: '80px', md: '200px' }}
             onClick={() =>
               setActiveBullets({
                 basic: true,
                 mainInfo: false,
                 description: false,
-                media: false,
+                media: false
               })
-            }
-          >
+            }>
             <Flex
               direction="column"
               justify="center"
@@ -354,35 +340,33 @@ function NewEstablishment() {
               position="relative"
               _before={{
                 content: "''",
-                width: { sm: "80px", md: "195px" },
-                height: "3px",
-                bg: activeBullets.mainInfo ? textColor : "gray.200",
-                left: { sm: "12px", md: "35px" },
+                width: { sm: '80px', md: '195px' },
+                height: '3px',
+                bg: activeBullets.mainInfo ? textColor : 'gray.200',
+                left: { sm: '12px', md: '35px' },
                 top: {
-                  sm: activeBullets.basic ? "6px" : "4px",
-                  md: null,
+                  sm: activeBullets.basic ? '6px' : '4px',
+                  md: null
                 },
-                position: "absolute",
-                bottom: activeBullets.basic ? "40px" : "38px",
+                position: 'absolute',
+                bottom: activeBullets.basic ? '40px' : '38px',
 
-                transition: "all .3s ease",
-              }}
-            >
+                transition: 'all .3s ease'
+              }}>
               <Icon
                 as={BsCircleFill}
-                color={activeBullets.basic ? textColor : "gray.300"}
-                w={activeBullets.basic ? "16px" : "12px"}
-                h={activeBullets.basic ? "16px" : "12px"}
+                color={activeBullets.basic ? textColor : 'gray.300'}
+                w={activeBullets.basic ? '16px' : '12px'}
+                h={activeBullets.basic ? '16px' : '12px'}
                 mb="8px"
                 zIndex={1}
               />
               <Text
-                color={activeBullets.basic ? { textColor } : "gray.300"}
-                fontWeight={activeBullets.basic ? "bold" : "normal"}
+                color={activeBullets.basic ? { textColor } : 'gray.300'}
+                fontWeight={activeBullets.basic ? 'bold' : 'normal'}
                 transition="all .3s ease"
                 _hover={{ color: textColor }}
-                display={{ sm: "none", md: "block" }}
-              >
+                display={{ sm: 'none', md: 'block' }}>
                 1. Basic
               </Text>
             </Flex>
@@ -390,16 +374,15 @@ function NewEstablishment() {
           <Tab
             ref={mainInfoTab}
             _focus="none"
-            w={{ sm: "80px", md: "200px" }}
+            w={{ sm: '80px', md: '200px' }}
             onClick={() =>
               setActiveBullets({
                 basic: true,
                 mainInfo: true,
                 description: false,
-                media: false,
+                media: false
               })
-            }
-          >
+            }>
             <Flex
               direction="column"
               justify="center"
@@ -407,33 +390,31 @@ function NewEstablishment() {
               position="relative"
               _before={{
                 content: "''",
-                width: { sm: "80px", md: "195px" },
-                height: "3px",
-                bg: activeBullets.description ? textColor : "gray.200",
-                left: { sm: "12px", md: "50px" },
+                width: { sm: '80px', md: '195px' },
+                height: '3px',
+                bg: activeBullets.description ? textColor : 'gray.200',
+                left: { sm: '12px', md: '50px' },
                 top: {
-                  sm: activeBullets.mainInfo ? "6px" : "4px",
-                  md: null,
+                  sm: activeBullets.mainInfo ? '6px' : '4px',
+                  md: null
                 },
-                position: "absolute",
-                bottom: activeBullets.mainInfo ? "40px" : "38px",
+                position: 'absolute',
+                bottom: activeBullets.mainInfo ? '40px' : '38px',
 
-                transition: "all .3s ease",
-              }}
-            >
+                transition: 'all .3s ease'
+              }}>
               <Icon
                 as={BsCircleFill}
-                color={activeBullets.mainInfo ? textColor : "gray.300"}
-                w={activeBullets.mainInfo ? "16px" : "12px"}
-                h={activeBullets.mainInfo ? "16px" : "12px"}
+                color={activeBullets.mainInfo ? textColor : 'gray.300'}
+                w={activeBullets.mainInfo ? '16px' : '12px'}
+                h={activeBullets.mainInfo ? '16px' : '12px'}
                 mb="8px"
                 zIndex={1}
               />
               <Text
-                color={activeBullets.mainInfo ? { textColor } : "gray.300"}
-                fontWeight={activeBullets.mainInfo ? "bold" : "normal"}
-                display={{ sm: "none", md: "block" }}
-              >
+                color={activeBullets.mainInfo ? { textColor } : 'gray.300'}
+                fontWeight={activeBullets.mainInfo ? 'bold' : 'normal'}
+                display={{ sm: 'none', md: 'block' }}>
                 2. Main Info
               </Text>
             </Flex>
@@ -442,16 +423,15 @@ function NewEstablishment() {
           <Tab
             ref={descriptionTab}
             _focus="none"
-            w={{ sm: "80px", md: "200px" }}
+            w={{ sm: '80px', md: '200px' }}
             onClick={() =>
               setActiveBullets({
                 basic: true,
                 mainInfo: true,
                 description: true,
-                media: false,
+                media: false
               })
-            }
-          >
+            }>
             <Flex
               direction="column"
               justify="center"
@@ -459,35 +439,33 @@ function NewEstablishment() {
               position="relative"
               _before={{
                 content: "''",
-                width: { sm: "80px", md: "200px" },
-                height: "3px",
-                bg: activeBullets.media ? textColor : "gray.200",
-                left: { sm: "12px", md: "46px" },
+                width: { sm: '80px', md: '200px' },
+                height: '3px',
+                bg: activeBullets.media ? textColor : 'gray.200',
+                left: { sm: '12px', md: '46px' },
                 top: {
-                  sm: activeBullets.description ? "6px" : "4px",
-                  md: null,
+                  sm: activeBullets.description ? '6px' : '4px',
+                  md: null
                 },
-                position: "absolute",
-                bottom: activeBullets.description ? "40px" : "38px",
+                position: 'absolute',
+                bottom: activeBullets.description ? '40px' : '38px',
 
-                transition: "all .3s ease",
-              }}
-            >
+                transition: 'all .3s ease'
+              }}>
               <Icon
                 as={BsCircleFill}
-                color={activeBullets.description ? textColor : "gray.300"}
-                w={activeBullets.description ? "16px" : "12px"}
-                h={activeBullets.description ? "16px" : "12px"}
+                color={activeBullets.description ? textColor : 'gray.300'}
+                w={activeBullets.description ? '16px' : '12px'}
+                h={activeBullets.description ? '16px' : '12px'}
                 mb="8px"
                 zIndex={1}
               />
               <Text
-                color={activeBullets.description ? { textColor } : "gray.300"}
-                fontWeight={activeBullets.description ? "bold" : "normal"}
+                color={activeBullets.description ? { textColor } : 'gray.300'}
+                fontWeight={activeBullets.description ? 'bold' : 'normal'}
                 transition="all .3s ease"
                 _hover={{ color: textColor }}
-                display={{ sm: "none", md: "block" }}
-              >
+                display={{ sm: 'none', md: 'block' }}>
                 3. Description
               </Text>
             </Flex>
@@ -495,39 +473,37 @@ function NewEstablishment() {
           <Tab
             ref={mediaTab}
             _focus="none"
-            w={{ sm: "80px", md: "200px" }}
+            w={{ sm: '80px', md: '200px' }}
             onClick={() =>
               setActiveBullets({
                 basic: true,
                 mainInfo: true,
                 description: true,
-                media: true,
+                media: true
               })
-            }
-          >
+            }>
             <Flex direction="column" justify="center" align="center">
               <Icon
                 as={BsCircleFill}
-                color={activeBullets.media ? textColor : "gray.300"}
-                w={activeBullets.media ? "16px" : "12px"}
-                h={activeBullets.media ? "16px" : "12px"}
+                color={activeBullets.media ? textColor : 'gray.300'}
+                w={activeBullets.media ? '16px' : '12px'}
+                h={activeBullets.media ? '16px' : '12px'}
                 mb="8px"
                 zIndex={1}
               />
               <Text
-                color={activeBullets.media ? { textColor } : "gray.300"}
-                fontWeight={activeBullets.media ? "bold" : "normal"}
+                color={activeBullets.media ? { textColor } : 'gray.300'}
+                fontWeight={activeBullets.media ? 'bold' : 'normal'}
                 transition="all .3s ease"
                 _hover={{ color: textColor }}
-                display={{ sm: "none", md: "block" }}
-              >
+                display={{ sm: 'none', md: 'block' }}>
                 4. Media
               </Text>
             </Flex>
           </Tab>
         </TabList>
 
-        <TabPanels mt="24px" maxW={{ md: "90%", lg: "100%" }} mx="auto">
+        <TabPanels mt="24px" maxW={{ md: '90%', lg: '100%' }} mx="auto">
           <TabPanel maxW="800px">
             <Card>
               <CardHeader mb="32px">
@@ -538,45 +514,25 @@ function NewEstablishment() {
 
               <CardBody>
                 <FormProvider {...basicMethods}>
-                  <form
-                    onSubmit={handleSubmit(onSubmitBasic)}
-                    style={{ width: "100%" }}
-                  >
+                  <form onSubmit={handleSubmit(onSubmitBasic)} style={{ width: '100%' }}>
                     <Stack direction="column" spacing="20px" w="100%">
                       <Flex direction="column" w="80%" mt="10px">
-                        <FormLabel
-                          ms="4px"
-                          fontSize="xs"
-                          fontWeight="bold"
-                          mb="4px"
-                          pl="12px"
-                        >
+                        <FormLabel ms="4px" fontSize="xs" fontWeight="bold" mb="4px" pl="12px">
                           What kind of production do you want to create?
                         </FormLabel>
                       </Flex>
-                      <Flex w={"100%"} justifyContent={"center"}>
-                        <Flex
-                          bg={bgButtonGroup}
-                          borderRadius="12px"
-                          w={"fit-content"}
-                        >
+                      <Flex w={'100%'} justifyContent={'center'}>
+                        <Flex bg={bgButtonGroup} borderRadius="12px" w={'fit-content'}>
                           <Button
                             variant="no-hover"
                             w="135px"
                             h="40px"
                             fontSize="xs"
                             boxShadow={
-                              activeButton === 0
-                                ? "0px 2px 5.5px rgba(0, 0, 0, 0.06)"
-                                : "none"
+                              activeButton === 0 ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'
                             }
-                            bg={
-                              activeButton === 0
-                                ? bgActiveButton
-                                : "transparent"
-                            }
-                            onClick={() => setActiveButton(0)}
-                          >
+                            bg={activeButton === 0 ? bgActiveButton : 'transparent'}
+                            onClick={() => setActiveButton(0)}>
                             WEATHER
                           </Button>
                           <Button
@@ -585,17 +541,10 @@ function NewEstablishment() {
                             h="40px"
                             fontSize="xs"
                             boxShadow={
-                              activeButton === 1
-                                ? "0px 2px 5.5px rgba(0, 0, 0, 0.06)"
-                                : "none"
+                              activeButton === 1 ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'
                             }
-                            bg={
-                              activeButton === 1
-                                ? bgActiveButton
-                                : "transparent"
-                            }
-                            onClick={() => setActiveButton(1)}
-                          >
+                            bg={activeButton === 1 ? bgActiveButton : 'transparent'}
+                            onClick={() => setActiveButton(1)}>
                             PRODUCTION
                           </Button>
                           <Button
@@ -604,17 +553,10 @@ function NewEstablishment() {
                             h="40px"
                             fontSize="xs"
                             boxShadow={
-                              activeButton === 2
-                                ? "0px 2px 5.5px rgba(0, 0, 0, 0.06)"
-                                : "none"
+                              activeButton === 2 ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'
                             }
-                            bg={
-                              activeButton === 2
-                                ? bgActiveButton
-                                : "transparent"
-                            }
-                            onClick={() => setActiveButton(2)}
-                          >
+                            bg={activeButton === 2 ? bgActiveButton : 'transparent'}
+                            onClick={() => setActiveButton(2)}>
                             CHEMICAL
                           </Button>
                           <Button
@@ -623,17 +565,10 @@ function NewEstablishment() {
                             h="40px"
                             fontSize="xs"
                             boxShadow={
-                              activeButton === 3
-                                ? "0px 2px 5.5px rgba(0, 0, 0, 0.06)"
-                                : "none"
+                              activeButton === 3 ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'
                             }
-                            bg={
-                              activeButton === 3
-                                ? bgActiveButton
-                                : "transparent"
-                            }
-                            onClick={() => setActiveButton(3)}
-                          >
+                            bg={activeButton === 3 ? bgActiveButton : 'transparent'}
+                            onClick={() => setActiveButton(3)}>
                             OTHER
                           </Button>
                         </Flex>
@@ -662,14 +597,8 @@ function NewEstablishment() {
                       {/* </Stack> */}
                       <Flex>
                         <FormControl>
-                          <FormLabel
-                            pl={"12px"}
-                            fontSize="xs"
-                            fontWeight="bold"
-                            mb={"4px"}
-                          >
-                            Select the others Parcels to which the event was
-                            applied
+                          <FormLabel pl={'12px'} fontSize="xs" fontWeight="bold" mb={'4px'}>
+                            Select the others Parcels to which the event was applied
                           </FormLabel>
                           <Select
                             // value={parcels?.filter((v) => v.isFixed)}
@@ -693,8 +622,7 @@ function NewEstablishment() {
                         mt="24px"
                         w="100px"
                         h="35px"
-                        type="submit"
-                      >
+                        type="submit">
                         <Text fontSize="xs" color="#fff" fontWeight="bold">
                           NEXT
                         </Text>
@@ -747,10 +675,7 @@ function NewEstablishment() {
               </CardHeader>
               <CardBody>
                 <FormProvider {...descriptionMethods}>
-                  <form
-                    onSubmit={descriptionSubmit(onSubmitDescription)}
-                    style={{ width: "100%" }}
-                  >
+                  <form onSubmit={descriptionSubmit(onSubmitDescription)} style={{ width: '100%' }}>
                     <Flex direction="column" w="100%">
                       <Stack direction="column" spacing="20px" w="100%">
                         <Editor />
@@ -763,13 +688,8 @@ function NewEstablishment() {
                           mt="24px"
                           w="100px"
                           h="35px"
-                          onClick={() => mainInfoTab.current.click()}
-                        >
-                          <Text
-                            fontSize="xs"
-                            color="gray.700"
-                            fontWeight="bold"
-                          >
+                          onClick={() => mainInfoTab.current.click()}>
+                          <Text fontSize="xs" color="gray.700" fontWeight="bold">
                             PREV
                           </Text>
                         </Button>
@@ -780,8 +700,7 @@ function NewEstablishment() {
                           mt="24px"
                           w="100px"
                           h="35px"
-                          type="submit"
-                        >
+                          type="submit">
                           <Text fontSize="xs" color="#fff" fontWeight="bold">
                             NEXT
                           </Text>
@@ -796,28 +715,15 @@ function NewEstablishment() {
           <TabPanel>
             <Card>
               <CardHeader mb="22px">
-                <Text
-                  color={textColor}
-                  fontSize="xl"
-                  fontWeight="bold"
-                  mb="3px"
-                >
+                <Text color={textColor} fontSize="xl" fontWeight="bold" mb="3px">
                   Media
                 </Text>
               </CardHeader>
               <CardBody>
                 <FormProvider {...mediaMethods}>
-                  <form
-                    onSubmit={mediaSubmit(onSubmitMedia)}
-                    style={{ width: "100%" }}
-                  >
+                  <form onSubmit={mediaSubmit(onSubmitMedia)} style={{ width: '100%' }}>
                     <Flex direction="column" w="100%">
-                      <Text
-                        color={textColor}
-                        fontSize="sm"
-                        fontWeight="bold"
-                        mb="12px"
-                      >
+                      <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
                         Establishment images
                       </Text>
                       <Flex
@@ -828,8 +734,7 @@ function NewEstablishment() {
                         w="100%"
                         minH="130px"
                         cursor="pointer"
-                        {...getRootProps({ className: "dropzone" })}
-                      >
+                        {...getRootProps({ className: 'dropzone' })}>
                         <Input {...getInputProps()} />
                         <Button variant="no-hover">
                           <Text color="gray.400" fontWeight="normal">
@@ -845,13 +750,8 @@ function NewEstablishment() {
                           mt="24px"
                           w="100px"
                           h="35px"
-                          onClick={() => descriptionTab.current.click()}
-                        >
-                          <Text
-                            fontSize="xs"
-                            color="gray.700"
-                            fontWeight="bold"
-                          >
+                          onClick={() => descriptionTab.current.click()}>
+                          <Text fontSize="xs" color="gray.700" fontWeight="bold">
                             PREV
                           </Text>
                         </Button>
@@ -862,8 +762,7 @@ function NewEstablishment() {
                           mt="24px"
                           w="100px"
                           h="35px"
-                          type="submit"
-                        >
+                          type="submit">
                           <Text fontSize="xs" color="#fff" fontWeight="bold">
                             SEND
                           </Text>

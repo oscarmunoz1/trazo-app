@@ -49,8 +49,6 @@ const App = () => {
     if (arr.length > 0) setSubDomain(arr[0] === 'app');
   }, []);
 
-  console.log('subdomain', subdomain);
-
   return (
     <Routes>
       <Route element={<CheckAuth />}>

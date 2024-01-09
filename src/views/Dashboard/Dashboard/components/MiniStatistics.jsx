@@ -36,8 +36,13 @@ const MiniStatistics = ({ title, amount, percentage, icon, isSelected }) => {
               pb=".1rem">
               {amount}
             </StatLabel>
-            <Flex>
-              <StatNumber fontSize="lg" color={isSelected ? 'white' : textColor}>
+            <Flex maxW={{ md: '100%', lg: '80%' }} overflow="hidden">
+              <StatNumber
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+                overflow="hidden"
+                fontSize="lg"
+                color={isSelected ? 'white' : textColor}>
                 {title}
               </StatNumber>
             </Flex>

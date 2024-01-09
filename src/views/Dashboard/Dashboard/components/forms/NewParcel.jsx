@@ -24,12 +24,6 @@ import {
   FormLabel,
   Icon,
   Input,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Select,
   Stack,
   Switch,
   Tab,
@@ -37,60 +31,41 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  Tag,
-  TagCloseButton,
-  TagLabel,
   Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { FormProvider, useForm } from "react-hook-form";
-import { GoogleMap, Polygon, useLoadScript } from "@react-google-maps/api";
-import React, { useEffect, useReducer, useRef, useState } from "react";
-import { boolean, object, string } from "zod";
-import { clearForm, setForm } from "store/features/formSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+  useColorModeValue
+} from '@chakra-ui/react';
+import { DrawingManager, GoogleMap, Polygon, useLoadScript } from '@react-google-maps/api';
+import { FormProvider, useForm } from 'react-hook-form';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { boolean, object, string } from 'zod';
+import { clearForm, setForm } from 'store/features/formSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { BsCircleFill } from "react-icons/bs";
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardFooter from "components/Card/CardFooter.tsx";
-import CardHeader from "components/Card/CardHeader";
-import CardWithMap from "../CardWithMap";
+import { BsCircleFill } from 'react-icons/bs';
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardFooter from 'components/Card/CardFooter.tsx';
+import CardHeader from 'components/Card/CardHeader';
 // Custom components
-import Editor from "components/Editor/Editor";
-import FormInput from "components/Forms/FormInput";
-import Header from "views/Pages/Profile/Overview/components/Header";
-import ProfileBgImage from "assets/img/ProfileBackground.png";
-import avatar4 from "assets/img/avatars/avatar4.png";
-import imageMap from "assets/img/imageMap.png";
-import { setEstablishmentParcel } from "store/features/companySlice";
-import { useCreateParcelMutation } from "store/api/productApi.js";
-import { useDropzone } from "react-dropzone";
-import { zodResolver } from "@hookform/resolvers/zod";
+import Editor from 'components/Editor/Editor';
+import FormInput from 'components/Forms/FormInput';
+import { setEstablishmentParcel } from 'store/features/companySlice';
+import { useCreateParcelMutation } from 'store/api/productApi.js';
+import { useDropzone } from 'react-dropzone';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const formSchemaInfo = object({
-  name: string().min(1, "Name is required"),
-  area: string().min(1, "Area is required"),
+  name: string().min(1, 'Name is required'),
+  area: string().min(1, 'Area is required')
 });
 
 const formSchemaDescription = object({
-  description: string().min(1, "Description is required"),
-});
-
-const formSchema = object({
-  name: string().min(1, "Name is required"),
-  country: string().min(1, "Country is required"),
-  state: string().min(1, "State is required"),
-  city: string().min(1, "City is required"),
-  zone: string(),
-  description: string().min(1, "Description is required"),
-  facebook: string(),
-  instagram: string(),
+  description: string().min(1, 'Description is required')
 });
 
 const options = {
-  googleMapApiKey: "AIzaSyCLHij6DjbLLkhTsTvrRhwuKf8ZGXrx-Q8",
+  googleMapApiKey: 'AIzaSyCLHij6DjbLLkhTsTvrRhwuKf8ZGXrx-Q8'
 };
 
 const formSchemaCertificate = object({
@@ -112,30 +87,30 @@ const formSchemaCertificate = object({
       return z.string().min(1).check(value); // apply validation if certificate is true
     }
     return true; // skip validation if certificate is false
-  }),
+  })
 });
 
 const reducer = (state, action) => {
-  if (action.type === "SWITCH_ACTIVE") {
-    if (action.payload === "overview") {
+  if (action.type === 'SWITCH_ACTIVE') {
+    if (action.payload === 'overview') {
       const newState = {
         overview: true,
         teams: false,
-        projects: false,
+        projects: false
       };
       return newState;
-    } else if (action.payload === "teams") {
+    } else if (action.payload === 'teams') {
       const newState = {
         overview: false,
         teams: true,
-        projects: false,
+        projects: false
       };
       return newState;
-    } else if (action.payload === "projects") {
+    } else if (action.payload === 'projects') {
       const newState = {
         overview: false,
         teams: false,
-        projects: true,
+        projects: true
       };
       return newState;
     }
@@ -145,20 +120,24 @@ const reducer = (state, action) => {
 
 function NewParcel() {
   // Chakra color mode
-  const textColor = useColorModeValue("gray.700", "white");
-  const bgPrevButton = useColorModeValue("gray.100", "gray.100");
-  const bgColor = useColorModeValue("white", "gray.700");
+  const textColor = useColorModeValue('gray.700', 'white');
+  const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
+  const bgColor = useColorModeValue('white', 'gray.700');
   const dispatch = useDispatch();
-  const currentEstablishment = useSelector(
-    (state) => state.form.currentForm?.establishment
-  );
+  const currentEstablishment = useSelector((state) => state.form.currentForm?.establishment);
   const navigate = useNavigate();
   const currentCompany = useSelector((state) => state.company.currentCompany);
-
+  const [path, setPath] = useState([]);
+  const polygonRef = useRef();
+  const listenersRef = useRef([]);
   const { establishmentId } = useParams();
 
+  const [drawingMode, setDrawingMode] = useState(false);
+  const [polygon, setPolygon] = useState(null);
+  const [map, setMap] = useState(null);
+
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: options.googleMapApiKey,
+    googleMapsApiKey: options.googleMapApiKey
   });
 
   const [activeBullets, setActiveBullets] = useState({
@@ -166,8 +145,46 @@ function NewParcel() {
     location: false,
     description: false,
     media: false,
-    certificate: false,
+    certificate: false
   });
+
+  const onMapClick = (e) => {
+    setPath([...path, { lat: e.latLng.lat(), lng: e.latLng.lng() }]);
+  };
+
+  const onEdit = useCallback(() => {
+    if (polygonRef.current) {
+      const nextPath = polygonRef.current
+        .getPath()
+        .getArray()
+        .map((latLng) => {
+          return { lat: latLng.lat(), lng: latLng.lng() };
+        });
+      setPath(nextPath);
+    }
+  }, [setPath]);
+
+  const onLoadPolygon = useCallback(
+    (polygon) => {
+      polygonRef.current = polygon;
+      const path = polygon.getPath();
+      listenersRef.current.push(
+        path.addListener('set_at', onEdit),
+        path.addListener('insert_at', onEdit),
+        path.addListener('remove_at', onEdit)
+      );
+    },
+    [onEdit]
+  );
+  const bgButton = useColorModeValue(
+    'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)',
+    'gray.800'
+  );
+
+  const onUnmount = useCallback(() => {
+    listenersRef.current.forEach((lis) => lis.remove());
+    polygonRef.current = null;
+  }, []);
 
   const mainInfoTab = useRef();
   const locationTab = useRef();
@@ -180,23 +197,20 @@ function NewParcel() {
   const currentParcel = useSelector((state) => state.form.currentForm?.parcel);
 
   const infoMethods = useForm({
-    resolver: zodResolver(formSchemaInfo),
+    resolver: zodResolver(formSchemaInfo)
   });
-
+  console.log(path);
   const {
     reset,
     handleSubmit,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors, isSubmitSuccessful }
   } = infoMethods;
 
   const descriptionMethods = useForm({
-    resolver: zodResolver(formSchemaDescription),
+    resolver: zodResolver(formSchemaDescription)
   });
 
-  const {
-    reset: descriptionReset,
-    handleSubmit: descriptionSubmit,
-  } = descriptionMethods;
+  const { reset: descriptionReset, handleSubmit: descriptionSubmit } = descriptionMethods;
 
   const onSubmitInfo = (data) => {
     dispatch(setForm({ parcel: data }));
@@ -213,33 +227,27 @@ function NewParcel() {
       setForm({
         parcel: {
           ...currentParcel,
-          description: data.description,
-        },
+          description: data.description
+        }
       })
     );
     mediaTab.current.click();
   };
 
   const methodsCertificate = useForm({
-    resolver: zodResolver(formSchemaCertificate),
+    resolver: zodResolver(formSchemaCertificate)
   });
 
   const {
     handleSubmit: handleSubmitCertificate,
     register: registerCertificate,
     watch,
-    formState: {
-      errors: errorsCertificate,
-      isSubmitSuccessful: isSubmitSuccessfulCertificate,
-    },
+    formState: { errors: errorsCertificate, isSubmitSuccessful: isSubmitSuccessfulCertificate }
   } = methodsCertificate;
 
-  const certificateValue = watch("certificate");
+  const certificateValue = watch('certificate');
 
-  const [
-    createParcel,
-    { data, error, isSuccess, isLoading },
-  ] = useCreateParcelMutation();
+  const [createParcel, { data, error, isSuccess, isLoading }] = useCreateParcelMutation();
 
   const onSubmitCertificate = (data) => {
     createParcel({
@@ -248,8 +256,8 @@ function NewParcel() {
       parcelData: {
         ...currentParcel,
         ...data,
-        establishment: parseInt(establishmentId),
-      },
+        establishment: parseInt(establishmentId)
+      }
     });
   };
 
@@ -258,7 +266,7 @@ function NewParcel() {
       dispatch(
         setEstablishmentParcel({
           parcel: data,
-          establishmentId: parseInt(establishmentId),
+          establishmentId: parseInt(establishmentId)
         })
       );
       dispatch(clearForm());
@@ -266,29 +274,48 @@ function NewParcel() {
     }
   }, [isSuccess]);
 
+  const handleMapLoad = (map) => {
+    setMap(map);
+  };
+
+  const handleDrawingManagerLoad = (drawingManager) => {
+    // Access to drawingManager object
+  };
+
+  const handlePolygonComplete = (polygon) => {
+    setPolygon(polygon);
+    setDrawingMode(false);
+  };
+
+  const toggleDrawingMode = () => {
+    setDrawingMode(!drawingMode);
+    if (map && polygon) {
+      polygon.setMap(null); // Remove existing polygon when toggling drawing mode
+      setPolygon(null);
+    }
+  };
+
   return (
     <Flex
       direction="column"
       bg={bgColor}
       boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
-      borderRadius="15px"
-    >
+      borderRadius="15px">
       <Tabs variant="unstyled" mt="24px" alignSelf="center">
         <TabList display="flex" align="center">
           <Tab
             ref={mainInfoTab}
             _focus="none"
-            w={{ sm: "80px", md: "200px" }}
+            w={{ sm: '80px', md: '200px' }}
             onClick={() =>
               setActiveBullets({
                 mainInfo: true,
                 location: false,
                 description: false,
                 media: false,
-                certificate: false,
+                certificate: false
               })
-            }
-          >
+            }>
             <Flex
               direction="column"
               justify="center"
@@ -296,33 +323,31 @@ function NewParcel() {
               position="relative"
               _before={{
                 content: "''",
-                width: { sm: "80px", md: "235px" },
-                height: "3px",
-                bg: activeBullets.location ? textColor : "gray.200",
-                left: { sm: "12px", md: "42px" },
+                width: { sm: '80px', md: '235px' },
+                height: '3px',
+                bg: activeBullets.location ? textColor : 'gray.200',
+                left: { sm: '12px', md: '42px' },
                 top: {
-                  sm: activeBullets.mainInfo ? "6px" : "4px",
-                  md: null,
+                  sm: activeBullets.mainInfo ? '6px' : '4px',
+                  md: null
                 },
-                position: "absolute",
-                bottom: activeBullets.mainInfo ? "40px" : "38px",
+                position: 'absolute',
+                bottom: activeBullets.mainInfo ? '40px' : '38px',
 
-                transition: "all .3s ease",
-              }}
-            >
+                transition: 'all .3s ease'
+              }}>
               <Icon
                 as={BsCircleFill}
-                color={activeBullets.mainInfo ? textColor : "gray.300"}
-                w={activeBullets.mainInfo ? "16px" : "12px"}
-                h={activeBullets.mainInfo ? "16px" : "12px"}
+                color={activeBullets.mainInfo ? textColor : 'gray.300'}
+                w={activeBullets.mainInfo ? '16px' : '12px'}
+                h={activeBullets.mainInfo ? '16px' : '12px'}
                 mb="8px"
                 zIndex={1}
               />
               <Text
-                color={activeBullets.mainInfo ? { textColor } : "gray.300"}
-                fontWeight={activeBullets.mainInfo ? "bold" : "normal"}
-                display={{ sm: "none", md: "block" }}
-              >
+                color={activeBullets.mainInfo ? { textColor } : 'gray.300'}
+                fontWeight={activeBullets.mainInfo ? 'bold' : 'normal'}
+                display={{ sm: 'none', md: 'block' }}>
                 1. Main Info
               </Text>
             </Flex>
@@ -330,17 +355,16 @@ function NewParcel() {
           <Tab
             ref={locationTab}
             _focus="none"
-            w={{ sm: "120px", md: "250px", lg: "260px" }}
+            w={{ sm: '120px', md: '250px', lg: '260px' }}
             onClick={() =>
               setActiveBullets({
                 mainInfo: true,
                 location: true,
                 description: false,
                 media: false,
-                certificate: false,
+                certificate: false
               })
-            }
-          >
+            }>
             <Flex
               direction="column"
               justify="center"
@@ -348,33 +372,31 @@ function NewParcel() {
               position="relative"
               _before={{
                 content: "''",
-                width: { sm: "120px", md: "235px", lg: "235px" },
-                height: "3px",
-                bg: activeBullets.description ? textColor : "gray.200",
-                left: { sm: "12px", md: "38px" },
+                width: { sm: '120px', md: '235px', lg: '235px' },
+                height: '3px',
+                bg: activeBullets.description ? textColor : 'gray.200',
+                left: { sm: '12px', md: '38px' },
                 top: {
-                  sm: activeBullets.location ? "5px" : "4px",
-                  md: null,
+                  sm: activeBullets.location ? '5px' : '4px',
+                  md: null
                 },
-                position: "absolute",
-                bottom: activeBullets.location ? "40px" : "38px",
+                position: 'absolute',
+                bottom: activeBullets.location ? '40px' : '38px',
 
-                transition: "all .3s ease",
-              }}
-            >
+                transition: 'all .3s ease'
+              }}>
               <Icon
                 as={BsCircleFill}
-                color={activeBullets.location ? textColor : "gray.300"}
-                w={activeBullets.location ? "16px" : "12px"}
-                h={activeBullets.location ? "16px" : "12px"}
+                color={activeBullets.location ? textColor : 'gray.300'}
+                w={activeBullets.location ? '16px' : '12px'}
+                h={activeBullets.location ? '16px' : '12px'}
                 mb="8px"
                 zIndex={1}
               />
               <Text
-                color={activeBullets.location ? { textColor } : "gray.300"}
-                fontWeight={activeBullets.location ? "bold" : "normal"}
-                display={{ sm: "none", md: "block" }}
-              >
+                color={activeBullets.location ? { textColor } : 'gray.300'}
+                fontWeight={activeBullets.location ? 'bold' : 'normal'}
+                display={{ sm: 'none', md: 'block' }}>
                 2. Location
               </Text>
             </Flex>
@@ -382,17 +404,16 @@ function NewParcel() {
           <Tab
             ref={descriptionTab}
             _focus="none"
-            w={{ sm: "80px", md: "200px" }}
+            w={{ sm: '80px', md: '200px' }}
             onClick={() =>
               setActiveBullets({
                 mainInfo: true,
                 location: true,
                 description: true,
                 media: false,
-                certificate: false,
+                certificate: false
               })
-            }
-          >
+            }>
             <Flex
               direction="column"
               justify="center"
@@ -400,35 +421,33 @@ function NewParcel() {
               position="relative"
               _before={{
                 content: "''",
-                width: { sm: "80px", md: "200px" },
-                height: "3px",
-                bg: activeBullets.media ? textColor : "gray.200",
-                left: { sm: "12px", md: "46px" },
+                width: { sm: '80px', md: '200px' },
+                height: '3px',
+                bg: activeBullets.media ? textColor : 'gray.200',
+                left: { sm: '12px', md: '46px' },
                 top: {
-                  sm: activeBullets.description ? "6px" : "4px",
-                  md: null,
+                  sm: activeBullets.description ? '6px' : '4px',
+                  md: null
                 },
-                position: "absolute",
-                bottom: activeBullets.description ? "40px" : "38px",
+                position: 'absolute',
+                bottom: activeBullets.description ? '40px' : '38px',
 
-                transition: "all .3s ease",
-              }}
-            >
+                transition: 'all .3s ease'
+              }}>
               <Icon
                 as={BsCircleFill}
-                color={activeBullets.description ? textColor : "gray.300"}
-                w={activeBullets.description ? "16px" : "12px"}
-                h={activeBullets.description ? "16px" : "12px"}
+                color={activeBullets.description ? textColor : 'gray.300'}
+                w={activeBullets.description ? '16px' : '12px'}
+                h={activeBullets.description ? '16px' : '12px'}
                 mb="8px"
                 zIndex={1}
               />
               <Text
-                color={activeBullets.description ? { textColor } : "gray.300"}
-                fontWeight={activeBullets.description ? "bold" : "normal"}
+                color={activeBullets.description ? { textColor } : 'gray.300'}
+                fontWeight={activeBullets.description ? 'bold' : 'normal'}
                 transition="all .3s ease"
                 _hover={{ color: textColor }}
-                display={{ sm: "none", md: "block" }}
-              >
+                display={{ sm: 'none', md: 'block' }}>
                 3. Description
               </Text>
             </Flex>
@@ -436,17 +455,16 @@ function NewParcel() {
           <Tab
             ref={mediaTab}
             _focus="none"
-            w={{ sm: "80px", md: "200px" }}
+            w={{ sm: '80px', md: '200px' }}
             onClick={() =>
               setActiveBullets({
                 mainInfo: true,
                 location: true,
                 description: true,
                 media: true,
-                certificate: false,
+                certificate: false
               })
-            }
-          >
+            }>
             <Flex
               direction="column"
               justify="center"
@@ -454,32 +472,30 @@ function NewParcel() {
               position="relative"
               _before={{
                 content: "''",
-                width: { sm: "80px", md: "200px" },
-                height: "3px",
-                bg: activeBullets.certificate ? textColor : "gray.200",
-                left: { sm: "12px", md: "32px" },
-                top: { sm: activeBullets.media ? "6px" : "4px", md: null },
-                position: "absolute",
-                bottom: activeBullets.media ? "40px" : "38px",
+                width: { sm: '80px', md: '200px' },
+                height: '3px',
+                bg: activeBullets.certificate ? textColor : 'gray.200',
+                left: { sm: '12px', md: '32px' },
+                top: { sm: activeBullets.media ? '6px' : '4px', md: null },
+                position: 'absolute',
+                bottom: activeBullets.media ? '40px' : '38px',
 
-                transition: "all .3s ease",
-              }}
-            >
+                transition: 'all .3s ease'
+              }}>
               <Icon
                 as={BsCircleFill}
-                color={activeBullets.media ? textColor : "gray.300"}
-                w={activeBullets.media ? "16px" : "12px"}
-                h={activeBullets.media ? "16px" : "12px"}
+                color={activeBullets.media ? textColor : 'gray.300'}
+                w={activeBullets.media ? '16px' : '12px'}
+                h={activeBullets.media ? '16px' : '12px'}
                 mb="8px"
                 zIndex={1}
               />
               <Text
-                color={activeBullets.media ? { textColor } : "gray.300"}
-                fontWeight={activeBullets.media ? "bold" : "normal"}
+                color={activeBullets.media ? { textColor } : 'gray.300'}
+                fontWeight={activeBullets.media ? 'bold' : 'normal'}
                 transition="all .3s ease"
                 _hover={{ color: textColor }}
-                display={{ sm: "none", md: "block" }}
-              >
+                display={{ sm: 'none', md: 'block' }}>
                 4. Media
               </Text>
             </Flex>
@@ -487,40 +503,38 @@ function NewParcel() {
           <Tab
             ref={certificationTab}
             _focus="none"
-            w={{ sm: "80px", md: "200px" }}
+            w={{ sm: '80px', md: '200px' }}
             onClick={() =>
               setActiveBullets({
                 mainInfo: true,
                 location: true,
                 description: true,
                 media: true,
-                certificate: true,
+                certificate: true
               })
-            }
-          >
+            }>
             <Flex direction="column" justify="center" align="center">
               <Icon
                 as={BsCircleFill}
-                color={activeBullets.certificate ? textColor : "gray.300"}
-                w={activeBullets.certificate ? "16px" : "12px"}
-                h={activeBullets.certificate ? "16px" : "12px"}
+                color={activeBullets.certificate ? textColor : 'gray.300'}
+                w={activeBullets.certificate ? '16px' : '12px'}
+                h={activeBullets.certificate ? '16px' : '12px'}
                 mb="8px"
                 zIndex={1}
               />
               <Text
-                color={activeBullets.certificate ? { textColor } : "gray.300"}
-                fontWeight={activeBullets.certificate ? "bold" : "normal"}
+                color={activeBullets.certificate ? { textColor } : 'gray.300'}
+                fontWeight={activeBullets.certificate ? 'bold' : 'normal'}
                 transition="all .3s ease"
                 _hover={{ color: textColor }}
-                display={{ sm: "none", md: "block" }}
-              >
+                display={{ sm: 'none', md: 'block' }}>
                 5. Certificate
               </Text>
             </Flex>
           </Tab>
         </TabList>
 
-        <TabPanels mt="24px" maxW={{ md: "90%", lg: "100%" }} mx="auto">
+        <TabPanels mt="24px" maxW={{ md: '90%', lg: '100%' }} mx="auto">
           <TabPanel>
             <Card>
               <CardHeader mb="22px">
@@ -530,15 +544,9 @@ function NewParcel() {
               </CardHeader>
               <CardBody>
                 <FormProvider {...infoMethods}>
-                  <form
-                    onSubmit={handleSubmit(onSubmitInfo)}
-                    style={{ width: "100%" }}
-                  >
+                  <form onSubmit={handleSubmit(onSubmitInfo)} style={{ width: '100%' }}>
                     <Stack direction="column" spacing="20px" w="100%">
-                      <Stack
-                        direction={{ sm: "column", md: "row" }}
-                        spacing="30px"
-                      >
+                      <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
                         <FormControl>
                           <FormInput
                             name="name"
@@ -564,8 +572,7 @@ function NewParcel() {
                         mt="24px"
                         w="100px"
                         h="35px"
-                        type="submit"
-                      >
+                        type="submit">
                         <Text fontSize="xs" color="#fff" fontWeight="bold">
                           NEXT
                         </Text>
@@ -585,14 +592,8 @@ function NewParcel() {
                   justify="center"
                   textAlign="center"
                   w="80%"
-                  mx="auto"
-                >
-                  <Text
-                    color={textColor}
-                    fontSize="lg"
-                    fontWeight="bold"
-                    mb="4px"
-                  >
+                  mx="auto">
+                  <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
                     Where is the Parcel located?
                   </Text>
                   <Text color="gray.400" fontWeight="normal" fontSize="sm">
@@ -600,55 +601,84 @@ function NewParcel() {
                   </Text>
                 </Flex>
               </CardHeader>
-              <CardBody justifyContent={"center"} mb="20px">
+              <CardBody justifyContent={'center'} mb="20px">
                 <Flex direction="column" w="80%" h="300px">
                   {isLoaded && (
-                    <GoogleMap
-                      mapContainerStyle={{
-                        width: "100%",
-                        height: "100%",
-                        borderRadius: "10px",
-                      }}
-                      zoom={16}
-                      center={{
-                        lat: -31.27006513500534,
-                        lng: -57.199462864720985,
-                      }}
-                      mapTypeId="satellite"
-                    >
-                      <Polygon
-                        path={[
-                          { lat: -31.26835838901041, lng: -57.202751722067966 },
-                          {
-                            lat: -31.271918579848123,
-                            lng: -57.201694589349295,
-                          },
-                          { lat: -31.27094552584586, lng: -57.19690586848693 },
-                          { lat: -31.269076616200664, lng: -57.19727631670458 },
-                        ]}
-                        options={{
-                          fillColor: "#ff0000",
-                          fillOpacity: 0.35,
-                          strokeColor: "#ff0000",
-                          strokeOpacity: 1,
-                          strokeWeight: 2,
+                    <>
+                      <GoogleMap
+                        mapContainerStyle={{
+                          width: '100%',
+                          height: '100%',
+                          borderRadius: '10px'
                         }}
-                      />
-                    </GoogleMap>
+                        zoom={6}
+                        center={{
+                          lat: -32.74197207213357,
+                          lng: -56.232580159032494
+                        }}
+                        mapTypeId="satellite"
+                        onClick={onMapClick}
+                        onLoad={handleMapLoad}>
+                        {/* <Polygon
+                          path={path}
+                          options={{
+                            fillColor: '#ff0000',
+                            fillOpacity: 0.35,
+                            strokeColor: '#ff0000',
+                            strokeOpacity: 1,
+                            strokeWeight: 2
+                          }}
+                          editable={true}
+                          geodesic={true}
+                          onMouseUp={onEdit}
+                          // Event used when dragging the whole Polygon
+                          onDragEnd={onEdit}
+                          onLoad={onLoadPolygon}
+                          onUnmount={onUnmount}
+                          draggable={true}
+                        /> */}
+                        {drawingMode && (
+                          <DrawingManager
+                            onLoad={handleDrawingManagerLoad}
+                            onPolygonComplete={handlePolygonComplete}
+                            options={{ drawingControl: false, polygonOptions: { editable: false } }}
+                          />
+                        )}
+                      </GoogleMap>
+                      <Flex mt="20px" justifyContent={'flex-end'}>
+                        <Button
+                          bg={bgButton}
+                          color="white"
+                          fontSize="xs"
+                          variant="no-hover"
+                          onClick={() => setPolygon(null)}>
+                          CLEAR
+                        </Button>
+                        <Button
+                          variant="outline"
+                          colorScheme="green"
+                          minW="110px"
+                          h="36px"
+                          fontSize="xs"
+                          px="1.5rem"
+                          onClick={() => setDrawingMode((prevState) => !prevState)}>
+                          EDIT MODE
+                        </Button>
+                      </Flex>
+                    </>
                   )}
                 </Flex>
               </CardBody>
               <CardFooter>
-                <Flex justify="space-between" width={"100%"}>
+                <Flex justify="space-between" width={'100%'}>
                   <Button
                     variant="no-hover"
                     bg={bgPrevButton}
                     alignSelf="flex-end"
                     mt="24px"
-                    w={{ sm: "75px", lg: "100px" }}
+                    w={{ sm: '75px', lg: '100px' }}
                     h="35px"
-                    onClick={() => prevTab.current.click()}
-                  >
+                    onClick={() => prevTab.current.click()}>
                     <Text fontSize="xs" color="gray.700" fontWeight="bold">
                       PREV
                     </Text>
@@ -656,15 +686,13 @@ function NewParcel() {
                   <Button
                     bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
                     _hover={{
-                      bg:
-                        "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
+                      bg: 'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)'
                     }}
                     alignSelf="flex-end"
                     mt="24px"
-                    w={{ sm: "75px", lg: "100px" }}
+                    w={{ sm: '75px', lg: '100px' }}
                     h="35px"
-                    onClick={handleNext}
-                  >
+                    onClick={handleNext}>
                     <Text fontSize="xs" color="#fff" fontWeight="bold">
                       NEXT
                     </Text>
@@ -683,10 +711,7 @@ function NewParcel() {
               </CardHeader>
               <CardBody>
                 <FormProvider {...descriptionMethods}>
-                  <form
-                    onSubmit={descriptionSubmit(onSubmitDescription)}
-                    style={{ width: "100%" }}
-                  >
+                  <form onSubmit={descriptionSubmit(onSubmitDescription)} style={{ width: '100%' }}>
                     <Flex direction="column" w="100%">
                       <Stack direction="column" spacing="20px" w="100%">
                         <Editor />
@@ -699,13 +724,8 @@ function NewParcel() {
                           mt="24px"
                           w="100px"
                           h="35px"
-                          onClick={() => mainInfoTab.current.click()}
-                        >
-                          <Text
-                            fontSize="xs"
-                            color="gray.700"
-                            fontWeight="bold"
-                          >
+                          onClick={() => mainInfoTab.current.click()}>
+                          <Text fontSize="xs" color="gray.700" fontWeight="bold">
                             PREV
                           </Text>
                         </Button>
@@ -716,8 +736,7 @@ function NewParcel() {
                           mt="24px"
                           w="100px"
                           h="35px"
-                          type="submit"
-                        >
+                          type="submit">
                           <Text fontSize="xs" color="#fff" fontWeight="bold">
                             NEXT
                           </Text>
@@ -732,23 +751,13 @@ function NewParcel() {
           <TabPanel>
             <Card>
               <CardHeader mb="22px">
-                <Text
-                  color={textColor}
-                  fontSize="xl"
-                  fontWeight="bold"
-                  mb="3px"
-                >
+                <Text color={textColor} fontSize="xl" fontWeight="bold" mb="3px">
                   Media
                 </Text>
               </CardHeader>
               <CardBody>
                 <Flex direction="column" w="100%">
-                  <Text
-                    color={textColor}
-                    fontSize="sm"
-                    fontWeight="bold"
-                    mb="12px"
-                  >
+                  <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
                     Parcel images
                   </Text>
                   <Flex
@@ -759,8 +768,7 @@ function NewParcel() {
                     w="100%"
                     minH="130px"
                     cursor="pointer"
-                    {...getRootProps({ className: "dropzone" })}
-                  >
+                    {...getRootProps({ className: 'dropzone' })}>
                     <Input {...getInputProps()} />
                     <Button variant="no-hover">
                       <Text color="gray.400" fontWeight="normal">
@@ -776,8 +784,7 @@ function NewParcel() {
                       mt="24px"
                       w="100px"
                       h="35px"
-                      onClick={() => descriptionTab.current.click()}
-                    >
+                      onClick={() => descriptionTab.current.click()}>
                       <Text fontSize="xs" color="gray.700" fontWeight="bold">
                         PREV
                       </Text>
@@ -789,8 +796,7 @@ function NewParcel() {
                       mt="24px"
                       w="100px"
                       h="35px"
-                      onClick={() => certificationTab.current.click()}
-                    >
+                      onClick={() => certificationTab.current.click()}>
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
                         NEXT
                       </Text>
@@ -809,19 +815,13 @@ function NewParcel() {
                   justify="center"
                   textAlign="center"
                   w="80%"
-                  mx="auto"
-                >
-                  <Text
-                    color={textColor}
-                    fontSize="lg"
-                    fontWeight="bold"
-                    mb="4px"
-                  >
+                  mx="auto">
+                  <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
                     Do you want to certificate this parcel?
                   </Text>
                   <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                    In the following inputs you must give detailed information
-                    in order to certify this parcel.
+                    In the following inputs you must give detailed information in order to certify
+                    this parcel.
                   </Text>
                 </Flex>
               </CardHeader>
@@ -831,25 +831,15 @@ function NewParcel() {
                     <FormProvider {...methodsCertificate}>
                       <form
                         onSubmit={handleSubmitCertificate(onSubmitCertificate)}
-                        style={{ width: "100%" }}
-                      >
-                        <FormControl
-                          display="flex"
-                          alignItems="center"
-                          mb="25px"
-                        >
+                        style={{ width: '100%' }}>
+                        <FormControl display="flex" alignItems="center" mb="25px">
                           <Switch
                             id="certificate"
                             colorScheme="green"
                             me="10px"
-                            {...registerCertificate("certificate")}
+                            {...registerCertificate('certificate')}
                           />
-                          <FormLabel
-                            htmlFor="certificate"
-                            mb="0"
-                            ms="1"
-                            fontWeight="normal"
-                          >
+                          <FormLabel htmlFor="certificate" mb="0" ms="1" fontWeight="normal">
                             Yes, I want to certify this parcel
                           </FormLabel>
                         </FormControl>
@@ -873,36 +863,29 @@ function NewParcel() {
                           label="Address"
                           disabled={!certificateValue}
                         />
-                        <Flex justify="space-between" width={"100%"}>
+                        <Flex justify="space-between" width={'100%'}>
                           <Button
                             variant="no-hover"
                             bg={bgPrevButton}
                             alignSelf="flex-end"
                             mt="24px"
-                            w={{ sm: "75px", lg: "100px" }}
+                            w={{ sm: '75px', lg: '100px' }}
                             h="35px"
-                            onClick={() => prevTab.current.click()}
-                          >
-                            <Text
-                              fontSize="xs"
-                              color="gray.700"
-                              fontWeight="bold"
-                            >
+                            onClick={() => prevTab.current.click()}>
+                            <Text fontSize="xs" color="gray.700" fontWeight="bold">
                               PREV
                             </Text>
                           </Button>
                           <Button
                             bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
                             _hover={{
-                              bg:
-                                "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
+                              bg: 'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)'
                             }}
                             alignSelf="flex-end"
                             mt="24px"
-                            w={{ sm: "75px", lg: "100px" }}
+                            w={{ sm: '75px', lg: '100px' }}
                             h="35px"
-                            type="submit"
-                          >
+                            type="submit">
                             {isLoading ? (
                               <CircularProgress
                                 isIndeterminate
@@ -911,11 +894,7 @@ function NewParcel() {
                                 size="25px"
                               />
                             ) : (
-                              <Text
-                                fontSize="xs"
-                                color="#fff"
-                                fontWeight="bold"
-                              >
+                              <Text fontSize="xs" color="#fff" fontWeight="bold">
                                 SEND
                               </Text>
                             )}

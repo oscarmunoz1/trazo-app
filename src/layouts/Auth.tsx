@@ -15,33 +15,36 @@
 
 */
 
-import "assets/css/pud-dashboard-styles.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
+import 'assets/css/pud-dashboard-styles.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 
 // Chakra imports
-import { Box, ChakraProvider, Portal } from "@chakra-ui/react";
-import { Outlet, Route } from "react-router-dom";
+import { Box, ChakraProvider, Portal } from '@chakra-ui/react';
+import { Outlet, Route } from 'react-router-dom';
 
 // core components
-import AuthNavbar from "components/Navbars/AuthNavbar";
-import Footer from "components/Footer/Footer";
-import React from "react";
-import theme from "theme/theme.ts";
+import AuthNavbar from 'components/Navbars/AuthNavbar';
+import Footer from 'components/Footer/Footer';
+import React from 'react';
+import { Route as RouteType } from 'types/common';
+import theme from 'theme/theme.ts';
 
-export default function Pages(props) {
-  const { ...rest } = props;
+export default function Pages() {
   // ref for the wrapper div
   const wrapper = React.createRef();
-  const dynamicRoutes = [];
+  const dynamicRoutes: RouteType[] = [];
   React.useEffect(() => {
-    document.body.style.overflow = "unset";
+    document.body.style.overflow = 'unset';
     // Specify how to clean up after this effect:
     return function cleanup() {};
   });
-  const getActiveRoute = (routes) => {
-    let activeRoute = "Home";
+  const getActiveRoute = (routes: RouteType[] | undefined): string => {
+    let activeRoute = 'Home';
+    if (!routes) {
+      return activeRoute;
+    }
     for (let i = 0; i < routes?.length; i++) {
       if (routes[i].collapse) {
         let collapseActiveRoute = getActiveRoute(routes[i].items);
@@ -54,9 +57,7 @@ export default function Pages(props) {
           return categoryActiveRoute;
         }
       } else {
-        if (
-          window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
-        ) {
+        if (window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1) {
           return routes[i].name;
         }
       }
@@ -64,8 +65,11 @@ export default function Pages(props) {
     return activeRoute;
   };
   // This changes navbar state(fixed or not)
-  const getActiveNavbar = (routes) => {
+  const getActiveNavbar = (routes: RouteType[] | undefined): boolean | undefined => {
     let activeNavbar = false;
+    if (!routes) {
+      return activeNavbar;
+    }
     for (let i = 0; i < routes?.length; i++) {
       if (routes[i].collapse) {
         let collapseActiveNavbar = getActiveNavbar(
@@ -82,25 +86,18 @@ export default function Pages(props) {
           return categoryActiveNavbar;
         }
       } else {
-        if (
-          window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
-        ) {
+        if (window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1) {
           return routes[i].secondaryNavbar;
         }
       }
     }
     return activeNavbar;
   };
-  const getRoutes = (routes) => {
+
+  const getRoutes = (routes: RouteType[] | undefined) => {
     return routes.map((prop, key) => {
-      if (prop.layout === "/auth") {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={key}
-          />
-        );
+      if (prop.layout === '/auth') {
+        return <Route path={prop.layout + prop.path} component={prop.component} key={key} />;
       }
       if (prop.collapse) {
         return getRoutes(prop.isDashboard ? dynamicRoutes : prop.items);
@@ -112,9 +109,10 @@ export default function Pages(props) {
       }
     });
   };
+
   const navRef = React.useRef();
-  document.documentElement.dir = "ltr";
-  document.documentElement.layout = "auth";
+  document.documentElement.dir = 'ltr';
+  document.documentElement.layout = 'auth';
   return (
     <ChakraProvider theme={theme} resetCss={false} w="100%">
       <Box ref={navRef} w="100%">
