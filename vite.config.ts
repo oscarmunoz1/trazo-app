@@ -4,7 +4,7 @@ import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: 'https://traceit.io/',
+  // base: 'https://traceit.io/',
   plugins: [react()],
   test: {
     globals: true,
@@ -28,7 +28,7 @@ export default defineConfig({
     port: 3000,
     // this sets a default host to "localhost"
     host: 'localhost',
-    base: 'https://traceit.io/'
+    base: 'https://app.traceit.io/'
   },
   resolve: {
     alias: [
