@@ -470,7 +470,9 @@ function Capture() {
                         Production:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
-                        13/04/2021 - 16/07/2021
+                        {`${new Date(historyData?.start_date).toLocaleDateString()}-${new Date(
+                          historyData?.finish_date
+                        ).toLocaleDateString()}`}
                       </Text>
                     </Flex>
                     <Flex align="center" mb="15px">

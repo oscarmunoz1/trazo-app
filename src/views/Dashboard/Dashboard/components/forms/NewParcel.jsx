@@ -50,6 +50,7 @@ import CardHeader from 'components/Card/CardHeader';
 // Custom components
 import Editor from 'components/Editor/Editor';
 import FormInput from 'components/Forms/FormInput';
+import MapCreator from 'components/Map/MapCreator';
 import { setEstablishmentParcel } from 'store/features/companySlice';
 import { useCreateParcelMutation } from 'store/api/productApi.js';
 import { useDropzone } from 'react-dropzone';
@@ -584,122 +585,7 @@ function NewParcel() {
             </Card>
           </TabPanel>
           <TabPanel>
-            <Card>
-              <CardHeader mb="20px">
-                <Flex
-                  direction="column"
-                  align="center"
-                  justify="center"
-                  textAlign="center"
-                  w="80%"
-                  mx="auto">
-                  <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
-                    Where is the Parcel located?
-                  </Text>
-                  <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                    Indicate the location of the parcel
-                  </Text>
-                </Flex>
-              </CardHeader>
-              <CardBody justifyContent={'center'} mb="20px">
-                <Flex direction="column" w="80%" h="300px">
-                  {isLoaded && (
-                    <>
-                      <GoogleMap
-                        mapContainerStyle={{
-                          width: '100%',
-                          height: '100%',
-                          borderRadius: '10px'
-                        }}
-                        zoom={6}
-                        center={{
-                          lat: -32.74197207213357,
-                          lng: -56.232580159032494
-                        }}
-                        mapTypeId="satellite"
-                        onClick={onMapClick}
-                        onLoad={handleMapLoad}>
-                        {/* <Polygon
-                          path={path}
-                          options={{
-                            fillColor: '#ff0000',
-                            fillOpacity: 0.35,
-                            strokeColor: '#ff0000',
-                            strokeOpacity: 1,
-                            strokeWeight: 2
-                          }}
-                          editable={true}
-                          geodesic={true}
-                          onMouseUp={onEdit}
-                          // Event used when dragging the whole Polygon
-                          onDragEnd={onEdit}
-                          onLoad={onLoadPolygon}
-                          onUnmount={onUnmount}
-                          draggable={true}
-                        /> */}
-                        {drawingMode && (
-                          <DrawingManager
-                            onLoad={handleDrawingManagerLoad}
-                            onPolygonComplete={handlePolygonComplete}
-                            options={{ drawingControl: false, polygonOptions: { editable: false } }}
-                          />
-                        )}
-                      </GoogleMap>
-                      <Flex mt="20px" justifyContent={'flex-end'}>
-                        <Button
-                          bg={bgButton}
-                          color="white"
-                          fontSize="xs"
-                          variant="no-hover"
-                          onClick={() => setPolygon(null)}>
-                          CLEAR
-                        </Button>
-                        <Button
-                          variant="outline"
-                          colorScheme="green"
-                          minW="110px"
-                          h="36px"
-                          fontSize="xs"
-                          px="1.5rem"
-                          onClick={() => setDrawingMode((prevState) => !prevState)}>
-                          EDIT MODE
-                        </Button>
-                      </Flex>
-                    </>
-                  )}
-                </Flex>
-              </CardBody>
-              <CardFooter>
-                <Flex justify="space-between" width={'100%'}>
-                  <Button
-                    variant="no-hover"
-                    bg={bgPrevButton}
-                    alignSelf="flex-end"
-                    mt="24px"
-                    w={{ sm: '75px', lg: '100px' }}
-                    h="35px"
-                    onClick={() => prevTab.current.click()}>
-                    <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                      PREV
-                    </Text>
-                  </Button>
-                  <Button
-                    bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                    _hover={{
-                      bg: 'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)'
-                    }}
-                    alignSelf="flex-end"
-                    mt="24px"
-                    w={{ sm: '75px', lg: '100px' }}
-                    h="35px"
-                    onClick={handleNext}>
-                    <Text fontSize="xs" color="#fff" fontWeight="bold">
-                      NEXT
-                    </Text>
-                  </Button>
-                </Flex>
-              </CardFooter>
-            </Card>
+            <MapCreator handleNext={handleNext} prevTab={mainInfoTab} />
           </TabPanel>
 
           <TabPanel>

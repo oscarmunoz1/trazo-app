@@ -155,6 +155,13 @@ function ProfileProduction() {
                       historyData?.finish_date
                     ).toLocaleDateString()}`}
                   </Text>
+                  <Stack direction="row" spacing="12px" color="orange.300" mb="16px">
+                    <Icon as={BsStarFill} w="26px" h="26px" />
+                    <Icon as={BsStarFill} w="26px" h="26px" />
+                    <Icon as={BsStarFill} w="26px" h="26px" />
+                    <Icon as={BsStarFill} w="26px" h="26px" />
+                    <Icon as={BsStarHalf} w="26px" h="26px" />
+                  </Stack>
                   <Text color="gray.400" fontWeight="normal" fontSize="sm">
                     Product
                   </Text>
@@ -173,6 +180,14 @@ function ProfileProduction() {
                     CERTIFIED
                   </Badge>
                   <Flex direction="column">
+                    <Flex align="center" mb="15px">
+                      <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
+                        Location:{' '}
+                      </Text>
+                      <Text fontSize="md" color="gray.500" fontWeight="400">
+                        {establishment?.location}
+                      </Text>
+                    </Flex>
                     <Flex align="center" mb="10px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
                         Establishment:
@@ -195,7 +210,9 @@ function ProfileProduction() {
                         Production:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
-                        {establishment?.state}
+                        {`${new Date(historyData?.start_date).toLocaleDateString()}-${new Date(
+                          historyData?.finish_date
+                        ).toLocaleDateString()}`}
                       </Text>
                     </Flex>
                   </Flex>

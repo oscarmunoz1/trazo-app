@@ -88,7 +88,11 @@ export default function ParcelView() {
           <Card minH="290px" bg={cardColor} />
         )}
 
-        <CardWithMap backgroundImage={imageMap} />
+        <CardWithMap
+          polygon={data?.polygon}
+          center={data?.map_metadata?.center}
+          zoom={data?.map_metadata?.zoom}
+        />
       </Grid>
       <Grid
         templateColumns={{ sm: '1fr', md: '1fr 1fr', lg: '1fr 2fr' }}
