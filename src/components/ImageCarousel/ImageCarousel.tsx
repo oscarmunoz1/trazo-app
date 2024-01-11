@@ -1,7 +1,7 @@
 import { Box, Flex, Image, Stack } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 
 import BgMusicCard from 'assets/img/BgMusicCard.png';
-import { useState } from 'react';
 
 type ImageCarouselProps = {
   imagesList: string[];
@@ -9,11 +9,14 @@ type ImageCarouselProps = {
 
 const ImageCarousel = (props: ImageCarouselProps) => {
   const { imagesList } = props;
-  const [currentImage, setCurrentImage] = useState<string>(
-    imagesList && imagesList.length > 0
-      ? `${import.meta.env.VITE_APP_BACKEND_URL}${imagesList[0]}`
-      : BgMusicCard
-  );
+
+  const [currentImage, setCurrentImage] = useState<string>(BgMusicCard);
+
+  useEffect(() => {
+    if (imagesList && imagesList.length > 0) {
+      setCurrentImage(imagesList[0]);
+    }
+  }, [imagesList]);
 
   return (
     <Flex direction="column" me={{ lg: '48px', xl: '48px' }} mb={{ sm: '24px', lg: '0px' }}>
@@ -36,7 +39,7 @@ const ImageCarousel = (props: ImageCarouselProps) => {
               w={{ sm: '36px', md: '90px', lg: '60px' }}
               h={{ sm: '36px', md: '90px', lg: '60px' }}>
               <Image
-                src={`${import.meta.env.VITE_APP_BACKEND_URL}${image}`}
+                src={image}
                 w="100%"
                 h="100%"
                 borderRadius="15px"
@@ -45,61 +48,6 @@ const ImageCarousel = (props: ImageCarouselProps) => {
               />
             </Box>
           ))}
-
-        {/* <Box w={{ sm: '36px', md: '90px', lg: '60px' }} h={{ sm: '36px', md: '90px', lg: '60px' }}>
-          <Image
-            src={
-              establishment?.image
-                ? `${import.meta.env.VITE_APP_BACKEND_URL}${establishment?.image}`
-                : productPage1
-            }
-            w="100%"
-            h="100%"
-            borderRadius="15px"
-            cursor="pointer"
-            onClick={(e) => setCurrentImage(e.target.src)}
-          />
-        </Box>
-        <Box w={{ sm: '36px', md: '90px', lg: '60px' }} h={{ sm: '36px', md: '90px', lg: '60px' }}>
-          <Image
-            src={productPage2}
-            w="100%"
-            h="100%"
-            borderRadius="15px"
-            cursor="pointer"
-            onClick={(e) => setCurrentImage(e.target.src)}
-          />
-        </Box>
-        <Box w={{ sm: '36px', md: '90px', lg: '60px' }} h={{ sm: '36px', md: '90px', lg: '60px' }}>
-          <Image
-            src={productPage3}
-            w="100%"
-            h="100%"
-            borderRadius="15px"
-            cursor="pointer"
-            onClick={(e) => setCurrentImage(e.target.src)}
-          />
-        </Box>
-        <Box w={{ sm: '36px', md: '90px', lg: '60px' }} h={{ sm: '36px', md: '90px', lg: '60px' }}>
-          <Image
-            src={productPage4}
-            w="100%"
-            h="100%"
-            borderRadius="15px"
-            cursor="pointer"
-            onClick={(e) => setCurrentImage(e.target.src)}
-          />
-        </Box>
-        <Box w={{ sm: '36px', md: '90px', lg: '60px' }} h={{ sm: '36px', md: '90px', lg: '60px' }}>
-          <Image
-            src={productPage2}
-            w="100%"
-            h="100%"
-            borderRadius="15px"
-            cursor="pointer"
-            onClick={(e) => setCurrentImage(e.target.src)}
-          />
-        </Box> */}
       </Stack>
     </Flex>
   );

@@ -26,6 +26,7 @@ import { FaFacebook, FaInstagram, FaPencilAlt, FaTrashAlt, FaTwitter } from 'rea
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
+import BgMusicCard from 'assets/img/BgMusicCard.png';
 import BgSignUp from 'assets/img/basic-auth.png';
 import Card from 'components/Card/Card';
 import CardBody from 'components/Card/CardBody';
@@ -68,7 +69,7 @@ function ProfileEstablishment() {
 
   const { isOpen: isOpen1, onOpen: onOpen1, onClose: onClose1 } = useDisclosure();
 
-  const { data, error, isLoading, isFetching, refetch } = useGetEventQuery(
+  const { data: eventData, error, isLoading, isFetching, refetch } = useGetEventQuery(
     { companyId: currentCompany.id, establishmentId, parcelId, eventId, eventType },
     {
       skip: !eventId || !parcelId || !establishmentId || !currentCompany.id || !eventType
@@ -203,7 +204,23 @@ function ProfileEstablishment() {
           <CardBody px={{ sm: '16px', md: '32px', lg: '48px' }}>
             <Flex direction={'column'}>
               <Flex direction={{ sm: 'column', lg: 'row' }} mb={{ sm: '42px', lg: '48px' }}>
-                <ImageCarousel images={establishment?.images} />
+                <Flex
+                  direction="column"
+                  me={{ lg: '48px', xl: '48px' }}
+                  mb={{ sm: '24px', lg: '0px' }}>
+                  <Box
+                    w={{ sm: '100%', md: '100%', lg: '380px', xl: '400px' }}
+                    h={{ sm: '200px', md: '500px', lg: '230px', xl: '300px' }}
+                    mb="26px"
+                    mx={{ sm: 'auto', lg: '0px' }}>
+                    <Image
+                      src={eventData?.image || BgMusicCard}
+                      w="100%"
+                      h="100%"
+                      borderRadius="15px"
+                    />
+                  </Box>
+                </Flex>
                 {/* <Flex
                   direction="column"
                   me={{ lg: '48px', xl: '48px' }}
@@ -297,7 +314,7 @@ function ProfileEstablishment() {
                 </Flex> */}
                 <Flex direction="column">
                   <Text color={textColor} fontSize="3xl" fontWeight="bold" mb="12px">
-                    {data?.name}
+                    {eventData?.name}
                   </Text>
                   <Text color="gray.400" fontWeight="normal" fontSize="sm">
                     Parcel
@@ -350,7 +367,7 @@ function ProfileEstablishment() {
                         Date:
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
-                        {data?.date && new Date(data?.date).toLocaleDateString('en-US')}
+                        {eventData?.date && new Date(eventData?.date).toLocaleDateString('en-US')}
                       </Text>
                     </Flex>
 
@@ -384,7 +401,7 @@ function ProfileEstablishment() {
                 </Flex>
               </Flex>
               <Flex px="24px" pb="24px">
-                <HTMLRenderer htmlString={data?.description} />
+                <HTMLRenderer htmlString={eventData?.description} />
               </Flex>
             </Flex>
           </CardBody>

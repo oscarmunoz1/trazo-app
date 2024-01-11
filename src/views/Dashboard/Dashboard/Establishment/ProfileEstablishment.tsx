@@ -40,6 +40,7 @@ import productPage1 from 'assets/img/ProductImage1.png';
 import productPage2 from 'assets/img/ProductImage2.png';
 import productPage3 from 'assets/img/ProductImage3.png';
 import productPage4 from 'assets/img/ProductImage4.png';
+import { useGetEstablishmentQuery } from 'store/api/companyApi';
 import { useSelector } from 'react-redux';
 import { useSignUpMutation } from 'store/api/authApi';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -52,23 +53,19 @@ function ProfileEstablishment() {
   const navigate = useNavigate();
   const [currentImage, setCurrentImage] = useState(productPage1);
   const { establishmentId } = useParams();
-  const [establishment, setEstablishment] = useState(null);
   const { isOpen: isOpen1, onOpen: onOpen1, onClose: onClose1 } = useDisclosure();
-
-  const establishments = useSelector((state) => state.company.currentCompany?.establishments);
 
   const currentCompany = useSelector((state) => state.company.currentCompany);
 
-  useEffect(() => {
-    let establishment;
-    if (establishments) {
-      establishment = establishments.filter(
-        (establishment) => establishment.id.toString() === establishmentId
-      )[0];
-
-      setEstablishment(establishment);
+  const { data: establishmentData, error, isLoading } = useGetEstablishmentQuery(
+    {
+      companyId: currentCompany?.id,
+      establishmentId
+    },
+    {
+      skip: !establishmentId || currentCompany?.id === undefined
     }
-  }, [establishmentId, establishments]);
+  );
 
   return (
     <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden">
@@ -147,11 +144,11 @@ function ProfileEstablishment() {
           <CardBody px={{ sm: '16px', md: '32px', lg: '48px' }}>
             <Flex direction={'column'}>
               <Flex direction={{ sm: 'column', lg: 'row' }} mb={{ sm: '42px', lg: '48px' }}>
-                <ImageCarousel images={establishment?.images} />
+                <ImageCarousel imagesList={establishmentData?.images} />
 
                 <Flex direction="column">
                   <Text color={textColor} fontSize="3xl" fontWeight="bold" mb="12px">
-                    {establishment?.name}
+                    {establishmentData?.name}
                   </Text>
                   <Text color="gray.400" fontWeight="normal" fontSize="sm">
                     Company
@@ -177,7 +174,7 @@ function ProfileEstablishment() {
                         Address:
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
-                        {establishment?.address}
+                        {establishmentData?.address}
                       </Text>
                     </Flex>
 
@@ -186,7 +183,7 @@ function ProfileEstablishment() {
                         City:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
-                        {establishment?.city}
+                        {establishmentData?.city}
                       </Text>
                     </Flex>
                     <Flex align="center" mb="10px">
@@ -194,16 +191,16 @@ function ProfileEstablishment() {
                         State:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
-                        {establishment?.state}
+                        {establishmentData?.state}
                       </Text>
                     </Flex>
-                    {establishment?.zone && (
+                    {establishmentData?.zone && (
                       <Flex align="center" mb="10px">
                         <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
                           Zone:
                         </Text>
                         <Text fontSize="md" color="gray.500" fontWeight="400">
-                          {establishment?.zone}
+                          {establishmentData?.zone}
                         </Text>
                       </Flex>
                     )}
@@ -242,7 +239,7 @@ function ProfileEstablishment() {
                 </Flex>
               </Flex>
               <Flex px="24px" pb="24px">
-                <HTMLRenderer htmlString={establishment?.description} />
+                <HTMLRenderer htmlString={establishmentData?.description} />
               </Flex>
             </Flex>
           </CardBody>

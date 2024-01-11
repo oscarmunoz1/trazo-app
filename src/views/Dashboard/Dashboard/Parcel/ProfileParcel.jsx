@@ -68,7 +68,7 @@ function ProfileEstablishment() {
       skip:
         parcelId === undefined ||
         currentParcel?.id === parcelId ||
-        !currentCompany ||
+        currentCompany?.id === undefined ||
         !establishmentId
     }
   );
@@ -161,7 +161,7 @@ function ProfileEstablishment() {
           <CardBody px={{ sm: '16px', md: '32px', lg: '48px' }}>
             <Flex direction={'column'}>
               <Flex direction={{ sm: 'column', lg: 'row' }} mb={{ sm: '42px', lg: '48px' }}>
-                <ImageCarousel images={parcelData?.images} />
+                <ImageCarousel imagesList={parcelData?.images} />
                 {/* <Flex
                   direction="column"
                   me={{ lg: "48px", xl: "48px" }}
