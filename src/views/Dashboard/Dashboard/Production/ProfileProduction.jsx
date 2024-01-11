@@ -68,7 +68,6 @@ function ProfileProduction() {
       establishment = establishments.filter(
         (establishment) => establishment.id.toString() === establishmentId
       )[0];
-
       setEstablishment(establishment);
     }
   }, [establishmentId, establishments]);
@@ -118,41 +117,6 @@ function ProfileProduction() {
           pt={{ sm: '16px', md: '32px', lg: '0px' }}
           boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px">
           <CardHeader justifyContent="end">
-            {/* <Flex
-                direction={{ sm: "column", md: "row" }}
-                align="flex-start"
-                py={{ md: "12px" }}
-                px="24px"
-              >
-                <Button p="0px" bg="transparent" mb={{ sm: "10px", md: "0px" }}>
-                  <Flex
-                    color={textColor}
-                    cursor="pointer"
-                    align="center"
-                    p="12px"
-                  >
-                    <Icon as={FaTrashAlt} me="4px" />
-                  </Flex>
-                </Button>
-                <Button
-                  p="0px"
-                  bg="transparent"
-                  onClick={() =>
-                    navigate(
-                      `/admin/dashboard/establishment/${establishmentId}/change`
-                    )
-                  }
-                >
-                  <Flex
-                    color={textColor}
-                    cursor="pointer"
-                    align="center"
-                    p="12px"
-                  >
-                    <Icon as={FaPencilAlt} me="4px" />
-                  </Flex>
-                </Button>
-              </Flex> */}
             <Flex p="24px" align="center" justify="center">
               <Menu isOpen={isOpen1} onClose={onClose1}>
                 <MenuButton onClick={onOpen1} alignSelf="flex-start">
@@ -164,7 +128,6 @@ function ProfileProduction() {
                       navigate(`/admin/dashboard/establishment/${establishmentId}/change`)
                     }>
                     <Flex color={textColor} cursor="pointer" align="center" p="4px">
-                      {/* <Icon as={FaPencilAlt} me="4px" /> */}
                       <Text fontSize="sm" fontWeight="500">
                         EDIT
                       </Text>
@@ -198,7 +161,7 @@ function ProfileProduction() {
                   <Text color={textColor} fontWeight="bold" fontSize="2xl" mb="12px">
                     {historyData?.product}
                   </Text>
-                  {/* <Badge
+                  <Badge
                     colorScheme="green"
                     w="95px"
                     h="28px"
@@ -206,10 +169,9 @@ function ProfileProduction() {
                     borderRadius="15px"
                     display="flex"
                     alignItems="center"
-                    justifyContent="center"
-                  >
+                    justifyContent="center">
                     CERTIFIED
-                  </Badge> */}
+                  </Badge>
                   <Flex direction="column">
                     <Flex align="center" mb="10px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
@@ -225,7 +187,7 @@ function ProfileProduction() {
                         Parcel:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
-                        {establishment?.parcel}
+                        {historyData?.parcel}
                       </Text>
                     </Flex>
                     <Flex align="center" mb="10px">
@@ -274,11 +236,12 @@ function ProfileProduction() {
                     </Flex>
                   </Flex>
                 </Flex>
-                <Image
-                  // boxSize={{ lg: "500px", xl: "600px", "2xl": "790px" }}
-                  src={historyData?.qr_code}
-                  alt="illustration"
-                />
+                <Flex px="24px" py="24px" width={'400px'} height={'400px'} direction={'column'}>
+                  <Text fontSize="xl" color={textColor} fontWeight="bold" pb="24px">
+                    QR Code
+                  </Text>
+                  <Image src={historyData?.qr_code} alt="illustration" />
+                </Flex>
               </Flex>
             </Flex>
           </CardBody>

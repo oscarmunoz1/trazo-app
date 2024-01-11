@@ -25,19 +25,19 @@ import {
   Th,
   Thead,
   Tr,
-  useColorModeValue,
-} from "@chakra-ui/react";
+  useColorModeValue
+} from '@chakra-ui/react';
 
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody.tsx";
-import CardHeader from "components/Card/CardHeader.tsx";
-import React from "react";
-import ScansRow from "components/Tables/ScansRow";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody.tsx';
+import CardHeader from 'components/Card/CardHeader.tsx';
+import React from 'react';
+import ScansRow from 'components/Tables/ScansRow';
 
 const ScansList = ({ title, labels, scansData }) => {
   // Chakra Color Mode
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
     <Card px="0px" height="780px">
@@ -54,13 +54,12 @@ const ScansList = ({ title, labels, scansData }) => {
             fontSize="xs"
             w="100px"
             h="35px"
-            mt={{ sm: "16px", md: "0px" }}
-          >
+            mt={{ sm: '16px', md: '0px' }}>
             VIEW ALL
           </Button>
         </Flex>
       </CardHeader>
-      <CardBody overflowX={{ sm: "scroll", md: "hidden" }}>
+      <CardBody overflowX={{ sm: 'scroll', md: 'hidden' }}>
         <Table variant="simple">
           <Thead>
             <Tr>
@@ -70,9 +69,8 @@ const ScansList = ({ title, labels, scansData }) => {
                     color="gray.400"
                     fontSize="xs"
                     key={label}
-                    paddingInlineStart={"25px"}
-                    paddingInlineEnd={"25px"}
-                  >
+                    paddingInlineStart={'25px'}
+                    paddingInlineEnd={'25px'}>
                     {label}
                   </Th>
                 );

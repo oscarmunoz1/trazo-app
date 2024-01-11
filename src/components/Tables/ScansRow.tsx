@@ -1,5 +1,5 @@
 // Chakra imports
-import { Button, Link, Stack, Td, Text, Tr, useColorModeValue } from '@chakra-ui/react';
+import { Button, Flex, Link, Stack, Td, Text, Tr, useColorModeValue } from '@chakra-ui/react';
 
 type ScansRowProps = {
   date: string;
@@ -39,18 +39,20 @@ const ScansRow = (props: ScansRowProps) => {
         <Button
           onClick={() => console.log('click')}
           variant="no-hover"
-          bg="green.400"
+          bg={comment ? 'green.400' : 'white'}
           w="100px"
           h="35px"
-          disabled={comment === ''}
           fontSize="xs"
-          color="#fff"
+          color={comment ? '#fff' : '#CBD5E0'}
+          border={comment ? 'none' : '1px solid #CBD5E0'}
+          cursor={comment ? 'pointer' : 'default'}
           fontWeight="bold"
           alignSelf={{ sm: 'flex-start', md: 'flex-end' }}
           mt={{ sm: '16px', md: '0px' }}>
           VIEW
         </Button>
       </Td>
+      <Flex>hola</Flex>
     </Tr>
   );
 };

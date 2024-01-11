@@ -18,7 +18,7 @@ const ImageCarousel = (props: ImageCarouselProps) => {
   return (
     <Flex direction="column" me={{ lg: '48px', xl: '48px' }} mb={{ sm: '24px', lg: '0px' }}>
       <Box
-        w={{ sm: '275px', md: '670px', lg: '380px', xl: '400px' }}
+        w={{ sm: '100%', md: '100%', lg: '380px', xl: '400px' }}
         h={{ sm: '200px', md: '500px', lg: '230px', xl: '300px' }}
         mb="26px"
         mx={{ sm: 'auto', lg: '0px' }}>
