@@ -52,7 +52,6 @@ const ScansRow = (props: ScansRowProps) => {
           VIEW
         </Button>
       </Td>
-      <Flex>hola</Flex>
     </Tr>
   );
 };
