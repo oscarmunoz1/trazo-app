@@ -32,6 +32,7 @@ import CardBody from 'components/Card/CardBody';
 import CardHeader from 'components/Card/CardHeader';
 import FormInput from 'components/Forms/FormInput';
 import HTMLRenderer from 'components/Utils/HTMLRenderer';
+import ImageCarousel from 'components/ImageCarousel/ImageCarousel';
 import { IoEllipsisVerticalSharp } from 'react-icons/io5';
 import NewEstablishment from '../components/forms/NewEstablishment';
 import productPage1 from 'assets/img/ProductImage1.png';
@@ -202,7 +203,8 @@ function ProfileEstablishment() {
           <CardBody px={{ sm: '16px', md: '32px', lg: '48px' }}>
             <Flex direction={'column'}>
               <Flex direction={{ sm: 'column', lg: 'row' }} mb={{ sm: '42px', lg: '48px' }}>
-                <Flex
+                <ImageCarousel images={establishment?.images} />
+                {/* <Flex
                   direction="column"
                   me={{ lg: '48px', xl: '48px' }}
                   mb={{ sm: '24px', lg: '0px' }}>
@@ -292,7 +294,7 @@ function ProfileEstablishment() {
                       />
                     </Box>
                   </Stack>
-                </Flex>
+                </Flex> */}
                 <Flex direction="column">
                   <Text color={textColor} fontSize="3xl" fontWeight="bold" mb="12px">
                     {data?.name}

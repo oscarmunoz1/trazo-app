@@ -3,6 +3,10 @@ import { Box, Flex, Image, Stack } from '@chakra-ui/react';
 import BgMusicCard from 'assets/img/BgMusicCard.png';
 import { useState } from 'react';
 
+type ImageCarouselProps = {
+  imagesList: string[];
+};
+
 const ImageCarousel = (props: ImageCarouselProps) => {
   const { imagesList } = props;
   const [currentImage, setCurrentImage] = useState<string>(
@@ -18,19 +22,7 @@ const ImageCarousel = (props: ImageCarouselProps) => {
         h={{ sm: '200px', md: '500px', lg: '230px', xl: '300px' }}
         mb="26px"
         mx={{ sm: 'auto', lg: '0px' }}>
-        <Image
-          src={
-            // establishment?.image
-            //   ? `${import.meta.env.VITE_APP_BACKEND_URL}${
-            //       establishment?.image
-            //     }`
-            //   : productPage1
-            currentImage
-          }
-          w="100%"
-          h="100%"
-          borderRadius="15px"
-        />
+        <Image src={currentImage} w="100%" h="100%" borderRadius="15px" />
       </Box>
       <Stack
         direction="row"

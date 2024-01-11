@@ -49,6 +49,7 @@ import CardHeader from 'components/Card/CardHeader';
 // import CameraCard from "./components/CameraCard";
 import FormInput from 'components/Forms/FormInput';
 import HTMLRenderer from 'components/Utils/HTMLRenderer';
+import ImageCarousel from 'components/ImageCarousel/ImageCarousel';
 import ImageParcel1 from 'assets/img/ImageParcel1.png';
 import ProfileInformation from './components/ProfileInformation';
 import TimelineRow from 'components/Tables/TimelineRow';
@@ -331,7 +332,7 @@ function Capture() {
           <CardBody>
             <Flex direction="column" w="100%">
               <Flex direction={{ sm: 'column', lg: 'row' }} mb={{ sm: '22px', lg: '44px' }}>
-                <Flex
+                {/* <Flex
                   direction="column"
                   me={{ lg: '20px', xl: '40px' }}
                   mb={{ sm: '24px', lg: '0px' }}>
@@ -408,7 +409,8 @@ function Capture() {
                       />
                     </Box>
                   </Stack>
-                </Flex>
+                </Flex> */}
+                <ImageCarousel imagesList={historyData?.images} />
                 <Flex direction="column">
                   <Text color={textColor} fontSize="3xl" fontWeight="bold" mb="12px">
                     {historyData?.product}
