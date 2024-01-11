@@ -1,6 +1,6 @@
 import { Box, Flex, Image, Stack } from '@chakra-ui/react';
 
-import BgMusicCard from 'assets/BgMusicCard.png';
+import BgMusicCard from 'assets/img/BgMusicCard.png';
 import { useState } from 'react';
 
 const ImageCarousel = (props: ImageCarouselProps) => {
