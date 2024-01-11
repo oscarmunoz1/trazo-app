@@ -46,7 +46,7 @@ export default function Footer() {
             base: '20px',
             md: '44px'
           }}>
-          <Link color="gray.400" href="https://google.com">
+          <Link color="gray.400" href="">
             Learn
           </Link>
         </ListItem>
@@ -55,7 +55,7 @@ export default function Footer() {
             base: '20px',
             md: '44px'
           }}>
-          <Link color="gray.400" href="https://google.com">
+          <Link color="gray.400" href="">
             Why us?
           </Link>
         </ListItem>
@@ -64,12 +64,12 @@ export default function Footer() {
             base: '20px',
             md: '44px'
           }}>
-          <Link color="gray.400" href="https://google.com">
+          <Link color="gray.400" href="">
             Blog
           </Link>
         </ListItem>
         <ListItem>
-          <Link color="gray.400" href="https://google.com">
+          <Link color="gray.400" href="">
             Contact
           </Link>
         </ListItem>

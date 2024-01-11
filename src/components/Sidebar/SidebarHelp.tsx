@@ -33,7 +33,7 @@ const SidebarHelp = ({ sidebarWidth }: { sidebarWidth: number }) => {
         display={sidebarWidth === 275 || !sidebarWidth ? 'block' : 'none'}>
         Please check our docs
       </Text>
-      <Link w="100%" href="https://google.com/">
+      <Link w="100%" href="">
         <Button
           fontSize="10px"
           fontWeight="bold"

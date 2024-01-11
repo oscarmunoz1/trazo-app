@@ -27,7 +27,7 @@ import {
   UnorderedList,
   useColorModeValue
 } from '@chakra-ui/react';
-import { BsStarFill, BsStarHalf } from 'react-icons/bs';
+import { BsStar, BsStarFill, BsStarHalf } from 'react-icons/bs';
 import {
   FaFacebook,
   FaInstagram,
@@ -416,11 +416,61 @@ function Capture() {
                     {historyData?.product}
                   </Text>
                   <Stack direction="row" spacing="12px" color="orange.300" mb="16px">
-                    <Icon as={BsStarFill} w="26px" h="26px" />
-                    <Icon as={BsStarFill} w="26px" h="26px" />
-                    <Icon as={BsStarFill} w="26px" h="26px" />
-                    <Icon as={BsStarFill} w="26px" h="26px" />
-                    <Icon as={BsStarHalf} w="26px" h="26px" />
+                    <Icon
+                      as={
+                        historyData?.reputation >= 1
+                          ? BsStarFill
+                          : historyData?.reputation > 0.5
+                          ? BsStarHalf
+                          : BsStar
+                      }
+                      w="26px"
+                      h="26px"
+                    />
+                    <Icon
+                      as={
+                        historyData?.reputation >= 2
+                          ? BsStarFill
+                          : historyData?.reputation > 1.5
+                          ? BsStarHalf
+                          : BsStar
+                      }
+                      w="26px"
+                      h="26px"
+                    />
+                    <Icon
+                      as={
+                        historyData?.reputation >= 3
+                          ? BsStarFill
+                          : historyData?.reputation > 2.5
+                          ? BsStarHalf
+                          : BsStar
+                      }
+                      w="26px"
+                      h="26px"
+                    />
+                    <Icon
+                      as={
+                        historyData?.reputation >= 4
+                          ? BsStarFill
+                          : historyData?.reputation > 3.5
+                          ? BsStarHalf
+                          : BsStar
+                      }
+                      w="26px"
+                      h="26px"
+                    />
+                    <Icon
+                      as={
+                        historyData?.reputation === 5
+                          ? BsStarFill
+                          : historyData?.reputation > 4.5
+                          ? BsStarHalf
+                          : BsStar
+                      }
+                      w="26px"
+                      h="26px"
+                    />
                   </Stack>
                   <Text color="gray.400" fontWeight="normal" fontSize="sm">
                     Company
