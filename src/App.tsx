@@ -216,6 +216,8 @@ const App = () => {
             </>
           ) : (
             <>
+              <Route path="/capture" element={<Capture />} />
+              <Route path="/production/:productionId" exact element={<ProductDetail />} />
               <Route path="/auth" element={<AuthLayout />}>
                 <Route path="signin" exact element={<SignIn />} key={1} />
                 <Route path="signup" exact key={2} element={<SignUp />} />

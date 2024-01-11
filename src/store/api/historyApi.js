@@ -51,8 +51,8 @@ export const historyApi = baseApi.injectEndpoints({
       providesTags: (result, error, historyId) => (result ? [{ type: 'History', historyId }] : [])
     }),
     getEvent: build.query({
-      query: ({ companyId, establishmentId, parcelId, eventId }) => ({
-        url: EVENT_URL(companyId, establishmentId, parcelId, eventId),
+      query: ({ companyId, establishmentId, eventId, eventType }) => ({
+        url: EVENT_URL(companyId, establishmentId, eventId, eventType),
         method: 'GET',
         credentials: 'include'
       }),

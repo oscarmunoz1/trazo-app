@@ -57,12 +57,15 @@ export const FINISH_HISTORY = (companyId: string, establishmentId: string, parce
 export const EVENT_URL = (
   companyId: string,
   establishmentId: string,
-  parcelId: string,
-  eventId: string
+  eventId: string,
+  eventType: string
 ) =>
-  eventId
-    ? `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/parcels/${parcelId}/events/${eventId}/`
-    : `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/parcels/${parcelId}/events/`;
+  eventId && eventType
+    ? `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/events/${eventId}/?event_type=${eventType}`
+    : eventId
+    ? `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/events/${eventId}`
+    : `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/events/`;
+
 export const EVENT_CREATE_URL = (companyId: string, establishmentId: string) =>
   `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/events/`;
 export const PRODUCTION_URL = (productionId: string) =>
