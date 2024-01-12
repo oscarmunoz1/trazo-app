@@ -40,13 +40,11 @@ import SalesOverview from './components/SalesOverview';
 import bgImage from 'assets/img/basic-auth.png';
 // assets
 import imageFarm from 'assets/img/imageFarm.png';
-import logoChakra from 'assets/svg/logo-white.svg';
 import { useSelector } from 'react-redux';
 
 export default function DashboardView() {
   const { establishmentId } = useParams();
   const navigate = useNavigate();
-  const [currentEstablishmentId, setCurrentEstablishmentId] = useState(null);
   const [establishment, setEstablishment] = useState(null);
 
   const cardColor = useColorModeValue('white', 'gray.700');
@@ -87,13 +85,7 @@ export default function DashboardView() {
 
   return (
     <Flex flexDirection="column" pt={{ base: '120px', md: '75px' }}>
-      <Text
-        color={mainText}
-        href="#"
-        bg="inherit"
-        borderRadius="inherit"
-        fontWeight="bold"
-        padding="10px">
+      <Text color={mainText} bg="inherit" borderRadius="inherit" fontWeight="bold" padding="10px">
         Establishments
       </Text>
       <Grid

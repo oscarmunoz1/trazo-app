@@ -1,64 +1,42 @@
 // Chakra imports
 import {
   Badge,
-  Box,
-  Button,
   Flex,
-  FormControl,
-  FormLabel,
-  HStack,
   Icon,
   Image,
-  Input,
-  Link,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Stack,
-  Switch,
   Text,
   useColorModeValue,
   useDisclosure
 } from '@chakra-ui/react';
 import { BsStar, BsStarFill, BsStarHalf } from 'react-icons/bs';
 import { FaRegCheckCircle, FaRegDotCircle } from 'react-icons/fa';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import BgSignUp from 'assets/img/basic-auth.png';
+import BoxBackground from '../components/BoxBackground';
 import Card from 'components/Card/Card';
 import CardBody from 'components/Card/CardBody';
 import CardHeader from 'components/Card/CardHeader';
-import FormInput from 'components/Forms/FormInput';
 import HTMLRenderer from 'components/Utils/HTMLRenderer';
 import ImageCarousel from 'components/ImageCarousel/ImageCarousel';
 import { IoEllipsisVerticalSharp } from 'react-icons/io5';
-import NewEstablishment from '../components/forms/NewEstablishment';
 import TimelineRow from 'components/Tables/TimelineRow';
-import productPage1 from 'assets/img/ProductImage1.png';
-import productPage2 from 'assets/img/ProductImage2.png';
-import productPage3 from 'assets/img/ProductImage3.png';
-import productPage4 from 'assets/img/ProductImage4.png';
 import { useGetHistoryQuery } from 'store/api/historyApi';
 import { useSelector } from 'react-redux';
-import { useSignUpMutation } from 'store/api/authApi';
-import { zodResolver } from '@hookform/resolvers/zod';
 
 function ProfileProduction() {
-  const titleColor = useColorModeValue('green.300', 'green.200');
   const textColor = useColorModeValue('gray.700', 'white');
-  const bgColor = useColorModeValue('white', 'gray.700');
-  const bgIcons = useColorModeValue('green.200', 'rgba(255, 255, 255, 0.5)');
   const navigate = useNavigate();
-  const [currentImage, setCurrentImage] = useState(productPage1);
   const { establishmentId, productionId, parcelId } = useParams();
   const [establishment, setEstablishment] = useState(null);
   const { isOpen: isOpen1, onOpen: onOpen1, onClose: onClose1 } = useDisclosure();
 
   const establishments = useSelector((state) => state.company.currentCompany?.establishments);
-
-  const currentCompany = useSelector((state) => state.company.currentCompany);
 
   const { data: historyData, isLoading, isError, isSuccess } = useGetHistoryQuery(productionId);
 
@@ -73,42 +51,9 @@ function ProfileProduction() {
   }, [establishmentId, establishments]);
 
   return (
-    <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden">
-      <Box
-        position="absolute"
-        minH={{ base: '70vh', md: '50vh' }}
-        borderRadius="15px"
-        left="0"
-        right="0"
-        bgRepeat="no-repeat"
-        overflow="hidden"
-        zIndex="-1"
-        top="0"
-        bgImage={BgSignUp}
-        bgSize="cover"
-        mt={{ base: '130px', md: '100px' }}
-        marginInlineStart={'25px'}
-        marginInlineEnd={'25px'}></Box>
-      <Flex
-        direction="column"
-        textAlign="center"
-        justifyContent="center"
-        align="center"
-        mt="6.5rem"
-        pt={'55px'}>
-        <Text fontSize="4xl" color="white" fontWeight="bold">
-          Production Detail
-        </Text>
-        <Text
-          fontSize="md"
-          color="white"
-          fontWeight="normal"
-          mt="10px"
-          mb="26px"
-          w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}>
-          Here you can see the information of the production you have selected.
-        </Text>
-      </Flex>
+    <BoxBackground
+      title={'Production Detail'}
+      subtitle={'Here you can see the information of the production you have selected.'}>
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
         <Card
           mt={{ md: '24px' }}
@@ -314,7 +259,7 @@ function ProfileProduction() {
           </CardBody>
         </Card>
       </Flex>
-    </Flex>
+    </BoxBackground>
   );
 }
 
