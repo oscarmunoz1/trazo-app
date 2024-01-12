@@ -19,9 +19,9 @@ function getCookie(name: string) {
 const baseQuery = fetchBaseQuery({
   baseUrl,
   prepareHeaders: (headers) => {
-    if (!headers.get('Accept')) headers.set('Accept', 'application/json');
-    if (!headers.get('default-content-type'))
-      if (!headers.get('Content-Type')) headers.set('Content-Type', 'application/json');
+    // if (!headers.get('Accept')) headers.set('Accept', 'application/json');
+    // if (!headers.get('default-content-type'))
+    //   if (!headers.get('Content-Type')) headers.set('Content-Type', 'application/json');
     const csrftoken = getCookie(CSRF_TOKEN);
     if (csrftoken) headers.set(CSRF_HEADER_KEY, csrftoken);
     return headers;

@@ -21,13 +21,13 @@ import BgSignUp from 'assets/img/basic-auth.png';
 import Card from 'components/Card/Card';
 import CardBody from 'components/Card/CardBody';
 import CardHeader from 'components/Card/CardHeader';
-import EditEvent from '../components/forms/EditEvent';
+import EditParcel from '../components/forms/EditParcel';
 import FormInput from 'components/Forms/FormInput';
-import NewEvent from '../components/forms/NewEvent';
+import NewParcel from '../components/forms/NewParcel';
 import { useSignUpMutation } from 'store/api/authApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-function UpdateEvent({ isEdit = false }) {
+function AddParcel({ isEdit = false }) {
   const titleColor = useColorModeValue('green.300', 'green.200');
   const textColor = useColorModeValue('gray.700', 'white');
   const bgColor = useColorModeValue('white', 'gray.700');
@@ -35,7 +35,12 @@ function UpdateEvent({ isEdit = false }) {
   const navigate = useNavigate();
 
   return (
-    <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden">
+    <Flex
+      direction="column"
+      alignSelf="center"
+      justifySelf="center"
+      overflow="hidden"
+      alignItems="center">
       <Box
         position="absolute"
         minH={{ base: '70vh', md: '50vh' }}
@@ -59,7 +64,7 @@ function UpdateEvent({ isEdit = false }) {
         mt="6.5rem"
         pt={'55px'}>
         <Text fontSize="4xl" color="white" fontWeight="bold">
-          {isEdit ? 'Edit the selected Event' : 'Add a new Event'}
+          {isEdit ? 'Edit the selected Parcel' : 'Add a new Parcel'}
         </Text>
         <Text
           fontSize="md"
@@ -69,15 +74,15 @@ function UpdateEvent({ isEdit = false }) {
           mb="26px"
           w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}>
           {isEdit
-            ? 'Modify the form below to edit the selected event.'
-            : 'Complete the form below to add a new event to your parcel history.'}
+            ? 'Modify the form below to edit the selected parcel.'
+            : 'Complete the form below to add a new parcel to your establishment.'}
         </Text>
       </Flex>
-      <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
-        {isEdit ? <EditEvent /> : <NewEvent />}
+      <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px" w="90%" maxW={'100%'}>
+        {isEdit ? <EditParcel /> : <NewParcel />}
       </Flex>
     </Flex>
   );
 }
 
-export default UpdateEvent;
+export default AddParcel;

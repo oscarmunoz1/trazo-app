@@ -89,7 +89,7 @@ function ProfileEstablishment() {
       <Box
         position="absolute"
         minH={{ base: '70vh', md: '50vh' }}
-        borderRadius={{ md: '15px' }}
+        borderRadius="15px"
         left="0"
         right="0"
         bgRepeat="no-repeat"
@@ -98,7 +98,7 @@ function ProfileEstablishment() {
         top="0"
         bgImage={BgSignUp}
         bgSize="cover"
-        mt={{ md: '100px' }}
+        mt={{ base: '130px', md: '100px' }}
         marginInlineStart={'25px'}
         marginInlineEnd={'25px'}></Box>
       <Flex

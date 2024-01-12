@@ -324,10 +324,11 @@ function NewParcel() {
     <Flex
       direction="column"
       bg={bgColor}
+      w="100%"
       boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
       borderRadius="15px">
-      <Tabs variant="unstyled" mt="24px" alignSelf="center">
-        <TabList display="flex" align="center">
+      <Tabs variant="unstyled" mt="24px" alignSelf="center" w="100%">
+        <TabList display="flex" align="center" justifyContent={'center'}>
           <Tab
             ref={mainInfoTab}
             _focus="none"
@@ -615,8 +616,8 @@ function NewParcel() {
             <MapCreator
               handleNext={handleNext}
               prevTab={mainInfoTab}
-              center={parcelData?.map_metadata.center}
-              zoom={parcelData?.map_metadata.zoom}
+              center={parcelData?.map_metadata?.center}
+              zoom={parcelData?.map_metadata?.zoom}
               mapPolygon={parcelData?.polygon}
             />
             {/* <Card>
@@ -773,11 +774,9 @@ function NewParcel() {
                     borderRadius="15px"
                     w="100%"
                     maxWidth={'980px'}
-                    // minH="130px"
                     cursor="pointer"
                     overflowY={'auto'}
                     minH={'175px'}
-                    // p="60px"
                     {...getRootProps({ className: 'dropzone' })}>
                     <Input {...getInputProps()} />
                     <Button variant="no-hover">
@@ -789,7 +788,6 @@ function NewParcel() {
                         //   ))}
                         // </Text>
                         <Flex gap="20px" p="20px" flexWrap={'wrap'}>
-                          {/* <Stack spacing={2}> */}
                           {acceptedFiles.map((file, index) => (
                             <Box key={index}>
                               <img

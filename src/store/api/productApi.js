@@ -24,38 +24,49 @@ export const productApi = baseApi.injectEndpoints({
       providesTags: (result, error, parcelId) => (result ? [{ type: 'Parcel', parcelId }] : [])
     }),
     createParcel: build.mutation({
-      query: ({ companyId, establishmentId, parcelData }) => ({
-        url: PARCEL_URL(companyId, establishmentId),
-        method: 'POST',
-        credentials: 'include',
-        body: parcelData
-      }),
+      query: ({ companyId, establishmentId, parcelData }) => {
+        const formData = new FormData();
+        parcelData.album.images.forEach((file) => {
+          formData.append('album[images]', file);
+        });
+
+        formData.append('name', parcelData.name);
+        formData.append('description', parcelData.description);
+        formData.append('area', parcelData.area);
+        formData.append('certified', parcelData.certified);
+        formData.append('polygon', JSON.stringify(parcelData.polygon));
+        formData.append('map_metadata', JSON.stringify(parcelData.map_metadata));
+        formData.append('establishment', establishmentId);
+
+        return {
+          url: PARCEL_URL(companyId, establishmentId),
+          method: 'POST',
+          credentials: 'include',
+          body: formData,
+          formData: true
+        };
+      },
       invalidatesTags: (result) => (result ? ['Parcel'] : [])
     }),
     updateParcel: build.mutation({
       query: ({ companyId, establishmentId, parcelId, parcelData }) => {
         const formData = new FormData();
         parcelData.album.images.forEach((file) => {
-          formData.append('album', file);
+          formData.append('album[images]', file);
         });
 
-        for (const [key, value] of Object.entries(parcelData)) {
-          if (key !== 'album') {
-            formData.append(key, value);
-          }
-        }
+        formData.append('name', parcelData.name);
+        formData.append('description', parcelData.description);
+        formData.append('area', parcelData.area);
+        formData.append('certified', parcelData.certified);
+        formData.append('polygon', JSON.stringify(parcelData.polygon));
+        formData.append('map_metadata', JSON.stringify(parcelData.map_metadata));
 
         return {
           url: PARCEL_URL(companyId, establishmentId, parcelId),
           method: 'PATCH',
           credentials: 'include',
-
           body: formData,
-          headers: {
-            'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryXofNuTAW9CyJMamA'
-            // "Accept-Encoding": "gzip, deflate, br",
-            // Accept: "application/json",
-          },
           formData: true
         };
       },

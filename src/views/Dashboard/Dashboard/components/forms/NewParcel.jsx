@@ -17,6 +17,7 @@
 
 // Chakra imports
 import {
+  Box,
   Button,
   CircularProgress,
   Flex,
@@ -149,6 +150,13 @@ function NewParcel() {
     certificate: false
   });
 
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    // onDrop,
+    // accept: "image/*", // Accepted file types
+    maxFiles: 5 // Maximum number of files
+    // maxSize: 1024 * 1024 * 5, // Maximum file size (5 MB)
+  });
+
   const onMapClick = (e) => {
     setPath([...path, { lat: e.latLng.lat(), lng: e.latLng.lng() }]);
   };
@@ -192,8 +200,6 @@ function NewParcel() {
   const descriptionTab = useRef();
   const mediaTab = useRef();
   const certificationTab = useRef();
-
-  const { getRootProps, getInputProps } = useDropzone();
 
   const currentParcel = useSelector((state) => state.form.currentForm?.parcel);
 
@@ -251,13 +257,19 @@ function NewParcel() {
   const [createParcel, { data, error, isSuccess, isLoading }] = useCreateParcelMutation();
 
   const onSubmitCertificate = (data) => {
+    const { product, ...currentParcelData } = currentParcel;
+    if (product) {
+      currentParcelData['product'] = product;
+    }
     createParcel({
       companyId: currentCompany?.id,
       establishmentId,
       parcelData: {
         ...currentParcel,
         ...data,
-        establishment: parseInt(establishmentId)
+        establishment: parseInt(establishmentId),
+        album: { images: acceptedFiles },
+        certified: data.certificate
       }
     });
   };
@@ -652,14 +664,50 @@ function NewParcel() {
                     border="1px dashed #E2E8F0"
                     borderRadius="15px"
                     w="100%"
-                    minH="130px"
+                    maxWidth={'980px'}
                     cursor="pointer"
+                    overflowY={'auto'}
+                    minH={'175px'}
                     {...getRootProps({ className: 'dropzone' })}>
                     <Input {...getInputProps()} />
                     <Button variant="no-hover">
-                      <Text color="gray.400" fontWeight="normal">
-                        Drop files here to upload
-                      </Text>
+                      {acceptedFiles.length > 0 ? (
+                        // <Text fontSize="sm" color="green">
+                        //   {files.length} file(s) selected:
+                        //   {files.map((file) => (
+                        //     <span key={file.path}> {file.name},</span>
+                        //   ))}
+                        // </Text>
+                        <Flex gap="20px" p="20px" flexWrap={'wrap'}>
+                          {acceptedFiles.map((file, index) => (
+                            <Box key={index}>
+                              <img
+                                src={URL.createObjectURL(file)} // Create a preview URL for the image
+                                alt={file.name}
+                                style={{
+                                  width: '150px',
+                                  height: '100px',
+                                  borderRadius: '15px',
+                                  objectFit: 'contain'
+                                }}
+                              />
+                              <Text
+                                color="gray.400"
+                                fontWeight="normal"
+                                maxWidth="150px"
+                                textOverflow={'ellipsis'}
+                                overflow={'hidden'}>
+                                {file.name}
+                              </Text>
+                            </Box>
+                          ))}
+                          {/* </Stack> */}
+                        </Flex>
+                      ) : (
+                        <Text color="gray.400" fontWeight="normal">
+                          Drop files here to upload
+                        </Text>
+                      )}
                     </Button>
                   </Flex>
                   <Flex justify="space-between">
