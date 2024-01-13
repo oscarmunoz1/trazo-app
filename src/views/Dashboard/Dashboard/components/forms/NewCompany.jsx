@@ -141,7 +141,6 @@ function NewCompany() {
   };
 
   const onSubmitDescription = (data) => {
-    console.log(data);
     dispatch(
       setForm({
         company: {

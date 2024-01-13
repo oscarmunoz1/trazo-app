@@ -202,7 +202,7 @@ export default function Dashboard(props: any) {
             base: '100%',
             xl: `calc(100% - ${sidebarWidth}px)`
           }}>
-          <Portal>
+          <Portal padding="0">
             <AdminNavbar
               onOpen={onOpen}
               brandText={getActiveRoute(routes)}
@@ -213,8 +213,10 @@ export default function Dashboard(props: any) {
           </Portal>
 
           {getRoute() ? (
-            <PanelContent>
-              <PanelContainer>
+            <PanelContent
+              paddingInlineStart={{ base: '0px', lg: '15px' }}
+              paddingInlineEnd={{ base: '0px', lg: '15px' }}>
+              <PanelContainer padding={{ base: '0px', lg: '30px 15px' }}>
                 <Outlet />
               </PanelContainer>
             </PanelContent>

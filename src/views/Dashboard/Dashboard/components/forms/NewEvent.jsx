@@ -247,7 +247,6 @@ function NewEstablishment() {
   const { reset: descriptionReset, handleSubmit: descriptionSubmit } = descriptionMethods;
 
   const onSubmitDescription = (data) => {
-    console.log(data);
     dispatch(
       setForm({
         event: {
@@ -268,8 +267,6 @@ function NewEstablishment() {
   const [createEvent, { data, error, isSuccess, isLoading }] = useCreateEventMutation();
 
   const onSubmitMedia = (data) => {
-    console.log(data);
-
     createEvent({
       ...currentEvent,
       companyId: currentCompany.id,

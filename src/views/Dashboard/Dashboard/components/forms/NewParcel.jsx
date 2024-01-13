@@ -206,7 +206,6 @@ function NewParcel() {
   const infoMethods = useForm({
     resolver: zodResolver(formSchemaInfo)
   });
-  console.log(path);
   const {
     reset,
     handleSubmit,
@@ -229,7 +228,6 @@ function NewParcel() {
   };
 
   const onSubmitDescription = (data) => {
-    console.log(data);
     dispatch(
       setForm({
         parcel: {

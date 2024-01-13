@@ -247,9 +247,6 @@ function Capture() {
     }
   }, [productionId, refetch]);
 
-  console.log(historyData);
-  console.log(productionId);
-
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();

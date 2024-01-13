@@ -15,12 +15,7 @@ function BoxBackground(props: BoxBackgroundProps) {
   const { title, subtitle, children } = props;
 
   return (
-    <Flex
-      direction="column"
-      alignSelf="center"
-      justifySelf="center"
-      overflow="hidden"
-      alignItems="center">
+    <Flex direction="column" alignSelf="center" justifySelf="center" alignItems="center">
       <Box
         position="absolute"
         minH={{ base: '70vh', md: '50vh' }}
@@ -28,7 +23,6 @@ function BoxBackground(props: BoxBackgroundProps) {
         left="0"
         right="0"
         bgRepeat="no-repeat"
-        overflow="hidden"
         zIndex="-1"
         top="0"
         bgImage={BgSignUp}
@@ -44,7 +38,12 @@ function BoxBackground(props: BoxBackgroundProps) {
         mt="6.5rem"
         width={'100%'}
         pt={'55px'}>
-        <Text fontSize="4xl" color="white" fontWeight="bold">
+        <Text
+          fontSize="4xl"
+          color="white"
+          marginInlineStart="25px"
+          marginInlineEnd="25px"
+          fontWeight="bold">
           {title}
         </Text>
         <Text
@@ -57,7 +56,7 @@ function BoxBackground(props: BoxBackgroundProps) {
           {subtitle}
         </Text>
       </Flex>
-      <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px" w="90%" maxW={'100%'}>
+      <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px" w="100%">
         {children}
       </Flex>
     </Flex>

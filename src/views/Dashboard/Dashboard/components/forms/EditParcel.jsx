@@ -255,7 +255,6 @@ function NewParcel() {
   };
 
   const onSubmitDescription = (data) => {
-    console.log(data);
     dispatch(
       setForm({
         parcel: {
@@ -283,17 +282,11 @@ function NewParcel() {
   const [updateParcel, { data, error, isSuccess, isLoading }] = useUpdateParcelMutation();
 
   const onSubmitCertificate = (data) => {
-    console.log(data);
     const { product, ...currentParcelData } = currentParcel;
     if (product) {
       currentParcelData['product'] = product;
     }
-    console.log({
-      ...currentParcelData,
-      ...currentParcelForm,
-      establishment: parseInt(establishmentId),
-      album: { images: acceptedFiles }
-    });
+
     updateParcel({
       parcelId,
       companyId: currentCompany?.id,

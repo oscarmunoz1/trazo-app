@@ -215,7 +215,6 @@ function Sidebar(props: SidebarProps) {
         );
       }
       if (prop.collapse) {
-        console.log('prop', prop);
         return (
           <Accordion allowToggle>
             <AccordionItem border="none">
@@ -465,7 +464,6 @@ function Sidebar(props: SidebarProps) {
   const createAccordionLinks = (routes: Route[] | undefined) => {
     let inactiveColor = useColorModeValue('gray.400', 'gray.400');
     let activeColor = useColorModeValue('gray.700', 'white');
-    console.log('routes11', routes);
     return routes?.map((prop, index) => {
       return (
         <NavLink to={prop.layout + prop.path}>
