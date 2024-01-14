@@ -57,7 +57,7 @@ function ProfileProduction() {
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
         <Card
           mt={{ md: '24px' }}
-          maxWidth={{ sm: '95%', md: '85%', lg: '80%' }}
+          maxWidth={{ sm: '100%', md: '100%', lg: '80%' }}
           px="0px"
           pt={{ sm: '16px', md: '32px', lg: '0px' }}
           boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px">

@@ -51,6 +51,7 @@ import CardHeader from 'components/Card/CardHeader';
 // Custom components
 import Editor from 'components/Editor/Editor';
 import FormInput from 'components/Forms/FormInput';
+import FormLayout from 'components/Forms/FormLayout';
 import MapCreator from 'components/Map/MapCreator';
 import { setEstablishmentParcel } from 'store/features/companySlice';
 import { useCreateParcelMutation } from 'store/api/productApi.js';
@@ -285,429 +286,136 @@ function NewParcel() {
     }
   }, [isSuccess]);
 
-  const handleMapLoad = (map) => {
-    setMap(map);
-  };
-
-  const handleDrawingManagerLoad = (drawingManager) => {
-    // Access to drawingManager object
-  };
-
-  const handlePolygonComplete = (polygon) => {
-    setPolygon(polygon);
-    setDrawingMode(false);
-  };
-
-  const toggleDrawingMode = () => {
-    setDrawingMode(!drawingMode);
-    if (map && polygon) {
-      polygon.setMap(null); // Remove existing polygon when toggling drawing mode
-      setPolygon(null);
+  const tabsList = [
+    {
+      name: 'mainInfo',
+      ref: mainInfoTab,
+      label: '1. Main Info',
+      nextTab: 'location',
+      onClick: () =>
+        setActiveBullets({
+          mainInfo: true,
+          location: false,
+          description: false,
+          media: false,
+          certificate: false
+        })
+    },
+    {
+      name: 'location',
+      ref: locationTab,
+      label: '2. Location',
+      nextTab: 'description',
+      onClick: () =>
+        setActiveBullets({
+          mainInfo: true,
+          location: true,
+          description: false,
+          media: false,
+          certificate: false
+        })
+    },
+    {
+      name: 'description',
+      ref: descriptionTab,
+      label: '3. Description',
+      nextTab: 'media',
+      onClick: () =>
+        setActiveBullets({
+          mainInfo: true,
+          location: true,
+          description: true,
+          media: false,
+          certificate: false
+        })
+    },
+    {
+      name: 'media',
+      ref: mediaTab,
+      label: '4. Media',
+      nextTab: 'certificate',
+      onClick: () =>
+        setActiveBullets({
+          mainInfo: true,
+          location: true,
+          description: true,
+          media: true,
+          certificate: false
+        })
+    },
+    {
+      name: 'certificate',
+      ref: certificationTab,
+      label: '5. Certificate',
+      onClick: () =>
+        setActiveBullets({
+          mainInfo: true,
+          location: true,
+          description: true,
+          media: true,
+          certificate: true
+        })
     }
-  };
+  ];
 
   return (
-    <Flex
-      direction="column"
-      bg={bgColor}
-      boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
-      borderRadius="15px">
-      <Tabs variant="unstyled" mt="24px" alignSelf="center">
-        <TabList display="flex" align="center">
-          <Tab
-            ref={mainInfoTab}
-            _focus="none"
-            w={{ sm: '80px', md: '200px' }}
-            onClick={() =>
-              setActiveBullets({
-                mainInfo: true,
-                location: false,
-                description: false,
-                media: false,
-                certificate: false
-              })
-            }>
-            <Flex
-              direction="column"
-              justify="center"
-              align="center"
-              position="relative"
-              _before={{
-                content: "''",
-                width: { sm: '80px', md: '235px' },
-                height: '3px',
-                bg: activeBullets.location ? textColor : 'gray.200',
-                left: { sm: '12px', md: '42px' },
-                top: {
-                  sm: activeBullets.mainInfo ? '6px' : '4px',
-                  md: null
-                },
-                position: 'absolute',
-                bottom: activeBullets.mainInfo ? '40px' : '38px',
+    <FormLayout tabsList={tabsList} activeBullets={activeBullets}>
+      <TabPanel>
+        <Card>
+          <CardHeader mb="22px">
+            <Text color={textColor} fontSize="lg" fontWeight="bold">
+              Parcel Info
+            </Text>
+          </CardHeader>
+          <CardBody>
+            <FormProvider {...infoMethods}>
+              <form onSubmit={handleSubmit(onSubmitInfo)} style={{ width: '100%' }}>
+                <Stack direction="column" spacing="20px" w="100%">
+                  <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
+                    <FormControl>
+                      <FormInput name="name" label="Name" placeholder="Parcel name" fontSize="xs" />
+                    </FormControl>
+                    <FormControl>
+                      <FormInput name="area" label="Area" placeholder="Parcel area" fontSize="xs" />
+                    </FormControl>
+                  </Stack>
 
-                transition: 'all .3s ease'
-              }}>
-              <Icon
-                as={BsCircleFill}
-                color={activeBullets.mainInfo ? textColor : 'gray.300'}
-                w={activeBullets.mainInfo ? '16px' : '12px'}
-                h={activeBullets.mainInfo ? '16px' : '12px'}
-                mb="8px"
-                zIndex={1}
-              />
-              <Text
-                color={activeBullets.mainInfo ? { textColor } : 'gray.300'}
-                fontWeight={activeBullets.mainInfo ? 'bold' : 'normal'}
-                display={{ sm: 'none', md: 'block' }}>
-                1. Main Info
-              </Text>
-            </Flex>
-          </Tab>
-          <Tab
-            ref={locationTab}
-            _focus="none"
-            w={{ sm: '120px', md: '250px', lg: '260px' }}
-            onClick={() =>
-              setActiveBullets({
-                mainInfo: true,
-                location: true,
-                description: false,
-                media: false,
-                certificate: false
-              })
-            }>
-            <Flex
-              direction="column"
-              justify="center"
-              align="center"
-              position="relative"
-              _before={{
-                content: "''",
-                width: { sm: '120px', md: '235px', lg: '235px' },
-                height: '3px',
-                bg: activeBullets.description ? textColor : 'gray.200',
-                left: { sm: '12px', md: '38px' },
-                top: {
-                  sm: activeBullets.location ? '5px' : '4px',
-                  md: null
-                },
-                position: 'absolute',
-                bottom: activeBullets.location ? '40px' : '38px',
+                  <Button
+                    variant="no-hover"
+                    bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+                    alignSelf="flex-end"
+                    mt="24px"
+                    w="100px"
+                    h="35px"
+                    type="submit">
+                    <Text fontSize="xs" color="#fff" fontWeight="bold">
+                      NEXT
+                    </Text>
+                  </Button>
+                </Stack>
+              </form>
+            </FormProvider>
+          </CardBody>
+        </Card>
+      </TabPanel>
+      <TabPanel>
+        <MapCreator handleNext={handleNext} prevTab={mainInfoTab} />
+      </TabPanel>
 
-                transition: 'all .3s ease'
-              }}>
-              <Icon
-                as={BsCircleFill}
-                color={activeBullets.location ? textColor : 'gray.300'}
-                w={activeBullets.location ? '16px' : '12px'}
-                h={activeBullets.location ? '16px' : '12px'}
-                mb="8px"
-                zIndex={1}
-              />
-              <Text
-                color={activeBullets.location ? { textColor } : 'gray.300'}
-                fontWeight={activeBullets.location ? 'bold' : 'normal'}
-                display={{ sm: 'none', md: 'block' }}>
-                2. Location
-              </Text>
-            </Flex>
-          </Tab>
-          <Tab
-            ref={descriptionTab}
-            _focus="none"
-            w={{ sm: '80px', md: '200px' }}
-            onClick={() =>
-              setActiveBullets({
-                mainInfo: true,
-                location: true,
-                description: true,
-                media: false,
-                certificate: false
-              })
-            }>
-            <Flex
-              direction="column"
-              justify="center"
-              align="center"
-              position="relative"
-              _before={{
-                content: "''",
-                width: { sm: '80px', md: '200px' },
-                height: '3px',
-                bg: activeBullets.media ? textColor : 'gray.200',
-                left: { sm: '12px', md: '46px' },
-                top: {
-                  sm: activeBullets.description ? '6px' : '4px',
-                  md: null
-                },
-                position: 'absolute',
-                bottom: activeBullets.description ? '40px' : '38px',
-
-                transition: 'all .3s ease'
-              }}>
-              <Icon
-                as={BsCircleFill}
-                color={activeBullets.description ? textColor : 'gray.300'}
-                w={activeBullets.description ? '16px' : '12px'}
-                h={activeBullets.description ? '16px' : '12px'}
-                mb="8px"
-                zIndex={1}
-              />
-              <Text
-                color={activeBullets.description ? { textColor } : 'gray.300'}
-                fontWeight={activeBullets.description ? 'bold' : 'normal'}
-                transition="all .3s ease"
-                _hover={{ color: textColor }}
-                display={{ sm: 'none', md: 'block' }}>
-                3. Description
-              </Text>
-            </Flex>
-          </Tab>
-          <Tab
-            ref={mediaTab}
-            _focus="none"
-            w={{ sm: '80px', md: '200px' }}
-            onClick={() =>
-              setActiveBullets({
-                mainInfo: true,
-                location: true,
-                description: true,
-                media: true,
-                certificate: false
-              })
-            }>
-            <Flex
-              direction="column"
-              justify="center"
-              align="center"
-              position="relative"
-              _before={{
-                content: "''",
-                width: { sm: '80px', md: '200px' },
-                height: '3px',
-                bg: activeBullets.certificate ? textColor : 'gray.200',
-                left: { sm: '12px', md: '32px' },
-                top: { sm: activeBullets.media ? '6px' : '4px', md: null },
-                position: 'absolute',
-                bottom: activeBullets.media ? '40px' : '38px',
-
-                transition: 'all .3s ease'
-              }}>
-              <Icon
-                as={BsCircleFill}
-                color={activeBullets.media ? textColor : 'gray.300'}
-                w={activeBullets.media ? '16px' : '12px'}
-                h={activeBullets.media ? '16px' : '12px'}
-                mb="8px"
-                zIndex={1}
-              />
-              <Text
-                color={activeBullets.media ? { textColor } : 'gray.300'}
-                fontWeight={activeBullets.media ? 'bold' : 'normal'}
-                transition="all .3s ease"
-                _hover={{ color: textColor }}
-                display={{ sm: 'none', md: 'block' }}>
-                4. Media
-              </Text>
-            </Flex>
-          </Tab>
-          <Tab
-            ref={certificationTab}
-            _focus="none"
-            w={{ sm: '80px', md: '200px' }}
-            onClick={() =>
-              setActiveBullets({
-                mainInfo: true,
-                location: true,
-                description: true,
-                media: true,
-                certificate: true
-              })
-            }>
-            <Flex direction="column" justify="center" align="center">
-              <Icon
-                as={BsCircleFill}
-                color={activeBullets.certificate ? textColor : 'gray.300'}
-                w={activeBullets.certificate ? '16px' : '12px'}
-                h={activeBullets.certificate ? '16px' : '12px'}
-                mb="8px"
-                zIndex={1}
-              />
-              <Text
-                color={activeBullets.certificate ? { textColor } : 'gray.300'}
-                fontWeight={activeBullets.certificate ? 'bold' : 'normal'}
-                transition="all .3s ease"
-                _hover={{ color: textColor }}
-                display={{ sm: 'none', md: 'block' }}>
-                5. Certificate
-              </Text>
-            </Flex>
-          </Tab>
-        </TabList>
-
-        <TabPanels mt="24px" maxW={{ md: '90%', lg: '100%' }} mx="auto">
-          <TabPanel>
-            <Card>
-              <CardHeader mb="22px">
-                <Text color={textColor} fontSize="lg" fontWeight="bold">
-                  Parcel Info
-                </Text>
-              </CardHeader>
-              <CardBody>
-                <FormProvider {...infoMethods}>
-                  <form onSubmit={handleSubmit(onSubmitInfo)} style={{ width: '100%' }}>
-                    <Stack direction="column" spacing="20px" w="100%">
-                      <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
-                        <FormControl>
-                          <FormInput
-                            name="name"
-                            label="Name"
-                            placeholder="Parcel name"
-                            fontSize="xs"
-                          />
-                        </FormControl>
-                        <FormControl>
-                          <FormInput
-                            name="area"
-                            label="Area"
-                            placeholder="Parcel area"
-                            fontSize="xs"
-                          />
-                        </FormControl>
-                      </Stack>
-
-                      <Button
-                        variant="no-hover"
-                        bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                        alignSelf="flex-end"
-                        mt="24px"
-                        w="100px"
-                        h="35px"
-                        type="submit">
-                        <Text fontSize="xs" color="#fff" fontWeight="bold">
-                          NEXT
-                        </Text>
-                      </Button>
-                    </Stack>
-                  </form>
-                </FormProvider>
-              </CardBody>
-            </Card>
-          </TabPanel>
-          <TabPanel>
-            <MapCreator handleNext={handleNext} prevTab={mainInfoTab} />
-          </TabPanel>
-
-          <TabPanel>
-            <Card>
-              <CardHeader mb="32px">
-                <Text fontSize="lg" color={textColor} fontWeight="bold">
-                  Description
-                </Text>
-              </CardHeader>
-              <CardBody>
-                <FormProvider {...descriptionMethods}>
-                  <form onSubmit={descriptionSubmit(onSubmitDescription)} style={{ width: '100%' }}>
-                    <Flex direction="column" w="100%">
-                      <Stack direction="column" spacing="20px" w="100%">
-                        <Editor />
-                      </Stack>
-                      <Flex justify="space-between">
-                        <Button
-                          variant="no-hover"
-                          bg={bgPrevButton}
-                          alignSelf="flex-end"
-                          mt="24px"
-                          w="100px"
-                          h="35px"
-                          onClick={() => mainInfoTab.current.click()}>
-                          <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                            PREV
-                          </Text>
-                        </Button>
-                        <Button
-                          variant="no-hover"
-                          bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                          alignSelf="flex-end"
-                          mt="24px"
-                          w="100px"
-                          h="35px"
-                          type="submit">
-                          <Text fontSize="xs" color="#fff" fontWeight="bold">
-                            NEXT
-                          </Text>
-                        </Button>
-                      </Flex>
-                    </Flex>
-                  </form>
-                </FormProvider>
-              </CardBody>
-            </Card>
-          </TabPanel>
-          <TabPanel>
-            <Card>
-              <CardHeader mb="22px">
-                <Text color={textColor} fontSize="xl" fontWeight="bold" mb="3px">
-                  Media
-                </Text>
-              </CardHeader>
-              <CardBody>
+      <TabPanel>
+        <Card>
+          <CardHeader mb="32px">
+            <Text fontSize="lg" color={textColor} fontWeight="bold">
+              Description
+            </Text>
+          </CardHeader>
+          <CardBody>
+            <FormProvider {...descriptionMethods}>
+              <form onSubmit={descriptionSubmit(onSubmitDescription)} style={{ width: '100%' }}>
                 <Flex direction="column" w="100%">
-                  <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
-                    Parcel images
-                  </Text>
-                  <Flex
-                    align="center"
-                    justify="center"
-                    border="1px dashed #E2E8F0"
-                    borderRadius="15px"
-                    w="100%"
-                    maxWidth={'980px'}
-                    cursor="pointer"
-                    overflowY={'auto'}
-                    minH={'175px'}
-                    {...getRootProps({ className: 'dropzone' })}>
-                    <Input {...getInputProps()} />
-                    <Button variant="no-hover">
-                      {acceptedFiles.length > 0 ? (
-                        // <Text fontSize="sm" color="green">
-                        //   {files.length} file(s) selected:
-                        //   {files.map((file) => (
-                        //     <span key={file.path}> {file.name},</span>
-                        //   ))}
-                        // </Text>
-                        <Flex gap="20px" p="20px" flexWrap={'wrap'}>
-                          {acceptedFiles.map((file, index) => (
-                            <Box key={index}>
-                              <img
-                                src={URL.createObjectURL(file)} // Create a preview URL for the image
-                                alt={file.name}
-                                style={{
-                                  width: '150px',
-                                  height: '100px',
-                                  borderRadius: '15px',
-                                  objectFit: 'contain'
-                                }}
-                              />
-                              <Text
-                                color="gray.400"
-                                fontWeight="normal"
-                                maxWidth="150px"
-                                textOverflow={'ellipsis'}
-                                overflow={'hidden'}>
-                                {file.name}
-                              </Text>
-                            </Box>
-                          ))}
-                          {/* </Stack> */}
-                        </Flex>
-                      ) : (
-                        <Text color="gray.400" fontWeight="normal">
-                          Drop files here to upload
-                        </Text>
-                      )}
-                    </Button>
-                  </Flex>
+                  <Stack direction="column" spacing="20px" w="100%">
+                    <Editor />
+                  </Stack>
                   <Flex justify="space-between">
                     <Button
                       variant="no-hover"
@@ -716,7 +424,7 @@ function NewParcel() {
                       mt="24px"
                       w="100px"
                       h="35px"
-                      onClick={() => descriptionTab.current.click()}>
+                      onClick={() => mainInfoTab.current.click()}>
                       <Text fontSize="xs" color="gray.700" fontWeight="bold">
                         PREV
                       </Text>
@@ -728,121 +436,209 @@ function NewParcel() {
                       mt="24px"
                       w="100px"
                       h="35px"
-                      onClick={() => certificationTab.current.click()}>
+                      type="submit">
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
                         NEXT
                       </Text>
                     </Button>
                   </Flex>
                 </Flex>
-              </CardBody>
-            </Card>
-          </TabPanel>
-          <TabPanel>
-            <Card>
-              <CardHeader mb="40px">
-                <Flex
-                  direction="column"
-                  align="center"
-                  justify="center"
-                  textAlign="center"
-                  w="80%"
-                  mx="auto">
-                  <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
-                    Do you want to certificate this parcel?
-                  </Text>
-                  <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                    In the following inputs you must give detailed information in order to certify
-                    this parcel.
-                  </Text>
-                </Flex>
-              </CardHeader>
-              <CardBody>
-                <Flex direction="column" w="100%">
-                  <Stack direction="column" spacing="20px">
-                    <FormProvider {...methodsCertificate}>
-                      <form
-                        onSubmit={handleSubmitCertificate(onSubmitCertificate)}
-                        style={{ width: '100%' }}>
-                        <FormControl display="flex" alignItems="center" mb="25px">
-                          <Switch
-                            id="certificate"
-                            colorScheme="green"
-                            me="10px"
-                            {...registerCertificate('certificate')}
-                          />
-                          <FormLabel htmlFor="certificate" mb="0" ms="1" fontWeight="normal">
-                            Yes, I want to certify this parcel
-                          </FormLabel>
-                        </FormControl>
-                        <FormInput
-                          fontSize="xs"
-                          ms="4px"
-                          borderRadius="15px"
-                          type="text"
-                          placeholder="Contact number of the parcel"
-                          name="contactNumber"
-                          label="Contact number"
-                          disabled={!certificateValue}
-                        />
-                        <FormInput
-                          fontSize="xs"
-                          ms="4px"
-                          borderRadius="15px"
-                          type="text"
-                          placeholder="Address of the parcel"
-                          name="address"
-                          label="Address"
-                          disabled={!certificateValue}
-                        />
-                        <Flex justify="space-between" width={'100%'}>
-                          <Button
-                            variant="no-hover"
-                            bg={bgPrevButton}
-                            alignSelf="flex-end"
-                            mt="24px"
-                            w={{ sm: '75px', lg: '100px' }}
-                            h="35px"
-                            onClick={() => prevTab.current.click()}>
-                            <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                              PREV
-                            </Text>
-                          </Button>
-                          <Button
-                            bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                            _hover={{
-                              bg: 'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)'
+              </form>
+            </FormProvider>
+          </CardBody>
+        </Card>
+      </TabPanel>
+      <TabPanel>
+        <Card>
+          <CardHeader mb="22px">
+            <Text color={textColor} fontSize="xl" fontWeight="bold" mb="3px">
+              Media
+            </Text>
+          </CardHeader>
+          <CardBody>
+            <Flex direction="column" w="100%">
+              <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
+                Parcel images
+              </Text>
+              <Flex
+                align="center"
+                justify="center"
+                border="1px dashed #E2E8F0"
+                borderRadius="15px"
+                w="100%"
+                maxWidth={'980px'}
+                cursor="pointer"
+                overflowY={'auto'}
+                minH={'175px'}
+                {...getRootProps({ className: 'dropzone' })}>
+                <Input {...getInputProps()} />
+                <Button variant="no-hover">
+                  {acceptedFiles.length > 0 ? (
+                    // <Text fontSize="sm" color="green">
+                    //   {files.length} file(s) selected:
+                    //   {files.map((file) => (
+                    //     <span key={file.path}> {file.name},</span>
+                    //   ))}
+                    // </Text>
+                    <Flex gap="20px" p="20px" flexWrap={'wrap'}>
+                      {acceptedFiles.map((file, index) => (
+                        <Box key={index}>
+                          <img
+                            src={URL.createObjectURL(file)} // Create a preview URL for the image
+                            alt={file.name}
+                            style={{
+                              width: '150px',
+                              height: '100px',
+                              borderRadius: '15px',
+                              objectFit: 'contain'
                             }}
-                            alignSelf="flex-end"
-                            mt="24px"
-                            w={{ sm: '75px', lg: '100px' }}
-                            h="35px"
-                            type="submit">
-                            {isLoading ? (
-                              <CircularProgress
-                                isIndeterminate
-                                value={1}
-                                color="#313860"
-                                size="25px"
-                              />
-                            ) : (
-                              <Text fontSize="xs" color="#fff" fontWeight="bold">
-                                SEND
-                              </Text>
-                            )}
-                          </Button>
-                        </Flex>
-                      </form>
-                    </FormProvider>
-                  </Stack>
-                </Flex>
-              </CardBody>
-            </Card>
-          </TabPanel>
-        </TabPanels>
-        {/* </form> */}
-      </Tabs>
-    </Flex>
+                          />
+                          <Text
+                            color="gray.400"
+                            fontWeight="normal"
+                            maxWidth="150px"
+                            textOverflow={'ellipsis'}
+                            overflow={'hidden'}>
+                            {file.name}
+                          </Text>
+                        </Box>
+                      ))}
+                      {/* </Stack> */}
+                    </Flex>
+                  ) : (
+                    <Text color="gray.400" fontWeight="normal">
+                      Drop files here to upload
+                    </Text>
+                  )}
+                </Button>
+              </Flex>
+              <Flex justify="space-between">
+                <Button
+                  variant="no-hover"
+                  bg={bgPrevButton}
+                  alignSelf="flex-end"
+                  mt="24px"
+                  w="100px"
+                  h="35px"
+                  onClick={() => descriptionTab.current.click()}>
+                  <Text fontSize="xs" color="gray.700" fontWeight="bold">
+                    PREV
+                  </Text>
+                </Button>
+                <Button
+                  variant="no-hover"
+                  bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+                  alignSelf="flex-end"
+                  mt="24px"
+                  w="100px"
+                  h="35px"
+                  onClick={() => certificationTab.current.click()}>
+                  <Text fontSize="xs" color="#fff" fontWeight="bold">
+                    NEXT
+                  </Text>
+                </Button>
+              </Flex>
+            </Flex>
+          </CardBody>
+        </Card>
+      </TabPanel>
+      <TabPanel>
+        <Card>
+          <CardHeader mb="40px">
+            <Flex
+              direction="column"
+              align="center"
+              justify="center"
+              textAlign="center"
+              w="80%"
+              mx="auto">
+              <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
+                Do you want to certificate this parcel?
+              </Text>
+              <Text color="gray.400" fontWeight="normal" fontSize="sm">
+                In the following inputs you must give detailed information in order to certify this
+                parcel.
+              </Text>
+            </Flex>
+          </CardHeader>
+          <CardBody>
+            <Flex direction="column" w="100%">
+              <Stack direction="column" spacing="20px">
+                <FormProvider {...methodsCertificate}>
+                  <form
+                    onSubmit={handleSubmitCertificate(onSubmitCertificate)}
+                    style={{ width: '100%' }}>
+                    <FormControl display="flex" alignItems="center" mb="25px">
+                      <Switch
+                        id="certificate"
+                        colorScheme="green"
+                        me="10px"
+                        {...registerCertificate('certificate')}
+                      />
+                      <FormLabel htmlFor="certificate" mb="0" ms="1" fontWeight="normal">
+                        Yes, I want to certify this parcel
+                      </FormLabel>
+                    </FormControl>
+                    <FormInput
+                      fontSize="xs"
+                      ms="4px"
+                      borderRadius="15px"
+                      type="text"
+                      placeholder="Contact number of the parcel"
+                      name="contactNumber"
+                      label="Contact number"
+                      disabled={!certificateValue}
+                    />
+                    <FormInput
+                      fontSize="xs"
+                      ms="4px"
+                      borderRadius="15px"
+                      type="text"
+                      placeholder="Address of the parcel"
+                      name="address"
+                      label="Address"
+                      disabled={!certificateValue}
+                    />
+                    <Flex justify="space-between" width={'100%'}>
+                      <Button
+                        variant="no-hover"
+                        bg={bgPrevButton}
+                        alignSelf="flex-end"
+                        mt="24px"
+                        w={{ sm: '75px', lg: '100px' }}
+                        h="35px"
+                        onClick={() => prevTab.current.click()}>
+                        <Text fontSize="xs" color="gray.700" fontWeight="bold">
+                          PREV
+                        </Text>
+                      </Button>
+                      <Button
+                        bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+                        _hover={{
+                          bg: 'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)'
+                        }}
+                        alignSelf="flex-end"
+                        mt="24px"
+                        w={{ sm: '75px', lg: '100px' }}
+                        h="35px"
+                        type="submit">
+                        {isLoading ? (
+                          <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
+                        ) : (
+                          <Text fontSize="xs" color="#fff" fontWeight="bold">
+                            SEND
+                          </Text>
+                        )}
+                      </Button>
+                    </Flex>
+                  </form>
+                </FormProvider>
+              </Stack>
+            </Flex>
+          </CardBody>
+        </Card>
+      </TabPanel>
+    </FormLayout>
   );
 }
 

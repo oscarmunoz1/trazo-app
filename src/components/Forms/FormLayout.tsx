@@ -26,7 +26,7 @@ import { FormProvider } from 'react-hook-form';
 import { useDropzone } from 'react-dropzone';
 
 function FormLayout(props) {
-  const { tabsList, activeBullets, children } = props;
+  const { tabsList, activeBullets, lineWidth, lineLeft, children } = props;
 
   const [tabWidth, setTabWidth] = useState(0);
 
@@ -44,13 +44,47 @@ function FormLayout(props) {
     }
 
     return () => {
-      observer.unobserve(tabsList[0].ref?.current);
+      if (tabsList[0].ref?.current) observer.unobserve(tabsList[0].ref?.current);
     };
   }, [tabsList]);
 
   // Chakra color mode
   const textColor = useColorModeValue('gray.700', 'white');
   const bgColor = useColorModeValue('white', 'gray.700');
+
+  const getLineWidth = () => {
+    if (lineWidth) {
+      return lineWidth;
+    }
+    if (tabsList.length === 4) {
+      return 26;
+    } else {
+      return 32;
+    }
+  };
+
+  const getLineLeft = (index: number) => {
+    if (lineLeft) {
+      if (index === tabsList.length - 2) {
+        return lineLeft[0];
+      } else {
+        return lineLeft[1];
+      }
+    }
+    if (tabsList.length === 4) {
+      if (index === tabsList.length - 2) {
+        return '32px';
+      } else {
+        return '52px';
+      }
+    } else {
+      if (index === tabsList.length - 2) {
+        return '32px';
+      } else {
+        return '43px';
+      }
+    }
+  };
 
   return (
     <Flex
@@ -62,6 +96,8 @@ function FormLayout(props) {
       <Tabs variant="unstyled" mt="24px" alignSelf="center" w="100%">
         <TabList display="flex" align="center" justifyContent={{ base: 'center' }}>
           {tabsList.map((tab, index) => {
+            const lineWidth = getLineWidth();
+            const lineLeft = getLineLeft(index);
             if (index === tabsList.length - 1) {
               return (
                 <Tab
@@ -79,6 +115,9 @@ function FormLayout(props) {
                       zIndex={1}
                     />
                     <Text
+                      textOverflow="ellipsis"
+                      whiteSpace="nowrap"
+                      overflow="hidden"
                       color={activeBullets[tab.name] ? { textColor } : 'gray.300'}
                       fontWeight={activeBullets[tab.name] ? 'bold' : 'normal'}
                       transition="all .3s ease"
@@ -103,13 +142,13 @@ function FormLayout(props) {
                     position="relative"
                     _before={{
                       content: "''",
-                      width: { base: `${tabWidth + 26}px`, smdd: `${tabWidth + 26}px` },
+                      width: `${tabWidth + lineWidth}px`,
                       height: '3px',
                       bg: activeBullets[tab.nextTab] ? textColor : 'gray.200',
                       left: {
                         base: '20px',
                         sm: '8px',
-                        smdd: index === tabsList.length - 2 ? '32px' : '52px'
+                        smdd: lineLeft
                       },
                       top: {
                         base: activeBullets[tab.name] ? '6px' : '4px',
@@ -129,6 +168,9 @@ function FormLayout(props) {
                       zIndex={1}
                     />
                     <Text
+                      textOverflow="ellipsis"
+                      whiteSpace="nowrap"
+                      overflow="hidden"
                       color={activeBullets[tab.name] ? { textColor } : 'gray.300'}
                       fontWeight={activeBullets[tab.name] ? 'bold' : 'normal'}
                       display={{ base: 'none', smdd: 'block' }}>

@@ -58,6 +58,7 @@ import CardWithMap from '../CardWithMap';
 import ChemicalTab from './ChemicalTab';
 import Editor from 'components/Editor/Editor';
 import FormInput from 'components/Forms/FormInput';
+import FormLayout from 'components/Forms/FormLayout';
 import GeneralTab from './GeneralTab';
 import Header from 'views/Pages/Profile/Overview/components/Header';
 import ProductionTab from './ProductionTab';
@@ -273,12 +274,6 @@ function NewEstablishment() {
       establishmentId: parseInt(establishmentId),
       parcelId: parseInt(parcelId)
     });
-    // createEstablishment({
-    //   ...currentEvent,
-    //   ...(data?.facebook && { facebook: data.facebook }),
-    //   ...(data?.instagram && { instagram: data.instagram }),
-    //   company: currentCompany.id,
-    // });
   };
 
   useEffect(() => {
@@ -310,271 +305,144 @@ function NewEstablishment() {
     }
   }, [parcels]);
 
+  const tabsList = [
+    {
+      name: 'basic',
+      ref: basicTab,
+      label: '1. Basic',
+      nextTab: 'mainInfo',
+      onClick: () =>
+        setActiveBullets({
+          basic: true,
+          mainInfo: false,
+          description: false,
+          media: false
+        })
+    },
+    {
+      name: 'mainInfo',
+      ref: mainInfoTab,
+      label: '2. Main Info',
+      nextTab: 'description',
+      onClick: () =>
+        setActiveBullets({
+          basic: true,
+          mainInfo: true,
+          description: false,
+          media: false
+        })
+    },
+    {
+      name: 'description',
+      ref: descriptionTab,
+      label: '3. Description',
+      nextTab: 'media',
+      onClick: () =>
+        setActiveBullets({
+          basic: true,
+          mainInfo: true,
+          description: true,
+          media: false
+        })
+    },
+    {
+      name: 'media',
+      ref: mediaTab,
+      label: '4. Media',
+      nextTab: null,
+      onClick: () =>
+        setActiveBullets({
+          basic: true,
+          mainInfo: true,
+          description: true,
+          media: true
+        })
+    }
+  ];
+
   return (
-    <Flex
-      direction="column"
-      bg={bgColor}
-      boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
-      borderRadius="15px">
-      <Tabs variant="unstyled" mt="24px" alignSelf="center">
-        <TabList display="flex" align="center">
-          <Tab
-            ref={basicTab}
-            _focus="none"
-            w={{ sm: '80px', md: '200px' }}
-            onClick={() =>
-              setActiveBullets({
-                basic: true,
-                mainInfo: false,
-                description: false,
-                media: false
-              })
-            }>
-            <Flex
-              direction="column"
-              justify="center"
-              align="center"
-              position="relative"
-              _before={{
-                content: "''",
-                width: { sm: '80px', md: '195px' },
-                height: '3px',
-                bg: activeBullets.mainInfo ? textColor : 'gray.200',
-                left: { sm: '12px', md: '35px' },
-                top: {
-                  sm: activeBullets.basic ? '6px' : '4px',
-                  md: null
-                },
-                position: 'absolute',
-                bottom: activeBullets.basic ? '40px' : '38px',
-
-                transition: 'all .3s ease'
-              }}>
-              <Icon
-                as={BsCircleFill}
-                color={activeBullets.basic ? textColor : 'gray.300'}
-                w={activeBullets.basic ? '16px' : '12px'}
-                h={activeBullets.basic ? '16px' : '12px'}
-                mb="8px"
-                zIndex={1}
-              />
-              <Text
-                color={activeBullets.basic ? { textColor } : 'gray.300'}
-                fontWeight={activeBullets.basic ? 'bold' : 'normal'}
-                transition="all .3s ease"
-                _hover={{ color: textColor }}
-                display={{ sm: 'none', md: 'block' }}>
-                1. Basic
-              </Text>
-            </Flex>
-          </Tab>
-          <Tab
-            ref={mainInfoTab}
-            _focus="none"
-            w={{ sm: '80px', md: '200px' }}
-            onClick={() =>
-              setActiveBullets({
-                basic: true,
-                mainInfo: true,
-                description: false,
-                media: false
-              })
-            }>
-            <Flex
-              direction="column"
-              justify="center"
-              align="center"
-              position="relative"
-              _before={{
-                content: "''",
-                width: { sm: '80px', md: '195px' },
-                height: '3px',
-                bg: activeBullets.description ? textColor : 'gray.200',
-                left: { sm: '12px', md: '50px' },
-                top: {
-                  sm: activeBullets.mainInfo ? '6px' : '4px',
-                  md: null
-                },
-                position: 'absolute',
-                bottom: activeBullets.mainInfo ? '40px' : '38px',
-
-                transition: 'all .3s ease'
-              }}>
-              <Icon
-                as={BsCircleFill}
-                color={activeBullets.mainInfo ? textColor : 'gray.300'}
-                w={activeBullets.mainInfo ? '16px' : '12px'}
-                h={activeBullets.mainInfo ? '16px' : '12px'}
-                mb="8px"
-                zIndex={1}
-              />
-              <Text
-                color={activeBullets.mainInfo ? { textColor } : 'gray.300'}
-                fontWeight={activeBullets.mainInfo ? 'bold' : 'normal'}
-                display={{ sm: 'none', md: 'block' }}>
-                2. Main Info
-              </Text>
-            </Flex>
-          </Tab>
-
-          <Tab
-            ref={descriptionTab}
-            _focus="none"
-            w={{ sm: '80px', md: '200px' }}
-            onClick={() =>
-              setActiveBullets({
-                basic: true,
-                mainInfo: true,
-                description: true,
-                media: false
-              })
-            }>
-            <Flex
-              direction="column"
-              justify="center"
-              align="center"
-              position="relative"
-              _before={{
-                content: "''",
-                width: { sm: '80px', md: '200px' },
-                height: '3px',
-                bg: activeBullets.media ? textColor : 'gray.200',
-                left: { sm: '12px', md: '46px' },
-                top: {
-                  sm: activeBullets.description ? '6px' : '4px',
-                  md: null
-                },
-                position: 'absolute',
-                bottom: activeBullets.description ? '40px' : '38px',
-
-                transition: 'all .3s ease'
-              }}>
-              <Icon
-                as={BsCircleFill}
-                color={activeBullets.description ? textColor : 'gray.300'}
-                w={activeBullets.description ? '16px' : '12px'}
-                h={activeBullets.description ? '16px' : '12px'}
-                mb="8px"
-                zIndex={1}
-              />
-              <Text
-                color={activeBullets.description ? { textColor } : 'gray.300'}
-                fontWeight={activeBullets.description ? 'bold' : 'normal'}
-                transition="all .3s ease"
-                _hover={{ color: textColor }}
-                display={{ sm: 'none', md: 'block' }}>
-                3. Description
-              </Text>
-            </Flex>
-          </Tab>
-          <Tab
-            ref={mediaTab}
-            _focus="none"
-            w={{ sm: '80px', md: '200px' }}
-            onClick={() =>
-              setActiveBullets({
-                basic: true,
-                mainInfo: true,
-                description: true,
-                media: true
-              })
-            }>
-            <Flex direction="column" justify="center" align="center">
-              <Icon
-                as={BsCircleFill}
-                color={activeBullets.media ? textColor : 'gray.300'}
-                w={activeBullets.media ? '16px' : '12px'}
-                h={activeBullets.media ? '16px' : '12px'}
-                mb="8px"
-                zIndex={1}
-              />
-              <Text
-                color={activeBullets.media ? { textColor } : 'gray.300'}
-                fontWeight={activeBullets.media ? 'bold' : 'normal'}
-                transition="all .3s ease"
-                _hover={{ color: textColor }}
-                display={{ sm: 'none', md: 'block' }}>
-                4. Media
-              </Text>
-            </Flex>
-          </Tab>
-        </TabList>
-
-        <TabPanels mt="24px" maxW={{ md: '90%', lg: '100%' }} mx="auto">
-          <TabPanel maxW="800px">
-            <Card>
-              <CardHeader mb="32px">
-                <Text fontSize="lg" color={textColor} fontWeight="bold">
-                  Basic
-                </Text>
-              </CardHeader>
-
-              <CardBody>
-                <FormProvider {...basicMethods}>
-                  <form onSubmit={handleSubmit(onSubmitBasic)} style={{ width: '100%' }}>
-                    <Stack direction="column" spacing="20px" w="100%">
-                      <Flex direction="column" w="80%" mt="10px">
-                        <FormLabel ms="4px" fontSize="xs" fontWeight="bold" mb="4px" pl="12px">
-                          What kind of production do you want to create?
-                        </FormLabel>
-                      </Flex>
-                      <Flex w={'100%'} justifyContent={'center'}>
-                        <Flex bg={bgButtonGroup} borderRadius="12px" w={'fit-content'}>
-                          <Button
-                            variant="no-hover"
-                            w="135px"
-                            h="40px"
-                            fontSize="xs"
-                            boxShadow={
-                              activeButton === 0 ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'
-                            }
-                            bg={activeButton === 0 ? bgActiveButton : 'transparent'}
-                            onClick={() => setActiveButton(0)}>
-                            WEATHER
-                          </Button>
-                          <Button
-                            variant="no-hover"
-                            w="135px"
-                            h="40px"
-                            fontSize="xs"
-                            boxShadow={
-                              activeButton === 1 ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'
-                            }
-                            bg={activeButton === 1 ? bgActiveButton : 'transparent'}
-                            onClick={() => setActiveButton(1)}>
-                            PRODUCTION
-                          </Button>
-                          <Button
-                            variant="no-hover"
-                            w="135px"
-                            h="40px"
-                            fontSize="xs"
-                            boxShadow={
-                              activeButton === 2 ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'
-                            }
-                            bg={activeButton === 2 ? bgActiveButton : 'transparent'}
-                            onClick={() => setActiveButton(2)}>
-                            CHEMICAL
-                          </Button>
-                          <Button
-                            variant="no-hover"
-                            w="135px"
-                            h="40px"
-                            fontSize="xs"
-                            boxShadow={
-                              activeButton === 3 ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'
-                            }
-                            bg={activeButton === 3 ? bgActiveButton : 'transparent'}
-                            onClick={() => setActiveButton(3)}>
-                            OTHER
-                          </Button>
-                        </Flex>
-                      </Flex>
-                      {/* <Stack
+    <FormLayout
+      tabsList={tabsList}
+      activeBullets={activeBullets}
+      lineWidth={29}
+      lineLeft={['52px', '39px']}>
+      <TabPanel>
+        <Card>
+          <CardHeader mb="22px">
+            <Text fontSize="lg" color={textColor} fontWeight="bold">
+              Basic
+            </Text>
+          </CardHeader>
+          <CardBody>
+            <FormProvider {...basicMethods}>
+              <form onSubmit={handleSubmit(onSubmitBasic)} style={{ width: '100%' }}>
+                <Stack direction="column" spacing="20px" w="100%">
+                  <Flex direction="column" w="80%" mt="10px">
+                    <FormLabel ms="4px" fontSize="xs" fontWeight="bold" mb="4px" pl="12px">
+                      What kind of production do you want to create?
+                    </FormLabel>
+                  </Flex>
+                  <Flex w={'100%'} justifyContent={'center'}>
+                    <Flex
+                      bg={bgButtonGroup}
+                      borderRadius="12px"
+                      w={'fit-content'}
+                      direction={{ base: 'column', smdd: 'row' }}>
+                      <Button
+                        variant="no-hover"
+                        w="135px"
+                        h="40px"
+                        fontSize="xs"
+                        boxShadow={
+                          activeButton === 0 ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'
+                        }
+                        bg={activeButton === 0 ? bgActiveButton : 'transparent'}
+                        onClick={() => setActiveButton(0)}>
+                        WEATHER
+                      </Button>
+                      <Button
+                        variant="no-hover"
+                        w="135px"
+                        h="40px"
+                        fontSize="xs"
+                        boxShadow={
+                          activeButton === 1 ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'
+                        }
+                        bg={activeButton === 1 ? bgActiveButton : 'transparent'}
+                        onClick={() => setActiveButton(1)}>
+                        PRODUCTION
+                      </Button>
+                      <Button
+                        variant="no-hover"
+                        w="135px"
+                        h="40px"
+                        fontSize="xs"
+                        boxShadow={
+                          activeButton === 2 ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'
+                        }
+                        bg={activeButton === 2 ? bgActiveButton : 'transparent'}
+                        onClick={() => setActiveButton(2)}>
+                        CHEMICAL
+                      </Button>
+                      <Button
+                        variant="no-hover"
+                        w="135px"
+                        h="40px"
+                        fontSize="xs"
+                        boxShadow={
+                          activeButton === 3 ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'
+                        }
+                        bg={activeButton === 3 ? bgActiveButton : 'transparent'}
+                        onClick={() => setActiveButton(3)}>
+                        OTHER
+                      </Button>
+                    </Flex>
+                  </Flex>
+                  {/* <Stack
                         direction={{ sm: "column", md: "row" }}
                         spacing="30px"
                       > */}
-                      {/* <FormControl>
+                  {/* <FormControl>
                           <FormInput
                             name="name"
                             label="Name"
@@ -582,199 +450,196 @@ function NewEstablishment() {
                             fontSize="xs"
                           />
                         </FormControl> */}
-                      <FormControl>
-                        <FormInput
-                          fontSize="xs"
-                          label="Date"
-                          type="datetime-local"
-                          name="date"
-                          placeholder="Select date and time"
-                        />
-                      </FormControl>
-                      {/* </Stack> */}
-                      <Flex>
-                        <FormControl>
-                          <FormLabel pl={'12px'} fontSize="xs" fontWeight="bold" mb={'4px'}>
-                            Select the others Parcels to which the event was applied
-                          </FormLabel>
-                          <Select
-                            // value={parcels?.filter((v) => v.isFixed)}
-                            value={value}
-                            isMulti
-                            styles={styles}
-                            isClearable={value?.some((v) => !v.isFixed)}
-                            name="colors"
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                            onChange={onChange}
-                            options={parcels}
-                          />
-                        </FormControl>
-                      </Flex>
+                  <FormControl>
+                    <FormInput
+                      fontSize="xs"
+                      label="Date"
+                      type="datetime-local"
+                      name="date"
+                      placeholder="Select date and time"
+                    />
+                  </FormControl>
+                  {/* </Stack> */}
+                  <Flex>
+                    <FormControl>
+                      <FormLabel pl={'12px'} fontSize="xs" fontWeight="bold" mb={'4px'}>
+                        Select the others Parcels to which the event was applied
+                      </FormLabel>
+                      <Select
+                        // value={parcels?.filter((v) => v.isFixed)}
+                        value={value}
+                        isMulti
+                        styles={styles}
+                        isClearable={value?.some((v) => !v.isFixed)}
+                        name="colors"
+                        className="basic-multi-select"
+                        classNamePrefix="select"
+                        onChange={onChange}
+                        options={parcels}
+                      />
+                    </FormControl>
+                  </Flex>
 
-                      <Button
-                        variant="no-hover"
-                        bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                        alignSelf="flex-end"
-                        mt="24px"
-                        w="100px"
-                        h="35px"
-                        type="submit">
-                        <Text fontSize="xs" color="#fff" fontWeight="bold">
-                          NEXT
-                        </Text>
-                      </Button>
-                    </Stack>
-                  </form>
-                </FormProvider>
-              </CardBody>
-            </Card>
-          </TabPanel>
-          <TabPanel>
-            <Card>
-              <CardHeader mb="22px">
-                <Text color={textColor} fontSize="lg" fontWeight="bold">
-                  Event Info
-                </Text>
-              </CardHeader>
-              <CardBody>
-                {activeButton === 0 ? (
-                  <WeatherTab
-                    onSubmitHandler={onSubmitMainInfo}
-                    onPrev={() => basicTab.current.click()}
-                  />
-                ) : activeButton === 1 ? (
-                  <ProductionTab
-                    onSubmitHandler={onSubmitMainInfo}
-                    onPrev={() => basicTab.current.click()}
-                  />
-                ) : activeButton === 2 ? (
-                  <ChemicalTab
-                    onSubmitHandler={onSubmitMainInfo}
-                    onPrev={() => basicTab.current.click()}
-                  />
-                ) : (
-                  <GeneralTab
-                    onSubmitHandler={onSubmitMainInfo}
-                    onPrev={() => basicTab.current.click()}
-                  />
-                )}
-              </CardBody>
-            </Card>
-          </TabPanel>
+                  <Button
+                    variant="no-hover"
+                    bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+                    alignSelf="flex-end"
+                    mt="24px"
+                    w="100px"
+                    h="35px"
+                    type="submit">
+                    <Text fontSize="xs" color="#fff" fontWeight="bold">
+                      NEXT
+                    </Text>
+                  </Button>
+                </Stack>
+              </form>
+            </FormProvider>
+          </CardBody>
+        </Card>
+      </TabPanel>
+      <TabPanel>
+        <Card>
+          <CardHeader mb="22px">
+            <Text color={textColor} fontSize="lg" fontWeight="bold">
+              Event Info
+            </Text>
+          </CardHeader>
+          <CardBody>
+            {activeButton === 0 ? (
+              <WeatherTab
+                onSubmitHandler={onSubmitMainInfo}
+                onPrev={() => basicTab.current.click()}
+              />
+            ) : activeButton === 1 ? (
+              <ProductionTab
+                onSubmitHandler={onSubmitMainInfo}
+                onPrev={() => basicTab.current.click()}
+              />
+            ) : activeButton === 2 ? (
+              <ChemicalTab
+                onSubmitHandler={onSubmitMainInfo}
+                onPrev={() => basicTab.current.click()}
+              />
+            ) : (
+              <GeneralTab
+                onSubmitHandler={onSubmitMainInfo}
+                onPrev={() => basicTab.current.click()}
+              />
+            )}
+          </CardBody>
+        </Card>
+      </TabPanel>
 
-          <TabPanel>
-            <Card>
-              <CardHeader mb="32px">
-                <Text fontSize="lg" color={textColor} fontWeight="bold">
-                  Description
-                </Text>
-              </CardHeader>
-              <CardBody>
-                <FormProvider {...descriptionMethods}>
-                  <form onSubmit={descriptionSubmit(onSubmitDescription)} style={{ width: '100%' }}>
-                    <Flex direction="column" w="100%">
-                      <Stack direction="column" spacing="20px" w="100%">
-                        <Editor />
-                      </Stack>
-                      <Flex justify="space-between">
-                        <Button
-                          variant="no-hover"
-                          bg={bgPrevButton}
-                          alignSelf="flex-end"
-                          mt="24px"
-                          w="100px"
-                          h="35px"
-                          onClick={() => mainInfoTab.current.click()}>
-                          <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                            PREV
-                          </Text>
-                        </Button>
-                        <Button
-                          variant="no-hover"
-                          bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                          alignSelf="flex-end"
-                          mt="24px"
-                          w="100px"
-                          h="35px"
-                          type="submit">
-                          <Text fontSize="xs" color="#fff" fontWeight="bold">
-                            NEXT
-                          </Text>
-                        </Button>
-                      </Flex>
-                    </Flex>
-                  </form>
-                </FormProvider>
-              </CardBody>
-            </Card>
-          </TabPanel>
-          <TabPanel>
-            <Card>
-              <CardHeader mb="22px">
-                <Text color={textColor} fontSize="xl" fontWeight="bold" mb="3px">
-                  Media
-                </Text>
-              </CardHeader>
-              <CardBody>
-                <FormProvider {...mediaMethods}>
-                  <form onSubmit={mediaSubmit(onSubmitMedia)} style={{ width: '100%' }}>
-                    <Flex direction="column" w="100%">
-                      <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
-                        Establishment images
+      <TabPanel>
+        <Card>
+          <CardHeader mb="32px">
+            <Text fontSize="lg" color={textColor} fontWeight="bold">
+              Description
+            </Text>
+          </CardHeader>
+          <CardBody>
+            <FormProvider {...descriptionMethods}>
+              <form onSubmit={descriptionSubmit(onSubmitDescription)} style={{ width: '100%' }}>
+                <Flex direction="column" w="100%">
+                  <Stack direction="column" spacing="20px" w="100%">
+                    <Editor />
+                  </Stack>
+                  <Flex justify="space-between">
+                    <Button
+                      variant="no-hover"
+                      bg={bgPrevButton}
+                      alignSelf="flex-end"
+                      mt="24px"
+                      w="100px"
+                      h="35px"
+                      onClick={() => mainInfoTab.current.click()}>
+                      <Text fontSize="xs" color="gray.700" fontWeight="bold">
+                        PREV
                       </Text>
-                      <Flex
-                        align="center"
-                        justify="center"
-                        border="1px dashed #E2E8F0"
-                        borderRadius="15px"
-                        w="100%"
-                        minH="130px"
-                        cursor="pointer"
-                        {...getRootProps({ className: 'dropzone' })}>
-                        <Input {...getInputProps()} />
-                        <Button variant="no-hover">
-                          <Text color="gray.400" fontWeight="normal">
-                            Drop files here to upload
-                          </Text>
-                        </Button>
-                      </Flex>
-                      <Flex justify="space-between">
-                        <Button
-                          variant="no-hover"
-                          bg={bgPrevButton}
-                          alignSelf="flex-end"
-                          mt="24px"
-                          w="100px"
-                          h="35px"
-                          onClick={() => descriptionTab.current.click()}>
-                          <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                            PREV
-                          </Text>
-                        </Button>
-                        <Button
-                          variant="no-hover"
-                          bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                          alignSelf="flex-end"
-                          mt="24px"
-                          w="100px"
-                          h="35px"
-                          type="submit">
-                          <Text fontSize="xs" color="#fff" fontWeight="bold">
-                            SEND
-                          </Text>
-                        </Button>
-                      </Flex>
-                    </Flex>
-                  </form>
-                </FormProvider>
-              </CardBody>
-            </Card>
-          </TabPanel>
-        </TabPanels>
-        {/* </form> */}
-      </Tabs>
-    </Flex>
+                    </Button>
+                    <Button
+                      variant="no-hover"
+                      bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+                      alignSelf="flex-end"
+                      mt="24px"
+                      w="100px"
+                      h="35px"
+                      type="submit">
+                      <Text fontSize="xs" color="#fff" fontWeight="bold">
+                        NEXT
+                      </Text>
+                    </Button>
+                  </Flex>
+                </Flex>
+              </form>
+            </FormProvider>
+          </CardBody>
+        </Card>
+      </TabPanel>
+      <TabPanel>
+        <Card>
+          <CardHeader mb="22px">
+            <Text color={textColor} fontSize="xl" fontWeight="bold" mb="3px">
+              Media
+            </Text>
+          </CardHeader>
+          <CardBody>
+            <FormProvider {...mediaMethods}>
+              <form onSubmit={mediaSubmit(onSubmitMedia)} style={{ width: '100%' }}>
+                <Flex direction="column" w="100%">
+                  <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
+                    Establishment images
+                  </Text>
+                  <Flex
+                    align="center"
+                    justify="center"
+                    border="1px dashed #E2E8F0"
+                    borderRadius="15px"
+                    w="100%"
+                    minH="130px"
+                    cursor="pointer"
+                    {...getRootProps({ className: 'dropzone' })}>
+                    <Input {...getInputProps()} />
+                    <Button variant="no-hover">
+                      <Text color="gray.400" fontWeight="normal">
+                        Drop files here to upload
+                      </Text>
+                    </Button>
+                  </Flex>
+                  <Flex justify="space-between">
+                    <Button
+                      variant="no-hover"
+                      bg={bgPrevButton}
+                      alignSelf="flex-end"
+                      mt="24px"
+                      w="100px"
+                      h="35px"
+                      onClick={() => descriptionTab.current.click()}>
+                      <Text fontSize="xs" color="gray.700" fontWeight="bold">
+                        PREV
+                      </Text>
+                    </Button>
+                    <Button
+                      variant="no-hover"
+                      bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+                      alignSelf="flex-end"
+                      mt="24px"
+                      w="100px"
+                      h="35px"
+                      type="submit">
+                      <Text fontSize="xs" color="#fff" fontWeight="bold">
+                        SEND
+                      </Text>
+                    </Button>
+                  </Flex>
+                </Flex>
+              </form>
+            </FormProvider>
+          </CardBody>
+        </Card>
+      </TabPanel>
+    </FormLayout>
   );
 }
 

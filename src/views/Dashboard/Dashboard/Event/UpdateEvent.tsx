@@ -13,9 +13,7 @@ function UpdateEvent({ isEdit = false }) {
           ? 'Modify the form below to edit the selected event.'
           : 'Complete the form below to add a new event to your parcel history.'
       }>
-      <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
-        {isEdit ? <EditEvent /> : <NewEvent />}
-      </Flex>
+      {isEdit ? <EditEvent /> : <NewEvent />}
     </BoxBackground>
   );
 }
