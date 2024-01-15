@@ -15,9 +15,9 @@
 
 */
 
-import { BsCircleFill, BsFillCloudLightningRainFill } from 'react-icons/bs';
 // Chakra imports
 import {
+  Box,
   Button,
   Select as ChakraSelect,
   Checkbox,
@@ -44,6 +44,7 @@ import {
   Textarea,
   useColorModeValue
 } from '@chakra-ui/react';
+import { BsCircleFill, BsFillCloudLightningRainFill } from 'react-icons/bs';
 import { FormProvider, useForm } from 'react-hook-form';
 import React, { useEffect, useReducer, useRef, useState } from 'react';
 import { clearForm, setForm } from 'store/features/formSlice';
@@ -174,8 +175,6 @@ function NewEstablishment() {
   const descriptionTab = useRef();
   const mediaTab = useRef();
 
-  const { getRootProps, getInputProps } = useDropzone();
-
   const parcels = useSelector((state) =>
     state.company.currentCompany?.establishments?.reduce((res_parcels, establishment) => {
       const establishmentParcels = establishment.parcels.map((parcel) => {
@@ -267,12 +266,13 @@ function NewEstablishment() {
 
   const [createEvent, { data, error, isSuccess, isLoading }] = useCreateEventMutation();
 
-  const onSubmitMedia = (data) => {
+  const onSubmitMedia = () => {
     createEvent({
       ...currentEvent,
       companyId: currentCompany.id,
       establishmentId: parseInt(establishmentId),
-      parcelId: parseInt(parcelId)
+      parcelId: parseInt(parcelId),
+      album: { images: acceptedFiles }
     });
   };
 
@@ -304,6 +304,13 @@ function NewEstablishment() {
       setValue(parcels.filter((v) => v.isFixed));
     }
   }, [parcels]);
+
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    // onDrop,
+    // accept: "image/*", // Accepted file types
+    maxFiles: 5 // Maximum number of files
+    // maxSize: 1024 * 1024 * 5, // Maximum file size (5 MB)
+  });
 
   const tabsList = [
     {
@@ -438,18 +445,6 @@ function NewEstablishment() {
                       </Button>
                     </Flex>
                   </Flex>
-                  {/* <Stack
-                        direction={{ sm: "column", md: "row" }}
-                        spacing="30px"
-                      > */}
-                  {/* <FormControl>
-                          <FormInput
-                            name="name"
-                            label="Name"
-                            placeholder="Event name"
-                            fontSize="xs"
-                          />
-                        </FormControl> */}
                   <FormControl>
                     <FormInput
                       fontSize="xs"
@@ -585,57 +580,83 @@ function NewEstablishment() {
             </Text>
           </CardHeader>
           <CardBody>
-            <FormProvider {...mediaMethods}>
-              <form onSubmit={mediaSubmit(onSubmitMedia)} style={{ width: '100%' }}>
-                <Flex direction="column" w="100%">
-                  <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
-                    Establishment images
+            <Flex direction="column" w="100%">
+              <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
+                Parcel images
+              </Text>
+              <Flex
+                align="center"
+                justify="center"
+                border="1px dashed #E2E8F0"
+                borderRadius="15px"
+                w="100%"
+                maxWidth={'980px'}
+                cursor="pointer"
+                overflowY={'auto'}
+                minH={'175px'}
+                {...getRootProps({ className: 'dropzone' })}>
+                <Input {...getInputProps()} />
+                <Button variant="no-hover">
+                  {acceptedFiles.length > 0 ? (
+                    <Flex gap="20px" p="20px" flexWrap={'wrap'}>
+                      {acceptedFiles.map((file, index) => (
+                        <Box key={index}>
+                          <img
+                            src={URL.createObjectURL(file)} // Create a preview URL for the image
+                            alt={file.name}
+                            style={{
+                              width: '150px',
+                              height: '100px',
+                              borderRadius: '15px',
+                              objectFit: 'contain'
+                            }}
+                          />
+                          <Text
+                            color="gray.400"
+                            fontWeight="normal"
+                            maxWidth="150px"
+                            textOverflow={'ellipsis'}
+                            overflow={'hidden'}>
+                            {file.name}
+                          </Text>
+                        </Box>
+                      ))}
+                    </Flex>
+                  ) : (
+                    <Text color="gray.400" fontWeight="normal">
+                      Drop files here to upload
+                    </Text>
+                  )}
+                </Button>
+              </Flex>
+              <Flex justify="space-between">
+                <Button
+                  variant="no-hover"
+                  bg={bgPrevButton}
+                  alignSelf="flex-end"
+                  mt="24px"
+                  w="100px"
+                  h="35px"
+                  onClick={() => descriptionTab.current.click()}>
+                  <Text fontSize="xs" color="gray.700" fontWeight="bold">
+                    PREV
                   </Text>
-                  <Flex
-                    align="center"
-                    justify="center"
-                    border="1px dashed #E2E8F0"
-                    borderRadius="15px"
-                    w="100%"
-                    minH="130px"
-                    cursor="pointer"
-                    {...getRootProps({ className: 'dropzone' })}>
-                    <Input {...getInputProps()} />
-                    <Button variant="no-hover">
-                      <Text color="gray.400" fontWeight="normal">
-                        Drop files here to upload
-                      </Text>
-                    </Button>
-                  </Flex>
-                  <Flex justify="space-between">
-                    <Button
-                      variant="no-hover"
-                      bg={bgPrevButton}
-                      alignSelf="flex-end"
-                      mt="24px"
-                      w="100px"
-                      h="35px"
-                      onClick={() => descriptionTab.current.click()}>
-                      <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                        PREV
-                      </Text>
-                    </Button>
-                    <Button
-                      variant="no-hover"
-                      bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                      alignSelf="flex-end"
-                      mt="24px"
-                      w="100px"
-                      h="35px"
-                      type="submit">
-                      <Text fontSize="xs" color="#fff" fontWeight="bold">
-                        SEND
-                      </Text>
-                    </Button>
-                  </Flex>
-                </Flex>
-              </form>
-            </FormProvider>
+                </Button>
+                <Button
+                  variant="no-hover"
+                  bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+                  alignSelf="flex-end"
+                  mt="24px"
+                  w="100px"
+                  h="35px"
+                  type="submit"
+                  onClick={() => onSubmitMedia()}>
+                  <Text fontSize="xs" color="#fff" fontWeight="bold">
+                    NEXT
+                  </Text>
+                </Button>
+              </Flex>
+            </Flex>
           </CardBody>
         </Card>
       </TabPanel>

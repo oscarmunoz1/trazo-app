@@ -61,7 +61,13 @@ const CarouselHorizontal = ({ title, description, data }: CarouselHorizontalProp
       <CardBody px="5px">
         {data && data.length > 0 ? (
           <Grid
-            templateColumns={{ sm: '1fr', md: '1fr 1fr', xl: 'repeat(4, 1fr)' }}
+            templateColumns={{
+              sm: '1fr',
+              md: '1fr 1fr',
+              lg: 'repeat(3, 1fr)',
+              xl: 'repeat(3, 1fr)',
+              '2xl': 'repeat(4, 1fr)'
+            }}
             templateRows={{ sm: '1fr 1fr 1fr auto', md: '1fr 2fr', xl: '1fr' }}
             gap="24px">
             {data.map((parcel) => (

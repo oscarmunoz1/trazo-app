@@ -59,12 +59,26 @@ export const historyApi = baseApi.injectEndpoints({
       providesTags: (result, error, eventId) => (result ? [{ type: 'Event', eventId }] : [])
     }),
     createEvent: build.mutation({
-      query: ({ companyId, establishmentId, ...eventData }) => ({
-        url: EVENT_CREATE_URL(companyId, establishmentId),
-        method: 'POST',
-        credentials: 'include',
-        body: eventData
-      }),
+      query: ({ companyId, establishmentId, ...eventData }) => {
+        const formData = new FormData();
+
+        eventData.album.images.forEach((file) => {
+          formData.append('album[images]', file);
+        });
+
+        for (const [key, value] of Object.entries(eventData)) {
+          if (key !== 'album') {
+            formData.append(key, value);
+          }
+        }
+        return {
+          url: EVENT_CREATE_URL(companyId, establishmentId),
+          method: 'POST',
+          credentials: 'include',
+          body: formData,
+          formData: true
+        };
+      },
       invalidatesTags: (result) => (result ? ['Event', 'History'] : [])
     }),
     createProduction: build.mutation({
