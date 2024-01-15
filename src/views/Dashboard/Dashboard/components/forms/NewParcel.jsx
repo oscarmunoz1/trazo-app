@@ -474,12 +474,6 @@ function NewParcel() {
                 <Input {...getInputProps()} />
                 <Button variant="no-hover">
                   {acceptedFiles.length > 0 ? (
-                    // <Text fontSize="sm" color="green">
-                    //   {files.length} file(s) selected:
-                    //   {files.map((file) => (
-                    //     <span key={file.path}> {file.name},</span>
-                    //   ))}
-                    // </Text>
                     <Flex gap="20px" p="20px" flexWrap={'wrap'}>
                       {acceptedFiles.map((file, index) => (
                         <Box key={index}>
@@ -503,7 +497,6 @@ function NewParcel() {
                           </Text>
                         </Box>
                       ))}
-                      {/* </Stack> */}
                     </Flex>
                   ) : (
                     <Text color="gray.400" fontWeight="normal">

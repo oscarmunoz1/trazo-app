@@ -17,6 +17,7 @@
 
 // Chakra imports
 import {
+  Box,
   Button,
   Flex,
   FormControl,
@@ -157,8 +158,6 @@ function NewEstablishment() {
   const mediaTab = useRef();
   const socialsTab = useRef();
 
-  const { getRootProps, getInputProps } = useDropzone();
-
   const keyPress = (e) => {
     if (e.keyCode === 13) {
       setSkills([
@@ -243,6 +242,7 @@ function NewEstablishment() {
       companyId: currentCompany.id,
       establishment: {
         ...currentEstablishment,
+        album: { images: acceptedFiles },
         ...(data?.facebook && { facebook: data.facebook }),
         ...(data?.instagram && { instagram: data.instagram }),
         company: currentCompany.id
@@ -311,6 +311,13 @@ function NewEstablishment() {
         })
     }
   ];
+
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    // onDrop,
+    // accept: "image/*", // Accepted file types
+    maxFiles: 5 // Maximum number of files
+    // maxSize: 1024 * 1024 * 5, // Maximum file size (5 MB)
+  });
 
   return (
     <FormLayout tabsList={tabsList} activeBullets={activeBullets}>
@@ -455,7 +462,7 @@ function NewEstablishment() {
           <CardBody>
             <Flex direction="column" w="100%">
               <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
-                Establishment images
+                Parcel images
               </Text>
               <Flex
                 align="center"
@@ -463,14 +470,43 @@ function NewEstablishment() {
                 border="1px dashed #E2E8F0"
                 borderRadius="15px"
                 w="100%"
-                minH="130px"
+                maxWidth={'980px'}
                 cursor="pointer"
+                overflowY={'auto'}
+                minH={'175px'}
                 {...getRootProps({ className: 'dropzone' })}>
                 <Input {...getInputProps()} />
                 <Button variant="no-hover">
-                  <Text color="gray.400" fontWeight="normal">
-                    Drop files here to upload
-                  </Text>
+                  {acceptedFiles.length > 0 ? (
+                    <Flex gap="20px" p="20px" flexWrap={'wrap'}>
+                      {acceptedFiles.map((file, index) => (
+                        <Box key={index}>
+                          <img
+                            src={URL.createObjectURL(file)} // Create a preview URL for the image
+                            alt={file.name}
+                            style={{
+                              width: '150px',
+                              height: '100px',
+                              borderRadius: '15px',
+                              objectFit: 'contain'
+                            }}
+                          />
+                          <Text
+                            color="gray.400"
+                            fontWeight="normal"
+                            maxWidth="150px"
+                            textOverflow={'ellipsis'}
+                            overflow={'hidden'}>
+                            {file.name}
+                          </Text>
+                        </Box>
+                      ))}
+                    </Flex>
+                  ) : (
+                    <Text color="gray.400" fontWeight="normal">
+                      Drop files here to upload
+                    </Text>
+                  )}
                 </Button>
               </Flex>
               <Flex justify="space-between">

@@ -260,7 +260,7 @@ export default function CommercialView() {
         padding="10px">
         Establishments
       </Text>
-      <SimpleGrid columns={{ sm: 2, md: 3, xl: 4 }} spacing="24px">
+      <SimpleGrid columns={{ sm: 1, md: 3, xl: 4 }} spacing="24px">
         {establishments ? (
           establishments.map((prop, key) => (
             <NavLink to={`/admin/dashboard/establishment/${prop.id}/commercial/`}>
@@ -284,8 +284,9 @@ export default function CommercialView() {
             direction={{ sm: 'column', md: 'row' }}
             justify="space-between"
             align="center"
+            gap="24px"
             w="100%">
-            <Flex gap="24px">
+            <Flex gap="24px" direction={{ base: 'column', smd: 'row' }}>
               <Flex flexDirection={'column'}>
                 <Stack
                   direction="row"
@@ -435,7 +436,10 @@ export default function CommercialView() {
             </Stack>
           </Flex>
         </Flex>
-        <Flex flexDirection={'row'} gap="24px">
+        <Flex
+          flexDirection={{ base: 'column', lg: 'row' }}
+          gap="24px"
+          p={{ base: '20px', lg: '0' }}>
           <Flex flex={2}>
             <ScansList
               title={'Scans'}

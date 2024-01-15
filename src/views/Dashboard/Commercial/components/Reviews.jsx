@@ -16,30 +16,23 @@
 */
 
 // Chakra imports
-import {
-  Button,
-  Flex,
-  Progress,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Button, Flex, Progress, Stack, Text, useColorModeValue } from '@chakra-ui/react';
 import {
   useGetEstablishmentLastReviewsQuery,
-  useGetEstablishmentProductReputationPercentageQuery,
-} from "store/api/reviewApi";
+  useGetEstablishmentProductReputationPercentageQuery
+} from 'store/api/reviewApi';
 
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import GeneralCard from "./GeneralCard";
-import React from "react";
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import GeneralCard from './GeneralCard';
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Reviews = () => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
   const { establishmentId } = useParams();
 
   const currentCompany = useSelector((state) => state.company.currentCompany);
@@ -47,22 +40,20 @@ const Reviews = () => {
   const { data: reviews } = useGetEstablishmentLastReviewsQuery(
     {
       companyId: currentCompany?.id,
-      establishmentId,
+      establishmentId
     },
     {
-      skip: !currentCompany || !establishmentId,
+      skip: !currentCompany || !establishmentId
     }
   );
 
-  const {
-    data: reviewsPercentage,
-  } = useGetEstablishmentProductReputationPercentageQuery(
+  const { data: reviewsPercentage } = useGetEstablishmentProductReputationPercentageQuery(
     {
       companyId: currentCompany?.id,
-      establishmentId,
+      establishmentId
     },
     {
-      skip: !currentCompany || !establishmentId,
+      skip: !currentCompany || !establishmentId
     }
   );
 
@@ -74,7 +65,7 @@ const Reviews = () => {
         </Text>
       </CardHeader>
       <CardBody>
-        <Flex gap="24px" width={"100%"}>
+        <Flex gap="24px" width={'100%'} direction={{ base: 'column', md: 'row' }}>
           <Flex direction="column" w="100%" flex={1}>
             <Stack direction="column" spacing="28px" w="100%" mb="40px">
               <Flex direction="column">
@@ -90,8 +81,7 @@ const Reviews = () => {
                   colorScheme="teal"
                   size="sm"
                   value={reviewsPercentage?.positive}
-                  borderRadius="15px"
-                ></Progress>
+                  borderRadius="15px"></Progress>
               </Flex>
               <Flex direction="column">
                 <Flex justify="space-between" mb="8px">
@@ -106,8 +96,7 @@ const Reviews = () => {
                   colorScheme="gray"
                   size="sm"
                   value={reviewsPercentage?.neutral}
-                  borderRadius="15px"
-                ></Progress>
+                  borderRadius="15px"></Progress>
               </Flex>
               <Flex direction="column">
                 <Flex justify="space-between" mb="8px">
@@ -122,15 +111,11 @@ const Reviews = () => {
                   colorScheme="red"
                   size="sm"
                   value={reviewsPercentage?.negative}
-                  borderRadius="15px"
-                ></Progress>
+                  borderRadius="15px"></Progress>
               </Flex>
             </Stack>
           </Flex>
-          <Flex flexDirection={"column"} gap="16px" width={"100%"} flex={2}>
-            {/* <GeneralCard />
-            <GeneralCard />
-            <GeneralCard /> */}
+          <Flex flexDirection={'column'} gap="16px" width={'100%'} flex={2}>
             {reviews?.map((review) => (
               <GeneralCard key={review.id} review={review} />
             ))}
@@ -139,8 +124,7 @@ const Reviews = () => {
               borderRadius="12px"
               bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
               p="12px 24px"
-              alignSelf="flex-end"
-            >
+              alignSelf="flex-end">
               <Text color="#fff" fontSize="xs">
                 VIEW ALL REVIEWS
               </Text>

@@ -24,7 +24,7 @@ import {
   useDisclosure
 } from '@chakra-ui/react';
 import { NavLink, useLocation } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { FaCircle } from 'react-icons/fa';
 import { HSeparator } from 'components/Separator/Separator';
@@ -35,6 +35,7 @@ import { HomeIcon } from 'components/Icons/Icons';
 import IconBox from 'components/Icons/IconBox';
 import Overview from 'views/Pages/Profile/Overview/index';
 import { RootState } from 'store/index';
+import { SidebarContext } from 'contexts/SidebarContext';
 import SidebarHelp from './SidebarHelp';
 import logo from 'assets/img/traceit.png';
 import { useSelector } from 'react-redux';
@@ -178,18 +179,20 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
     let activeColorIcon = useColorModeValue('white', 'white');
     let activeColor = useColorModeValue('gray.700', 'white');
     let inactiveColor = useColorModeValue('gray.400', 'gray.400');
+    let sidebarActiveShadow = '0px 7px 11px rgba(0, 0, 0, 0.04)';
     // Here are all the props that may change depending on sidebar's state.(Opaque or transparent)
     if (sidebarVariant === 'opaque') {
       inactiveBg = useColorModeValue('gray.100', 'gray.600');
       activeColor = useColorModeValue('gray.700', 'white');
       inactiveColor = useColorModeValue('gray.400', 'gray.400');
+      sidebarActiveShadow = 'none';
     }
-    return routes?.map((prop, index) => {
+    return routes?.map((prop: Route, index: number) => {
       if (prop.category) {
         return (
           <>
             <Text
-              fontSize={'md'}
+              fontSize={'xs'}
               color={activeColor}
               fontWeight="bold"
               mx="auto"
@@ -213,10 +216,15 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                 display="flex"
                 align="center"
                 justify="center"
-                key={index}
+                boxShadow={activeRoute(prop.regex) && prop.icon ? sidebarActiveShadow : null}
+                _hover={{
+                  boxShadow: activeRoute(prop.regex) && prop.icon ? sidebarActiveShadow : null
+                }}
+                _focus={{
+                  boxShadow: 'none'
+                }}
                 borderRadius="15px"
-                _focus={{ boxShadow: 'none' }}
-                _hover={{ boxShadow: 'none' }}
+                w={'100%'}
                 px={prop.icon ? null : '0px'}
                 py={prop.icon ? '12px' : null}
                 bg={activeRoute(prop.regex) && prop.icon ? activeAccordionBg : 'transparent'}>
@@ -232,12 +240,18 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                     }}
                     px="0px"
                     borderRadius="15px"
-                    _hover="none"
                     w="100%"
+                    _hover="none"
                     _active={{
                       bg: 'inherit',
                       transform: 'none',
-                      borderColor: 'transparent'
+                      borderColor: 'transparent',
+                      border: 'none'
+                    }}
+                    _focus={{
+                      transform: 'none',
+                      borderColor: 'transparent',
+                      border: 'none'
                     }}>
                     {prop.icon ? (
                       <Flex>
@@ -250,24 +264,23 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                           transition={variantChange}>
                           {prop.icon}
                         </IconBox>
+                        <Text color={activeColor} my="auto" fontSize="sm" display={'block'}>
+                          {prop.name}
+                        </Text>
+                      </Flex>
+                    ) : (
+                      <HStack spacing={'0px'} ps={'0px'} ms={'8px'}>
                         {prop.establishmentId ? (
                           <NavLink color="red" to={prop.layout + prop.path}>
-                            <Text color={activeColor} my="auto" fontSize="sm" display={'block'}>
+                            <Text color={activeColor} my="auto" fontSize="sm">
                               {prop.name}
                             </Text>
                           </NavLink>
                         ) : (
-                          <Text color={activeColor} my="auto" fontSize="sm" display={'block'}>
+                          <Text color={activeColor} my="auto" fontSize="sm">
                             {prop.name}
                           </Text>
                         )}
-                      </Flex>
-                    ) : (
-                      <HStack spacing={'22px'} ps="10px" ms="0px">
-                        <Icon as={FaCircle} w="10px" color="green.400" />
-                        <Text color={activeColor} my="auto" fontSize="sm">
-                          {prop.name}
-                        </Text>
                       </HStack>
                     )}
                   </Button>
@@ -282,14 +295,15 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                     }}
                     px="0px"
                     borderRadius="15px"
-                    _hover="none"
                     w="100%"
+                    _hover="none"
                     _active={{
                       bg: 'inherit',
                       transform: 'none',
                       borderColor: 'transparent'
                     }}
                     _focus={{
+                      borderColor: 'transparent',
                       boxShadow: 'none'
                     }}>
                     {prop.icon ? (
@@ -300,7 +314,9 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                           h="30px"
                           w="30px"
                           me="12px"
-                          transition={variantChange}>
+                          transition={variantChange}
+                          boxShadow={sidebarActiveShadow}
+                          _hover={{ boxShadow: sidebarActiveShadow }}>
                           {prop.icon}
                         </IconBox>
                         <Text color={inactiveColor} my="auto" fontSize="sm">
@@ -308,8 +324,8 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                         </Text>
                       </Flex>
                     ) : (
-                      <HStack spacing={'26px'} ps={'10px'} ms={'0px'}>
-                        <Icon as={FaCircle} w="6px" color="green.400" />
+                      <HStack spacing={'0px'} ps={'0px'} ms={'8px'}>
+                        <Icon as={FaCircle} w="6px" color="green.400" display={'none'} />
                         {prop.establishmentId ? (
                           <NavLink color="red" to={prop.layout + prop.path}>
                             <Text color={inactiveColor} my="auto" fontSize="md" fontWeight="normal">
@@ -325,9 +341,16 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                     )}
                   </Button>
                 )}
-                <AccordionIcon color="gray.400" />
+                <AccordionIcon
+                  color="gray.400"
+                  display={prop.icon ? 'none' : 'block'}
+                  transform={prop.icon ? null : 'translateX(-70%)'}
+                />
               </AccordionButton>
-              <AccordionPanel pe={prop.icon ? null : '0px'} pb="8px">
+              <AccordionPanel
+                pe={prop.icon ? null : '0px'}
+                p="8px 0px"
+                ps={prop.icon ? null : '8px'}>
                 {(dynamicRoutes || certificationsRoutes || commercialDynamicRoutes) && (
                   <List>
                     {
@@ -381,11 +404,12 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
               </Box>
             ) : (
               <ListItem>
-                <HStack spacing="22px" py="5px" px="10px">
+                <HStack spacing={'8px'} py="5px" px={'0px'}>
                   <Icon
                     as={FaCircle}
                     w={activeRoute(prop.regex) ? '10px' : '6px'}
                     color="green.400"
+                    display={'none'}
                   />
                   <Text
                     color={activeRoute(prop.regex) ? activeColor : inactiveColor}
@@ -399,6 +423,221 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
         );
       }
     });
+    // return routes?.map((prop, index) => {
+    //   if (prop.category) {
+    //     return (
+    //       <>
+    //         <Text
+    //           fontSize={'md'}
+    //           color={activeColor}
+    //           fontWeight="bold"
+    //           mx="auto"
+    //           ps={{
+    //             sm: '10px',
+    //             xl: '16px'
+    //           }}
+    //           py="12px"
+    //           key={index}>
+    //           {prop.name}
+    //         </Text>
+    //         {createLinks(prop.items)}
+    //       </>
+    //     );
+    //   }
+    //   if (prop.collapse) {
+    //     return (
+    //       <Accordion allowToggle>
+    //         <AccordionItem border="none">
+    //           <AccordionButton
+    //             display="flex"
+    //             align="center"
+    //             justify="center"
+    //             key={index}
+    //             borderRadius="15px"
+    //             _focus={{ boxShadow: 'none' }}
+    //             _hover={{ boxShadow: 'none' }}
+    //             px={prop.icon ? null : '0px'}
+    //             py={prop.icon ? '12px' : null}
+    //             bg={activeRoute(prop.regex) && prop.icon ? activeAccordionBg : 'transparent'}>
+    //             {activeRoute(prop.regex) ? (
+    //               <Button
+    //                 boxSize="initial"
+    //                 justifyContent="flex-start"
+    //                 alignItems="center"
+    //                 bg="transparent"
+    //                 transition={variantChange}
+    //                 mx={{
+    //                   xl: 'auto'
+    //                 }}
+    //                 px="0px"
+    //                 borderRadius="15px"
+    //                 _hover="none"
+    //                 w="100%"
+    //                 _active={{
+    //                   bg: 'inherit',
+    //                   transform: 'none',
+    //                   borderColor: 'transparent'
+    //                 }}>
+    //                 {prop.icon ? (
+    //                   <Flex>
+    //                     <IconBox
+    //                       bg={activeBg}
+    //                       color={activeColorIcon}
+    //                       h="30px"
+    //                       w="30px"
+    //                       me="12px"
+    //                       transition={variantChange}>
+    //                       {prop.icon}
+    //                     </IconBox>
+    //                     {prop.establishmentId ? (
+    //                       <NavLink color="red" to={prop.layout + prop.path}>
+    //                         <Text color={activeColor} my="auto" fontSize="sm" display={'block'}>
+    //                           {prop.name}
+    //                         </Text>
+    //                       </NavLink>
+    //                     ) : (
+    //                       <Text color={activeColor} my="auto" fontSize="sm" display={'block'}>
+    //                         {prop.name}
+    //                       </Text>
+    //                     )}
+    //                   </Flex>
+    //                 ) : (
+    //                   <HStack spacing={'22px'} ps="10px" ms="0px">
+    //                     <Icon as={FaCircle} w="10px" color="green.400" />
+    //                     <Text color={activeColor} my="auto" fontSize="sm">
+    //                       {prop.name}
+    //                     </Text>
+    //                   </HStack>
+    //                 )}
+    //               </Button>
+    //             ) : (
+    //               <Button
+    //                 boxSize="initial"
+    //                 justifyContent="flex-start"
+    //                 alignItems="center"
+    //                 bg="transparent"
+    //                 mx={{
+    //                   xl: 'auto'
+    //                 }}
+    //                 px="0px"
+    //                 borderRadius="15px"
+    //                 _hover="none"
+    //                 w="100%"
+    //                 _active={{
+    //                   bg: 'inherit',
+    //                   transform: 'none',
+    //                   borderColor: 'transparent'
+    //                 }}
+    //                 _focus={{
+    //                   boxShadow: 'none'
+    //                 }}>
+    //                 {prop.icon ? (
+    //                   <Flex>
+    //                     <IconBox
+    //                       bg={inactiveBg}
+    //                       color={inactiveColorIcon}
+    //                       h="30px"
+    //                       w="30px"
+    //                       me="12px"
+    //                       transition={variantChange}>
+    //                       {prop.icon}
+    //                     </IconBox>
+    //                     <Text color={inactiveColor} my="auto" fontSize="sm">
+    //                       {prop.name}
+    //                     </Text>
+    //                   </Flex>
+    //                 ) : (
+    //                   <HStack spacing={'26px'} ps={'10px'} ms={'0px'}>
+    //                     <Icon as={FaCircle} w="6px" color="green.400" />
+    //                     {prop.establishmentId ? (
+    //                       <NavLink color="red" to={prop.layout + prop.path}>
+    //                         <Text color={inactiveColor} my="auto" fontSize="md" fontWeight="normal">
+    //                           {prop.name}
+    //                         </Text>
+    //                       </NavLink>
+    //                     ) : (
+    //                       <Text color={inactiveColor} my="auto" fontSize="md" fontWeight="normal">
+    //                         {prop.name}
+    //                       </Text>
+    //                     )}
+    //                   </HStack>
+    //                 )}
+    //               </Button>
+    //             )}
+    //             <AccordionIcon color="gray.400" />
+    //           </AccordionButton>
+    //           <AccordionPanel pe={prop.icon ? null : '0px'} pb="8px">
+    //             {(dynamicRoutes || certificationsRoutes || commercialDynamicRoutes) && (
+    //               <List>
+    //                 {
+    //                   prop.icon
+    //                     ? createLinks(
+    //                         prop.isDashboard && !prop.items
+    //                           ? dynamicRoutes
+    //                           : prop.isCertifications
+    //                           ? certificationsRoutes
+    //                           : prop.isCommercial
+    //                           ? commercialDynamicRoutes
+    //                           : prop.items
+    //                       ) // for bullet accordion links
+    //                     : createAccordionLinks(
+    //                         prop.isDashboard && !prop.items
+    //                           ? dynamicRoutes
+    //                           : prop.isCertifications
+    //                           ? certificationsRoutes
+    //                           : prop.isCommercial
+    //                           ? commercialDynamicRoutes
+    //                           : prop.items
+    //                       ) // for non-bullet accordion links
+    //                 }
+    //               </List>
+    //             )}
+    //           </AccordionPanel>
+    //         </AccordionItem>
+    //       </Accordion>
+    //     );
+    //   } else {
+    //     return (
+    //       <NavLink to={prop.layout + prop.path}>
+    //         {prop.icon ? (
+    //           <Box>
+    //             <HStack spacing="14px" py="15px" px="15px">
+    //               <IconBox
+    //                 bg="green.400"
+    //                 color="white"
+    //                 h="30px"
+    //                 w="30px"
+    //                 transition={variantChange}>
+    //                 {prop.icon}
+    //               </IconBox>
+    //               <Text
+    //                 color={activeRoute(prop.regex) ? activeColor : inactiveColor}
+    //                 fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}
+    //                 fontSize="sm">
+    //                 {prop.name}
+    //               </Text>
+    //             </HStack>
+    //           </Box>
+    //         ) : (
+    //           <ListItem>
+    //             <HStack spacing="22px" py="5px" px="10px">
+    //               <Icon
+    //                 as={FaCircle}
+    //                 w={activeRoute(prop.regex) ? '10px' : '6px'}
+    //                 color="green.400"
+    //               />
+    //               <Text
+    //                 color={activeRoute(prop.regex) ? activeColor : inactiveColor}
+    //                 fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}>
+    //                 {prop.name}
+    //               </Text>
+    //             </HStack>
+    //           </ListItem>
+    //         )}
+    //       </NavLink>
+    //     );
+    //   }
+    // });
   };
 
   const { logoText, routes } = props;

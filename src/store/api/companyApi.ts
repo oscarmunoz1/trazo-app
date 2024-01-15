@@ -25,12 +25,27 @@ const companyApi = baseApi.injectEndpoints({
       invalidatesTags: (result) => (result ? ['Company'] : [])
     }),
     createEstablishment: build.mutation({
-      query: ({ companyId, establishment }) => ({
-        url: ESTABLISHMENT_URL(companyId),
-        method: 'POST',
-        credentials: 'include',
-        body: establishment
-      }),
+      query: ({ companyId, establishment }) => {
+        const formData = new FormData();
+
+        establishment.album.images.forEach((file) => {
+          formData.append('album[images]', file);
+        });
+
+        for (const [key, value] of Object.entries(establishment)) {
+          if (key !== 'album') {
+            formData.append(key, value);
+          }
+        }
+
+        return {
+          url: ESTABLISHMENT_URL(companyId),
+          method: 'POST',
+          credentials: 'include',
+          body: formData,
+          formData: true
+        };
+      },
       invalidatesTags: (result) => (result ? ['Establishment'] : [])
     }),
     editEstablishment: build.mutation({
