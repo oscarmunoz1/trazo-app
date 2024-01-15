@@ -64,7 +64,7 @@ const CardWithImage = ({ title, name, image, readMoreLink }: CardWithImageProps)
           </Flex>
           <Spacer />
           <Flex
-            bg="green.300"
+            bg={{ sm: 'none', md: 'green.300' }}
             align="center"
             justify="center"
             borderRadius="15px"

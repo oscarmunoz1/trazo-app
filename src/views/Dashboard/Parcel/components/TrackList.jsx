@@ -52,7 +52,7 @@ const TrackList = ({ amount }) => {
       parcelId: parcelId || ''
     },
     {
-      skip: !parcelId || !currentCompany || !establishmentId
+      skip: !parcelId || !currentCompany || !establishmentId || currentCompany?.id === undefined
     }
   );
 

@@ -36,7 +36,7 @@ export default function ParcelView() {
   const { data, error, isLoading, isFetching, refetch } = useGetParcelQuery(
     { parcelId, establishmentId, companyId: currentCompany?.id },
     {
-      skip: !parcelId || !establishmentId || !currentCompany
+      skip: !parcelId || !establishmentId || !currentCompany || currentCompany?.id === undefined
     }
   );
 

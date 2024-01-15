@@ -38,7 +38,7 @@ const HistoryCard = ({ title, amount, captions }) => {
   const { data, error, isLoading, isFetching, refetch } = useGetParcelHistoriesQuery(
     { companyId: currentCompany?.id, establishmentId, parcelId },
     {
-      skip: !parcelId || !establishmentId || !currentCompany
+      skip: !parcelId || !establishmentId || !currentCompany || currentCompany?.id === undefined
     }
   );
 

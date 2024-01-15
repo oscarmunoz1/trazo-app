@@ -79,7 +79,13 @@ export default function CommercialView() {
       parcelId: filters.parcel?.id,
       productionId: filters.production?.id
     },
-    { skip: !currentEstablishmentId || !filters?.period || !currentCompany }
+    {
+      skip:
+        !currentEstablishmentId ||
+        !filters?.period ||
+        !currentCompany ||
+        currentCompany?.id === undefined
+    }
   );
 
   const {
@@ -94,7 +100,13 @@ export default function CommercialView() {
       parcelId: filters.parcel?.id,
       productionId: filters.production?.id
     },
-    { skip: !currentCompany || !currentEstablishmentId || !filters?.period }
+    {
+      skip:
+        !currentCompany ||
+        !currentEstablishmentId ||
+        !filters?.period ||
+        currentCompany?.id === undefined
+    }
   );
 
   const {
@@ -109,7 +121,13 @@ export default function CommercialView() {
       parcelId: filters.parcel?.id,
       productionId: filters.production?.id
     },
-    { skip: !currentEstablishmentId || !filters?.period || !currentCompany }
+    {
+      skip:
+        !currentEstablishmentId ||
+        !filters?.period ||
+        !currentCompany ||
+        currentCompany?.id === undefined
+    }
   );
 
   const [
@@ -151,7 +169,7 @@ export default function CommercialView() {
 
   const { data: dataProducts } = useGetEstablishmentProductsQuery(
     { companyId: currentCompany?.id, establishmentId: currentEstablishmentId },
-    { skip: !currentEstablishmentId || !currentCompany }
+    { skip: !currentEstablishmentId || !currentCompany || currentCompany?.id === undefined }
   );
 
   const { data: dataHistories } = useGetEstablishmentHistoriesQuery(
@@ -168,7 +186,8 @@ export default function CommercialView() {
         !currentEstablishmentId ||
         !filters?.period ||
         !filters?.parcel ||
-        !filters?.product
+        !filters?.product ||
+        currentCompany?.id === undefined
     }
   );
 

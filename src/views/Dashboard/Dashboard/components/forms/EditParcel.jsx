@@ -201,7 +201,8 @@ function NewParcel() {
         parcelId === undefined ||
         currentParcel?.id === parcelId ||
         !currentCompany ||
-        !establishmentId
+        !establishmentId ||
+        currentCompany?.id === undefined
     }
   );
 

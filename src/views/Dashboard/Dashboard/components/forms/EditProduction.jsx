@@ -195,7 +195,7 @@ function NewProduction() {
       establishmentId
     },
     {
-      skip: !currentCompany || !establishmentId
+      skip: !currentCompany || !establishmentId || currentCompany?.id === undefined
     }
   );
 
