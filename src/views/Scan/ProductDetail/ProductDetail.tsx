@@ -329,88 +329,10 @@ function Capture() {
           <CardBody>
             <Flex direction="column" w="100%">
               <Flex direction={{ sm: 'column', lg: 'row' }} mb={{ sm: '22px', lg: '44px' }}>
-                {/* <Flex
-                  direction="column"
-                  me={{ lg: '20px', xl: '40px' }}
-                  mb={{ sm: '24px', lg: '0px' }}>
-                  <Box
-                    w={{ sm: '305px', md: '370px', lg: '350px', xl: '550px' }}
-                    h={{ sm: '220px', md: '300px', lg: '230px', xl: '433px' }}
-                    mb="26px"
-                    mx={{ sm: 'auto', lg: '0px' }}>
-                    <Image src={currentImage} w="100%" h="100%" borderRadius="15px" />
-                  </Box>
-                  <Stack
-                    direction="row"
-                    spacing={{ sm: '20px', md: '35px', lg: '20px' }}
-                    mx="auto"
-                    mb={{ sm: '24px', lg: '0px' }}>
-                    <Box
-                      w={{ sm: '36px', md: '90px', lg: '60px' }}
-                      h={{ sm: '36px', md: '90px', lg: '60px' }}>
-                      <Image
-                        src={productPage1}
-                        w="100%"
-                        h="100%"
-                        borderRadius="15px"
-                        cursor="pointer"
-                        onClick={(e) => setCurrentImage(e.target.src)}
-                      />
-                    </Box>
-                    <Box
-                      w={{ sm: '36px', md: '90px', lg: '60px' }}
-                      h={{ sm: '36px', md: '90px', lg: '60px' }}>
-                      <Image
-                        src={productPage2}
-                        w="100%"
-                        h="100%"
-                        borderRadius="15px"
-                        cursor="pointer"
-                        onClick={(e) => setCurrentImage(e.target.src)}
-                      />
-                    </Box>
-                    <Box
-                      w={{ sm: '36px', md: '90px', lg: '60px' }}
-                      h={{ sm: '36px', md: '90px', lg: '60px' }}>
-                      <Image
-                        src={productPage3}
-                        w="100%"
-                        h="100%"
-                        borderRadius="15px"
-                        cursor="pointer"
-                        onClick={(e) => setCurrentImage(e.target.src)}
-                      />
-                    </Box>
-                    <Box
-                      w={{ sm: '36px', md: '90px', lg: '60px' }}
-                      h={{ sm: '36px', md: '90px', lg: '60px' }}>
-                      <Image
-                        src={productPage4}
-                        w="100%"
-                        h="100%"
-                        borderRadius="15px"
-                        cursor="pointer"
-                        onClick={(e) => setCurrentImage(e.target.src)}
-                      />
-                    </Box>
-                    <Box
-                      w={{ sm: '36px', md: '90px', lg: '60px' }}
-                      h={{ sm: '36px', md: '90px', lg: '60px' }}>
-                      <Image
-                        src={productPage2}
-                        w="100%"
-                        h="100%"
-                        borderRadius="15px"
-                        cursor="pointer"
-                        onClick={(e) => setCurrentImage(e.target.src)}
-                      />
-                    </Box>
-                  </Stack>
-                </Flex> */}
-                <ImageCarousel imagesList={historyData?.images} />
+                {historyData?.images && <ImageCarousel imagesList={historyData?.images} />}
                 <Flex direction="column">
                   <Text color={textColor} fontSize="3xl" fontWeight="bold" mb="12px">
-                    {historyData?.product}
+                    {historyData?.product.name}
                   </Text>
                   <Stack direction="row" spacing="12px" color="orange.300" mb="16px">
                     <Icon
@@ -490,18 +412,20 @@ function Capture() {
                   <Flex direction="column">
                     <Flex align="center" mb="15px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        Location:{' '}
+                        Establishment:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
-                        {historyData?.location}
+                        <Link textDecoration={'underline'}>
+                          {historyData?.parcel.establishment.name}
+                        </Link>
                       </Text>
                     </Flex>
                     <Flex align="center" mb="15px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        Establishment:{' '}
+                        Location:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
-                        <Link textDecoration={'underline'}>{historyData?.establishment}</Link>
+                        {historyData?.parcel.establishment.location}
                       </Text>
                     </Flex>
                     <Flex align="center" mb="15px">
@@ -509,7 +433,7 @@ function Capture() {
                         Parcel:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
-                        <Link textDecoration={'underline'}>{historyData?.parcel}</Link>
+                        <Link textDecoration={'underline'}>{historyData?.parcel.name}</Link>
                       </Text>
                     </Flex>
                     <Flex align="center" mb="15px">
@@ -517,7 +441,7 @@ function Capture() {
                         Production:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
-                        {`${new Date(historyData?.start_date).toLocaleDateString()}-${new Date(
+                        {`${new Date(historyData?.start_date).toLocaleDateString()} - ${new Date(
                           historyData?.finish_date
                         ).toLocaleDateString()}`}
                       </Text>
@@ -559,9 +483,9 @@ function Capture() {
 
               <Flex px="24px" pb="24px" direction={'column'}>
                 <Text fontSize="xl" color={textColor} fontWeight="bold" pb="24px">
-                  {historyData?.establishment}
+                  {historyData?.parcel.establishment.name}
                 </Text>
-                <HTMLRenderer htmlString={historyData?.establishment_description} />
+                <HTMLRenderer htmlString={historyData?.parcel.establishment.description} />
               </Flex>
               <Flex pt={'24px'} direction={{ sm: 'column', md: 'column', lg: 'row' }}>
                 <Flex px="24px" width={{ md: '100%', lg: '50%' }} direction={'column'}>
@@ -594,29 +518,18 @@ function Capture() {
                   <Text fontSize="xl" color={textColor} fontWeight="bold" pb="24px">
                     Parcel location
                   </Text>
-                  {isLoaded && (
+                  {isLoaded && historyData && (
                     <GoogleMap
                       mapContainerStyle={{
                         width: '100%',
                         height: '100%',
                         borderRadius: '10px'
                       }}
-                      zoom={16}
-                      center={{
-                        lat: -31.27006513500534,
-                        lng: -57.199462864720985
-                      }}
+                      zoom={historyData?.parcel.map_metadata.zoom || 15}
+                      center={historyData?.parcel.map_metadata.center || { lat: 0, lng: 0 }}
                       mapTypeId="satellite">
                       <Polygon
-                        path={[
-                          { lat: -31.26835838901041, lng: -57.202751722067966 },
-                          {
-                            lat: -31.271918579848123,
-                            lng: -57.201694589349295
-                          },
-                          { lat: -31.27094552584586, lng: -57.19690586848693 },
-                          { lat: -31.269076616200664, lng: -57.19727631670458 }
-                        ]}
+                        path={historyData?.parcel.polygon}
                         options={{
                           fillColor: '#ff0000',
                           fillOpacity: 0.35,

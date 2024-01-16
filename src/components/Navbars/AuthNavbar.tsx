@@ -34,7 +34,7 @@ import {
   useDisclosure
 } from '@chakra-ui/react';
 import { ProfileIcon, RocketIcon } from 'components/Icons/Icons';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import IconBox from 'components/Icons/IconBox';
@@ -61,6 +61,7 @@ export default function AuthNavbar(props: AuthNavbarProps) {
   const isLoadingAuth = useSelector((state: RootState) => state.auth.isLoading);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [subdomain, setSubDomain] = useState(null);
 
   const [open, setOpen] = React.useState(false);
   const { isOpen: isOpenPages, onOpen: onOpenPages, onClose: onClosePages } = useDisclosure();
@@ -74,6 +75,15 @@ export default function AuthNavbar(props: AuthNavbarProps) {
   } = useDisclosure();
 
   const [logout, { isLoading, isSuccess, error, isError }] = useLogoutMutation();
+
+  useEffect(() => {
+    const host = window.location.host; // gets the full domain of the app
+
+    const arr = host
+      .split('.')
+      .slice(0, host.includes(import.meta.env.VITE_APP_BASE_DOMAIN) ? -1 : -2);
+    if (arr.length > 0) setSubDomain(arr[0] === 'app');
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -367,7 +377,7 @@ export default function AuthNavbar(props: AuthNavbarProps) {
       <Flex w="100%" justifyContent={{ sm: 'start', lg: 'space-between' }}>
         {brand}
         <Box ms={{ base: 'auto', lg: '0px' }} display={{ lg: 'none' }}>
-          {isLoadingAuth === false && isAuthenticated && (
+          {subdomain && isLoadingAuth === false && isAuthenticated && (
             <SidebarResponsive
               logoText={props.logoText}
               secondary={props.secondary}
@@ -378,7 +388,7 @@ export default function AuthNavbar(props: AuthNavbarProps) {
           )}
         </Box>
         {/* {linksAuth} */}
-        {isLoadingAuth === false && isAuthenticated ? (
+        {subdomain && isLoadingAuth === false && isAuthenticated ? (
           <Button
             ms="0px"
             px="0px"

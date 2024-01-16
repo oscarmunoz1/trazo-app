@@ -66,8 +66,12 @@ export const historyApi = baseApi.injectEndpoints({
           formData.append('album[images]', file);
         });
 
+        eventData.parcels.forEach((parcel) => {
+          formData.append('parcels', parcel);
+        });
+
         for (const [key, value] of Object.entries(eventData)) {
-          if (key !== 'album') {
+          if (key !== 'album' && key !== 'parcels') {
             formData.append(key, value);
           }
         }
