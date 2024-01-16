@@ -177,19 +177,21 @@ function NewEstablishment() {
 
   const parcels = useSelector((state) =>
     state.company.currentCompany?.establishments?.reduce((res_parcels, establishment) => {
-      const establishmentParcels = establishment.parcels.map((parcel) => {
-        if (parcel.id === Number(parcelId)) {
+      const establishmentParcels = establishment.parcels
+        .filter((parcel) => parcel.has_current_production)
+        .map((parcel) => {
+          if (parcel.id === Number(parcelId)) {
+            return {
+              value: parcel.id,
+              label: parcel.name,
+              isFixed: true
+            };
+          }
           return {
             value: parcel.id,
-            label: parcel.name,
-            isFixed: true
+            label: parcel.name
           };
-        }
-        return {
-          value: parcel.id,
-          label: parcel.name
-        };
-      });
+        });
       return res_parcels.concat(establishmentParcels);
     }, [])
   );
@@ -461,7 +463,6 @@ function NewEstablishment() {
                         Select the others Parcels to which the event was applied
                       </FormLabel>
                       <Select
-                        // value={parcels?.filter((v) => v.isFixed)}
                         value={value}
                         isMulti
                         styles={styles}
