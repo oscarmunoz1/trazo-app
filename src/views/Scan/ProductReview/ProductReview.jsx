@@ -43,6 +43,7 @@ import { object, string } from 'zod';
 import { useCommentHistoryMutation, useGetPublicHistoryQuery } from 'store/api/historyApi';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import BgMusicCard from 'assets/img/BgMusicCard.png';
 import BgSignUp from 'assets/img/basic-auth.png';
 import Card from 'components/Card/Card';
 import CardBody from 'components/Card/CardBody';
@@ -167,7 +168,9 @@ function ProductReview() {
           <CardHeader mb="22px" justifyContent={'center'}>
             <Flex direction={'column'} w="100%">
               <Flex direction={'row'} gap="25px">
-                <Image src={productPage1} w="100px" h="80px" borderRadius="5px" />
+                {historyData?.images.length > 0 && (
+                  <Image src={historyData?.images[0]} w="100px" h="80px" borderRadius="5px" />
+                )}
                 <Text fontSize="md" fontWeight={'bold'} color={textColor}>
                   {historyData?.product.name} - {historyData?.company},{' '}
                   {historyData?.parcel.establishment.name}
