@@ -69,7 +69,7 @@ const App = () => {
                 <Route path="signup" exact key={2} element={<SignUp />} />
                 <Route path="verifyemail" exact key={2} element={<VerifyEmail />} />
               </Route>
-              <Route path="*" exact element={<Navigate to="/pricing" replace />} />
+              {/* <Route path="*" exact element={<Navigate to="/pricing" replace />} /> */}
             </>
           )}
           <Route path="/capture" element={<Capture />} />
