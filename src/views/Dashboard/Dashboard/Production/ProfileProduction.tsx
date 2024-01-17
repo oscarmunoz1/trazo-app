@@ -54,7 +54,7 @@ function ProfileProduction() {
     <BoxBackground
       title={'Production Detail'}
       subtitle={'Here you can see the information of the production you have selected.'}>
-      <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
+      <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px" width={'100%'}>
         <Card
           mt={{ md: '24px' }}
           maxWidth={{ sm: '100%', md: '100%', lg: '80%' }}

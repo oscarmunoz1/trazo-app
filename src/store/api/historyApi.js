@@ -24,12 +24,26 @@ export const historyApi = baseApi.injectEndpoints({
       providesTags: (result, error, parcelId) => (result ? [{ type: 'History', parcelId }] : [])
     }),
     finishCurrentHistory: build.mutation({
-      query: ({ companyId, establishmentId, parcelId, historyData }) => ({
-        url: FINISH_HISTORY(companyId, establishmentId, parcelId),
-        method: 'POST',
-        credentials: 'include',
-        body: historyData
-      }),
+      query: ({ companyId, establishmentId, parcelId, historyData }) => {
+        const formData = new FormData();
+
+        historyData.album.images.forEach((file) => {
+          formData.append('album[images]', file);
+        });
+
+        for (const [key, value] of Object.entries(historyData)) {
+          if (key !== 'album') {
+            formData.append(key, value);
+          }
+        }
+        return {
+          url: FINISH_HISTORY(companyId, establishmentId, parcelId),
+          method: 'POST',
+          credentials: 'include',
+          body: formData,
+          formData: true
+        };
+      },
       invalidatesTags: (result, error, parcelId) => (result ? [{ type: 'History', parcelId }] : [])
     }),
     getParcelHistories: build.query({

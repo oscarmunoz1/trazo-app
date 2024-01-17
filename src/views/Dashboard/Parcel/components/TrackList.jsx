@@ -173,7 +173,7 @@ const TrackList = ({ amount }) => {
           )}
         </Flex>
       </CardBody>
-      <div style={{ display: 'flex', gap: '20px', justifyContent: 'flex-end' }}>
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
         <Button
           bg={bgButton}
           color="white"
@@ -183,21 +183,22 @@ const TrackList = ({ amount }) => {
           onClick={handleOnPrimaryClick}>
           {!currentHistory?.product ? 'START PRODUCTION' : 'ADD EVENT'}
         </Button>
-        <Button
-          variant="outline"
-          colorScheme="green"
-          minW="110px"
-          h="36px"
-          fontSize="xs"
-          px="1.5rem"
-          onClick={() =>
-            navigate(
-              `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${currentHistory?.id}/finish`
-            )
-          }
-          disabled={currentHistory?.events && currentHistory?.events.length > 0 ? false : true}>
-          FINISH PRODUCTION
-        </Button>
+        {currentHistory?.events && currentHistory?.events.length > 0 && (
+          <Button
+            variant="outline"
+            colorScheme="green"
+            minW="120px"
+            h="36px"
+            fontSize="xs"
+            px="1.5rem"
+            onClick={() =>
+              navigate(
+                `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${currentHistory?.id}/finish`
+              )
+            }>
+            FINISH PRODUCTION
+          </Button>
+        )}
       </div>
     </Card>
   );

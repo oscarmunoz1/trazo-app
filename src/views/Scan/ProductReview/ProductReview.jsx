@@ -72,10 +72,6 @@ const registerSchema = object({
   review: string().min(1, 'Review is required')
 });
 
-const options = {
-  googleMapApiKey: 'AIzaSyCLHij6DjbLLkhTsTvrRhwuKf8ZGXrx-Q8'
-};
-
 function ProductReview() {
   const textColor = useColorModeValue('gray.700', 'white');
   const { getRootProps, getInputProps } = useDropzone();
@@ -173,7 +169,8 @@ function ProductReview() {
               <Flex direction={'row'} gap="25px">
                 <Image src={productPage1} w="100px" h="80px" borderRadius="5px" />
                 <Text fontSize="md" fontWeight={'bold'} color={textColor}>
-                  {historyData?.product} - {historyData?.company}, {historyData?.establishment}
+                  {historyData?.product.name} - {historyData?.company},{' '}
+                  {historyData?.parcel.establishment.name}
                 </Text>
               </Flex>
               <HSeparator my="16px" />
