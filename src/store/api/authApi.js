@@ -17,10 +17,12 @@ const authApi = baseApi.injectEndpoints({
         try {
           const result = await queryFulfilled;
           dispatch(setUser(result.data.user));
-          const { data } = await dispatch(
-            baseApi.endpoints.getCompany.initiate(result.data.user['companies'][0].id)
-          );
-          dispatch(setCompany(data));
+          if (result.data.user['companies'].length > 0) {
+            const { data } = await dispatch(
+              baseApi.endpoints.getCompany.initiate(result.data.user['companies'][0].id)
+            );
+            dispatch(setCompany(data));
+          }
         } catch (error) {
           console.error(error);
         }
