@@ -1,4 +1,5 @@
 import { Navigate, Outlet, useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
+import { PRODUCER, SUPERUSER } from '../../config';
 import React, { useEffect } from 'react';
 
 import { LOGIN_PAGE_URL } from 'config/routes';
@@ -16,36 +17,40 @@ const Authenticated = ({ allowedRoles }) => {
   const { establishmentId } = useParams();
 
   useEffect(() => {
-    const id = Number(establishmentId);
+    if (currentUser?.user_type === PRODUCER || currentUser?.user_type === SUPERUSER) {
+      const id = Number(establishmentId);
 
-    if (
-      (establishmentId || pathname == '/admin/dashboard' || pathname == '/admin/dashboard/') &&
-      currentUser?.companies.length > 0
-    ) {
       if (
-        currentCompany &&
-        currentCompany.establishments &&
-        !currentCompany.establishments.map((e) => e.id).includes(id)
+        (establishmentId || pathname == '/admin/dashboard' || pathname == '/admin/dashboard/') &&
+        currentUser?.companies.length > 0
       ) {
-        if (currentCompany.establishments?.length > 0) {
-          const establishment = currentCompany.establishments[0].id;
-          navigate(`/admin/dashboard/establishment/${establishment}`);
-        } else {
-          navigate(`/admin/dashboard/`);
+        if (
+          currentCompany &&
+          currentCompany.establishments &&
+          !currentCompany.establishments.map((e) => e.id).includes(id)
+        ) {
+          if (currentCompany.establishments?.length > 0) {
+            const establishment = currentCompany.establishments[0].id;
+            navigate(`/admin/dashboard/establishment/${establishment}`);
+          } else {
+            navigate(`/admin/dashboard/`);
+          }
         }
       }
     }
   }, [currentCompany, establishmentId, navigate, currentUser]);
 
   useEffect(() => {
-    if (currentUser?.companies.length === 0) {
-      navigate(`/admin/dashboard/select-company`);
-    } else if (
-      currentUser?.companies.length === 1 &&
-      currentCompany?.establishments &&
-      currentCompany.establishments.length === 0
-    ) {
-      navigate(`/admin/dashboard/establishment/add`);
+    if (currentUser?.user_type === PRODUCER || currentUser?.user_type === SUPERUSER) {
+      if (currentUser?.companies.length === 0) {
+        navigate(`/admin/dashboard/select-company`);
+      } else if (
+        currentUser?.companies.length === 1 &&
+        currentCompany?.establishments &&
+        currentCompany.establishments.length === 0
+      ) {
+        navigate(`/admin/dashboard/establishment/add`);
+      }
     }
   }, [currentCompany, currentUser, navigate]);
 
