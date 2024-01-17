@@ -40,6 +40,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import IconBox from 'components/Icons/IconBox';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { RootState } from 'store';
 import SidebarResponsive from 'components/Sidebar/SidebarResponsive';
 import { clearCurrentCompany } from 'store/features/companySlice';
@@ -389,16 +390,27 @@ export default function AuthNavbar(props: AuthNavbarProps) {
         </Box>
         {/* {linksAuth} */}
         {subdomain && isLoadingAuth === false && isAuthenticated ? (
-          <Button
-            ms="0px"
-            px="0px"
-            me={{ sm: '2px', md: '16px' }}
-            color={navbarIcon}
-            variant="transparent-with-icon"
-            leftIcon={<ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />}
-            onClick={handleLogout}>
-            <Text display={{ sm: 'none', md: 'flex' }}>Sign Out</Text>
-          </Button>
+          <>
+            <Button
+              ms="0px"
+              px="0px"
+              me={{ sm: '2px', md: '16px' }}
+              color={navbarIcon}
+              variant="transparent-with-icon"
+              leftIcon={<RiLogoutBoxRLine color={navbarIcon} w="22px" h="22px" me="0px" />}
+              onClick={handleLogout}>
+              <Text display={{ sm: 'none', md: 'flex' }}>Sign Out</Text>
+            </Button>
+            <Button
+              ms="0px"
+              px="0px"
+              me={{ sm: '2px', md: '16px' }}
+              color={navbarIcon}
+              variant="transparent-with-icon"
+              leftIcon={<ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />}
+              onClick={handleLogout}
+            />
+          </>
         ) : (
           <Link href={`${import.meta.env.VITE_APP_BASE_URL}pricing`}>
             <Button

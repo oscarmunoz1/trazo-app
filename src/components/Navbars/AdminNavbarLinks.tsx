@@ -40,6 +40,7 @@ import React, { useEffect } from 'react';
 import { ItemContent } from 'components/Menu/ItemContent';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { RiLogoutBoxRLine } from 'react-icons/ri';
 import SidebarResponsive from 'components/Sidebar/SidebarResponsive';
 // Assets
 import avatar1 from 'assets/img/avatars/avatar1.png';
@@ -106,7 +107,7 @@ export default function HeaderLinks(props: HeaderLinksProps) {
           sm: '60%',
           md: '200px'
         }}
-        me={{ sm: 'auto', md: '20px' }}
+        me={{ sm: '20px', md: '20px' }}
         _focus={{
           borderColor: { mainTeal }
         }}
@@ -145,10 +146,18 @@ export default function HeaderLinks(props: HeaderLinksProps) {
         me={{ sm: '2px', md: '16px' }}
         color={navbarIcon}
         variant="transparent-with-icon"
-        leftIcon={<ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />}
+        leftIcon={<RiLogoutBoxRLine color={navbarIcon} size="22px" me="0px" />}
         onClick={handleLogout}>
         <Text display={{ sm: 'none', md: 'flex' }}>Sign Out</Text>
       </Button>
+      <Button
+        ms="0px"
+        px="0px"
+        color={navbarIcon}
+        variant="transparent-with-icon"
+        leftIcon={<ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />}
+        onClick={handleLogout}
+      />
       {/* </NavLink> */}
       <SidebarResponsive
         logoText={props.logoText}
