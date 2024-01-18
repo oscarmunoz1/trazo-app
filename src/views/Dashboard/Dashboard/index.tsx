@@ -18,6 +18,7 @@ import {
   HomeIcon,
   WalletIcon
 } from 'components/Icons/Icons.tsx';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import {
@@ -43,6 +44,7 @@ import imageFarm from 'assets/img/imageFarm.png';
 import { useSelector } from 'react-redux';
 
 export default function DashboardView() {
+  const intl = useIntl();
   const { establishmentId } = useParams();
   const navigate = useNavigate();
   const [establishment, setEstablishment] = useState(null);
@@ -86,7 +88,7 @@ export default function DashboardView() {
   return (
     <Flex flexDirection="column" pt={{ base: '120px', md: '75px' }}>
       <Text color={mainText} bg="inherit" borderRadius="inherit" fontWeight="bold" padding="10px">
-        Establishments
+        {intl.formatMessage({ id: 'app.establishments' })}
       </Text>
       <Grid
         templateColumns={{ sm: '1fr', md: '1fr 1fr', xl: 'repeat(4, 1fr)' }}
@@ -119,7 +121,7 @@ export default function DashboardView() {
           <Flex direction="column" justifyContent="center" align="center" h="120px">
             <Icon as={FaPlus} w="15px" h="15px" mb="10px" />
             <Text fontSize="md" fontWeight="bold">
-              New
+              {intl.formatMessage({ id: 'app.new' })}
             </Text>
           </Flex>
         </Button>
@@ -132,7 +134,7 @@ export default function DashboardView() {
         gap="24px">
         {establishment ? (
           <CardWithImage
-            title={'Establishment Profile'}
+            title={intl.formatMessage({ id: 'app.establishmentProfile' })}
             name={establishment?.name}
             description={establishment?.description}
             state={establishment?.state}
@@ -157,18 +159,16 @@ export default function DashboardView() {
         {establishment ? (
           <CardWithBackground
             backgroundImage={imageFarm}
-            title={'Work with certifications'}
-            description={
-              'traceit works with registered and accredited professionals who, through an electronic signature, certify that a certain event occurred in a certain way.'
-            }
+            title={intl.formatMessage({ id: 'app.certifications' })}
+            description={intl.formatMessage({ id: 'app.certifications_description' })}
           />
         ) : (
           <Card minH="290px" bg={cardColor} />
         )}
       </Grid>
       <CarouselHorizontal
-        title={'Parcels'}
-        description={'Establishment Parcels '}
+        title={intl.formatMessage({ id: 'app.parcels' })}
+        description={intl.formatMessage({ id: 'app.establishmentParcels' })}
         data={establishment?.parcels}
       />
     </Flex>

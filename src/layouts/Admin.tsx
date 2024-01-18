@@ -45,9 +45,11 @@ import { Route as TypeRoute } from '../types/common';
 import routes from '../routes';
 // Custom Chakra theme
 import theme from 'theme/theme';
+import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
 export default function Dashboard(props: any) {
+  const intl = useIntl();
   const { ...rest } = props;
   // states and functions
   const [sidebarVariant, setSidebarVariant] = useState('transparent');
@@ -98,7 +100,7 @@ export default function Dashboard(props: any) {
   };
 
   const getActiveRoute = (routes: TypeRoute[]): string => {
-    let activeRoute = 'Home';
+    let activeRoute = intl.formatMessage({ id: 'app.home' });
     for (let i = 0; i < routes?.length; i++) {
       if (routes[i].collapse) {
         let collapseActiveRoute = getActiveRoute(

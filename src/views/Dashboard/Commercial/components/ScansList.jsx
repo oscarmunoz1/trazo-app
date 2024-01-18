@@ -34,8 +34,10 @@ import CardBody from 'components/Card/CardBody.tsx';
 import CardHeader from 'components/Card/CardHeader.tsx';
 import React from 'react';
 import ScansRow from 'components/Tables/ScansRow';
+import { useIntl } from 'react-intl';
 
 const ScansList = ({ title, labels, scansData }) => {
+  const intl = useIntl();
   // Chakra Color Mode
   const textColor = useColorModeValue('gray.700', 'white');
 
@@ -55,7 +57,7 @@ const ScansList = ({ title, labels, scansData }) => {
             w="100px"
             h="35px"
             mt={{ sm: '16px', md: '0px' }}>
-            VIEW ALL
+            {intl.formatMessage({ id: 'app.viewAll' }).toUpperCase()}
           </Button>
         </Flex>
       </CardHeader>

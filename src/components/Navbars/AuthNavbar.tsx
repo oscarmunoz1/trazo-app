@@ -48,6 +48,7 @@ import { clearUser } from 'store/features/userSlice';
 import logoTraceit from 'assets/img/traceit.png';
 import { logout as logoutAction } from 'store/features/authSlice';
 import routes from 'routes.tsx';
+import { useIntl } from 'react-intl';
 import { useLogoutMutation } from 'store/api/authApi';
 import { useNavigate } from 'react-router-dom';
 
@@ -58,6 +59,7 @@ type AuthNavbarProps = {
 };
 
 export default function AuthNavbar(props: AuthNavbarProps) {
+  const intl = useIntl();
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const isLoadingAuth = useSelector((state: RootState) => state.auth.isLoading);
   const navigate = useNavigate();
@@ -389,7 +391,10 @@ export default function AuthNavbar(props: AuthNavbarProps) {
           )}
         </Box>
         {/* {linksAuth} */}
-        {subdomain && isLoadingAuth === false && isAuthenticated ? (
+        {subdomain &&
+        isLoadingAuth === false &&
+        isAuthenticated &&
+        window.location.pathname != '/pricing' ? (
           <>
             <Button
               ms="0px"
@@ -399,7 +404,9 @@ export default function AuthNavbar(props: AuthNavbarProps) {
               variant="transparent-with-icon"
               leftIcon={<RiLogoutBoxRLine color={navbarIcon} w="22px" h="22px" me="0px" />}
               onClick={handleLogout}>
-              <Text display={{ sm: 'none', md: 'flex' }}>Sign Out</Text>
+              <Text display={{ sm: 'none', md: 'flex' }}>
+                {intl.formatMessage({ id: 'app.signOut' })}
+              </Text>
             </Button>
             <Button
               ms="0px"

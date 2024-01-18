@@ -15,20 +15,23 @@
 
 */
 
-import App from "./App";
-import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import React from "react";
-import ReactDOM from "react-dom";
-import { store } from "./store";
+import App from './App';
+import { BrowserRouter } from 'react-router-dom';
+import I18n from 'i18n/I18n';
+import { Provider } from 'react-redux';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { store } from './store';
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <Provider store={store}>
     <BrowserRouter>
-      <App />
+      <I18n>
+        <App />
+      </I18n>
     </BrowserRouter>
   </Provider>,
-  document.getElementById("root")
+  document.getElementById('root')
 );

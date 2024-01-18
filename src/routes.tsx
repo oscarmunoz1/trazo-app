@@ -18,9 +18,13 @@
 import { BsFillClipboardCheckFill } from 'react-icons/bs';
 import { HomeIcon } from 'components/Icons/Icons';
 import { Route } from 'types/common';
+import { useIntl } from 'react-intl';
+
+// const intl = useIntl();
 
 const dashRoutes: Route[] = [
   {
+    id: 'home',
     name: 'Home',
     path: '/dashboard/establishment',
     icon: <HomeIcon color="inherit" />,
@@ -32,6 +36,7 @@ const dashRoutes: Route[] = [
     regex: /^\/admin\/dashboard\/establishment\/[0-9]+(\/parcel\/[0-9]+)?$/
   },
   {
+    id: 'commercialInfo',
     name: 'Commercial Info',
     path: '/dashboard/establishment',
     icon: <BsFillClipboardCheckFill color="inherit" />,

@@ -44,12 +44,14 @@ import { productApi } from 'store/api/productApi';
 import { scansData } from 'variables/general';
 import { useGetEstablishmentProductReputationQuery } from 'store/api/reviewApi';
 import { useGetScansByEstablishmentQuery } from 'store/api/historyApi';
+import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
 // Custom icons
 // assets
 
 export default function CommercialView() {
+  const intl = useIntl();
   const textColor = useColorModeValue('gray.700', 'white');
   const { establishmentId } = useParams();
   const chartRef = useRef(null);
@@ -58,7 +60,7 @@ export default function CommercialView() {
     parcel: null,
     product: null,
     production: null,
-    period: { id: 'week', name: 'This week' }
+    period: { id: 'week', name: intl.formatMessage({ id: 'app.thisWeek' }) }
   });
   const [currentEstablishmentId, setCurrentEstablishmentId] = useState(null);
   const [establishment, setEstablishment] = useState(null);
@@ -162,7 +164,7 @@ export default function CommercialView() {
         parcel: null,
         product: null,
         production: null,
-        period: { id: 'week', name: 'This week' }
+        period: { id: 'week', name: intl.formatMessage({ id: 'app.thisWeek' }) }
       });
     }
   }, [establishmentId, establishments]);
@@ -268,6 +270,14 @@ export default function CommercialView() {
     }
   }, [dataEstablishmentProductsReputation]);
 
+  const scansColumnsNames = [
+    intl.formatMessage({ id: 'app.date' }),
+    intl.formatMessage({ id: 'app.product' }),
+    intl.formatMessage({ id: 'app.location' }),
+    intl.formatMessage({ id: 'app.parcel' }),
+    intl.formatMessage({ id: 'app.comment' })
+  ];
+
   return (
     <Flex flexDirection="column" pt={{ base: '120px', md: '75px' }}>
       <Text
@@ -277,7 +287,7 @@ export default function CommercialView() {
         borderRadius="inherit"
         fontWeight="bold"
         padding="10px">
-        Establishments
+        {intl.formatMessage({ id: 'app.establishments' })}
       </Text>
       <SimpleGrid columns={{ sm: 1, md: 3, xl: 4 }} spacing="24px">
         {establishments ? (
@@ -321,11 +331,13 @@ export default function CommercialView() {
                       bg="#fff"
                       minW="155px"
                       fontSize="xs">
-                      {filters.parcel ? filters.parcel.name : 'ALL PARCELS'}
+                      {filters.parcel
+                        ? filters.parcel.name
+                        : intl.formatMessage({ id: 'app.allParcels' }).toUpperCase()}
                     </MenuButton>
                     <MenuList>
                       <MenuItem onClick={() => onParcelFilterChange(null)} color="gray.500">
-                        All Parcels
+                        {intl.formatMessage({ id: 'app.allParcels' })}
                       </MenuItem>
                       <MenuDivider />
                       {establishment &&
@@ -353,11 +365,13 @@ export default function CommercialView() {
                       bg="#fff"
                       minW="155px"
                       fontSize="xs">
-                      {filters.product ? filters.product.name : 'ALL PRODUCTS'}
+                      {filters.product
+                        ? filters.product.name
+                        : intl.formatMessage({ id: 'app.allProducts' }).toUpperCase()}
                     </MenuButton>
                     <MenuList>
                       <MenuItem onClick={() => onProductFilterChange(null)} color="gray.500">
-                        All Products
+                        {intl.formatMessage({ id: 'app.allProducts' })}
                       </MenuItem>
                       <MenuDivider />
                       {filters?.parcel
@@ -397,11 +411,13 @@ export default function CommercialView() {
                       fontSize="xs"
                       width="fit-content"
                       disabled={filters.product == null || filters.parcel == null}>
-                      {filters.production ? filters.production.period : 'ALL PRODUCTIONS'}
+                      {filters.production
+                        ? filters.production.period
+                        : intl.formatMessage({ id: 'app.allProductions' }).toUpperCase()}
                     </MenuButton>
                     <MenuList>
                       <MenuItem onClick={() => onProductionFilterChange(null)} color="gray.500">
-                        All Productions
+                        {intl.formatMessage({ id: 'app.allProductions' })}
                       </MenuItem>
                       <MenuDivider />
                       {dataHistories &&
@@ -436,17 +452,32 @@ export default function CommercialView() {
                 </MenuButton>
                 <MenuList>
                   <MenuItem
-                    onClick={() => onPeriodFilterChange({ id: 'week', name: 'This week' })}
+                    onClick={() =>
+                      onPeriodFilterChange({
+                        id: 'week',
+                        name: intl.formatMessage({ id: 'app.thisWeek' })
+                      })
+                    }
                     color="gray.500">
-                    This week
+                    {intl.formatMessage({ id: 'app.thisWeek' })}
                   </MenuItem>
                   <MenuItem
-                    onClick={() => onPeriodFilterChange({ id: 'month', name: 'This month' })}
+                    onClick={() =>
+                      onPeriodFilterChange({
+                        id: 'month',
+                        name: intl.formatMessage({ id: 'app.thisMonth' })
+                      })
+                    }
                     color="gray.500">
                     This month
                   </MenuItem>
                   <MenuItem
-                    onClick={() => onPeriodFilterChange({ id: 'year', name: 'This year' })}
+                    onClick={() =>
+                      onPeriodFilterChange({
+                        id: 'year',
+                        name: intl.formatMessage({ id: 'app.thisYear' })
+                      })
+                    }
                     color="gray.500">
                     This year
                   </MenuItem>
@@ -461,8 +492,8 @@ export default function CommercialView() {
           p={{ base: '20px', lg: '0' }}>
           <Flex flex={2}>
             <ScansList
-              title={'Scans'}
-              labels={['Date', 'Product', 'Location', 'Parcel', 'Comment']}
+              title={intl.formatMessage({ id: 'app.scans' })}
+              labels={scansColumnsNames}
               scansData={dataEstablishmentScans}
             />
           </Flex>
@@ -471,7 +502,7 @@ export default function CommercialView() {
               <Card px="0px" pb="0px" height="346px">
                 <CardHeader mb="34px" px="22px">
                   <Text color={textColor} fontSize="lg" fontWeight="bold">
-                    Numbers of scans and sales
+                    {intl.formatMessage({ id: 'app.numberScansAndSales' })}
                   </Text>
                 </CardHeader>
                 <CardBody h="100%">
@@ -510,7 +541,7 @@ export default function CommercialView() {
               <Card px="0px" pb="0px" minH="390px">
                 <CardHeader mb="34px" px="22px">
                   <Text color={textColor} fontSize="lg" fontWeight="bold">
-                    Products reputation ⭐️
+                    {intl.formatMessage({ id: 'app.productsReputation' })} ⭐️
                   </Text>
                 </CardHeader>
                 <CardBody h="100%">

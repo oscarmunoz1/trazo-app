@@ -42,7 +42,8 @@ export default defineConfig({
       { find: 'variables', replacement: resolve(__dirname, './src/variables') },
       { find: 'config', replacement: resolve(__dirname, './src/config') },
       { find: 'contexts', replacement: resolve(__dirname, './src/contexts') },
-      { find: 'theme', replacement: resolve(__dirname, './src/theme') }
+      { find: 'theme', replacement: resolve(__dirname, './src/theme') },
+      { find: 'i18n', replacement: resolve(__dirname, './src/i18n') }
     ]
   }
 });

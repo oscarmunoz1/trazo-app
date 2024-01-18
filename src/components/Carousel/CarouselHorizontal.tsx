@@ -13,6 +13,7 @@ import { FaPlus } from 'react-icons/fa';
 import avatar2 from 'assets/img/avatars/avatar2.png';
 import avatar4 from 'assets/img/avatars/avatar4.png';
 import avatar6 from 'assets/img/avatars/avatar6.png';
+import { useIntl } from 'react-intl';
 
 type CarouselHorizontalProps = {
   title: string;
@@ -23,7 +24,7 @@ type CarouselHorizontalProps = {
 const CarouselHorizontal = ({ title, description, data }: CarouselHorizontalProps) => {
   // Chakra color mode
   const textColor = useColorModeValue('gray.700', 'white');
-
+  const intl = useIntl();
   const navigate = useNavigate();
   const { establishmentId } = useParams();
 
@@ -52,7 +53,7 @@ const CarouselHorizontal = ({ title, description, data }: CarouselHorizontalProp
             <Flex direction="column" justifyContent="center" align="center" h="120px">
               <Icon as={FaPlus} w="15px" h="15px" mb="10px" />
               <Text fontSize="md" fontWeight="bold">
-                New
+                {intl.formatMessage({ id: 'app.new' })}
               </Text>
             </Flex>
           </Button>
@@ -75,8 +76,8 @@ const CarouselHorizontal = ({ title, description, data }: CarouselHorizontalProp
                 id={parcel.id}
                 image={parcel.image || BgMusicCard}
                 name={parcel.name}
-                category={parcel.product || '-'}
-                buttonText={'VIEW PARCEL'}
+                category={parcel.product || intl.formatMessage({ id: 'app.noCurrentProduction' })}
+                buttonText={intl.formatMessage({ id: 'app.viewParcel' }).toUpperCase()}
                 avatars={[avatar2, avatar4, avatar6]}
               />
             ))}

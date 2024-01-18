@@ -58,6 +58,7 @@ import { Scrollbars } from 'react-custom-scrollbars-2';
 import { SidebarContext } from 'contexts/SidebarContext';
 import SidebarHelp from './SidebarHelp';
 import logo from 'assets/img/traceit.png';
+import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
 type SidebarProps = {
@@ -79,6 +80,7 @@ type EstablishmentType = {
 };
 
 function Sidebar(props: SidebarProps) {
+  const intl = useIntl();
   // to check for active links and opened collapses
   let location = useLocation();
 
@@ -208,7 +210,9 @@ function Sidebar(props: SidebarProps) {
               }}
               py="12px"
               key={index}>
-              {prop.name}
+              {Object.keys(intl.messages).includes(`app.${prop.id}`)
+                ? intl.formatMessage({ id: `app.${prop.id}` })
+                : prop.name}
             </Text>
             {createLinks(prop.items)}
           </>
@@ -275,7 +279,9 @@ function Sidebar(props: SidebarProps) {
                           my="auto"
                           fontSize="sm"
                           display={sidebarWidth === 275 ? 'block' : 'none'}>
-                          {prop.name}
+                          {Object.keys(intl.messages).includes(`app.${prop.id}`)
+                            ? intl.formatMessage({ id: `app.${prop.id}` })
+                            : prop.name}
                         </Text>
                       </Flex>
                     ) : (
@@ -343,7 +349,9 @@ function Sidebar(props: SidebarProps) {
                           my="auto"
                           fontSize="sm"
                           display={sidebarWidth === 275 ? 'block' : 'none'}>
-                          {prop.name}
+                          {Object.keys(intl.messages).includes(`app.${prop.id}`)
+                            ? intl.formatMessage({ id: `app.${prop.id}` })
+                            : prop.name}
                         </Text>
                       </Flex>
                     ) : (

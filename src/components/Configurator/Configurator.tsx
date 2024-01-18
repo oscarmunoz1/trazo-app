@@ -24,12 +24,18 @@ import {
   DrawerContent,
   DrawerHeader,
   Flex,
+  FormControl,
+  FormLabel,
+  Select,
   Text,
   useColorMode
 } from '@chakra-ui/react';
+import { useContext, useRef } from 'react';
 
 import { HSeparator } from 'components/Separator/Separator';
-import { useRef } from 'react';
+import { IoIosArrowDown } from 'react-icons/io';
+import { LocaleContext } from 'i18n/LocaleContext';
+import { locales } from 'i18n/i18n-config';
 
 type ConfiguratorProps = {
   secondary: boolean;
@@ -40,7 +46,7 @@ type ConfiguratorProps = {
 
 function Configurator(props: ConfiguratorProps) {
   const { secondary, isOpen, onClose, fixed, ...rest } = props;
-
+  const { locale, setLocale } = useContext(LocaleContext);
   const { colorMode, toggleColorMode } = useColorMode();
 
   const settingsRef = useRef(null);
@@ -75,6 +81,28 @@ function Configurator(props: ConfiguratorProps) {
             </Flex>
 
             <HSeparator />
+            <Flex justifyContent="space-between" alignItems="center" mb="24px" pt="24px">
+              <Text fontSize="md" fontWeight="600" mb="4px">
+                Language
+              </Text>
+              <FormControl paddingLeft={'24px'}>
+                <Select
+                  borderRadius="15px"
+                  placeholder="English"
+                  color="gray.600"
+                  fontSize="xs"
+                  onChange={(e) => setLocale(e.target.value)}
+                  value={locale}>
+                  {Object.keys(locales).map((loc) => {
+                    return (
+                      <option value={loc} key={loc}>
+                        {locales[loc].name}
+                      </option>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </Flex>
           </Flex>
         </DrawerBody>
       </DrawerContent>

@@ -5,6 +5,7 @@ import { BsArrowRight } from 'react-icons/bs';
 // Custom components
 import Card from './Card';
 import CardBody from './CardBody';
+import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
 type CardWithImageProps = {
@@ -16,6 +17,7 @@ type CardWithImageProps = {
 
 const CardWithImage = ({ title, name, image, readMoreLink }: CardWithImageProps) => {
   const navigate = useNavigate();
+  const intl = useIntl();
 
   const textColor = useColorModeValue('gray.700', 'white');
 
@@ -46,7 +48,7 @@ const CardWithImage = ({ title, name, image, readMoreLink }: CardWithImageProps)
                   transition="all .5s ease"
                   my={{ sm: '1.5rem', lg: '0px' }}
                   _hover={{ me: '4px' }}>
-                  Read more
+                  {intl.formatMessage({ id: 'app.readMore' })}
                 </Text>
                 <Icon
                   as={BsArrowRight}

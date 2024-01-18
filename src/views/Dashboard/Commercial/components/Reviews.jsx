@@ -28,10 +28,12 @@ import CardBody from 'components/Card/CardBody';
 import CardHeader from 'components/Card/CardHeader';
 import GeneralCard from './GeneralCard';
 import React from 'react';
+import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const Reviews = () => {
+  const intl = useIntl();
   const textColor = useColorModeValue('gray.700', 'white');
   const { establishmentId } = useParams();
 
@@ -61,7 +63,7 @@ const Reviews = () => {
     <Card>
       <CardHeader mb="24px">
         <Text fontSize="lg" color={textColor} fontWeight="bold">
-          Reviews
+          {intl.formatMessage({ id: 'app.reviews' })}
         </Text>
       </CardHeader>
       <CardBody>
@@ -71,7 +73,7 @@ const Reviews = () => {
               <Flex direction="column">
                 <Flex justify="space-between" mb="8px">
                   <Text fontSize="md" color="gray.400" fontWeight="500">
-                    Positive Reviews
+                    {intl.formatMessage({ id: 'app.positiveReviews' })}
                   </Text>
                   <Text fontSize="md" color="gray.400" fontWeight="500">
                     {reviewsPercentage?.positive}%
@@ -86,7 +88,7 @@ const Reviews = () => {
               <Flex direction="column">
                 <Flex justify="space-between" mb="8px">
                   <Text fontSize="md" color="gray.400" fontWeight="500">
-                    Neutral Reviews
+                    {intl.formatMessage({ id: 'app.neutralReviews' })}
                   </Text>
                   <Text fontSize="md" color="gray.400" fontWeight="500">
                     {reviewsPercentage?.neutral}%
@@ -101,7 +103,7 @@ const Reviews = () => {
               <Flex direction="column">
                 <Flex justify="space-between" mb="8px">
                   <Text fontSize="md" color="gray.400" fontWeight="500">
-                    Negative Reviews
+                    {intl.formatMessage({ id: 'app.negativeReviews' })}
                   </Text>
                   <Text fontSize="md" color="gray.400" fontWeight="500">
                     {reviewsPercentage?.negative}%
@@ -126,7 +128,7 @@ const Reviews = () => {
               p="12px 24px"
               alignSelf="flex-end">
               <Text color="#fff" fontSize="xs">
-                VIEW ALL REVIEWS
+                {intl.formatMessage({ id: 'app.viewAllReviews' }).toUpperCase()}
               </Text>
             </Button>
           </Flex>

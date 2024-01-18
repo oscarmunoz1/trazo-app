@@ -38,6 +38,7 @@ import { RootState } from 'store/index';
 import { SidebarContext } from 'contexts/SidebarContext';
 import SidebarHelp from './SidebarHelp';
 import logo from 'assets/img/traceit.png';
+import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
 type SidebarResponsiveProps = {
@@ -49,6 +50,7 @@ type SidebarResponsiveProps = {
 };
 
 function SidebarResponsive(props: SidebarResponsiveProps) {
+  const intl = useIntl();
   const [dynamicRoutes, setDynamicRoutes] = useState([]);
   const [certificationsRoutes, setCertificationsRoutes] = useState([]);
   const [commercialDynamicRoutes, setCommercialDynamicRoutes] = useState([]);
@@ -265,7 +267,9 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                           {prop.icon}
                         </IconBox>
                         <Text color={activeColor} my="auto" fontSize="sm" display={'block'}>
-                          {prop.name}
+                          {Object.keys(intl.messages).includes(`app.${prop.id}`)
+                            ? intl.formatMessage({ id: `app.${prop.id}` })
+                            : prop.name}
                         </Text>
                       </Flex>
                     ) : (
@@ -320,7 +324,9 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                           {prop.icon}
                         </IconBox>
                         <Text color={inactiveColor} my="auto" fontSize="sm">
-                          {prop.name}
+                          {Object.keys(intl.messages).includes(`app.${prop.id}`)
+                            ? intl.formatMessage({ id: `app.${prop.id}` })
+                            : prop.name}
                         </Text>
                       </Flex>
                     ) : (

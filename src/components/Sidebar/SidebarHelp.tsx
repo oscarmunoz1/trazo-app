@@ -3,8 +3,10 @@ import { Button, Flex, Link, Text } from '@chakra-ui/react';
 import IconBox from 'components/Icons/IconBox';
 import { QuestionIcon } from '@chakra-ui/icons';
 import SidebarHelpImage from 'assets/img/SidebarHelpImage.png';
+import { useIntl } from 'react-intl';
 
 const SidebarHelp = ({ sidebarWidth }: { sidebarWidth: number }) => {
+  const intl = useIntl();
   return (
     <Flex
       borderRadius="15px"
@@ -24,14 +26,14 @@ const SidebarHelp = ({ sidebarWidth }: { sidebarWidth: number }) => {
         color="white"
         fontWeight="bold"
         display={sidebarWidth === 275 || !sidebarWidth ? 'block' : 'none'}>
-        Need help?
+        {intl.formatMessage({ id: 'app.needHelp' })}
       </Text>
       <Text
         fontSize="xs"
         color="white"
         mb="10px"
         display={sidebarWidth === 275 || !sidebarWidth ? 'block' : 'none'}>
-        Please check our docs
+        {intl.formatMessage({ id: 'app.checkOutDocs' })}
       </Text>
       <Link w="100%" href="">
         <Button
@@ -50,7 +52,7 @@ const SidebarHelp = ({ sidebarWidth }: { sidebarWidth: number }) => {
           }}
           color="black"
           display={sidebarWidth === 275 || !sidebarWidth ? 'block' : 'none'}>
-          DOCUMENTATION
+          {intl.formatMessage({ id: 'app.documentation' }).toUpperCase()}
         </Button>
       </Link>
     </Flex>

@@ -7,9 +7,11 @@ import { BsArrowRight } from 'react-icons/bs';
 import Card from 'components/Card/Card';
 import CardBody from 'components/Card/CardBody.tsx';
 import React from 'react';
+import { useIntl } from 'react-intl';
 
 const CardWithBackground = ({ title, description, backgroundImage }) => {
   const overlayRef = React.useRef();
+  const intl = useIntl();
   return (
     <Card maxHeight="290.5px" p="1rem">
       <CardBody
@@ -49,7 +51,7 @@ const CardWithBackground = ({ title, description, backgroundImage }) => {
                   fontWeight="bold"
                   _hover={{ me: '4px' }}
                   transition="all .5s ease">
-                  Read more
+                  {intl.formatMessage({ id: 'app.readMore' })}
                 </Text>
                 <Icon
                   as={BsArrowRight}

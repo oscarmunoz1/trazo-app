@@ -25,9 +25,11 @@ import avatar2 from 'assets/img/avatars/avatar10.png';
 import avatar3 from 'assets/img/avatars/avatar2.png';
 import { convertToObject } from 'typescript';
 import { useGetParcelHistoriesQuery } from 'store/api/historyApi';
+import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
 const HistoryCard = ({ title, amount, captions }) => {
+  const intl = useIntl();
   const textColor = useColorModeValue('gray.700', 'white');
   const navigate = useNavigate();
 
@@ -50,15 +52,20 @@ const HistoryCard = ({ title, amount, captions }) => {
       <CardHeader p="12px 0px 28px 0px">
         <Flex direction="column">
           <Text fontSize="lg" color={textColor} fontWeight="bold" pb=".5rem">
-            Productions
+            {intl.formatMessage({ id: 'app.productions' })}
           </Text>
           <Flex align="center">
             <Icon as={IoCheckmarkDoneCircleSharp} color="green.300" w={4} h={4} pe="3px" />
             <Text fontSize="sm" color="gray.400" fontWeight="normal">
               <Text fontWeight="bold" as="span">
-                {amount} done
+                {amount}{' '}
+                {amount > 1
+                  ? intl.formatMessage({ id: 'app.productions' }).toLowerCase()
+                  : intl.formatMessage({ id: 'app.production' }).toLowerCase()}
               </Text>{' '}
-              this month.
+              {amount > 1
+                ? intl.formatMessage({ id: 'app.completedThisYearPlural' })
+                : intl.formatMessage({ id: 'app.completedThisYearSingular' })}
             </Text>
           </Flex>
         </Flex>
@@ -116,7 +123,7 @@ const HistoryCard = ({ title, amount, captions }) => {
                 justifyContent={'center'}
                 alignItems={'center'}
                 textAlign={'center'}>
-                No productions yet, start by finishing the current production.
+                {intl.formatMessage({ id: 'app.noProductionsYet' })}
               </Text>
             </Flex>
           )}

@@ -51,6 +51,7 @@ import { clearUser } from 'store/features/userSlice';
 import { logout as logoutAction } from 'store/features/authSlice';
 import routes from 'routes.tsx';
 import { useDispatch } from 'react-redux';
+import { useIntl } from 'react-intl';
 import { useLogoutMutation } from 'store/api/authApi';
 import { useNavigate } from 'react-router-dom';
 
@@ -64,6 +65,7 @@ type HeaderLinksProps = {
 };
 
 export default function HeaderLinks(props: HeaderLinksProps) {
+  const intl = useIntl();
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -135,7 +137,7 @@ export default function HeaderLinks(props: HeaderLinksProps) {
           fontSize="xs"
           py="11px"
           color={mainText}
-          placeholder="Type here..."
+          placeholder={intl.formatMessage({ id: 'app.typeHere' })}
           borderRadius="inherit"
         />
       </InputGroup>
@@ -148,7 +150,9 @@ export default function HeaderLinks(props: HeaderLinksProps) {
         variant="transparent-with-icon"
         leftIcon={<RiLogoutBoxRLine color={navbarIcon} size="22px" me="0px" />}
         onClick={handleLogout}>
-        <Text display={{ sm: 'none', md: 'flex' }}>Sign Out</Text>
+        <Text display={{ sm: 'none', md: 'flex' }}>
+          {intl.formatMessage({ id: 'app.signOut' })}
+        </Text>
       </Button>
       <Button
         ms="0px"

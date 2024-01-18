@@ -25,10 +25,11 @@ import { IoEllipsisVerticalSharp } from 'react-icons/io5';
 import TimelineRow from 'components/Tables/TimelineRow';
 import { setCurrentHistory } from 'store/features/historySlice';
 import { useGetCurrentHistoryQuery } from 'store/api/historyApi';
+import { useIntl } from 'react-intl';
 
 const TrackList = ({ amount }) => {
   const textColor = useColorModeValue('gray.700', 'white');
-
+  const intl = useIntl();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenFinishModal,
@@ -81,7 +82,7 @@ const TrackList = ({ amount }) => {
         <Flex direction="column" w="100%">
           <Flex p="0px" align="center" justify="space-between">
             <Text fontSize="lg" color={textColor} fontWeight="bold" pb=".5rem">
-              Current production
+              {intl.formatMessage({ id: 'app.currentProduction' })}
             </Text>
             <Menu isOpen={isOpen1} onClose={onClose1}>
               <MenuButton
@@ -101,7 +102,7 @@ const TrackList = ({ amount }) => {
                   <Flex color={textColor} cursor="pointer" align="center" p="4px">
                     {/* <Icon as={FaPencilAlt} me="4px" /> */}
                     <Text fontSize="sm" fontWeight="500">
-                      EDIT
+                      {intl.formatMessage({ id: 'app.edit' }).toUpperCase()}
                     </Text>
                   </Flex>
                 </MenuItem>
@@ -109,7 +110,7 @@ const TrackList = ({ amount }) => {
                   <Flex color="red.500" cursor="pointer" align="center" p="4px">
                     {/* <Icon as={FaTrashAlt} me="4px" /> */}
                     <Text fontSize="sm" fontWeight="500">
-                      DELETE
+                      {intl.formatMessage({ id: 'app.delete' }).toUpperCase()}
                     </Text>
                   </Flex>
                 </MenuItem>
@@ -164,8 +165,8 @@ const TrackList = ({ amount }) => {
                     alignItems={'center'}
                     textAlign={'center'}>
                     {currentHistory?.product
-                      ? 'No events yet, start by adding a new one.'
-                      : 'No current production yet, start by starting a new one.'}
+                      ? intl.formatMessage({ id: 'app.noEventsYet' })
+                      : intl.formatMessage({ id: 'app.noProductionYet' })}
                   </Text>
                 </Flex>
               )}
@@ -181,7 +182,9 @@ const TrackList = ({ amount }) => {
           variant="no-hover"
           minW={!currentHistory?.product ? '135px' : '100px'}
           onClick={handleOnPrimaryClick}>
-          {!currentHistory?.product ? 'START PRODUCTION' : 'ADD EVENT'}
+          {!currentHistory?.product
+            ? intl.formatMessage({ id: 'app.startProduction' }).toUpperCase()
+            : intl.formatMessage({ id: 'app.addEvent' }).toUpperCase()}
         </Button>
         {currentHistory?.events && currentHistory?.events.length > 0 && (
           <Button
@@ -196,7 +199,7 @@ const TrackList = ({ amount }) => {
                 `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${currentHistory?.id}/finish`
               )
             }>
-            FINISH PRODUCTION
+            {intl.formatMessage({ id: 'app.finishProduction' }).toUpperCase()}
           </Button>
         )}
       </div>

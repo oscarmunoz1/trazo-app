@@ -17,7 +17,10 @@
 
 import { Flex, Link, List, ListItem, Text } from '@chakra-ui/react';
 
+import { useIntl } from 'react-intl';
+
 export default function Footer() {
+  const intl = useIntl();
   return (
     <Flex
       flexDirection={{
@@ -47,7 +50,7 @@ export default function Footer() {
             md: '44px'
           }}>
           <Link color="gray.400" href="">
-            Learn
+            {intl.formatMessage({ id: 'app.about' })}
           </Link>
         </ListItem>
         <ListItem
@@ -56,7 +59,7 @@ export default function Footer() {
             md: '44px'
           }}>
           <Link color="gray.400" href="">
-            Why us?
+            {intl.formatMessage({ id: 'app.whyUs' })}
           </Link>
         </ListItem>
         <ListItem
@@ -65,12 +68,12 @@ export default function Footer() {
             md: '44px'
           }}>
           <Link color="gray.400" href="">
-            Blog
+            {intl.formatMessage({ id: 'app.blog' })}
           </Link>
         </ListItem>
         <ListItem>
           <Link color="gray.400" href="">
-            Contact
+            {intl.formatMessage({ id: 'app.contactUs' })}
           </Link>
         </ListItem>
       </List>

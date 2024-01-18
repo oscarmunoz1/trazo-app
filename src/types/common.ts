@@ -1,4 +1,5 @@
 interface Route {
+  id: string;
   name: string;
   path: string;
   category?: string;

@@ -15,9 +15,11 @@ import imageMap from 'assets/img/imageMap.png';
 import imageParcel1 from 'assets/img/ImageParcel1.png';
 import { setParcel } from 'store/features/productSlice';
 import { useGetParcelQuery } from 'store/api/productApi';
+import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
 export default function ParcelView() {
+  const intl = useIntl();
   const { establishmentId, parcelId } = useParams();
   const dispatch = useDispatch();
 
@@ -47,6 +49,13 @@ export default function ParcelView() {
   useEffect(() => {
     if (data) dispatch(setParcel(data));
   }, [data]);
+
+  const historyCardTitles = [
+    intl.formatMessage({ id: 'app.timeFrame' }),
+    intl.formatMessage({ id: 'app.product' }),
+    intl.formatMessage({ id: 'app.members' }),
+    intl.formatMessage({ id: 'app.certified' })
+  ];
 
   return (
     <Flex flexDirection="column" pt={{ base: '120px', md: '75px' }}>
@@ -95,14 +104,14 @@ export default function ParcelView() {
         />
       </Grid>
       <Grid
-        templateColumns={{ sm: '1fr', md: '1fr 1fr', lg: '1fr 2fr' }}
+        templateColumns={{ sm: '1fr', md: '1fr', lg: '1fr 2fr' }}
         templateRows={{ sm: '1fr auto', md: '1fr', lg: '1fr' }}
         gap="24px">
         <TrackList amount={40} />
         <HistoryCard
           title={'History'}
-          amount={30}
-          captions={['Time frame', 'Product', 'Members', 'Certified']}
+          amount={data?.productions_completed}
+          captions={historyCardTitles}
         />
       </Grid>
     </Flex>

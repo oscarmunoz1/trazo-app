@@ -28,6 +28,7 @@ import { useContext, useState } from 'react';
 import AdminNavbarLinks from './AdminNavbarLinks';
 import PropTypes from 'prop-types';
 import { SidebarContext } from 'contexts/SidebarContext';
+import { useIntl } from 'react-intl';
 
 type AdminNavbarProps = {
   brandText: string;
@@ -40,6 +41,7 @@ type AdminNavbarProps = {
 };
 
 export default function AdminNavbar(props: AdminNavbarProps) {
+  const intl = useIntl();
   const [scrolled, setScrolled] = useState(false);
   const { sidebarWidth } = useContext(SidebarContext);
   const { variant, children, fixed, secondary, brandText, onOpen, ...rest } = props;
@@ -134,7 +136,7 @@ export default function AdminNavbar(props: AdminNavbarProps) {
           <Breadcrumb>
             <BreadcrumbItem color={mainText}>
               <BreadcrumbLink href="/admin/dashboard/" color={secondaryText}>
-                Pages
+                {intl.formatMessage({ id: 'app.pages' })}
               </BreadcrumbLink>
             </BreadcrumbItem>
 
