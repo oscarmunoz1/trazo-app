@@ -88,7 +88,6 @@ function Configurator(props: ConfiguratorProps) {
               <FormControl paddingLeft={'24px'}>
                 <Select
                   borderRadius="15px"
-                  placeholder="English"
                   color="gray.600"
                   fontSize="xs"
                   onChange={(e) => setLocale(e.target.value)}
