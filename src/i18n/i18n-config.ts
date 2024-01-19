@@ -9,6 +9,10 @@ export const locales = {
     name: 'English',
     messages: enMessages
   },
+  en: {
+    name: 'English',
+    messages: enMessages
+  },
   // Spanish translation message dictionary.
   'es-419': {
     name: 'Español',
