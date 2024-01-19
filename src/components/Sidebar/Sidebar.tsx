@@ -210,7 +210,7 @@ function Sidebar(props: SidebarProps) {
               }}
               py="12px"
               key={index}>
-              {Object.keys(intl.messages).includes(`app.${prop.id}`)
+              {Object.keys(intl?.messages).includes(`app.${prop.id}`)
                 ? intl.formatMessage({ id: `app.${prop.id}` })
                 : prop.name}
             </Text>
@@ -279,7 +279,7 @@ function Sidebar(props: SidebarProps) {
                           my="auto"
                           fontSize="sm"
                           display={sidebarWidth === 275 ? 'block' : 'none'}>
-                          {Object.keys(intl.messages).includes(`app.${prop.id}`)
+                          {Object.keys(intl?.messages).includes(`app.${prop.id}`)
                             ? intl.formatMessage({ id: `app.${prop.id}` })
                             : prop.name}
                         </Text>
@@ -349,7 +349,7 @@ function Sidebar(props: SidebarProps) {
                           my="auto"
                           fontSize="sm"
                           display={sidebarWidth === 275 ? 'block' : 'none'}>
-                          {Object.keys(intl.messages).includes(`app.${prop.id}`)
+                          {Object.keys(intl?.messages).includes(`app.${prop.id}`)
                             ? intl.formatMessage({ id: `app.${prop.id}` })
                             : prop.name}
                         </Text>

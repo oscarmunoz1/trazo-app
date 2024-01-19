@@ -267,7 +267,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                           {prop.icon}
                         </IconBox>
                         <Text color={activeColor} my="auto" fontSize="sm" display={'block'}>
-                          {Object.keys(intl.messages).includes(`app.${prop.id}`)
+                          {Object.keys(intl?.messages).includes(`app.${prop.id}`)
                             ? intl.formatMessage({ id: `app.${prop.id}` })
                             : prop.name}
                         </Text>
@@ -324,7 +324,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                           {prop.icon}
                         </IconBox>
                         <Text color={inactiveColor} my="auto" fontSize="sm">
-                          {Object.keys(intl.messages).includes(`app.${prop.id}`)
+                          {Object.keys(intl?.messages).includes(`app.${prop.id}`)
                             ? intl.formatMessage({ id: `app.${prop.id}` })
                             : prop.name}
                         </Text>
