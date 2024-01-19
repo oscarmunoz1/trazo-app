@@ -36,6 +36,7 @@ import { HSeparator } from 'components/Separator/Separator';
 import { IoIosArrowDown } from 'react-icons/io';
 import { LocaleContext } from 'i18n/LocaleContext';
 import { locales } from 'i18n/i18n-config';
+import { useIntl } from 'react-intl';
 
 type ConfiguratorProps = {
   secondary: boolean;
@@ -45,6 +46,7 @@ type ConfiguratorProps = {
 };
 
 function Configurator(props: ConfiguratorProps) {
+  const intl = useIntl();
   const { secondary, isOpen, onClose, fixed, ...rest } = props;
   const { locale, setLocale } = useContext(LocaleContext);
   const { colorMode, toggleColorMode } = useColorMode();
@@ -62,10 +64,10 @@ function Configurator(props: ConfiguratorProps) {
         <DrawerHeader pt="24px" px="24px">
           <DrawerCloseButton />
           <Text fontSize="xl" fontWeight="bold" mt="16px">
-            Profile Settings
+            {intl.formatMessage({ id: 'app.profileSettings' })}
           </Text>
           <Text fontSize="md" mb="16px">
-            Configure your profile settings.
+            {intl.formatMessage({ id: 'app.configureSettings' })}
           </Text>
           <HSeparator />
         </DrawerHeader>
@@ -73,17 +75,20 @@ function Configurator(props: ConfiguratorProps) {
           <Flex flexDirection="column">
             <Flex justifyContent="space-between" alignItems="center" mb="24px">
               <Text fontSize="md" fontWeight="600" mb="4px">
-                Dark/Light
+                {intl.formatMessage({ id: 'app.themeMode' })}
               </Text>
               <Button onClick={toggleColorMode}>
-                Toggle {colorMode === 'light' ? 'Dark' : 'Light'}
+                {intl.formatMessage({ id: 'app.toggle' })}{' '}
+                {colorMode === 'light'
+                  ? intl.formatMessage({ id: 'app.dark' })
+                  : intl.formatMessage({ id: 'app.light' })}
               </Button>
             </Flex>
 
             <HSeparator />
             <Flex justifyContent="space-between" alignItems="center" mb="24px" pt="24px">
               <Text fontSize="md" fontWeight="600" mb="4px">
-                Language
+                {intl.formatMessage({ id: 'app.language' })}
               </Text>
               <FormControl paddingLeft={'24px'}>
                 <Select

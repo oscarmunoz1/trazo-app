@@ -11,8 +11,7 @@ type I18nProps = {
 
 export default function I18n(props: I18nProps) {
   const [locale, setLocale] = useState(defaultLocale);
-  console.log(locale);
-  console.log('------------');
+
   return (
     <LocaleContext.Provider value={{ locale, setLocale }}>
       <IntlProvider

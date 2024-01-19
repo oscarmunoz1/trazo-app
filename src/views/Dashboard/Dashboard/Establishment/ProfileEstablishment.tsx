@@ -1,6 +1,6 @@
-import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
 // Chakra imports
 import {
+  Badge,
   Flex,
   Icon,
   Link,
@@ -12,6 +12,7 @@ import {
   useColorModeValue,
   useDisclosure
 } from '@chakra-ui/react';
+import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import BoxBackground from '../components/BoxBackground';
@@ -23,10 +24,12 @@ import ImageCarousel from 'components/ImageCarousel/ImageCarousel';
 import { IoEllipsisVerticalSharp } from 'react-icons/io5';
 import productPage1 from 'assets/img/ProductImage1.png';
 import { useGetEstablishmentQuery } from 'store/api/companyApi';
+import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 
 function ProfileEstablishment() {
+  const intl = useIntl();
   const textColor = useColorModeValue('gray.700', 'white');
 
   const navigate = useNavigate();
@@ -48,8 +51,8 @@ function ProfileEstablishment() {
 
   return (
     <BoxBackground
-      title="Establishment Profile"
-      subtitle="Here you can see the information of your establishment.">
+      title={intl.formatMessage({ id: 'app.establishmentProfile' })}
+      subtitle={intl.formatMessage({ id: 'app.establishmentSubtitle' })}>
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px" width={'100%'}>
         <Card
           mt={{ md: '24px' }}
@@ -70,14 +73,14 @@ function ProfileEstablishment() {
                     }>
                     <Flex color={textColor} cursor="pointer" align="center" p="4px">
                       <Text fontSize="sm" fontWeight="500">
-                        EDIT
+                        {intl.formatMessage({ id: 'app.edit' }).toUpperCase()}
                       </Text>
                     </Flex>
                   </MenuItem>
                   <MenuItem>
                     <Flex color="red.500" cursor="pointer" align="center" p="4px">
                       <Text fontSize="sm" fontWeight="500">
-                        DELETE
+                        {intl.formatMessage({ id: 'app.delete' }).toUpperCase()}
                       </Text>
                     </Flex>
                   </MenuItem>
@@ -95,12 +98,12 @@ function ProfileEstablishment() {
                     {establishmentData?.name}
                   </Text>
                   <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                    Company
+                    {intl.formatMessage({ id: 'app.company' })}
                   </Text>
                   <Text color={textColor} fontWeight="bold" fontSize="2xl" mb="12px">
                     {currentCompany?.name}
                   </Text>
-                  {/* <Badge
+                  <Badge
                     colorScheme="green"
                     w="95px"
                     h="28px"
@@ -108,14 +111,13 @@ function ProfileEstablishment() {
                     borderRadius="15px"
                     display="flex"
                     alignItems="center"
-                    justifyContent="center"
-                  >
-                    CERTIFIED
-                  </Badge> */}
+                    justifyContent="center">
+                    {intl.formatMessage({ id: 'app.certified' })}
+                  </Badge>
                   <Flex direction="column">
                     <Flex align="center" mb="10px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        Address:
+                        {intl.formatMessage({ id: 'app.address' })}:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
                         {establishmentData?.address}
@@ -124,7 +126,7 @@ function ProfileEstablishment() {
 
                     <Flex align="center" mb="10px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        City:{' '}
+                        {intl.formatMessage({ id: 'app.city' })}:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
                         {establishmentData?.city}
@@ -132,7 +134,7 @@ function ProfileEstablishment() {
                     </Flex>
                     <Flex align="center" mb="10px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        State:{' '}
+                        {intl.formatMessage({ id: 'app.state' })}:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
                         {establishmentData?.state}
@@ -141,7 +143,7 @@ function ProfileEstablishment() {
                     {establishmentData?.zone && (
                       <Flex align="center" mb="10px">
                         <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                          Zone:
+                          {intl.formatMessage({ id: 'app.zone' })}:{' '}
                         </Text>
                         <Text fontSize="md" color="gray.500" fontWeight="400">
                           {establishmentData?.zone}
@@ -150,7 +152,7 @@ function ProfileEstablishment() {
                     )}
                     <Flex align="center" mb="10px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        Social Media:{' '}
+                        {intl.formatMessage({ id: 'app.socialMedia' })}:{' '}
                       </Text>
                       <Flex>
                         <Link

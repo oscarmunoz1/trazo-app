@@ -95,9 +95,9 @@ const styles = {
 
 const formSchemaBasic = object({
   date: string().min(1, 'Date is required'),
-  age_of_plants: string().min(1, 'Age of plants is required'),
-  number_of_plants: string().min(1, 'Number of plants is required'),
-  soil_ph: string().min(1, 'Soil PH is required')
+  age_of_plants: string(),
+  number_of_plants: string(),
+  soil_ph: string()
 });
 
 function NewProduction() {
@@ -206,11 +206,12 @@ function NewProduction() {
     <Flex
       direction="column"
       bg={bgColor}
+      w={{ base: '100%', md: '768px' }}
       boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
       borderRadius="15px">
-      <Tabs variant="unstyled" mt="24px" alignSelf="center">
-        <TabPanels mt="24px" maxW={{ md: '90%', lg: '100%' }} mx="auto">
-          <TabPanel maxW="800px" width={'600px'}>
+      <Tabs variant="unstyled" mt="24px" alignSelf="center" w="100%">
+        <TabPanels maxW={{ md: '90%', lg: '100%' }} mx="auto">
+          <TabPanel>
             <Card>
               <CardHeader mb="32px">
                 <Text fontSize="lg" color={textColor} fontWeight="bold">
@@ -221,7 +222,7 @@ function NewProduction() {
               <CardBody>
                 <FormProvider {...basicMethods}>
                   <form onSubmit={handleSubmit(onSubmitBasic)} style={{ width: '100%' }}>
-                    <Stack direction="column" w="100%">
+                    <Stack direction="column" spacing="20px" w="100%">
                       <Flex direction="column" w="80%" mt="10px">
                         <FormLabel ms="4px" fontSize="xs" fontWeight="bold" mb="4px" pl="12px">
                           What kind of production do you want to create?

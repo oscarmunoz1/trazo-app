@@ -18,9 +18,7 @@ function UpdateProduction(props: UpdateProductionProps) {
           ? 'Modify the form below to edit the selected production.'
           : 'Complete the form below to start a new production on your parcel.'
       }>
-      <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
-        {isEdit ? <EditProduction /> : <NewProduction />}
-      </Flex>
+      {isEdit ? <EditProduction /> : <NewProduction />}
     </BoxBackground>
   );
 }
