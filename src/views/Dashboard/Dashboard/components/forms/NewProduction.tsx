@@ -67,6 +67,7 @@ import { addCompanyEstablishment } from 'store/features/companySlice';
 import avatar4 from 'assets/img/avatars/avatar4.png';
 import imageMap from 'assets/img/imageMap.png';
 import { set } from 'date-fns';
+import { setEstablishmentParcelHasProduction } from 'store/features/companySlice';
 import { useCreateEventMutation } from 'store/api/historyApi';
 import { useCreateProductionMutation } from 'store/api/historyApi';
 import { useDropzone } from 'react-dropzone';
@@ -176,6 +177,12 @@ function NewProduction() {
     if (isSuccessProduction) {
       // dispatch(addCompanyEstablishment(dataEstablishment));
       dispatch(clearForm());
+      dispatch(
+        setEstablishmentParcelHasProduction({
+          establishmentId,
+          parcelId
+        })
+      );
       navigate(navigateTo);
       setNavigateTo(null);
     }

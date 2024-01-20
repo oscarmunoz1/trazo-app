@@ -16,52 +16,39 @@
 */
 
 // Chakra imports
-import {
-  Avatar,
-  Flex,
-  Switch,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import avatar4 from "assets/img/avatars/avatar4.png";
+import { Avatar, Flex, Switch, Text, useColorModeValue } from '@chakra-ui/react';
+import React, { useState } from 'react';
+
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import React, { useState } from "react";
-import { Element } from "react-scroll";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import { Element } from 'react-scroll';
+import avatar4 from 'assets/img/avatars/avatar4.png';
 
 const Header = () => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
   const bgButton = useColorModeValue(
-    "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
-    "gray.800"
+    'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)',
+    'gray.800'
   );
   const [toggle, setToggle] = useState(false);
   return (
     <Card
-      w={{ sm: "100%", lg: "70%" }}
-      alignSelf={{ lg: "flex-end" }}
-      justifySelf={{ lg: "flex-end" }}
-    >
+      w={{ sm: '100%', lg: '70%' }}
+      alignSelf={{ lg: 'flex-end' }}
+      justifySelf={{ lg: 'flex-end' }}>
       <Element id="profile" name="profile">
         <CardBody>
           <Flex
-            direction={{ sm: "column", md: "row" }}
+            direction={{ sm: 'column', md: 'row' }}
             justify="space-between"
             align="center"
-            w="100%"
-          >
+            w="100%">
             <Flex align="center">
-              <Avatar
-                src={avatar4}
-                w="80px"
-                h="80px"
-                me="22px"
-                borderRadius="15px"
-              />
+              <Avatar src={avatar4} w="80px" h="80px" me="22px" borderRadius="15px" />
               <Flex direction="column">
                 <Text color={textColor} fontWeight="bold" fontSize="lg">
-                  Esthera Jackson
+                  Esthera Jacksonm
                 </Text>
                 <Text color="gray.400" fontWeight="normal" fontSize="sm">
                   esthera@simmmple.com
@@ -70,17 +57,11 @@ const Header = () => {
             </Flex>
             <Flex
               align="center"
-              alignSelf={{ sm: "flex-start", lg: null }}
-              mt={{ sm: "16px", lg: null }}
-              ms={{ sm: "6px", lg: null }}
-            >
-              <Text
-                color={textColor}
-                fontWeight="normal"
-                me="14px"
-                fontSize="sm"
-              >
-                Switch to {toggle ? "invisible" : "visible"}
+              alignSelf={{ sm: 'flex-start', lg: null }}
+              mt={{ sm: '16px', lg: null }}
+              ms={{ sm: '6px', lg: null }}>
+              <Text color={textColor} fontWeight="normal" me="14px" fontSize="sm">
+                Switch to {toggle ? 'invisible' : 'visible'}
               </Text>
               <Switch colorScheme="teal" onChange={() => setToggle(!toggle)} />
             </Flex>

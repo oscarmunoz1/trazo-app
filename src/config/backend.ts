@@ -6,7 +6,7 @@ export const SIGNUP_URL = `${ROOT_URL}/auth/register/`;
 export const LOGOUT_URL = `${ROOT_URL}/auth/logout/`;
 export const VERIFY_EMAIL_URL = `${ROOT_URL}/user/verify_email/`;
 export const PASSWORD_CHANGE_URL = `${ROOT_URL}/auth/password/change/`;
-export const USER_DATA_URL = `${ROOT_URL}/user/me/`;
+export const USER_DATA_URL = `${ROOT_URL}/users/me/`;
 
 // Company and Establishment URLs
 export const COMPANY_URL = (companyId?: string | undefined) =>
@@ -74,3 +74,7 @@ export const PUBLIC_HISTORY_URL = (historyId: string) =>
   `${ROOT_URL}/histories/${historyId}/public_history/`;
 export const COMMENT_HISTORY_URL = (scanId: string) =>
   `${ROOT_URL}/public_scans/${scanId}/comment/`;
+
+// User URLs
+export const USER_URL = (userId: string) =>
+  userId ? `${ROOT_URL}/users/${userId}/` : `${ROOT_URL}/users/`;

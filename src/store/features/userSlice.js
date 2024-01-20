@@ -1,12 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  user: null,
+  user: null
 };
 
 export const userSlice = createSlice({
   initialState,
-  name: "userSlice",
+  name: 'userSlice',
   reducers: {
     logout: () => initialState,
     setUser: (state, action) => {
@@ -17,8 +17,8 @@ export const userSlice = createSlice({
     },
     setUserCompany: (state, action) => {
       state.user.companies = [action.payload];
-    },
-  },
+    }
+  }
 });
 
 export default userSlice.reducer;

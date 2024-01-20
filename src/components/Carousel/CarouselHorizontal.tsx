@@ -78,7 +78,7 @@ const CarouselHorizontal = ({ title, description, data }: CarouselHorizontalProp
                 name={parcel.name}
                 category={parcel.product || intl.formatMessage({ id: 'app.noCurrentProduction' })}
                 buttonText={intl.formatMessage({ id: 'app.viewParcel' }).toUpperCase()}
-                avatars={[avatar2, avatar4, avatar6]}
+                avatars={parcel.members.map((member) => member.image || '')}
               />
             ))}
           </Grid>

@@ -1,26 +1,30 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import customFetchBase from "./customFetchBase";
-import { setUser } from "../features/userSlice";
+import { USER_URL } from '../../config';
+import baseApi from './baseApi';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import customFetchBase from './customFetchBase';
+import { setUser } from '../features/userSlice';
 
-export const userApi = createApi({
-  reducerPath: "userApi",
-  baseQuery: customFetchBase,
-  tagTypes: ["User"],
+export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getMe: builder.query({
-      query() {
+    updateUser: builder.mutation({
+      query: ({ userId, userData }) => {
+        const formData = new FormData();
+
+        for (const [key, value] of Object.entries(userData)) {
+          formData.append(key, value);
+        }
+
         return {
-          url: "user/me",
-          credentials: "include",
+          url: USER_URL(userId),
+          method: 'PATCH',
+          credentials: 'include',
+          body: formData,
+          formData: true
         };
       },
-      transformResponse: (result) => result.data.user,
-      async onQueryStarted(args, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(setUser(data));
-        } catch (error) {}
-      },
-    }),
-  }),
+      invalidatesTags: (result, error, { userId }) => [{ type: 'User', userId }]
+    })
+  })
 });
+
+export const { useGetMeQuery, useUpdateUserMutation } = userApi;

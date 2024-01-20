@@ -415,7 +415,7 @@ export default function AuthNavbar(props: AuthNavbarProps) {
               color={navbarIcon}
               variant="transparent-with-icon"
               leftIcon={<ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />}
-              onClick={handleLogout}
+              onClick={() => navigate(`/admin/dashboard/profile`)}
             />
           </>
         ) : (

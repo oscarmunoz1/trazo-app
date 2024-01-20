@@ -46,6 +46,7 @@ const HistoryCard = ({ title, amount, captions }) => {
 
   return (
     <Card
+      overflow={'auto'}
       p="16px"
       h={{ sm: 'fit-content', xl: 'fit-content' }}
       overflowX={{ sm: 'scroll', xl: 'hidden', height: 'fit-content' }}>
@@ -100,7 +101,7 @@ const HistoryCard = ({ title, amount, captions }) => {
                       logo={
                         history.certificate_percentage === 100 ? FaRegCheckCircle : FaRegDotCircle
                       }
-                      members={[avatar1, avatar2, avatar3]}
+                      members={history.members}
                       product={history.product}
                       progression={history.certificate_percentage}
                       color={history.certificate_percentage === 100 ? 'green.300' : 'blue.400'}

@@ -74,9 +74,9 @@ function DashboardTableRow(props: DashboardTableRowProps) {
           {members.map((member) => {
             return (
               <Avatar
-                name="Ryan Florence"
-                key={member}
-                src={member}
+                name={member.full_name}
+                key={member.id}
+                src={member.image || ''}
                 _hover={{ zIndex: '3', cursor: 'pointer' }}
               />
             );

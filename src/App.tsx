@@ -22,6 +22,7 @@ import ProductReview from 'views/Scan/ProductReview/ProductReview';
 import ProfileEstablishment from 'views/Dashboard/Dashboard/Establishment/ProfileEstablishment';
 import ProfileParcel from 'views/Dashboard/Dashboard/Parcel/ProfileParcel';
 import ProfileProduction from 'views/Dashboard/Dashboard/Production/ProfileProduction';
+import ProfileUser from 'views/Dashboard/Dashboard/User/ProfileUser';
 import React from 'react';
 import SelectCompanyView from 'views/Dashboard/Dashboard/Company/AddCompany';
 import SignIn from 'views/Authentication/SignIn/SignInIllustration';
@@ -84,6 +85,10 @@ const App = () => {
               /> */}
               <Route path="/admin/dashboard" element={<AdminLayout />}>
                 <Route path="select-company" exact element={<SelectCompanyView />} />
+
+                {/* Profile Routes */}
+
+                <Route path="profile" exact element={<ProfileUser />} />
 
                 {/* Establishment Routes */}
 

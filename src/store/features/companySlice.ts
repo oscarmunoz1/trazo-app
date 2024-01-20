@@ -59,6 +59,20 @@ export const companySlice = createSlice({
         }
         establishment.parcels.push(parcel);
       }
+    },
+    setEstablishmentParcelHasProduction: (state, action) => {
+      const { establishmentId, parcelId } = action.payload;
+      const establishment = state.currentCompany.establishments.find(
+        (establishment) => establishment.id === parseInt(establishmentId)
+      );
+      if (establishment && establishment.parcels) {
+        establishment.parcels = establishment.parcels.map((parcel) => {
+          if (parcel.id === parseInt(parcelId)) {
+            return { ...parcel, has_current_production: true };
+          }
+          return parcel;
+        });
+      }
     }
   }
 });
@@ -71,5 +85,6 @@ export const {
   setCompanyEstablishment,
   addCompanyEstablishment,
   editCompanyEstablishment,
-  setEstablishmentParcel
+  setEstablishmentParcel,
+  setEstablishmentParcelHasProduction
 } = companySlice.actions;
