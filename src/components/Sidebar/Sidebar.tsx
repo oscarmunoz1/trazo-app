@@ -508,7 +508,6 @@ function Sidebar(props: SidebarProps) {
   const { logoText, routes, sidebarVariant } = props;
   let isWindows = navigator.platform.startsWith('Win');
 
-  //  BRAND
   //  Chakra Color Mode
   let sidebarBg = 'none';
   let sidebarRadius = '0px';
