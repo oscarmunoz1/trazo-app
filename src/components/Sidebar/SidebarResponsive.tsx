@@ -311,24 +311,26 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                       boxShadow: 'none'
                     }}>
                     {prop.icon ? (
-                      <Flex>
-                        <IconBox
-                          bg={inactiveBg}
-                          color={inactiveColorIcon}
-                          h="30px"
-                          w="30px"
-                          me="12px"
-                          transition={variantChange}
-                          boxShadow={sidebarActiveShadow}
-                          _hover={{ boxShadow: sidebarActiveShadow }}>
-                          {prop.icon}
-                        </IconBox>
-                        <Text color={inactiveColor} my="auto" fontSize="sm">
-                          {Object.keys(intl?.messages).includes(`app.${prop.id}`)
-                            ? intl.formatMessage({ id: `app.${prop.id}` })
-                            : prop.name}
-                        </Text>
-                      </Flex>
+                      <NavLink to={prop.isCompanySettings ? prop.layout + prop.path : null}>
+                        <Flex>
+                          <IconBox
+                            bg={inactiveBg}
+                            color={inactiveColorIcon}
+                            h="30px"
+                            w="30px"
+                            me="12px"
+                            transition={variantChange}
+                            boxShadow={sidebarActiveShadow}
+                            _hover={{ boxShadow: sidebarActiveShadow }}>
+                            {prop.icon}
+                          </IconBox>
+                          <Text color={inactiveColor} my="auto" fontSize="sm">
+                            {Object.keys(intl?.messages).includes(`app.${prop.id}`)
+                              ? intl.formatMessage({ id: `app.${prop.id}` })
+                              : prop.name}
+                          </Text>
+                        </Flex>
+                      </NavLink>
                     ) : (
                       <HStack spacing={'0px'} ps={'0px'} ms={'8px'}>
                         <Icon as={FaCircle} w="6px" color="green.400" display={'none'} />
@@ -355,6 +357,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
               </AccordionButton>
               <AccordionPanel
                 pe={prop.icon ? null : '0px'}
+                display={prop.isCompanySettings ? 'none' : 'block'}
                 p="8px 0px"
                 ps={prop.icon ? null : '8px'}>
                 {(dynamicRoutes || certificationsRoutes || commercialDynamicRoutes) && (
