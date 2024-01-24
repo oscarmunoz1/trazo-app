@@ -70,6 +70,14 @@ const companyApi = baseApi.injectEndpoints({
               { type: 'Company', companyId }
             ]
           : [{ type: 'Company', companyId }]
+    }),
+    getCompanyMembers: build.query({
+      query: ({ companyId }) => ({
+        url: `${COMPANY_URL(companyId)}members/`,
+        method: 'GET',
+        credentials: 'include'
+      }),
+      providesTags: (result, error, companyId) => (result ? [{ type: 'Company', companyId }] : [])
     })
   }),
   overrideExisting: false
@@ -80,5 +88,6 @@ export const {
   useCreateCompanyMutation,
   useCreateEstablishmentMutation,
   useEditEstablishmentMutation,
-  useGetEstablishmentQuery
+  useGetEstablishmentQuery,
+  useGetCompanyMembersQuery
 } = companyApi;

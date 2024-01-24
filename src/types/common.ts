@@ -13,6 +13,7 @@ interface Route {
   regex: RegExp;
   isCertifications?: boolean;
   isCommercial?: boolean;
+  isCompanySettings?: boolean;
   items?: Route[];
   secondaryNavbar?: boolean | undefined;
   isHome?: boolean;

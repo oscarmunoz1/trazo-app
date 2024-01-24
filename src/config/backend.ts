@@ -4,7 +4,7 @@ const ROOT_URL = '';
 export const LOGIN_URL = `${ROOT_URL}/auth/login/`;
 export const SIGNUP_URL = `${ROOT_URL}/auth/register/`;
 export const LOGOUT_URL = `${ROOT_URL}/auth/logout/`;
-export const VERIFY_EMAIL_URL = `${ROOT_URL}/user/verify_email/`;
+export const VERIFY_EMAIL_URL = `${ROOT_URL}/users/verify_email/`;
 export const PASSWORD_CHANGE_URL = `${ROOT_URL}/auth/password/change/`;
 export const USER_DATA_URL = `${ROOT_URL}/users/me/`;
 

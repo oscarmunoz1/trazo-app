@@ -48,12 +48,16 @@ const authApi = baseApi.injectEndpoints({
           'Content-Type': 'application/json'
         }
       }),
-      invalidatesTags: (result) => (result ? ['User', 'Company', 'Parcel', 'History'] : [])
-      // transformResult: (result, queryApi, extraOptions) => {
-      //   // queryApi.dispatch(logoutUser());
-      //   // return { ...result, isAuthenticated: false };
-      //   dispatch(queryApi.util.resetApiState());
-      // },
+      invalidatesTags: (result) => (result ? ['User', 'Company', 'Parcel', 'History'] : []),
+      onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+          // Reset the state directly here
+          dispatch(baseApi.util.resetApiState());
+        } catch (error) {
+          // Handle logout failure
+        }
+      }
     }),
     verifyEmail: build.mutation({
       query({ email, code }) {

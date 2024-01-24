@@ -23,12 +23,14 @@ import {
   Flex,
   useColorModeValue
 } from '@chakra-ui/react';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import AdminNavbarLinks from './AdminNavbarLinks';
 import PropTypes from 'prop-types';
 import { SidebarContext } from 'contexts/SidebarContext';
 import { useIntl } from 'react-intl';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 type AdminNavbarProps = {
   brandText: string;
@@ -45,6 +47,36 @@ export default function AdminNavbar(props: AdminNavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const { sidebarWidth } = useContext(SidebarContext);
   const { variant, children, fixed, secondary, brandText, onOpen, ...rest } = props;
+
+  const [currentEstablishment, setCurrentEstablishment] = useState(null);
+  const [currentParcel, setCurrentParcel] = useState(null);
+
+  const { establishmentId, parcelId } = useParams<{ establishmentId: string; parcelId: string }>();
+
+  const establishments = useSelector(
+    (state: RootState) => state.company.currentCompany?.establishments
+  );
+
+  useEffect(() => {
+    if (establishmentId) {
+      const establishment = establishments?.find((e) => e.id.toString() === establishmentId);
+      if (establishment) {
+        setCurrentEstablishment(establishment);
+        if (parcelId) {
+          const parcels = establishment.parcels;
+          const parcel = parcels?.find((p) => p.id.toString() === parcelId);
+          if (parcel) {
+            setCurrentParcel(parcel);
+          }
+        } else {
+          setCurrentParcel(null);
+        }
+      }
+    } else {
+      setCurrentEstablishment(null);
+      setCurrentParcel(null);
+    }
+  }, [establishmentId, parcelId, establishments]);
 
   // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
   let mainText = useColorModeValue('gray.700', 'gray.200');
@@ -136,15 +168,25 @@ export default function AdminNavbar(props: AdminNavbarProps) {
           <Breadcrumb>
             <BreadcrumbItem color={mainText}>
               <BreadcrumbLink href="/admin/dashboard/" color={secondaryText}>
-                {intl.formatMessage({ id: 'app.pages' })}
+                {intl.formatMessage({ id: 'app.home' })}
               </BreadcrumbLink>
             </BreadcrumbItem>
 
-            <BreadcrumbItem color={mainText}>
-              <BreadcrumbLink href="#" color={mainText}>
-                {brandText}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
+            {currentEstablishment && (
+              <BreadcrumbItem color={mainText}>
+                <BreadcrumbLink
+                  href={parcelId && `/admin/dashboard/establishments/${establishmentId}`}
+                  color={mainText}>
+                  {currentEstablishment.name}
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            )}
+
+            {currentParcel && (
+              <BreadcrumbItem color={mainText}>
+                <BreadcrumbLink color={mainText}>{currentParcel.name}</BreadcrumbLink>
+              </BreadcrumbItem>
+            )}
           </Breadcrumb>
         </Box>
         <Box ms="auto" w={{ sm: '100%', md: 'unset' }}>

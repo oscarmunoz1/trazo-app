@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { LOGIN_PAGE_URL } from 'config/routes';
 import { useSelector } from 'react-redux';
 
-const Authenticated = ({ allowedRoles }) => {
+const Authenticated = ({ allowedRoles, mustBeCompanyAdmin = false }) => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const isLoading = useSelector((state) => state.auth.isLoading);
   const currentCompany = useSelector((state) => state.company.currentCompany);
@@ -56,10 +56,17 @@ const Authenticated = ({ allowedRoles }) => {
 
   const nextUrl = LOGIN_PAGE_URL + (pathname !== '/' ? '?next=' + pathname : '');
 
-  return isLoading === false && isAuthenticated && allowedRoles.includes(currentUser?.user_type) ? (
+  return isLoading === false &&
+    isAuthenticated &&
+    allowedRoles.includes(currentUser?.user_type) &&
+    (mustBeCompanyAdmin
+      ? currentUser?.companies[0].role === 'Company Admin' || currentUser?.user_type === SUPERUSER
+      : true) ? (
     <Outlet />
   ) : isLoading === false && isAuthenticated === false ? (
     <Navigate to={nextUrl} state={{ next: pathname }} />
+  ) : mustBeCompanyAdmin && currentUser?.companies[0].role !== 'Company Admin' ? (
+    <Navigate to="/admin/dashboard" />
   ) : // ) : isLoading === false &&
   //   isAuthenticated &&
   //   currentUser &&

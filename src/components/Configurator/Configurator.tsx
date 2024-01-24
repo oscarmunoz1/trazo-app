@@ -30,7 +30,7 @@ import {
   Text,
   useColorMode
 } from '@chakra-ui/react';
-import { useContext, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 
 import { HSeparator } from 'components/Separator/Separator';
 import { IoIosArrowDown } from 'react-icons/io';
@@ -50,6 +50,10 @@ function Configurator(props: ConfiguratorProps) {
   const { secondary, isOpen, onClose, fixed, ...rest } = props;
   const { locale, setLocale } = useContext(LocaleContext);
   const { colorMode, toggleColorMode } = useColorMode();
+
+  useEffect(() => {
+    console.log('colorMode', colorMode);
+  }, [colorMode]);
 
   const settingsRef = useRef(null);
 

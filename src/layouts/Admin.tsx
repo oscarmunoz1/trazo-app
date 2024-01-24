@@ -38,11 +38,13 @@ import Overview from 'views/Pages/Profile/Overview/index';
 import PanelContainer from 'components/Layout/PanelContainer';
 import PanelContent from 'components/Layout/PanelContent';
 import { RootState } from 'store/index';
+import { SettingsIcon } from 'components/Icons/Icons';
 import Sidebar from 'components/Sidebar/Sidebar';
 import { SidebarContext } from 'contexts/SidebarContext';
 import { Route as TypeRoute } from '../types/common';
 // import { dynamicRoutes } from "components/Sidebar/Sidebar";
-import routes from '../routes';
+import defaultRoutes from '../routes';
+import { set } from 'date-fns';
 // Custom Chakra theme
 import theme from 'theme/theme';
 import { useIntl } from 'react-intl';
@@ -61,6 +63,30 @@ export default function Dashboard(props: any) {
   const establishments = useSelector(
     (state: RootState) => state.company.currentCompany?.establishments
   );
+
+  const currentUser = useSelector((state) => state.userState.user);
+
+  const [routes, setRoutes] = useState();
+
+  useEffect(() => {
+    const routes = defaultRoutes;
+    if (currentUser?.companies[0].role === 'Company Admin') {
+      const companySettingRoute = {
+        id: 'companySettings',
+        name: 'Company Settings',
+        path: '/dashboard/settings',
+        icon: <SettingsIcon color="inherit" />,
+        authIcon: <SettingsIcon color="inherit" />,
+        layout: '/admin',
+        collapse: true,
+        isCompanySettings: true,
+        regex: /^\/admin\/dashboard\/settings$/
+      };
+      routes.push(companySettingRoute);
+    }
+
+    setRoutes(routes);
+  }, [currentUser]);
 
   // functions for changing the states from components
 

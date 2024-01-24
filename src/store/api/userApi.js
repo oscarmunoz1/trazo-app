@@ -23,8 +23,14 @@ export const userApi = baseApi.injectEndpoints({
         };
       },
       invalidatesTags: (result, error, { userId }) => [{ type: 'User', userId }]
+    }),
+    getUserRoles: builder.query({
+      query: () => ({
+        url: USER_URL() + 'roles',
+        credentials: 'include'
+      })
     })
   })
 });
 
-export const { useGetMeQuery, useUpdateUserMutation } = userApi;
+export const { useGetMeQuery, useUpdateUserMutation, useGetUserRolesQuery } = userApi;

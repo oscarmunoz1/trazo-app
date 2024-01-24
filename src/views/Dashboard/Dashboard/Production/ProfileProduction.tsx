@@ -93,7 +93,9 @@ function ProfileProduction() {
           <CardBody px={{ sm: '16px', md: '32px', lg: '48px' }}>
             <Flex direction={'column'}>
               <Flex direction={{ sm: 'column', lg: 'row' }} mb={{ sm: '42px', lg: '48px' }}>
-                <ImageCarousel imagesList={historyData?.images} />
+                {historyData?.images.length > 0 && (
+                  <ImageCarousel imagesList={historyData?.images} />
+                )}
                 <Flex direction="column">
                   <Text color={textColor} fontSize="3xl" fontWeight="bold" mb="12px">
                     {`${new Date(historyData?.start_date).toLocaleDateString()}-${new Date(
@@ -219,7 +221,7 @@ function ProfileProduction() {
                 </Text>
                 <HTMLRenderer htmlString={establishment?.description} />
               </Flex>
-              <Flex>
+              <Flex direction={{ base: 'column', lg: 'row' }}>
                 <Flex px="24px" py="24px" width={{ md: '100%', lg: '50%' }} direction={'column'}>
                   <Text fontSize="xl" color={textColor} fontWeight="bold" pb="24px">
                     Events
@@ -248,7 +250,14 @@ function ProfileProduction() {
                     </Flex>
                   </Flex>
                 </Flex>
-                <Flex px="24px" py="24px" width={'400px'} height={'400px'} direction={'column'}>
+                <Flex
+                  px="24px"
+                  py="24px"
+                  maxW={'300px'}
+                  maxH={'300px'}
+                  w="50%"
+                  h="50%"
+                  direction={'column'}>
                   <Text fontSize="xl" color={textColor} fontWeight="bold" pb="24px">
                     QR Code
                   </Text>

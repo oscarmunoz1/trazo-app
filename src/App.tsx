@@ -25,6 +25,7 @@ import ProfileProduction from 'views/Dashboard/Dashboard/Production/ProfileProdu
 import ProfileUser from 'views/Dashboard/Dashboard/User/ProfileUser';
 import React from 'react';
 import SelectCompanyView from 'views/Dashboard/Dashboard/Company/AddCompany';
+import SettingsView from 'views/Dashboard/Settings';
 import SignIn from 'views/Authentication/SignIn/SignInIllustration';
 import SignInApp from 'views/Authentication/SignIn/SignInBasic';
 import SignUp from 'views/Authentication/SignUp/SignUpBasic';
@@ -65,7 +66,7 @@ const App = () => {
             </>
           ) : (
             <>
-              <Route path="/auth" element={<AuthLayout />}>
+              <Route path="/auth">
                 <Route path="signin" exact element={<SignIn />} key={1} />
                 <Route path="signup" exact key={2} element={<SignUp />} />
                 <Route path="verifyemail" exact key={2} element={<VerifyEmail />} />
@@ -191,6 +192,19 @@ const App = () => {
             // ) : (
             //   <Route path="*" element={() => <Navigate to="/" replace />} />
             // )}
+          )}
+        </Route>
+        <Route
+          element={
+            <Authenticated allowedRoles={[PRODUCER, SUPERUSER]} mustBeCompanyAdmin={true} />
+          }>
+          {subdomain && (
+            <>
+              {/* Company Routes */}
+              <Route path="/admin/dashboard" element={<AdminLayout />}>
+                <Route path="settings" exact element={<SettingsView />} />
+              </Route>
+            </>
           )}
         </Route>
         <Route element={<Authenticated allowedRoles={[CONSUMER, PRODUCER, SUPERUSER]} />}>

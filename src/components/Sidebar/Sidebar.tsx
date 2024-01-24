@@ -296,7 +296,7 @@ function Sidebar(props: SidebarProps) {
                           display={sidebarWidth === 275 ? 'block' : 'none'}
                         />
                         {prop.establishmentId ? (
-                          <NavLink color="red" to={prop.layout + prop.path}>
+                          <NavLink to={prop.layout + prop.path}>
                             <Text color={activeColor} my="auto" fontSize="sm">
                               {sidebarWidth === 275 ? prop.name : prop.name[0]}
                             </Text>
@@ -332,28 +332,30 @@ function Sidebar(props: SidebarProps) {
                       boxShadow: 'none'
                     }}>
                     {prop.icon ? (
-                      <Flex>
-                        <IconBox
-                          bg={inactiveBg}
-                          color={inactiveColorIcon}
-                          h="30px"
-                          w="30px"
-                          me="12px"
-                          transition={variantChange}
-                          boxShadow={sidebarActiveShadow}
-                          _hover={{ boxShadow: sidebarActiveShadow }}>
-                          {prop.icon}
-                        </IconBox>
-                        <Text
-                          color={inactiveColor}
-                          my="auto"
-                          fontSize="sm"
-                          display={sidebarWidth === 275 ? 'block' : 'none'}>
-                          {Object.keys(intl?.messages).includes(`app.${prop.id}`)
-                            ? intl.formatMessage({ id: `app.${prop.id}` })
-                            : prop.name}
-                        </Text>
-                      </Flex>
+                      <NavLink to={prop.isCompanySettings ? prop.layout + prop.path : null}>
+                        <Flex>
+                          <IconBox
+                            bg={inactiveBg}
+                            color={inactiveColorIcon}
+                            h="30px"
+                            w="30px"
+                            me="12px"
+                            transition={variantChange}
+                            boxShadow={sidebarActiveShadow}
+                            _hover={{ boxShadow: sidebarActiveShadow }}>
+                            {prop.icon}
+                          </IconBox>
+                          <Text
+                            color={inactiveColor}
+                            my="auto"
+                            fontSize="sm"
+                            display={sidebarWidth === 275 ? 'block' : 'none'}>
+                            {Object.keys(intl?.messages).includes(`app.${prop.id}`)
+                              ? intl.formatMessage({ id: `app.${prop.id}` })
+                              : prop.name}
+                          </Text>
+                        </Flex>
+                      </NavLink>
                     ) : (
                       <HStack
                         spacing={sidebarWidth === 275 ? '26px' : '0px'}
@@ -382,18 +384,33 @@ function Sidebar(props: SidebarProps) {
                 )}
                 <AccordionIcon
                   color="gray.400"
-                  display={prop.icon ? (sidebarWidth === 275 ? 'block' : 'none') : 'block'}
-                  transform={prop.icon ? null : sidebarWidth === 275 ? null : 'translateX(-70%)'}
+                  display={
+                    prop.icon
+                      ? sidebarWidth === 275 && !prop.isCompanySettings
+                        ? 'block'
+                        : 'none'
+                      : 'block'
+                  }
+                  transform={
+                    prop.icon && !prop.isCompanySettings
+                      ? null
+                      : sidebarWidth === 275
+                      ? null
+                      : 'translateX(-70%)'
+                  }
                 />
               </AccordionButton>
               <AccordionPanel
                 pe={prop.icon ? null : '0px'}
+                display={prop.isCompanySettings ? 'none' : 'block'}
                 pb="8px"
-                ps={prop.icon ? null : sidebarWidth === 275 ? null : '8px'}>
+                ps={
+                  prop.icon && !prop.isCompanySettings ? null : sidebarWidth === 275 ? null : '8px'
+                }>
                 {(dynamicRoutes || certificationsRoutes || commercialDynamicRoutes) && (
                   <List>
                     {
-                      prop.icon
+                      prop.icon && !prop.isCompanySettings
                         ? createLinks(
                             prop.isDashboard && !prop.items
                               ? dynamicRoutes

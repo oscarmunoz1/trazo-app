@@ -30,14 +30,16 @@ const FormInput = ({ name, label, placeholder, disabled, ...otherProps }: FormIn
       name={name}
       render={({ field }) => (
         <FormControl sx={{ mb: 2 }} isInvalid={!!errors[name]}>
-          <FormLabel
-            mb="4px"
-            fontSize="xs"
-            fontWeight="bold"
-            color={disabled ? 'gray.300' : textColor}
-            pl="12px">
-            {label}
-          </FormLabel>
+          {label && (
+            <FormLabel
+              mb="4px"
+              fontSize="xs"
+              fontWeight="bold"
+              color={disabled ? 'gray.300' : textColor}
+              pl="12px">
+              {label}
+            </FormLabel>
+          )}
           <Input
             {...field}
             fontSize="sm"
