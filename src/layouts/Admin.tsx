@@ -70,7 +70,7 @@ export default function Dashboard(props: any) {
 
   useEffect(() => {
     const routes = defaultRoutes;
-    if (currentUser?.companies[0].role === 'Company Admin') {
+    if (currentUser?.companies.length > 0 && currentUser?.companies[0].role === 'Company Admin') {
       const companySettingRoute = {
         id: 'companySettings',
         name: 'Company Settings',
