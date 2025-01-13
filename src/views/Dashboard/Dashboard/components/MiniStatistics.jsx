@@ -16,7 +16,7 @@ import IconBox from 'components/Icons/IconBox';
 import React from 'react';
 
 const MiniStatistics = ({ title, amount, percentage, icon, isSelected }) => {
-  const iconGreen = useColorModeValue('green.300', 'green.300');
+  const iconGreen = useColorModeValue('green.500', 'green.400');
   const textColor = useColorModeValue('gray.700', 'white');
   let cardColor = useColorModeValue('white', 'gray.700');
 

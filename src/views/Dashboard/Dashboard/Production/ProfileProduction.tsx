@@ -91,7 +91,7 @@ function ProfileProduction() {
             </Flex>
           </CardHeader>
           <CardBody px={{ sm: '16px', md: '32px', lg: '48px' }}>
-            <Flex direction={'column'}>
+            <Flex direction={'column'} w={'100%'}>
               <Flex direction={{ sm: 'column', lg: 'row' }} mb={{ sm: '42px', lg: '48px' }}>
                 {historyData?.images.length > 0 && (
                   <ImageCarousel imagesList={historyData?.images} />

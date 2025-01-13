@@ -40,7 +40,7 @@ import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 // Assets
-import basic from "assets/img/basic-auth.png";
+import basic from "assets/img/backgroundImage.png";
 import deloitteLogo from "assets/svg/deloitte-logo.svg";
 import georgiaLogo from "assets/svg/georgia-logo.svg";
 import googleLogo from "assets/svg/google-logo.svg";
@@ -81,6 +81,18 @@ function Pricing() {
         overflow="hidden"
         zIndex="-1"
         top="0"
+        marginInlineEnd={'25px'}
+        _before={{
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          background: 'linear-gradient(180deg, rgba(0,128,0,0.85) 0%, rgba(0,128,0,0.6) 100%)',
+          borderRadius: '15px',
+          zIndex: 0
+        }}
         bgImage={basic}
         bgSize="cover"
         mx={{ sm: "auto" }}

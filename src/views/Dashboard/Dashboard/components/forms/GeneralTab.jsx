@@ -20,7 +20,7 @@ import { number, object, string } from "zod";
 import { FaPlus } from "react-icons/fa";
 import FormInput from "components/Forms/FormInput";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { useIntl } from "react-intl";
 // Custom components
 
 const formSchemaMainInfo = object({
@@ -28,6 +28,7 @@ const formSchemaMainInfo = object({
 });
 
 const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
+  const intl = useIntl();
   const bgPrevButton = useColorModeValue("gray.100", "gray.100");
   const textColor = useColorModeValue("gray.700", "white");
   const iconColor = useColorModeValue("gray.300", "gray.700");
@@ -52,24 +53,24 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
       >
         <Flex direction="column" w="100%">
           <FormInput
-            label="Name"
+            label={intl.formatMessage({ id: 'app.name' })}
             ms="4px"
             borderRadius="15px"
             type="text"
-            placeholder="Name of the event"
+            placeholder={intl.formatMessage({ id: 'app.nameOfTheEvent' })}
             mb="24px"
             name="name"
             fontSize="xs"
           />
           <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-            Observations
+            {intl.formatMessage({ id: 'app.observations' })}
           </FormLabel>
           <Textarea
             fontSize="sm"
             ms="4px"
             borderRadius="15px"
             type="text"
-            placeholder="Description of the event"
+            placeholder={intl.formatMessage({ id: 'app.descriptionOfTheEvent' })}
             mb="24px"
             size="lg"
             name="observations"
@@ -86,7 +87,7 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
               onClick={onPrev}
             >
               <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                PREV
+                {intl.formatMessage({ id: 'app.prev' })}
               </Text>
             </Button>
 
@@ -100,7 +101,7 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
               type="submit"
             >
               <Text fontSize="xs" color="#fff" fontWeight="bold">
-                NEXT
+                {intl.formatMessage({ id: 'app.next' })}
               </Text>
             </Button>
           </Flex>

@@ -20,6 +20,7 @@ import { number, object, string } from "zod";
 import { FaPlus } from "react-icons/fa";
 import FormInput from "components/Forms/FormInput";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useIntl } from "react-intl";
 
 // Custom components
 
@@ -28,6 +29,7 @@ const formSchemaMainInfo = object({
 });
 
 const WeatherTab = ({ onSubmitHandler, onPrev }) => {
+  const intl = useIntl();
   const bgPrevButton = useColorModeValue("gray.100", "gray.100");
   const textColor = useColorModeValue("gray.700", "white");
   const iconColor = useColorModeValue("gray.300", "gray.700");
@@ -52,10 +54,10 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
       >
         <Flex direction="column" w="100%">
           <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-            Type
+            {intl.formatMessage({ id: 'app.type' })}
           </FormLabel>
           <ChakraSelect
-            placeholder="Select option"
+            placeholder={intl.formatMessage({ id: 'app.selectOption' })}
             placeholderTextColor="red"
             css={{ "&::placeholder": { color: "red" } }}
             mb={errors.type ? "12px" : "24px"}
@@ -69,10 +71,10 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
             mt="4px"
             {...register("type")}
           >
-            <option value="PL">Planting</option>
-            <option value="HA">Harvesting</option>
-            <option value="IR">Irrigation</option>
-            <option value="PR">Pruning</option>
+            <option value="PL">{intl.formatMessage({ id: 'app.planting' })}</option>
+            <option value="HA">{intl.formatMessage({ id: 'app.harvesting' })}</option>
+            <option value="IR">{intl.formatMessage({ id: 'app.irrigation' })}</option>
+            <option value="PR">{intl.formatMessage({ id: 'app.pruning' })}</option>
           </ChakraSelect>
           {errors.type && (
             <Text fontSize="sm" color="red.500" mt={"0.5rem"}>
@@ -80,14 +82,14 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
             </Text>
           )}
           <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-            Observations
+            {intl.formatMessage({ id: 'app.observations' })}
           </FormLabel>
           <Textarea
             fontSize="sm"
             ms="4px"
             borderRadius="15px"
             type="text"
-            placeholder="Description of the event"
+            placeholder={intl.formatMessage({ id: 'app.descriptionOfTheEvent' })}
             mb="24px"
             size="lg"
             name="observations"
@@ -104,7 +106,7 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
               onClick={onPrev}
             >
               <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                PREV
+                {intl.formatMessage({ id: 'app.prev' })}
               </Text>
             </Button>
 
@@ -118,7 +120,7 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
               type="submit"
             >
               <Text fontSize="xs" color="#fff" fontWeight="bold">
-                NEXT
+                {intl.formatMessage({ id: 'app.next' })}
               </Text>
             </Button>
           </Flex>

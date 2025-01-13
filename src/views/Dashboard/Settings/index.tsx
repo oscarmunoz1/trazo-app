@@ -110,7 +110,7 @@ export default function SettingsView() {
   let inputBg = useColorModeValue('white', 'gray.800');
   const iconBoxInside = useColorModeValue('white', 'white');
   let mainText = useColorModeValue('gray.700', 'gray.200');
-  let mainTeal = useColorModeValue('green.400', 'green.400');
+  let mainTeal = useColorModeValue('green.500', 'green.400');
 
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName, isDashboard = false) => {

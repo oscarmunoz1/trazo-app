@@ -4,13 +4,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 // Assets
-import BgSignUp from 'assets/img/basic-auth.png';
+import BgSignUp from 'assets/img/backgroundImage.png';
 import { set } from 'react-hook-form';
 import { useVerifyEmailMutation } from 'store/api/authApi';
 
 function SignUp() {
   const textColor = useColorModeValue('gray.700', 'white');
-  const titleColor = useColorModeValue('green.300', 'green.200');
+  const titleColor = useColorModeValue('green.500', 'green.400');
   const bgColor = useColorModeValue('white', 'gray.700');
 
   const [isLoadingVerification, setIsLoadingVerification] = useState(true);
@@ -51,6 +51,18 @@ function SignUp() {
         zIndex="-1"
         top="0"
         bgImage={BgSignUp}
+        marginInlineEnd={'25px'}
+        _before={{
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          background: 'linear-gradient(180deg, rgba(0,128,0,0.85) 0%, rgba(0,128,0,0.6) 100%)',
+          borderRadius: '15px',
+          zIndex: 0
+        }}
         bgSize="cover"
         mx={{ md: 'auto' }}
         mt={{ md: '14px' }}></Box>

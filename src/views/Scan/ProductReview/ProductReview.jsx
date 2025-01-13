@@ -44,7 +44,7 @@ import { useCommentHistoryMutation, useGetPublicHistoryQuery } from 'store/api/h
 import { useNavigate, useParams } from 'react-router-dom';
 
 import BgMusicCard from 'assets/img/BgMusicCard.png';
-import BgSignUp from 'assets/img/basic-auth.png';
+import BgSignUp from 'assets/img/backgroundImage.png';
 import Card from 'components/Card/Card';
 import CardBody from 'components/Card/CardBody';
 import CardHeader from 'components/Card/CardHeader';
@@ -136,6 +136,18 @@ function ProductReview() {
         zIndex="-1"
         top="0"
         bgImage={BgSignUp}
+        marginInlineEnd={'25px'}
+        _before={{
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          background: 'linear-gradient(180deg, rgba(0,128,0,0.85) 0%, rgba(0,128,0,0.6) 100%)',
+          borderRadius: '15px',
+          zIndex: 0
+        }}
         bgSize="cover"
         mx={{ md: 'auto' }}
         mt={{ md: '14px' }}></Box>

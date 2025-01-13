@@ -21,6 +21,7 @@ import { number, object, string } from "zod";
 import { FaPlus } from "react-icons/fa";
 import FormInput from "components/Forms/FormInput";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useIntl } from 'react-intl';
 
 const formSchemaMainInfo = object({
   type: string().min(1, "Name is required"),
@@ -49,6 +50,7 @@ const formSchemaMainInfo = object({
 });
 
 const WeatherTab = ({ onSubmitHandler, onPrev }) => {
+  const intl = useIntl();
   const bgPrevButton = useColorModeValue("gray.100", "gray.100");
   const textColor = useColorModeValue("gray.700", "white");
   const iconColor = useColorModeValue("gray.300", "gray.700");
@@ -74,7 +76,7 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
         data = {
           type: data.type,
           lower_temperature: data.lower_temperature,
-          way_of_protection: data.way_of_protection,
+          way_of_protection: data.way_of_protection,  
           observation: data.observation,
         };
         break;
@@ -122,10 +124,10 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
           <Flex gap={"20px"}>
             <Flex flexDir={"column"} flexGrow={1}>
               <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-                Type
+                {intl.formatMessage({ id: 'app.type' })}
               </FormLabel>
               <ChakraSelect
-                placeholder="Select option"
+                placeholder={intl.formatMessage({ id: 'app.selectOption' })}
                 placeholderTextColor="red"
                 css={{ "&::placeholder": { color: "red" } }}
                 mb={errors.type ? "12px" : "24px"}
@@ -139,14 +141,14 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                 mt="4px"
                 {...register("type")}
               >
-                <option value="FR">Frost</option>
-                <option value="DR">Drought</option>
-                <option value="HA">Hailstorms</option>
-                <option value="HT">High Temperatures</option>
-                <option value="TS">Tropical Storm</option>
-                <option value="HW">High Winds</option>
-                <option value="HH">High Humidity</option>
-                <option value="LH">Low Humidity</option>
+                <option value="FR">{intl.formatMessage({ id: 'app.frost' })}</option>
+                <option value="DR">{intl.formatMessage({ id: 'app.drought' })}</option>
+                <option value="HA">{intl.formatMessage({ id: 'app.hailstorms' })}</option>
+                <option value="HT">{intl.formatMessage({ id: 'app.highTemperatures' })}</option>
+                <option value="TS">{intl.formatMessage({ id: 'app.tropicalStorm' })}</option>
+                <option value="HW">{intl.formatMessage({ id: 'app.highWinds' })}</option>
+                <option value="HH">{intl.formatMessage({ id: 'app.highHumidity' })}</option>
+                <option value="LH">{intl.formatMessage({ id: 'app.lowHumidity' })}</option>
               </ChakraSelect>
               {errors.type && (
                 <Text fontSize="sm" color="red.500" mt={"0.5rem"}>
@@ -159,21 +161,21 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
             <Flex gap={"20px"}>
               <FormInput
                 fontSize="xs"
-                label="Lower temperature (°F)"
+                label={intl.formatMessage({ id: 'app.lowerTemperature' })}
                 ms="4px"
                 borderRadius="15px"
                 type="text"
-                placeholder="Temperature"
+                placeholder={intl.formatMessage({ id: 'app.temperature' })}
                 mb="24px"
                 name="lower_temperature"
               />
               <FormInput
                 fontSize="xs"
-                label="Way of protection"
+                label={intl.formatMessage({ id: 'app.wayOfProtection' })}
                 ms="4px"
                 borderRadius="15px"
                 type="text"
-                placeholder="Not, nylon cover, irrigation, hot light, etc "
+                placeholder={intl.formatMessage({ id: 'app.notNet' })}
                 mb="24px"
                 name="way_of_protection"
               />
@@ -182,11 +184,11 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
             <Flex gap={"20px"}>
               <FormInput
                 fontSize="xs"
-                label="Accumulated water deficit (mm)"
+                label={intl.formatMessage({ id: 'app.accumulatedWaterDeficit' })}
                 ms="4px"
                 borderRadius="15px"
                 type="text"
-                placeholder="Water deficit"
+                placeholder={intl.formatMessage({ id: 'app.waterDeficit' })}
                 mb="24px"
                 name="water_deficit"
               />
@@ -196,21 +198,21 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
               <Flex gap={"20px"}>
                 <FormInput
                   fontSize="xs"
-                  label="Average weight of hailstones (g)"
+                  label={intl.formatMessage({ id: 'app.averageWeightOfHailstones' })}
                   ms="4px"
                   borderRadius="15px"
                   type="text"
-                  placeholder="Weight"
+                  placeholder={intl.formatMessage({ id: 'app.weight' })}
                   mb="24px"
                   name="weight"
                 />
                 <FormInput
                   fontSize="xs"
-                  label="Average diameter of hailstones (cm)"
+                  label={intl.formatMessage({ id: 'app.averageDiameterOfHailstones' })}
                   ms="4px"
                   borderRadius="15px"
                   type="text"
-                  placeholder="Diameter"
+                  placeholder={intl.formatMessage({ id: 'app.diameter' })}
                   mb="24px"
                   name="diameter"
                 />
@@ -218,21 +220,21 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
               <Flex gap={"20px"}>
                 <FormInput
                   fontSize="xs"
-                  label="Duration (min)"
+                  label={intl.formatMessage({ id: 'app.duration' })}
                   ms="4px"
                   borderRadius="15px"
                   type="text"
-                  placeholder="Duration"
+                  placeholder={intl.formatMessage({ id: 'app.duration' })}
                   mb="24px"
                   name="duration"
                 />
                 <FormInput
                   fontSize="xs"
-                  label="Way of protection"
+                  label={intl.formatMessage({ id: 'app.wayOfProtection' })}
                   ms="4px"
                   borderRadius="15px"
                   type="text"
-                  placeholder="Not, net, etc"
+                  placeholder={intl.formatMessage({ id: 'app.wayOfProtection' })}
                   mb="24px"
                   name="way_of_protection"
                 />
@@ -242,17 +244,17 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
             <Flex gap={"20px"} direction={"column"}>
               <FormInput
                 fontSize="xs"
-                label="Highest temperature (°F)"
+                label={intl.formatMessage({ id: 'app.highestTemperature' })}
                 ms="4px"
                 borderRadius="15px"
                 type="text"
-                placeholder="Temperature"
+                placeholder={intl.formatMessage({ id: 'app.temperature' })}
                 mb="24px"
                 name="highest_temperature"
               />
               <Flex flexDir={"column"}>
                 <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-                  Time Period
+                  {intl.formatMessage({ id: 'app.timePeriod' })}
                 </FormLabel>
                 <Flex flexDir={"row"} width={"100%"} gap={"20px"}>
                   <Flex flexDir={"column"} flexGrow={1}>
@@ -263,7 +265,7 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                       mb={"0"}
                       textAlign={"end"}
                     >
-                      From
+                      {intl.formatMessage({ id: 'app.from' })}
                     </FormLabel>
                     <FormInput
                       fontSize="xs"
@@ -271,7 +273,7 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                       borderRadius="15px"
                       type="datetime-local"
                       name="start_date"
-                      placeholder="Select date and time"
+                      placeholder={intl.formatMessage({ id: 'app.selectDateAndTime' })}
                       mb="24px"
                     />
                   </Flex>
@@ -283,7 +285,7 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                       mb={"0"}
                       textAlign={"end"}
                     >
-                      To
+                      {intl.formatMessage({ id: 'app.to' })}
                     </FormLabel>
                     <FormInput
                       fontSize="xs"
@@ -291,7 +293,7 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                       borderRadius="15px"
                       type="datetime-local"
                       name="end_date"
-                      placeholder="Select date and time"
+                      placeholder={intl.formatMessage({ id: 'app.selectDateAndTime' })}
                       mb="24px"
                     />
                   </Flex>
@@ -303,14 +305,14 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
           )}
 
           <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-            Observations
+            {intl.formatMessage({ id: 'app.observations' })}
           </FormLabel>
           <Textarea
             fontSize="sm"
             ms="4px"
             borderRadius="15px"
             type="text"
-            placeholder="Description of the event"
+            placeholder={intl.formatMessage({ id: 'app.description' })}
             mb="24px"
             size="lg"
             name="observation"
@@ -327,7 +329,7 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
               onClick={onPrev}
             >
               <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                PREV
+                {intl.formatMessage({ id: 'app.prev' })}
               </Text>
             </Button>
 
@@ -341,7 +343,7 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
               type="submit"
             >
               <Text fontSize="xs" color="#fff" fontWeight="bold">
-                NEXT
+                {intl.formatMessage({ id: 'app.next' })}
               </Text>
             </Button>
           </Flex>

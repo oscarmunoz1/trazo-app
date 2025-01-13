@@ -3,15 +3,17 @@ import EditEvent from '../components/forms/EditEvent';
 // Chakra imports
 import { Flex } from '@chakra-ui/react';
 import NewEvent from '../components/forms/NewEvent';
+import { useIntl } from 'react-intl';
 
 function UpdateEvent({ isEdit = false }) {
+  const intl = useIntl();
   return (
     <BoxBackground
-      title={isEdit ? 'Edit the selected Event' : 'Add a new Event'}
+      title={isEdit ? intl.formatMessage({ id: 'app.editEvent' }) : intl.formatMessage({ id: 'app.addNewEvent' })}
       subtitle={
         isEdit
-          ? 'Modify the form below to edit the selected event.'
-          : 'Complete the form below to add a new event to your parcel history.'
+          ? intl.formatMessage({ id: 'app.editEventDescription' })
+          : intl.formatMessage({ id: 'app.addNewEventDescription' })
       }>
       {isEdit ? <EditEvent /> : <NewEvent />}
     </BoxBackground>

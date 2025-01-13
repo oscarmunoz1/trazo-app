@@ -76,6 +76,7 @@ import { useCreateEventMutation } from 'store/api/historyApi';
 import { useDropzone } from 'react-dropzone';
 import { useGoogleMap } from '@react-google-maps/api';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useIntl } from 'react-intl';
 
 // Custom components
 const styles = {
@@ -139,7 +140,8 @@ const orderOptions = (values) => {
 };
 
 function NewEstablishment() {
-  // Chakra color mode
+  const intl = useIntl();
+  // Chakra color mode 
   const textColor = useColorModeValue('gray.700', 'white');
   const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
   const bgProfile = useColorModeValue(
@@ -388,7 +390,7 @@ function NewEstablishment() {
                 <Stack direction="column" spacing="20px" w="100%">
                   <Flex direction="column" w="80%" mt="10px">
                     <FormLabel ms="4px" fontSize="xs" fontWeight="bold" mb="4px" pl="12px">
-                      What kind of production do you want to create?
+                      {intl.formatMessage({ id: 'app.whatKindOfProduction' })}
                     </FormLabel>
                   </Flex>
                   <Flex w={'100%'} justifyContent={'center'}>
@@ -407,7 +409,7 @@ function NewEstablishment() {
                         }
                         bg={activeButton === 0 ? bgActiveButton : 'transparent'}
                         onClick={() => setActiveButton(0)}>
-                        WEATHER
+                        {intl.formatMessage({ id: 'app.weather' })}
                       </Button>
                       <Button
                         variant="no-hover"
@@ -419,7 +421,7 @@ function NewEstablishment() {
                         }
                         bg={activeButton === 1 ? bgActiveButton : 'transparent'}
                         onClick={() => setActiveButton(1)}>
-                        PRODUCTION
+                        {intl.formatMessage({ id: 'app.production' })}
                       </Button>
                       <Button
                         variant="no-hover"
@@ -431,7 +433,7 @@ function NewEstablishment() {
                         }
                         bg={activeButton === 2 ? bgActiveButton : 'transparent'}
                         onClick={() => setActiveButton(2)}>
-                        CHEMICAL
+                        {intl.formatMessage({ id: 'app.chemical' })}
                       </Button>
                       <Button
                         variant="no-hover"
@@ -443,24 +445,24 @@ function NewEstablishment() {
                         }
                         bg={activeButton === 3 ? bgActiveButton : 'transparent'}
                         onClick={() => setActiveButton(3)}>
-                        OTHER
+                        {intl.formatMessage({ id: 'app.other' })}
                       </Button>
                     </Flex>
                   </Flex>
                   <FormControl>
                     <FormInput
                       fontSize="xs"
-                      label="Date"
+                      label={intl.formatMessage({ id: 'app.date' })}
                       type="datetime-local"
                       name="date"
-                      placeholder="Select date and time"
+                      placeholder={intl.formatMessage({ id: 'app.selectDateAndTime' })}
                     />
                   </FormControl>
                   {/* </Stack> */}
                   <Flex>
                     <FormControl>
                       <FormLabel pl={'12px'} fontSize="xs" fontWeight="bold" mb={'4px'}>
-                        Select the others Parcels to which the event was applied
+                        {intl.formatMessage({ id: 'app.selectTheOthersParcelsToWhichTheEventWasApplied' })}
                       </FormLabel>
                       <Select
                         value={value}
@@ -485,7 +487,7 @@ function NewEstablishment() {
                     h="35px"
                     type="submit">
                     <Text fontSize="xs" color="#fff" fontWeight="bold">
-                      NEXT
+                      {intl.formatMessage({ id: 'app.next' })}
                     </Text>
                   </Button>
                 </Stack>
@@ -498,7 +500,7 @@ function NewEstablishment() {
         <Card>
           <CardHeader mb="22px">
             <Text color={textColor} fontSize="lg" fontWeight="bold">
-              Event Info
+              {intl.formatMessage({ id: 'app.eventInfo' })}
             </Text>
           </CardHeader>
           <CardBody>
@@ -531,7 +533,7 @@ function NewEstablishment() {
         <Card>
           <CardHeader mb="32px">
             <Text fontSize="lg" color={textColor} fontWeight="bold">
-              Description
+              {intl.formatMessage({ id: 'app.description' })}
             </Text>
           </CardHeader>
           <CardBody>
@@ -551,7 +553,7 @@ function NewEstablishment() {
                       h="35px"
                       onClick={() => mainInfoTab.current.click()}>
                       <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                        PREV
+                        {intl.formatMessage({ id: 'app.prev' })}
                       </Text>
                     </Button>
                     <Button
@@ -563,7 +565,7 @@ function NewEstablishment() {
                       h="35px"
                       type="submit">
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
-                        NEXT
+                        {intl.formatMessage({ id: 'app.next' })}
                       </Text>
                     </Button>
                   </Flex>
@@ -577,13 +579,13 @@ function NewEstablishment() {
         <Card>
           <CardHeader mb="22px">
             <Text color={textColor} fontSize="xl" fontWeight="bold" mb="3px">
-              Media
+              {intl.formatMessage({ id: 'app.media' })}
             </Text>
           </CardHeader>
           <CardBody>
             <Flex direction="column" w="100%">
               <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
-                Parcel images
+                {intl.formatMessage({ id: 'app.parcelImages' })}
               </Text>
               <Flex
                 align="center"
@@ -625,7 +627,7 @@ function NewEstablishment() {
                     </Flex>
                   ) : (
                     <Text color="gray.400" fontWeight="normal">
-                      Drop files here to upload
+                      {intl.formatMessage({ id: 'app.dropFilesHere' })}
                     </Text>
                   )}
                 </Button>
@@ -640,7 +642,7 @@ function NewEstablishment() {
                   h="35px"
                   onClick={() => descriptionTab.current.click()}>
                   <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                    PREV
+                    {intl.formatMessage({ id: 'app.prev' })}
                   </Text>
                 </Button>
                 <Button
@@ -653,7 +655,7 @@ function NewEstablishment() {
                   type="submit"
                   onClick={() => onSubmitMedia()}>
                   <Text fontSize="xs" color="#fff" fontWeight="bold">
-                    NEXT
+                    {intl.formatMessage({ id: 'app.next' })}
                   </Text>
                 </Button>
               </Flex>

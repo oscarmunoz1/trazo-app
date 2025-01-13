@@ -58,6 +58,8 @@ import { useCreateParcelMutation } from 'store/api/productApi.js';
 import { useDropzone } from 'react-dropzone';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { useIntl } from 'react-intl';
+
 const formSchemaInfo = object({
   name: string().min(1, 'Name is required'),
   area: string().min(1, 'Area is required')
@@ -134,6 +136,7 @@ function NewParcel() {
   const polygonRef = useRef();
   const listenersRef = useRef([]);
   const { establishmentId } = useParams();
+  const intl = useIntl();
 
   const [drawingMode, setDrawingMode] = useState(false);
   const [polygon, setPolygon] = useState(null);
@@ -515,7 +518,7 @@ function NewParcel() {
                   h="35px"
                   onClick={() => descriptionTab.current.click()}>
                   <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                    PREV
+                    {intl.formatMessage({ id: 'app.prev' })}
                   </Text>
                 </Button>
                 <Button
@@ -527,7 +530,7 @@ function NewParcel() {
                   h="35px"
                   onClick={() => certificationTab.current.click()}>
                   <Text fontSize="xs" color="#fff" fontWeight="bold">
-                    NEXT
+                    {intl.formatMessage({ id: 'app.next' })}
                   </Text>
                 </Button>
               </Flex>

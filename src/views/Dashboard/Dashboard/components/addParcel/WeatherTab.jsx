@@ -62,7 +62,7 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
             Type
           </FormLabel>
           <Select
-            placeholder="Select option"
+            placeholder={intl.formatMessage({ id: 'app.selectOption' })}
             placeholderTextColor="red"
             css={{ "&::placeholder": { color: "red" } }}
             mb={errors.type ? "12px" : "24px"}
@@ -75,13 +75,13 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
             fontSize={"0.875rem"}
             {...register("type")}
           >
-            <option value="FR">Frost</option>
-            <option value="DR">Drought</option>
-            <option value="HW">Heat Wave</option>
-            <option value="TS">Tropical Storm</option>
-            <option value="HW">High Winds</option>
-            <option value="HH">High Humidity</option>
-            <option value="LH">Low Humidity</option>
+            <option value="FR">{intl.formatMessage({ id: 'app.frost' })}</option>
+            <option value="DR">{intl.formatMessage({ id: 'app.drought' })}</option>
+            <option value="HW">{intl.formatMessage({ id: 'app.heatWave' })}</option>
+            <option value="TS">{intl.formatMessage({ id: 'app.tropicalStorm' })}</option>
+            <option value="HW">{intl.formatMessage({ id: 'app.highWinds' })}</option>
+            <option value="HH">{intl.formatMessage({ id: 'app.highHumidity' })}</option>
+            <option value="LH">{intl.formatMessage({ id: 'app.lowHumidity' })}</option>
           </Select>
           {errors.type && (
             <Text fontSize="sm" color="red.500" mt={"0.5rem"}>
@@ -98,7 +98,7 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
                 ms="4px"
                 borderRadius="15px"
                 type="text"
-                placeholder="Volume of the product"
+                placeholder={intl.formatMessage({ id: 'app.temperature' })}
                 mb="24px"
                 size="lg"
                 name="temperature"
@@ -113,7 +113,7 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
                 ms="4px"
                 borderRadius="15px"
                 type="text"
-                placeholder="Area"
+                placeholder={intl.formatMessage({ id: 'app.area' })}
                 mb="24px"
                 size="lg"
                 name="humidity"
@@ -122,7 +122,7 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
           </Flex>
           <Flex flexDir={"column"}>
             <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-              Time Period
+              {intl.formatMessage({ id: 'app.timePeriod' })}
             </FormLabel>
             <Flex flexDir={"row"} width={"100%"} gap={"20px"}>
               <Flex flexDir={"column"} flexGrow={1}>
@@ -133,7 +133,7 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
                   mb={"0"}
                   textAlign={"end"}
                 >
-                  From
+                  {intl.formatMessage({ id: 'app.from' })}
                 </FormLabel>
                 <FormInput
                   fontSize="xs"
@@ -141,7 +141,7 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
                   borderRadius="15px"
                   type="datetime-local"
                   name="startDate"
-                  placeholder="Select date and time"
+                  placeholder={intl.formatMessage({ id: 'app.selectDateAndTime' })}
                   mb="24px"
                 />
               </Flex>
@@ -153,7 +153,7 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
                   mb={"0"}
                   textAlign={"end"}
                 >
-                  To
+                  {intl.formatMessage({ id: 'app.to' })}
                 </FormLabel>
                 <FormInput
                   fontSize="xs"
@@ -161,21 +161,21 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
                   borderRadius="15px"
                   type="datetime-local"
                   name="endDate"
-                  placeholder="Select date and time"
+                  placeholder={intl.formatMessage({ id: 'app.selectDateAndTime' })}
                   mb="24px"
                 />
               </Flex>
             </Flex>
           </Flex>
           <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-            Observations
+            {intl.formatMessage({ id: 'app.observations' })}
           </FormLabel>
           <Textarea
             fontSize="sm"
             ms="4px"
             borderRadius="15px"
             type="text"
-            placeholder="Description of the event"
+            placeholder={intl.formatMessage({ id: 'app.descriptionOfTheEvent' })}
             mb="24px"
             size="lg"
             name="observations"
@@ -191,7 +191,7 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
               h="35px"
             >
               <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                PREV
+                {intl.formatMessage({ id: 'app.prev' })}
               </Text>
             </Button>
             <Button
@@ -212,7 +212,7 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
                 />
               ) : (
                 <Text fontSize="xs" color="#fff" fontWeight="bold">
-                  SEND
+                  {intl.formatMessage({ id: 'app.send' })}
                 </Text>
               )}
             </Button>

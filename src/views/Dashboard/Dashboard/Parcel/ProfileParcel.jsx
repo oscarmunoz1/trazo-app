@@ -62,7 +62,7 @@ function ProfileEstablishment() {
     <BoxBackground
       title="Parcel Profile"
       subtitle="Here you can see the information of your parcel.">
-      <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px" width={'100%'}>
+      <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px" w={'100%'}>
         <Card
           mt={{ md: '24px' }}
           maxWidth={{ sm: '100%', md: '100%', lg: '80%' }}

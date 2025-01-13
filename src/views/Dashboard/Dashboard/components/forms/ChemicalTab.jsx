@@ -20,6 +20,7 @@ import { number, object, string } from "zod";
 import { FaPlus } from "react-icons/fa";
 import FormInput from "components/Forms/FormInput";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useIntl } from "react-intl";
 
 // Custom components
 
@@ -34,6 +35,7 @@ const formSchemaMainInfo = object({
 });
 
 const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
+  const intl = useIntl();
   const bgPrevButton = useColorModeValue("gray.100", "gray.100");
   const textColor = useColorModeValue("gray.700", "white");
   const iconColor = useColorModeValue("gray.300", "gray.700");
@@ -69,7 +71,7 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
                 Type
               </FormLabel>
               <ChakraSelect
-                placeholder="Select option"
+                placeholder={intl.formatMessage({ id: 'app.selectOption' })}
                 placeholderTextColor="red"
                 css={{ "&::placeholder": { color: "red" } }}
                 mb={errors.type ? "12px" : "24px"}
@@ -82,10 +84,10 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
                 fontSize={"0.875rem"}
                 {...register("type")}
               >
-                <option value="FE">Fertilizer</option>
-                <option value="PE">Pesticide</option>
-                <option value="FU">Fungicide</option>
-                <option value="HE">Herbicide</option>
+                <option value="FE">{intl.formatMessage({ id: 'app.fertilizer' })}</option>
+                <option value="PE">{intl.formatMessage({ id: 'app.pesticide' })}</option>
+                <option value="FU">{intl.formatMessage({ id: 'app.fungicide' })}</option>
+                <option value="HE">{intl.formatMessage({ id: 'app.herbicide' })}</option>
               </ChakraSelect>
               {errors.type && (
                 <Text fontSize="sm" color="red.500" mt={"0.5rem"}>
@@ -96,11 +98,11 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
             <Flex flex={1}>
               <FormInput
                 fontSize="xs"
-                label="Way of application"
+                label={intl.formatMessage({ id: 'app.wayOfApplication' })}
                 ms="4px"
                 borderRadius="15px"
                 type="text"
-                placeholder="Way of application"
+                placeholder={intl.formatMessage({ id: 'app.wayOfApplication' })}
                 mb="24px"
                 name="way_of_application"
               />
@@ -108,11 +110,11 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
           </Flex>
           <Flex gap={"20px"}>
             <FormInput
-              label="Product Name"
+              label={intl.formatMessage({ id: 'app.productName' })}
               ms="4px"
               borderRadius="15px"
               type="text"
-              placeholder="Name of the product"
+              placeholder={intl.formatMessage({ id: 'app.nameOfTheProduct' })}
               mb="24px"
               name="product_name"
               fontSize="xs"
@@ -120,11 +122,11 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
 
             <FormInput
               fontSize="xs"
-              label="Commercial Name"
+              label={intl.formatMessage({ id: 'app.commercialName' })}
               ms="4px"
               borderRadius="15px"
               type="text"
-              placeholder="Commercial Name of the product"
+              placeholder={intl.formatMessage({ id: 'app.commercialNameOfTheProduct' })}
               mb="24px"
               name="commercial_name"
             />
@@ -132,35 +134,35 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
           <Flex gap={"20px"}>
             <FormInput
               fontSize="xs"
-              label="Volume"
+              label={intl.formatMessage({ id: 'app.volume' })}
               ms="4px"
               borderRadius="15px"
               type="text"
-              placeholder="Volume of the product"
+              placeholder={intl.formatMessage({ id: 'app.volumeOfTheProduct' })}
               mb="24px"
               name="volume"
             />
             <FormInput
               fontSize="xs"
-              label="Area"
+              label={intl.formatMessage({ id: 'app.area' })}
               ms="4px"
               borderRadius="15px"
               type="text"
-              placeholder="Area of application"
+              placeholder={intl.formatMessage({ id: 'app.areaOfApplication' })}
               mb="24px"
               name="area"
             />
           </Flex>
 
           <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-            Observations
+            {intl.formatMessage({ id: 'app.observations' })}
           </FormLabel>
           <Textarea
             fontSize="xs"
             ms="4px"
             borderRadius="15px"
             type="text"
-            placeholder="Description of the event"
+            placeholder={intl.formatMessage({ id: 'app.descriptionOfTheEvent' })}
             mb="24px"
             name="observations"
             {...register("observations")}
@@ -176,7 +178,7 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
               onClick={onPrev}
             >
               <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                PREV
+                {intl.formatMessage({ id: 'app.prev' })}
               </Text>
             </Button>
 
@@ -190,7 +192,7 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
               type="submit"
             >
               <Text fontSize="xs" color="#fff" fontWeight="bold">
-                NEXT
+                {intl.formatMessage({ id: 'app.next' })}
               </Text>
             </Button>
           </Flex>

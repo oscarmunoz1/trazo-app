@@ -1,7 +1,7 @@
 // Chakra imports
 import { Box, Flex, Text, useColorModeValue } from '@chakra-ui/react';
 
-import BgSignUp from 'assets/img/basic-auth.png';
+import BgSignUp from 'assets/img/backgroundImage.png';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ function BoxBackground(props: BoxBackgroundProps) {
   const { title, subtitle, children } = props;
 
   return (
-    <Flex direction="column" alignSelf="center" justifySelf="center" alignItems="center">
+    <Flex direction="column" alignSelf="center" justifySelf="center" alignItems="center" w={'100%'}>
       <Box
         position="absolute"
         minH={{ base: '70vh', md: '50vh' }}
@@ -29,7 +29,19 @@ function BoxBackground(props: BoxBackgroundProps) {
         bgSize="cover"
         mt={{ base: '130px', md: '100px' }}
         marginInlineStart={'25px'}
-        marginInlineEnd={'25px'}></Box>
+        marginInlineEnd={'25px'}
+        _before={{
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          background: 'linear-gradient(180deg, rgba(0,128,0,0.85) 0%, rgba(0,128,0,0.6) 100%)',
+          borderRadius: '15px',
+          zIndex: 0
+        }}
+      ></Box>
       <Flex
         direction="column"
         textAlign="center"

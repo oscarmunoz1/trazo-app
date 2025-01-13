@@ -71,7 +71,7 @@ export default function HeaderLinks(props: HeaderLinksProps) {
   const dispatch = useDispatch();
 
   // Chakra Color Mode
-  let mainTeal = useColorModeValue('green.400', 'green.400');
+  let mainTeal = useColorModeValue('green.500', 'green.400');
   let inputBg = useColorModeValue('white', 'gray.800');
   let mainText = useColorModeValue('gray.700', 'gray.200');
   let navbarIcon = useColorModeValue('gray.500', 'gray.200');

@@ -55,7 +55,7 @@ function SignIn() {
   const dispatch = useDispatch();
 
   // Chakra color mode
-  const titleColor = useColorModeValue('green.300', 'green.200');
+  const titleColor = useColorModeValue('green.500', 'green.400');
   const textColor = useColorModeValue('gray.400', 'white');
 
   const methods = useForm({
@@ -137,14 +137,14 @@ function SignIn() {
                   <Button
                     fontSize="10px"
                     type="submit"
-                    bg="green.300"
+                    bg="green.500"
                     w="100%"
                     h="45"
                     mb="20px"
                     color="white"
                     mt="20px"
                     _hover={{
-                      bg: 'green.200'
+                      bg: 'green.400'
                     }}
                     _active={{
                       bg: 'green.400'

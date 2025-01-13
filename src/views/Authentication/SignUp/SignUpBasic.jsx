@@ -19,7 +19,7 @@ import React, { useEffect } from 'react';
 import { object, string } from 'zod';
 
 // Assets
-import BgSignUp from 'assets/img/basic-auth.png';
+import BgSignUp from 'assets/img/backgroundImage.png';
 import FormInput from 'components/Forms/FormInput';
 import { useNavigate } from 'react-router-dom';
 import { useSignUpMutation } from 'store/api/authApi';
@@ -40,7 +40,7 @@ const registerSchema = object({
 });
 
 function SignUp() {
-  const titleColor = useColorModeValue('green.300', 'green.200');
+  const titleColor = useColorModeValue('green.500', 'green.400');
   const textColor = useColorModeValue('gray.700', 'white');
   const bgColor = useColorModeValue('white', 'gray.700');
   const bgIcons = useColorModeValue('green.200', 'rgba(255, 255, 255, 0.5)');
@@ -82,6 +82,18 @@ function SignUp() {
         zIndex="-1"
         top="0"
         bgImage={BgSignUp}
+        marginInlineEnd={'25px'}
+        _before={{
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          background: 'linear-gradient(180deg, rgba(0,128,0,0.85) 0%, rgba(0,128,0,0.6) 100%)',
+          borderRadius: '15px',
+          zIndex: 0
+        }}
         bgSize="cover"
         mx={{ md: 'auto' }}
         mt={{ md: '14px' }}></Box>
@@ -215,10 +227,10 @@ function SignUp() {
                       h="45"
                       mb="24px"
                       _hover={{
-                        bg: 'green.200'
+                        bg: 'green.400'
                       }}
                       _active={{
-                        bg: 'green.400'
+                        bg: 'green.500'
                       }}>
                       {isLoading ? (
                         <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />

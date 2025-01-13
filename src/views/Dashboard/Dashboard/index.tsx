@@ -38,7 +38,8 @@ import { FaPlus } from 'react-icons/fa';
 import LineChart from 'components/Charts/LineChart';
 import MiniStatistics from './components/MiniStatistics';
 import SalesOverview from './components/SalesOverview';
-import bgImage from 'assets/img/basic-auth.png';
+import bgImage from 'assets/img/backgroundImage.png';
+import defaultEstablishmentImage from 'assets/img/basic-auth.png';
 // assets
 import imageFarm from 'assets/img/imageFarm.png';
 import { useSelector } from 'react-redux';
@@ -143,7 +144,7 @@ export default function DashboardView() {
             readMoreLink={`/admin/dashboard/establishment/${establishment?.id}/profile`}
             image={
               <Image
-                src={establishment?.image || bgImage}
+                src={establishment?.image || defaultEstablishmentImage}
                 alt="establishment image"
                 width="100%"
                 height="100%"

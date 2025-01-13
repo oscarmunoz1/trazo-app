@@ -57,7 +57,7 @@ import { Route } from 'types/common';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { SidebarContext } from 'contexts/SidebarContext';
 import SidebarHelp from './SidebarHelp';
-import logo from 'assets/img/traceit.png';
+import logo from 'assets/img/trazo2.png';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
@@ -179,17 +179,17 @@ function Sidebar(props: SidebarProps) {
   const createLinks = (routes: any) => {
     const { sidebarVariant } = props;
     // Chakra Color Mode
-    let activeBg = useColorModeValue('green.400', 'green.400');
+    let activeBg = useColorModeValue('green.500', 'green.400');
     let activeAccordionBg = useColorModeValue('white', 'gray.700');
     let inactiveBg = useColorModeValue('white', 'gray.700');
-    let inactiveColorIcon = useColorModeValue('green.400', 'green.400');
+    let inactiveColorIcon = useColorModeValue('green.500', 'green.400');
     let activeColorIcon = useColorModeValue('white', 'white');
     let activeColor = useColorModeValue('gray.700', 'white');
     let inactiveColor = useColorModeValue('gray.400', 'gray.400');
     let sidebarActiveShadow = '0px 7px 11px rgba(0, 0, 0, 0.04)';
     // Here are all the props that may change depending on sidebar's state.(Opaque or transparent)
     if (sidebarVariant === 'opaque') {
-      activeBg = useColorModeValue('green.400', 'green.400');
+      activeBg = useColorModeValue('green.500', 'green.400');
       inactiveBg = useColorModeValue('gray.100', 'gray.600');
       activeColor = useColorModeValue('gray.700', 'white');
       inactiveColor = useColorModeValue('gray.400', 'gray.400');
@@ -524,12 +524,12 @@ function Sidebar(props: SidebarProps) {
         target="_blank"
         display="flex"
         lineHeight="100%"
-        mb="30px"
+        mb="10px"
         fontWeight="bold"
         justifyContent="center"
         alignItems="center"
         fontSize="11px">
-        <Image src={logo} alt="traceit logo" height="30px" paddingRight="10px" href="" />
+        <Image src={logo} alt="trazo logo" height="40px" paddingRight="10px" href="" />
       </Link>
       <HSeparator />
     </Box>

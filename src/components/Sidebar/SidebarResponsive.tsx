@@ -37,7 +37,7 @@ import Overview from 'views/Pages/Profile/Overview/index';
 import { RootState } from 'store/index';
 import { SidebarContext } from 'contexts/SidebarContext';
 import SidebarHelp from './SidebarHelp';
-import logo from 'assets/img/traceit.png';
+import logo from 'assets/img/trazo.png';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
@@ -174,10 +174,10 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
   const createLinks = (routes) => {
     const { sidebarVariant } = props;
     // Chakra Color Mode
-    let activeBg = useColorModeValue('green.400', 'green.400');
+    let activeBg = useColorModeValue('green.500', 'green.400');
     let activeAccordionBg = useColorModeValue('white', 'gray.700');
     let inactiveBg = useColorModeValue('white', 'gray.700');
-    let inactiveColorIcon = useColorModeValue('green.400', 'green.400');
+    let inactiveColorIcon = useColorModeValue('green.500', 'green.400');
     let activeColorIcon = useColorModeValue('white', 'white');
     let activeColor = useColorModeValue('gray.700', 'white');
     let inactiveColor = useColorModeValue('gray.400', 'gray.400');
@@ -668,7 +668,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
         justifyContent="center"
         alignItems="center"
         fontSize="11px">
-        <Image src={logo} alt="trood image" height="30px" paddingRight="10px" href="" />
+        <Image src={logo} alt="trazo logo" height="30px" paddingRight="10px" href="" />
       </Link>
       <HSeparator />
     </Box>

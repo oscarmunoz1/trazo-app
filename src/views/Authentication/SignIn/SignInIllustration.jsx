@@ -37,7 +37,7 @@ const loginSchema = object({
 
 function SignIn() {
   // Chakra color mode
-  const titleColor = useColorModeValue('green.400', 'teal.200');
+  const titleColor = useColorModeValue('green.500', 'teal.200');
   const textColor = useColorModeValue('gray.400', 'white');
   const illustrationBackground = useColorModeValue('gray.50', 'gray.700');
 

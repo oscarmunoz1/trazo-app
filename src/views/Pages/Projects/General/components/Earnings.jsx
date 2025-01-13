@@ -17,7 +17,7 @@
 
 // Chakra imports
 import { Badge, Button, Flex, Text, useColorModeValue } from "@chakra-ui/react";
-import basic from "assets/img/basic-auth.png";
+import basic from "assets/img/backgroundImage.png";
 // Custom components
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";

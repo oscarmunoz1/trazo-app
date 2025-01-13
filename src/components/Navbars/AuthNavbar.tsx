@@ -45,7 +45,7 @@ import { RootState } from 'store';
 import SidebarResponsive from 'components/Sidebar/SidebarResponsive';
 import { clearCurrentCompany } from 'store/features/companySlice';
 import { clearUser } from 'store/features/userSlice';
-import logoTraceit from 'assets/img/traceit.png';
+import logoTrazo from 'assets/img/trazo.png';
 import { logout as logoutAction } from 'store/features/authSlice';
 import routes from 'routes.tsx';
 import { useIntl } from 'react-intl';
@@ -355,7 +355,7 @@ export default function AuthNavbar(props: AuthNavbarProps) {
       justifyContent="center"
       alignItems="center"
       color={mainText}>
-      <Image src={logoTraceit} alt="traceit logo" height="30px" paddingRight="10px" href="" />
+      <Image src={logoTrazo} alt="trazo logo" height="45px" paddingRight="10px" href="" />
     </Link>
   );
 

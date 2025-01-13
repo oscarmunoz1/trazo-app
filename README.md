@@ -1,6 +1,6 @@
-# traceit
+# trazo
 
-Traceit is a COT (Customer-Oriented Traceability) system focused on the fruit and vegetable trade. Through a friendly interface, the producer declares and certifies the relevant events of his harvest, so that the final consumer can then read and evaluate them in the market.
+Trazo is a COT (Customer-Oriented Traceability) system focused on the fruit and vegetable trade. Through a friendly interface, the producer declares and certifies the relevant events of his harvest, so that the final consumer can then read and evaluate them in the market.
 
 This system aims to contribute to responsible eating, the diversification of activities of small producers, the consumer-producer approach and the creation of added value.
 
@@ -8,7 +8,7 @@ The main premise of COT systems is that for traceability systems to have a socia
 
 ## Demo link:
 
-Access to the app at [traceit.io](https://app.traceit.io)
+Access to the app at [trazo.io](https://app.trazo.io)
 
 ## Table of Content:
 
@@ -57,7 +57,7 @@ In this page the user can see all the scans that have been done to the QR code o
 
 ## Technologies
 
-I React, Chakra UI for the UI, react-google-maps, React Router DOM, react-hook-form, Redux Toolkit, React JWT. For the components like Cards, Texts, Inputs, I used a template developed by [Creative-Tim](https://www.creative-tim.com). The app is deployed in Netlify. The backend is deployed in AWS. You can find the backend repository [here](https://github.com/oscarmunoz1/traceit-back).
+I React, Chakra UI for the UI, react-google-maps, React Router DOM, react-hook-form, Redux Toolkit, React JWT. For the components like Cards, Texts, Inputs, I used a template developed by [Creative-Tim](https://www.creative-tim.com). The app is deployed in Netlify. The backend is deployed in AWS. You can find the backend repository [here](https://github.com/oscarmunoz1/trazo-back).
 
 <!-- ## Setup
 
@@ -67,7 +67,7 @@ I React, Chakra UI for the UI, react-google-maps, React Router DOM, react-hook-f
 
 ## Status
 
-Traceit is still in progress. The next steps are:
+Trazo is still in progress. The next steps are:
 
 ## Credits
 

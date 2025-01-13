@@ -18,7 +18,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import React, { useEffect } from "react";
 import { object, string } from "zod";
 
-import BgSignUp from "assets/img/basic-auth.png";
+import BgSignUp from "assets/img/backgroundImage.png";
 import CameraCard from "./components/CameraCard";
 import FormInput from "components/Forms/FormInput";
 import { useNavigate } from "react-router-dom";
@@ -99,6 +99,18 @@ function Capture() {
         overflow="hidden"
         zIndex="-1"
         top="0"
+        marginInlineEnd={'25px'}
+        _before={{
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          background: 'linear-gradient(180deg, rgba(0,128,0,0.85) 0%, rgba(0,128,0,0.6) 100%)',
+          borderRadius: '15px',
+          zIndex: 0
+        }}
         bgImage={BgSignUp}
         bgSize="cover"
         mx={{ md: "auto" }}

@@ -74,6 +74,7 @@ import { useDropzone } from 'react-dropzone';
 import { useGetEstablishmentProductsQuery } from 'store/api/productApi';
 import { useGoogleMap } from '@react-google-maps/api';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useIntl } from 'react-intl';
 
 // Custom components
 const styles = {
@@ -102,6 +103,7 @@ const formSchemaBasic = object({
 });
 
 function NewProduction() {
+  const intl = useIntl();
   // Chakra color mode
   const textColor = useColorModeValue('gray.700', 'white');
   const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
@@ -152,7 +154,7 @@ function NewProduction() {
       return;
     }
     setProductValueError(null);
-    if (event.nativeEvent.submitter.innerText === 'SAVE') {
+    if (event.nativeEvent.submitter.innerText === intl.formatMessage({ id: 'app.save' })) {
       setNavigateTo(`/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/`);
     } else {
       setNavigateTo(
@@ -222,7 +224,7 @@ function NewProduction() {
             <Card>
               <CardHeader mb="32px">
                 <Text fontSize="lg" color={textColor} fontWeight="bold">
-                  Main Info
+                  {intl.formatMessage({ id: 'app.mainInfo' })}
                 </Text>
               </CardHeader>
 
@@ -232,7 +234,7 @@ function NewProduction() {
                     <Stack direction="column" spacing="20px" w="100%">
                       <Flex direction="column" w="80%" mt="10px">
                         <FormLabel ms="4px" fontSize="xs" fontWeight="bold" mb="4px" pl="12px">
-                          What kind of production do you want to create?
+                          {intl.formatMessage({ id: 'app.whatKindOfProduction' })}
                         </FormLabel>
                       </Flex>
                       <Flex w={'100%'} justifyContent={'center'}>
@@ -247,7 +249,7 @@ function NewProduction() {
                             }
                             bg={activeButton === 0 ? bgActiveButton : 'transparent'}
                             onClick={() => setActiveButton(0)}>
-                            ORCHARD
+                            {intl.formatMessage({ id: 'app.orchard' })}
                           </Button>
                           <Button
                             variant="no-hover"
@@ -259,12 +261,12 @@ function NewProduction() {
                             }
                             bg={activeButton === 1 ? bgActiveButton : 'transparent'}
                             onClick={() => setActiveButton(1)}>
-                            GARDEN
+                            {intl.formatMessage({ id: 'app.garden' })}
                           </Button>
                         </Flex>
                       </Flex>
                       <FormLabel fontSize="xs" fontWeight="bold" pl="12px">
-                        Product
+                        {intl.formatMessage({ id: 'app.product' })}
                       </FormLabel>
                       <CreatableSelect
                         isClearable
@@ -281,10 +283,10 @@ function NewProduction() {
                       <Flex pt={'12px'} mt={'0px !important'}>
                         <FormInput
                           fontSize="xs"
-                          label="Date"
+                          label={intl.formatMessage({ id: 'app.date' })}
                           type="datetime-local"
                           name="date"
-                          placeholder="Select date and time"
+                          placeholder={intl.formatMessage({ id: 'app.selectDateAndTime' })}
                         />
                       </Flex>
                       {activeButton === 0 ? (
@@ -294,27 +296,27 @@ function NewProduction() {
                             ms="4px"
                             borderRadius="15px"
                             type="text"
-                            placeholder="Age of plants"
+                            placeholder={intl.formatMessage({ id: 'app.ageOfPlants' })}
                             name="age_of_plants"
-                            label="Age of plants (average)"
+                            label={intl.formatMessage({ id: 'app.ageOfPlants' })}
                           />
                           <FormInput
                             fontSize="xs"
                             ms="4px"
                             borderRadius="15px"
                             type="text"
-                            placeholder="Number of plants"
+                            placeholder={intl.formatMessage({ id: 'app.numberOfPlants' })}
                             name="number_of_plants"
-                            label="Number of plants (average)"
+                            label={intl.formatMessage({ id: 'app.numberOfPlants' })}
                           />
                           <FormInput
                             fontSize="xs"
                             ms="4px"
                             borderRadius="15px"
                             type="text"
-                            placeholder="Average Soil PH"
+                            placeholder={intl.formatMessage({ id: 'app.averageSoilPH' })}
                             name="soil_ph"
-                            label="Average Soil PH"
+                            label={intl.formatMessage({ id: 'app.averageSoilPH' })}
                           />
                         </>
                       ) : activeButton === 1 ? (
@@ -324,15 +326,15 @@ function NewProduction() {
                             ms="4px"
                             borderRadius="15px"
                             type="text"
-                            placeholder="Average Soil PH"
+                            placeholder={intl.formatMessage({ id: 'app.averageSoilPH' })}
                             name="soil_ph"
-                            label="Average Soil PH"
+                            label={intl.formatMessage({ id: 'app.averageSoilPH' })}
                           />
                         </>
                       ) : null}
                       <Flex direction="column" w="80%" pt="10px">
                         <FormLabel ms="4px" fontSize="xs" fontWeight="bold" mb="4px" pl="12px">
-                          Where the production will be?
+                          {intl.formatMessage({ id: 'app.whereTheProductionWillBe' })}
                         </FormLabel>
                       </Flex>
                       <Flex w={'100%'} justifyContent={'center'}>
@@ -345,7 +347,7 @@ function NewProduction() {
                             boxShadow={isOutdoor ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'}
                             bg={isOutdoor ? bgActiveButton : 'transparent'}
                             onClick={() => setIsOutdoor(true)}>
-                            OUTDOOR
+                            {intl.formatMessage({ id: 'app.outdoor' })}
                           </Button>
                           <Button
                             variant="no-hover"
@@ -355,7 +357,7 @@ function NewProduction() {
                             boxShadow={!isOutdoor ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'}
                             bg={!isOutdoor ? bgActiveButton : 'transparent'}
                             onClick={() => setIsOutdoor(false)}>
-                            INDOOR
+                            {intl.formatMessage({ id: 'app.indoor' })}
                           </Button>
                         </Flex>
                       </Flex>
@@ -365,11 +367,11 @@ function NewProduction() {
                           bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
                           alignSelf="flex-end"
                           mt="24px"
-                          w="200px"
+                          w="fit-content"
                           h="35px"
                           type="submit">
                           <Text fontSize="xs" color="#fff" fontWeight="bold">
-                            SAVE AND ADD A NEW EVENT
+                            {intl.formatMessage({ id: 'app.saveAndAddANewEvent' })}
                           </Text>
                         </Button>
                         <Button
@@ -381,7 +383,7 @@ function NewProduction() {
                           h="35px"
                           type="submit">
                           <Text fontSize="xs" color="#fff" fontWeight="bold">
-                            SAVE
+                            {intl.formatMessage({ id: 'app.save' })}
                           </Text>
                         </Button>
                       </Flex>

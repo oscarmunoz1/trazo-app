@@ -11,11 +11,13 @@ import {
 } from "@chakra-ui/react";
 // Custom components
 import React, { useState } from "react";
+import { useIntl } from "react-intl";
 
 import { FaPlus } from "react-icons/fa";
 import Select from "react-select";
 
 const AddRecordStep1 = (props) => {
+  const intl = useIntl();
   return (
     <FormControl>
       <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
@@ -26,7 +28,7 @@ const AddRecordStep1 = (props) => {
         ms="4px"
         borderRadius="15px"
         type="text"
-        placeholder="Name of the product"
+        placeholder={intl.formatMessage({ id: 'app.nameOfTheProduct' })}
         mb="24px"
         size="lg"
       />
@@ -38,7 +40,7 @@ const AddRecordStep1 = (props) => {
         ms="4px"
         borderRadius="15px"
         type="text"
-        placeholder="Volume of the product"
+        placeholder={intl.formatMessage({ id: 'app.volumeOfTheProduct' })}
         mb="24px"
         size="lg"
       />
@@ -50,7 +52,7 @@ const AddRecordStep1 = (props) => {
         ms="4px"
         borderRadius="15px"
         type="text"
-        placeholder="Area"
+        placeholder={intl.formatMessage({ id: 'app.area' })}
         mb="24px"
         size="lg"
       />
@@ -62,7 +64,7 @@ const AddRecordStep1 = (props) => {
         ms="4px"
         borderRadius="15px"
         type="text"
-        placeholder="Name of the event"
+        placeholder={intl.formatMessage({ id: 'app.nameOfTheEvent' })}
         mb="24px"
         size="lg"
       />

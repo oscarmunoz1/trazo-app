@@ -69,7 +69,7 @@ const CarouselCard = ({ id, image, name, category, buttonText, avatars }: Carous
             {buttonText}
           </Button>
           <AvatarGroup size="xs">
-            {avatars.map((el, idx) => {
+            {avatars?.map((el, idx) => {
               return <Avatar src={el} key={idx} />;
             })}
           </AvatarGroup>
