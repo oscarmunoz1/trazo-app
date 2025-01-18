@@ -153,5 +153,6 @@
     "app.pruning": "Podado",
     "app.nameOfTheEvent": "Nombre del evento",
     "app.nameOfTheProduct": "Nombre del producto",
-    "app.name": "Nombre"
+    "app.name": "Nombre",
+    "app.buyNow": "Comprar ahora"
 }

@@ -58,6 +58,7 @@ function ProfileEstablishment() {
     }
   }, [establishmentId, establishments]);
 
+
   return (
     <BoxBackground
       title="Parcel Profile"

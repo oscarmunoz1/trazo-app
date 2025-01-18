@@ -41,7 +41,7 @@ export default function Footer() {
           xl: 'start'
         }}
         mb={{ base: '20px', xl: '0px' }}>
-        &copy; {1900 + new Date().getFullYear()}
+        &copy; {new Date().getFullYear()} Trazo.
       </Text>
       <List display="flex">
         <ListItem

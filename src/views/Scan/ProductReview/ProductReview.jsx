@@ -123,7 +123,7 @@ function ProductReview() {
   };
 
   return (
-    <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden">
+    <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden" w="100%">
       <Box
         position="absolute"
         minH={{ base: '70vh', md: '50vh' }}

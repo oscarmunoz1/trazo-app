@@ -45,7 +45,7 @@ import { RootState } from 'store';
 import SidebarResponsive from 'components/Sidebar/SidebarResponsive';
 import { clearCurrentCompany } from 'store/features/companySlice';
 import { clearUser } from 'store/features/userSlice';
-import logoTrazo from 'assets/img/trazo.png';
+import logoTrazo from 'assets/img/trazo2.png';
 import { logout as logoutAction } from 'store/features/authSlice';
 import routes from 'routes.tsx';
 import { useIntl } from 'react-intl';
@@ -419,21 +419,22 @@ export default function AuthNavbar(props: AuthNavbarProps) {
             />
           </>
         ) : (
-          <Link href={`${import.meta.env.VITE_APP_BASE_URL}pricing`}>
-            <Button
-              bg={bgButton}
-              color={colorButton}
-              fontSize="xs"
-              variant="no-hover"
-              borderRadius="35px"
-              px="30px"
-              display={{
-                sm: 'none',
-                lg: 'flex'
-              }}>
-              Buy Now
-            </Button>
-          </Link>
+          null
+          // <Link to="pricing">
+          //   <Button
+          //     bg={bgButton}
+          //     color={colorButton}
+          //     fontSize="xs"
+          //     variant="no-hover"
+          //     borderRadius="35px"
+          //     px="30px"
+          //     display={{
+          //       sm: 'none',
+          //       lg: 'flex'
+          //     }}>
+          //     {intl.formatMessage({ id: 'app.buyNow' })}
+          //   </Button>
+          // </Link>
         )}
       </Flex>
     </Flex>

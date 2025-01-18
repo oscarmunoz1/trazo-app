@@ -153,5 +153,6 @@
     "app.irrigation": "Irrigation",
     "app.pruning": "Pruning",
     "app.nameOfTheEvent": "Name of the event",
-    "app.name": "Name"
+    "app.name": "Name",
+    "app.buyNow": "Buy Now"
 }

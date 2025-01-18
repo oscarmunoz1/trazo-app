@@ -279,7 +279,7 @@ function Capture() {
   }, [isSuccessComment]);
 
   return (
-    <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden">
+    <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden" w="100%">
       <Box
         position="absolute"
         minH={{ base: '70vh', md: '50vh' }}
@@ -554,7 +554,7 @@ function Capture() {
                   )}
                 </Flex>
               </Flex>
-              <Flex justifyContent={'center'} py="44px">
+              <Flex justifyContent={'center'} py="85px">
                 <Button
                   variant="no-hover"
                   bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"

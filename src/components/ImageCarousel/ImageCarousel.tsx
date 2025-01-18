@@ -25,7 +25,14 @@ const ImageCarousel = (props: ImageCarouselProps) => {
         h={{ sm: '80%', md: '60%', lg: '230px', xl: '300px' }}
         mb="26px"
         mx={{ sm: 'auto', lg: '0px' }}>
-        <Image src={currentImage} w="100%" h="100%" borderRadius="15px" />
+        <Image 
+          src={currentImage} 
+          w="100%" 
+          h="100%" 
+          borderRadius="15px"
+          objectFit="cover"
+          bg="transparent"
+        />
       </Box>
       <Stack
         direction="row"
