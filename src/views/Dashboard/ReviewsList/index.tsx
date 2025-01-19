@@ -55,9 +55,6 @@ export default function ReviewsListView() {
         p={{ sm: '16px', md: '32px', lg: '48px' }}
         boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px">
         <CardHeader p="12px 5px" mb="12px">
-          <Text fontSize="xl" color={textColor} fontWeight="bold">
-            Product Reviews
-          </Text>
           <HSeparator my="16px" />
         </CardHeader>
         <CardBody px="5px">

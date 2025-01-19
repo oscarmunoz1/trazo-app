@@ -39,8 +39,6 @@ export default function AdminConsumerLayout(props: any) {
   const [sidebarWidth, setSidebarWidth] = useState(275);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { ...rest } = props;
-  console.log('consumerRoutessss si si si', consumerRoutes);
-  console.log(window.location.href);
 
   const getActiveRoute = (routes) => {
     const currentPath = window.location.pathname;
@@ -51,9 +49,6 @@ export default function AdminConsumerLayout(props: any) {
     }
     return 'Consumer Dashboard';
   };
-
-  console.log('consumerRoutessss no si no', consumerRoutes);
-  console.log(window.location.href);
 
   return (
     <ChakraProvider theme={theme} resetCss={false}>

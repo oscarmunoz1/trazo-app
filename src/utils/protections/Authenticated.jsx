@@ -16,8 +16,6 @@ const Authenticated = ({ allowedRoles, mustBeCompanyAdmin = false }) => {
 
   const { establishmentId } = useParams();
 
-  console.log('currentUser', currentUser);
-
   useEffect(() => {
     if (currentUser?.user_type === PRODUCER || currentUser?.user_type === SUPERUSER) {
       const id = Number(establishmentId);
@@ -58,17 +56,6 @@ const Authenticated = ({ allowedRoles, mustBeCompanyAdmin = false }) => {
 
   const nextUrl = LOGIN_PAGE_URL + (pathname !== '/' ? '?next=' + pathname : '');
 
-  console.log('a ver aca\n\n\n\n\n\n');
-  console.log('pathname', pathname);
-  console.log(
-    isLoading === false &&
-      isAuthenticated &&
-      allowedRoles.includes(currentUser?.user_type) &&
-      (mustBeCompanyAdmin
-        ? currentUser?.companies[0].role === 'Company Admin' || currentUser?.user_type === SUPERUSER
-        : true)
-  );
-
   return isLoading === false &&
     isAuthenticated &&
     allowedRoles.includes(currentUser?.user_type) &&
@@ -80,12 +67,7 @@ const Authenticated = ({ allowedRoles, mustBeCompanyAdmin = false }) => {
     <Navigate to={nextUrl} state={{ next: pathname }} />
   ) : mustBeCompanyAdmin && currentUser?.companies[0].role !== 'Company Admin' ? (
     <Navigate to="/admin/dashboard" />
-  ) : // ) : isLoading === false &&
-  //   isAuthenticated &&
-  //   currentUser &&
-  //   !allowedRoles.includes(currentUser.user_type) ? (
-  //   <Navigate to="/pricing" />
-  null;
+  ) : null;
 };
 
 export default Authenticated;

@@ -25,8 +25,6 @@ export default function ScannedProductsView() {
   const cardColor = useColorModeValue('white', 'gray.700');
   const { data: productions, isLoading } = useGetUserProductionScansQuery();
 
-  console.log('productions', productions);
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

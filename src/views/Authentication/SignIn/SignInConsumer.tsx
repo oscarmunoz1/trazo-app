@@ -16,7 +16,7 @@ import React, { useEffect } from 'react';
 import { object, string } from 'zod';
 import { useLocation, useNavigate } from 'react-router-dom';
 import FormInput from 'components/Forms/FormInput';
-import { login } from 'store/features/authSlice';
+import { login as loginAction } from 'store/features/authSlice';
 import consumerSignInImage from 'assets/img/consumer-signin.png';
 import { useDispatch } from 'react-redux';
 import { useLoginMutation } from 'store/api/authApi';
@@ -39,7 +39,7 @@ export default function SignInConsumer() {
     resolver: zodResolver(loginSchema)
   });
 
-  const [login, { data, isError, error, isLoading, isSuccess }] = useLoginMutation();
+  const [loginMutation, { data, isError, error, isLoading, isSuccess }] = useLoginMutation();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -51,10 +51,11 @@ export default function SignInConsumer() {
 
   useEffect(() => {
     if (data && isSuccess) {
-      dispatch(login(data));
-      navigate('/dashboard/scanned');
+      dispatch(loginAction(data));
+      const nextPath = location.state?.next || '/admin/dashboard/scans';
+      navigate(nextPath);
     }
-  }, [data, isSuccess]);
+  }, [data, isSuccess, location.state, navigate]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -64,7 +65,7 @@ export default function SignInConsumer() {
 
   const onSubmitHandler = async (values) => {
     try {
-      await login({ 
+      await loginMutation({
         ...values,
         user_type: 'CONSUMER'
       }).unwrap();
@@ -176,8 +177,7 @@ export default function SignInConsumer() {
             bgSize="cover"
             bgPosition="center"
             position="absolute"
-            borderBottomLeftRadius="20px">
-          </Box>
+            borderBottomLeftRadius="20px"></Box>
         </Box>
       </Flex>
     </Flex>

@@ -1,9 +1,4 @@
-import {
-  Flex,
-  Grid,
-  Text,
-  useColorModeValue
-} from '@chakra-ui/react';
+import { Flex, Grid, Text, useColorModeValue } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Card from 'components/Card/Card';
@@ -15,12 +10,6 @@ export default function ConsumerDashboardView() {
   const iconBoxInside = useColorModeValue('white', 'white');
   const cardColor = useColorModeValue('white', 'gray.700');
 
-//   const scans = useSelector((state) => state.scans.totalScans);
-//   const reviews = useSelector((state) => state.reviews.totalReviews);
-
-  console.log('scans');
-  console.log('reviews');
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -30,9 +19,7 @@ export default function ConsumerDashboardView() {
       <Text color={mainText} bg="inherit" borderRadius="inherit" fontWeight="bold" padding="10px">
         Dashboard Overview
       </Text>
-      <Grid
-        templateColumns={{ sm: '1fr', md: '1fr 1fr', xl: 'repeat(2, 1fr)' }}
-        gap="24px">
+      <Grid templateColumns={{ sm: '1fr', md: '1fr 1fr', xl: 'repeat(2, 1fr)' }} gap="24px">
         {/* <MiniStatistics
           title="Total Scans"
           amount={scans || 0}
@@ -48,4 +35,4 @@ export default function ConsumerDashboardView() {
       {/* Add more consumer-specific content here */}
     </Flex>
   );
-} 
+}
