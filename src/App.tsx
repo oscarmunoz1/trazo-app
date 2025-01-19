@@ -34,28 +34,43 @@ import UpdateEvent from 'views/Dashboard/Dashboard/Event/UpdateEvent';
 import UpdateProduction from 'views/Dashboard/Dashboard/Production/UpdateProduction';
 import VerifyEmail from './views/Authentication/SignUp/VerifyEmail';
 import { useSelector } from 'react-redux';
+import VerifyEmailConsumer from 'views/Authentication/SignUp/VerifyEmailConsumer';
+import SignInConsumer from 'views/Authentication/SignIn/SignInConsumer';
+import SignUpConsumer from 'views/Authentication/SignUp/SignUpConsumer';
+import AdminConsumerLayout from 'layouts/AdminConsumer';
+import ConsumerDashboardView from 'views/Dashboard/ConsumerDashboard';
+import ScannedProductsView from 'views/Dashboard/ScannedProducts';
+import ReviewsListView from 'views/Dashboard/ReviewsList';
 
 const App = () => {
   const location = useLocation();
-  const [subdomain, setSubDomain] = useState(null);
+  const [subdomain, setSubDomain] = useState<string>('');
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const isLoadingAuth = useSelector((state) => state.auth.isLoading);
   const currentUser = useSelector((state) => state.userState.user);
 
   useEffect(() => {
-    const host = window.location.host; // gets the full domain of the app
-
+    const host = window.location.host;
     const arr = host
       .split('.')
       .slice(0, host.includes(import.meta.env.VITE_APP_BASE_DOMAIN) ? -1 : -2);
-    if (arr.length > 0) setSubDomain(arr[0] === 'app');
+
+    if (arr.length > 0) {
+      if (arr[0] === 'app') {
+        setSubDomain('producer');
+      } else if (arr[0] === 'consumer') {
+        setSubDomain('consumer');
+      } else {
+        setSubDomain('');
+      }
+    }
   }, []);
 
   return (
     <Routes>
       <Route element={<CheckAuth />}>
         <Route element={<AuthLayout />}>
-          {subdomain ? (
+          {subdomain === 'producer' ? (
             <>
               <Route path="/auth">
                 <Route path="signin" exact element={<SignInApp />} key={1} />
@@ -63,6 +78,15 @@ const App = () => {
                 <Route path="verifyemail" exact key={2} element={<VerifyEmail />} />
               </Route>
               <Route path="*" exact element={<Navigate to="/admin/dashboard" replace />} />
+            </>
+          ) : subdomain === 'consumer' ? (
+            <>
+              <Route path="/auth">
+                <Route path="signin" exact element={<SignInConsumer />} key={1} />
+                <Route path="signup" exact key={2} element={<SignUpConsumer />} />
+                <Route path="verifyemail" exact key={2} element={<VerifyEmail />} />
+              </Route>
+              <Route path="*" exact element={<Navigate to="/admin/dashboard/scans" replace />} />
             </>
           ) : (
             <>
@@ -77,13 +101,9 @@ const App = () => {
           <Route path="/capture" element={<Capture />} />
           <Route path="/production/:productionId" exact element={<ProductDetail />} />
         </Route>
-        <Route element={<Authenticated allowedRoles={[PRODUCER, SUPERUSER]} />}>
-          {subdomain && (
+        {subdomain === 'producer' && (
+          <Route element={<Authenticated allowedRoles={[PRODUCER, SUPERUSER]} />}>
             <>
-              {/* <Route
-                path="/"
-                element={<Navigate to="/admin/dashboard" replace />}
-              /> */}
               <Route path="/admin/dashboard" element={<AdminLayout />}>
                 <Route path="select-company" exact element={<SelectCompanyView />} />
 
@@ -189,51 +209,45 @@ const App = () => {
                 />
               </Route>
             </>
-            // ) : (
-            //   <Route path="*" element={() => <Navigate to="/" replace />} />
-            // )}
-          )}
-        </Route>
-        <Route
-          element={
-            <Authenticated allowedRoles={[PRODUCER, SUPERUSER]} mustBeCompanyAdmin={true} />
-          }>
-          {subdomain && (
-            <>
-              {/* Company Routes */}
-              <Route path="/admin/dashboard" element={<AdminLayout />}>
-                <Route path="settings" exact element={<SettingsView />} />
-              </Route>
-            </>
-          )}
-        </Route>
-        <Route element={<Authenticated allowedRoles={[CONSUMER, PRODUCER, SUPERUSER]} />}>
-          <Route element={<AuthLayout />}>
-            <Route path="/home" exact element={<Capture />} />
-            <Route path="/capture" element={<Capture />} />
-            <Route path="/production/:productionId" exact element={<ProductDetail />} />
-            <Route
-              path="/production/:productionId/review/:scanId"
-              exact
-              element={<ProductReview />}
-            />
-            {/* <Route path="*" element={() => <Navigate to="/home" replace />} /> */}
           </Route>
-        </Route>
+        )}
+        {subdomain === 'producer' && (
+          <Route
+            element={
+              <Authenticated allowedRoles={[PRODUCER, SUPERUSER]} mustBeCompanyAdmin={true} />
+            }>
+            {subdomain && (
+              <>
+                {/* Company Routes */}
+                <Route path="/admin/dashboard" element={<AdminLayout />}>
+                  <Route path="settings" exact element={<SettingsView />} />
+                </Route>
+              </>
+            )}
+          </Route>
+        )}
+        {subdomain === 'consumer' && (
+          <Route element={<Authenticated allowedRoles={[CONSUMER]} />}>
+            <Route path="/admin/dashboard/*" element={<AdminConsumerLayout />}>
+              <Route index element={<Navigate to="scans" replace />} />
+              <Route path="scans" element={<ScannedProductsView />} />
+              <Route path="reviews" element={<ReviewsListView />} />
+            </Route>
+            <Route path="capture" element={<Capture />} />
+            <Route path="production/:productionId" element={<ProductDetail />} />
+            <Route path="production/:productionId/review/:scanId" element={<ProductReview />} />
+          </Route>
+        )}
         <Route element={<NotAuthenticated />}>
-          {subdomain ? (
+          {subdomain === 'producer' ? (
             <>
-              {/* <Route
-                path="/"
-                element={<Navigate to="/auth/signin" replace />}
-              /> */}
               <Route path="/auth" element={<AuthLayout />}>
                 <Route path="signin" exact element={<SignInApp />} key={1} />
                 <Route path="signup" exact key={2} element={<SignUp />} />
                 <Route path="verifyemail" exact key={2} element={<VerifyEmail />} />
               </Route>
             </>
-          ) : (
+          ) : subdomain === 'consumer' ? (
             <>
               <Route path="/capture" element={<Capture />} />
               <Route path="/production/:productionId" exact element={<ProductDetail />} />
@@ -242,47 +256,15 @@ const App = () => {
                 <Route path="signup" exact key={2} element={<SignUp />} />
                 <Route path="verifyemail" exact key={2} element={<VerifyEmail />} />
               </Route>
-
-              {/* <Route
-                path="*"
-                element={() => <Navigate to="/auth/signin" replace />}
-              /> */}
             </>
+          ) : (
+            <Route path="*" element={() => <Navigate to="/" replace />} />
           )}
         </Route>
 
         <Route element={<AuthLayout />}>
           <Route path="/pricing" exact element={<Pricing />} />
         </Route>
-        {/* <Route
-          path="*"
-          element={() => {
-            debugger;
-            return <Navigate to="/admin/dashboard" replace />;
-          }}
-        /> */}
-        {/* {subdomain &&
-        isLoadingAuth === false &&
-        isAuthenticated &&
-        (currentUser?.user_type === PRODUCER ||
-          currentUser?.user_type === SUPERUSER) ? (
-          <Route
-            path="*"
-            exact
-            element={<Navigate to="/admin/dashboard" replace />}
-          />
-        ) : !subdomain && currentUser?.user_type === CONSUMER ? (
-          <Route path="*" exact element={<Navigate to="/home" replace />} />
-        ) : (
-          isLoadingAuth === false &&
-          !isAuthenticated && (
-            <Route
-              path="*"
-              exact
-              element={<Navigate to="/auth/signin" replace />}
-            />
-          )
-        )} */}
       </Route>
     </Routes>
   );

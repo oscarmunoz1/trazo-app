@@ -8,6 +8,7 @@ module.exports = {
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:prettier/recommended",
+    "prettier"
   ],
   overrides: [
     {
@@ -24,6 +25,15 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  plugins: ["react"],
-  rules: {},
+  plugins: ["react", "prettier"],
+  rules: {
+    "prettier/prettier": ["error", {}, { usePrettierrc: true }],
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off"
+  },
+  settings: {
+    react: {
+      version: "detect"
+    }
+  }
 };

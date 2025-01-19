@@ -56,6 +56,22 @@ export const historyApi = baseApi.injectEndpoints({
       },
       providesTags: (result, error, parcelId) => (result ? [{ type: 'History', parcelId }] : [])
     }),
+    getUserProductionScans: build.query({
+      query: () => ({
+        url: 'histories/my_scans/',
+        method: 'GET',
+        credentials: 'include'
+      }),
+      providesTags: (result) => (result ? ['History'] : [])
+    }),
+    getUserReviews: build.query({
+      query: () => ({
+        url: 'histories/my_reviews/',
+        method: 'GET',
+        credentials: 'include'
+      }),
+      providesTags: (result) => (result ? ['History'] : [])
+    }),
     getHistory: build.query({
       query: (historyId) => ({
         url: HISTORY_URL(historyId),
@@ -154,5 +170,7 @@ export const {
   useFinishCurrentHistoryMutation,
   useGetPublicHistoryQuery,
   useCommentHistoryMutation,
-  useGetScansByEstablishmentQuery
+  useGetScansByEstablishmentQuery,
+  useGetUserProductionScansQuery,
+  useGetUserReviewsQuery
 } = historyApi;

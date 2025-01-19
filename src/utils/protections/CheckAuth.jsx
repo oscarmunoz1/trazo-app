@@ -10,6 +10,8 @@ const CheckAuth = () => {
   const dispatch = useDispatch();
   const { data, isLoading, isError, isSuccess } = useUserDataQuery();
 
+  console.log('data', data);
+
   useEffect(() => {
     if (isSuccess && data) {
       dispatch(login(data));

@@ -65,7 +65,7 @@ function SignUp() {
   }, [isSubmitSuccessful]);
 
   const onSubmitHandler = (values) => {
-    registerUser(values);
+    registerUser({...values, user_type: 4});
   };
 
   return (

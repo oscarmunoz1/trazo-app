@@ -1,5 +1,5 @@
 import { Navigate, Outlet, useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
-import { PRODUCER, SUPERUSER } from '../../config';
+import { PRODUCER, SUPERUSER, CONSUMER } from '../../config';
 import React, { useEffect } from 'react';
 
 import { LOGIN_PAGE_URL } from 'config/routes';
@@ -15,6 +15,8 @@ const Authenticated = ({ allowedRoles, mustBeCompanyAdmin = false }) => {
   const currentUser = useSelector((state) => state.userState.user);
 
   const { establishmentId } = useParams();
+
+  console.log('currentUser', currentUser);
 
   useEffect(() => {
     if (currentUser?.user_type === PRODUCER || currentUser?.user_type === SUPERUSER) {
@@ -55,6 +57,17 @@ const Authenticated = ({ allowedRoles, mustBeCompanyAdmin = false }) => {
   }, [currentCompany, currentUser, navigate]);
 
   const nextUrl = LOGIN_PAGE_URL + (pathname !== '/' ? '?next=' + pathname : '');
+
+  console.log('a ver aca\n\n\n\n\n\n');
+  console.log('pathname', pathname);
+  console.log(
+    isLoading === false &&
+      isAuthenticated &&
+      allowedRoles.includes(currentUser?.user_type) &&
+      (mustBeCompanyAdmin
+        ? currentUser?.companies[0].role === 'Company Admin' || currentUser?.user_type === SUPERUSER
+        : true)
+  );
 
   return isLoading === false &&
     isAuthenticated &&

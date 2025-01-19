@@ -21,6 +21,8 @@ function SignUp() {
 
   const [verifyEmail, { isLoading, isSuccess, error, isError }] = useVerifyEmailMutation();
 
+  console.log('error', error?.data?.error);
+
   useEffect(() => {
     const email = searchParams.get('email');
     const code = searchParams.get('code');
@@ -28,6 +30,12 @@ function SignUp() {
       verifyEmail({ email, code });
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    if (error?.data?.error === 'User is already verified') {
+      navigate('/auth/signin');
+    }
+  }, [error]);
 
   useEffect(() => {
     if (isSuccess) {

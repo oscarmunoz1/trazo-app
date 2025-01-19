@@ -68,31 +68,11 @@ type SidebarProps = {
   toggleSidebar: boolean;
 };
 
-type ParcelType = {
-  id: number;
-  name: string;
-};
-
-type EstablishmentType = {
-  id: number;
-  name: string;
-  parcels: ParcelType[];
-};
-
-function Sidebar(props: SidebarProps) {
+function ConsumerSidebar(props: SidebarProps) {
   const intl = useIntl();
   // to check for active links and opened collapses
   let location = useLocation();
 
-  // this is for the rest of the collapses
-
-  const [dynamicRoutes, setDynamicRoutes] = useState<Route[]>([]);
-  const [certificationsRoutes, setCertificationsRoutes] = useState([]);
-  const [commercialDynamicRoutes, setCommercialDynamicRoutes] = useState([]);
-
-  const establishments = useSelector(
-    (state: RootState) => state.company.currentCompany?.establishments
-  );
   const { sidebarWidth, setSidebarWidth, toggleSidebar } = React.useContext(SidebarContext);
   const mainPanel = React.useRef();
 
@@ -101,80 +81,6 @@ function Sidebar(props: SidebarProps) {
   const activeRoute = (regex: RegExp) => {
     return regex.test(location.pathname);
   };
-
-
-  useEffect(() => {
-    const dynamicRoutes: Route[] =
-      establishments &&
-      establishments.map((e: EstablishmentType) => {
-        return {
-          name: e.name,
-          path: `/dashboard/establishment/${e.id}`,
-          collapse: true,
-          establishmentId: e.id,
-          authIcon: <HomeIcon color="inherit" />,
-          layout: '/admin',
-          isDashboard: true,
-          regex: new RegExp(
-            `^\\/admin\\/dashboard\\/establishment\\/${e.id}(\\/parcel\\/[0-9]+)?$`
-          ),
-          items: e?.parcels?.map((p: ParcelType) => {
-            return {
-              name: p.name,
-              path: `/dashboard/establishment/${e.id}/parcel/${p.id}`,
-              component: Overview,
-              layout: '/admin',
-              isDashboard: true,
-              regex: new RegExp(
-                `^\\/admin\\/dashboard\\/establishment\\/${e.id}\\/parcel\\/${p.id}$`
-              )
-            };
-          })
-        };
-      });
-
-    const certificationsRoutes = establishments &&
-      establishments.length > 0 && [
-        {
-          name: 'Parcels',
-          path: `/dashboard/establishment/${establishments[0].id}/certifications/parcels`,
-          secondaryNavbar: true,
-          layout: '/admin',
-          regex: new RegExp(
-            `^\\/admin\\/dashboard\\/establishment\\/${establishments[0].id}\\/certifications\\/parcels$`
-          )
-        },
-        {
-          name: 'Events',
-          path: `/dashboard/establishment/${establishments[0].id}/certifications/events`,
-          secondaryNavbar: true,
-          layout: '/admin',
-          regex: new RegExp(
-            `^\\/admin\\/dashboard\\/establishment\\/${establishments[0].id}\\/certifications\\/events$`
-          )
-        }
-      ];
-
-    const commercialDynamicRoutes =
-      establishments &&
-      establishments.map((e: EstablishmentType) => {
-        return {
-          name: e.name,
-          path: `/dashboard/establishment/${e.id}/commercial`,
-          establishmentId: e.id,
-          authIcon: <HomeIcon color="inherit" />,
-          regex: new RegExp(`^\\/admin\\/dashboard\\/establishment\\/${e.id}\\/commercial$`),
-          layout: '/admin',
-          items: []
-        };
-      });
-
-    if (establishments) {
-      setDynamicRoutes(dynamicRoutes);
-      setCertificationsRoutes(certificationsRoutes);
-      setCommercialDynamicRoutes(commercialDynamicRoutes);
-    }
-  }, [establishments]);
 
   // this function creates the links and collapses that appear in the sidebar (left menu)
   const createLinks = (routes: any) => {
@@ -368,17 +274,11 @@ function Sidebar(props: SidebarProps) {
                           color="green.400"
                           display={sidebarWidth === 275 ? 'block' : 'none'}
                         />
-                        {prop.establishmentId ? (
-                          <NavLink color="red" to={prop.layout + prop.path}>
-                            <Text color={inactiveColor} my="auto" fontSize="md" fontWeight="normal">
-                              {sidebarWidth === 275 ? prop.name : prop.name[0]}
-                            </Text>
-                          </NavLink>
-                        ) : (
+                        <NavLink color="red" to={prop.layout + prop.path}>
                           <Text color={inactiveColor} my="auto" fontSize="md" fontWeight="normal">
                             {sidebarWidth === 275 ? prop.name : prop.name[0]}
                           </Text>
-                        )}
+                        </NavLink>
                       </HStack>
                     )}
                   </Button>
@@ -404,108 +304,32 @@ function Sidebar(props: SidebarProps) {
               <AccordionPanel
                 pe={prop.icon ? null : '0px'}
                 display={prop.isCompanySettings ? 'none' : 'block'}
-                pb="8px"
-                ps={
-                  prop.icon && !prop.isCompanySettings ? null : sidebarWidth === 275 ? null : '8px'
-                }>
-                {(dynamicRoutes || certificationsRoutes || commercialDynamicRoutes) && (
-                  <List>
-                    {
-                      prop.icon && !prop.isCompanySettings
-                        ? createLinks(
-                            prop.isDashboard && !prop.items
-                              ? dynamicRoutes
-                              : prop.isCertifications
-                              ? certificationsRoutes
-                              : prop.isCommercial
-                              ? commercialDynamicRoutes
-                              : prop.items
-                          ) // for bullet accordion links
-                        : createAccordionLinks(
-                            prop.isDashboard && !prop.items
-                              ? dynamicRoutes
-                              : prop.isCertifications
-                              ? certificationsRoutes
-                              : prop.isCommercial
-                              ? commercialDynamicRoutes
-                              : prop.items
-                          ) // for non-bullet accordion links
-                    }
-                  </List>
-                )}
-              </AccordionPanel>
+                pb="8px"></AccordionPanel>
             </AccordionItem>
           </Accordion>
         );
       } else {
         return (
-          <NavLink to={prop.layout + prop.path}>
-            {prop.icon ? (
-              <Box>
-                <HStack spacing="14px" py="15px" px="15px">
-                  <IconBox
-                    bg="green.400"
-                    color="white"
-                    h="30px"
-                    w="30px"
-                    transition={variantChange}>
-                    {prop.icon}
-                  </IconBox>
-                  <Text
-                    color={activeRoute(prop.regex) ? activeColor : inactiveColor}
-                    fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}
-                    fontSize="sm">
-                    {prop.name}
-                  </Text>
-                </HStack>
-              </Box>
-            ) : (
-              <ListItem>
-                <HStack
-                  spacing={
-                    sidebarWidth === 275 ? (activeRoute(prop.regex) ? '22px' : '26px') : '8px'
-                  }
-                  py="5px"
-                  px={sidebarWidth === 275 ? '10px' : '0px'}>
-                  <Icon
-                    as={FaCircle}
-                    w={activeRoute(prop.regex) ? '10px' : '6px'}
-                    color="green.400"
-                    display={sidebarWidth === 275 ? 'block' : 'none'}
-                  />
-                  <Text
-                    color={activeRoute(prop.regex) ? activeColor : inactiveColor}
-                    fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}>
-                    {sidebarWidth === 275 ? prop.name : prop.name[0]}
-                  </Text>
-                </HStack>
-              </ListItem>
-            )}
+          <NavLink to={`${prop.layout}/dashboard/${prop.path}`}>
+            <Box>
+              <HStack spacing="14px" py="15px" px="15px">
+                <IconBox bg="green.400" color="white" h="30px" w="30px" transition={variantChange}>
+                  {prop.icon}
+                </IconBox>
+                <Text
+                  color={activeRoute(prop.regex) ? activeColor : inactiveColor}
+                  fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}
+                  fontSize="sm">
+                  {prop.name}
+                </Text>
+              </HStack>
+            </Box>
           </NavLink>
         );
       }
     });
   };
 
-  const createAccordionLinks = (routes: Route[] | undefined) => {
-    let inactiveColor = useColorModeValue('gray.400', 'gray.400');
-    let activeColor = useColorModeValue('gray.700', 'white');
-    return routes?.map((prop, index) => {
-      return (
-        <NavLink to={prop.layout + prop.path}>
-          <ListItem pt="5px" ms={sidebarWidth === 275 ? '26px' : '0px'} key={index}>
-            <Text
-              mb="4px"
-              color={activeRoute(prop.regex) ? activeColor : inactiveColor}
-              fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}
-              fontSize="sm">
-              {sidebarWidth === 275 ? prop.name : prop.name[0]}
-            </Text>
-          </ListItem>
-        </NavLink>
-      );
-    });
-  };
   const { logoText, routes, sidebarVariant } = props;
   let isWindows = navigator.platform.startsWith('Win');
 
@@ -589,4 +413,4 @@ function Sidebar(props: SidebarProps) {
   );
 }
 
-export default Sidebar;
+export default ConsumerSidebar;
