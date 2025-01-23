@@ -223,11 +223,11 @@ export default function SettingsView() {
         borderRadius="inherit"
         fontWeight="300"
         padding="4px">
-        This screen is only visible to company admins
+        {intl.formatMessage({ id: 'app.companySettingsDescription' })}
       </Text>
       <Card p="16px">
         <Text color={mainText} bg="inherit" borderRadius="inherit" fontWeight="bold" padding="10px">
-          Invite new members
+          {intl.formatMessage({ id: 'app.inviteNewMembers' })}
         </Text>
         <Flex direction={'row'} grow={'1'} pr={'32px'}>
           <FormProvider {...basicMethods}>
@@ -237,10 +237,9 @@ export default function SettingsView() {
                   <Flex width={{ base: '100%', smdd: '40%' }}>
                     <FormInput
                       fontSize="xs"
-                      // ms="4px"
                       borderRadius="15px"
                       type="text"
-                      placeholder="Invite by email"
+                      placeholder={intl.formatMessage({ id: 'app.inviteByEmail' })}
                       name="name"
                       // label="Name"
                     />
@@ -252,7 +251,7 @@ export default function SettingsView() {
                       styles={styles}
                       isClearable={true}
                       name="colors"
-                      placeholder="Select establishments"
+                      placeholder={intl.formatMessage({ id: 'app.selectEstablishments' })}
                       isMulti
                       className="basic-multi-select"
                       classNamePrefix="select"
@@ -267,7 +266,7 @@ export default function SettingsView() {
                       styles={styles}
                       isClearable={true}
                       name="colors"
-                      placeholder="Select role"
+                      placeholder={intl.formatMessage({ id: 'app.selectRole' })}
                       className="basic-multi-select"
                       classNamePrefix="select"
                       onChange={onChange2}
@@ -289,7 +288,7 @@ export default function SettingsView() {
                     fontSize="xs"
                     px="1.5rem"
                     onClick={() => {}}>
-                    Discard changes
+                    {intl.formatMessage({ id: 'app.discardChanges' })}
                   </Button>
                   <Button
                     bg={bgButton}
@@ -298,7 +297,7 @@ export default function SettingsView() {
                     fontSize="xs"
                     variant="no-hover"
                     onClick={() => {}}>
-                    Send invite
+                    {intl.formatMessage({ id: 'app.sendInvite' })}
                   </Button>
                 </Flex>
               </Flex>
@@ -308,7 +307,7 @@ export default function SettingsView() {
       </Card>
       <Card p="16px">
         <Text color={mainText} bg="inherit" borderRadius="inherit" fontWeight="bold" padding="10px">
-          Members in this company
+          {intl.formatMessage({ id: 'app.membersInThisCompany' })}
         </Text>
         <Flex pt={'12px'}>
           <InputGroup
@@ -357,7 +356,11 @@ export default function SettingsView() {
             <Table variant="simple">
               <Thead>
                 <Tr>
-                  {['Name', 'Current Working Establishments', 'Role'].map((label) => {
+                  {[
+                    intl.formatMessage({ id: 'app.name' }),
+                    intl.formatMessage({ id: 'app.currentWorkingEstablishments' }),
+                    intl.formatMessage({ id: 'app.role' })
+                  ].map((label) => {
                     return (
                       <Th
                         color="gray.400"

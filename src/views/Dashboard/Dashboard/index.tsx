@@ -8,7 +8,8 @@ import {
   Link,
   SimpleGrid,
   Text,
-  useColorModeValue
+  useColorModeValue,
+  Box
 } from '@chakra-ui/react';
 // Custom icons
 import {
@@ -50,7 +51,23 @@ export default function DashboardView() {
   const navigate = useNavigate();
   const [establishment, setEstablishment] = useState(null);
 
-  const cardColor = useColorModeValue('white', 'gray.700');
+  const textColor = useColorModeValue('gray.700', 'white');
+  const cardBg = useColorModeValue('white', 'gray.700');
+  const selectedGradient = useColorModeValue(
+    'linear-gradient(81.62deg, #4CAF50 2.25%, #45A049 79.87%)',
+    'linear-gradient(81.62deg, #388E3C 2.25%, #2E7D32 79.87%)'
+  );
+  const hoverBg = useColorModeValue('green.50', 'green.900');
+  const borderColor = useColorModeValue('green.200', 'green.700');
+
+  const bgGradient = useColorModeValue(
+    'linear-gradient(to right, green.50, transparent)',
+    'linear-gradient(to right, green.900, transparent)'
+  );
+  const shadowHover = useColorModeValue(
+    '0 20px 27px 0 rgba(0, 0, 0, 0.05)',
+    '0 20px 27px 0 rgba(0, 0, 0, 0.2)'
+  );
 
   const establishments = useSelector((state) => state.company.currentCompany?.establishments);
 
@@ -92,32 +109,52 @@ export default function DashboardView() {
         {intl.formatMessage({ id: 'app.establishments' })}
       </Text>
       <Grid
-        templateColumns={{ sm: '1fr', md: '1fr 1fr', xl: 'repeat(4, 1fr)' }}
+        templateColumns={{ sm: '1fr', md: '1fr 1fr auto', xl: 'repeat(4, 1fr)' }}
         templateRows={{ sm: '1fr 1fr auto', md: '1fr', xl: '1fr' }}
         gap="24px">
         {establishments ? (
           establishments.map((prop, key) => (
-            <NavLink minW="260px" to={`/admin/dashboard/establishment/${prop.id}`}>
-              <MiniStatistics
-                key={key}
-                isSelected={prop.id === establishment?.id}
-                title={prop.name}
-                amount={`${prop.city || prop.zone || ''}, ${prop.state}`}
-                percentage={55}
-                icon={<HomeIcon h={'24px'} w={'24px'} color={iconBoxInside} />}
-              />
+            <NavLink
+              minW="260px"
+              to={`/admin/dashboard/establishment/${prop.id}`}
+              style={{ textDecoration: 'none' }}>
+              <Box
+                transition="all 0.3s"
+                _hover={{
+                  boxShadow: shadowHover
+                }}>
+                <MiniStatistics
+                  key={key}
+                  isSelected={prop.id === establishment?.id}
+                  title={prop.name}
+                  amount={`${prop.city || prop.zone || ''}, ${prop.state}`}
+                  percentage={55}
+                  icon={<HomeIcon h={'24px'} w={'24px'} color={iconBoxInside} />}
+                  bgGradient={prop.id === establishment?.id ? selectedGradient : bgGradient}
+                  textColor={prop.id === establishment?.id ? 'white' : mainText}
+                  borderWidth="1px"
+                  borderColor={prop.id === establishment?.id ? 'transparent' : borderColor}
+                  borderRadius="2xl"
+                />
+              </Box>
             </NavLink>
           ))
         ) : (
-          <Card minH="115px" bg={cardColor} />
+          <Card minH="115px" bg={cardBg} />
         )}
         <Button
           p="0px"
           w="95px"
           h="95px"
           bg="transparent"
-          color="gray.500"
+          color="green.500"
           borderRadius="15px"
+          border="2px dashed"
+          borderColor="green.200"
+          _hover={{
+            bg: 'green.50',
+            borderColor: 'green.500'
+          }}
           onClick={toggleAddEstablishment}>
           <Flex direction="column" justifyContent="center" align="center" h="120px">
             <Icon as={FaPlus} w="15px" h="15px" mb="10px" />
@@ -142,6 +179,13 @@ export default function DashboardView() {
             city={establishment?.city}
             zone={establishment?.zone}
             readMoreLink={`/admin/dashboard/establishment/${establishment?.id}/profile`}
+            bgGradient={bgGradient}
+            borderLeft="4px solid"
+            borderColor="green.500"
+            boxShadow={shadowHover}
+            _hover={{
+              boxShadow: shadowHover
+            }}
             image={
               <Image
                 src={establishment?.image || defaultEstablishmentImage}
@@ -154,7 +198,7 @@ export default function DashboardView() {
             }
           />
         ) : (
-          <Card minH="290px" bg={cardColor} />
+          <Card minH="290px" bg={cardBg} />
         )}
 
         {establishment ? (
@@ -164,7 +208,7 @@ export default function DashboardView() {
             description={intl.formatMessage({ id: 'app.certifications_description' })}
           />
         ) : (
-          <Card minH="290px" bg={cardColor} />
+          <Card minH="290px" bg={cardBg} />
         )}
       </Grid>
       <CarouselHorizontal

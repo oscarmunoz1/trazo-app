@@ -86,8 +86,9 @@ export default function ParcelView() {
               <Image
                 src={data?.image || BgMusicCard}
                 alt="chakra image"
-                minWidth={{ md: '300px', lg: 'auto' }}
                 objectFit={'cover'}
+                minWidth={{ md: '300px', lg: 'auto' }}
+                width="100%"
                 borderRadius="15px"
                 height="100%"
               />

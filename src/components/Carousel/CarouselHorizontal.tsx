@@ -42,11 +42,17 @@ const CarouselHorizontal = ({ title, description, data }: CarouselHorizontalProp
           </Flex>
           <Button
             p="0px"
-            w="75px"
-            h="75px"
+            w="95px"
+            h="95px"
             bg="transparent"
-            color="gray.500"
+            color="green.500"
             borderRadius="15px"
+            border="2px dashed"
+            borderColor="green.200"
+            _hover={{
+              bg: 'green.50',
+              borderColor: 'green.500'
+            }}
             onClick={() =>
               navigate(`/admin/dashboard/establishment/${establishmentId}/parcel/add`)
             }>

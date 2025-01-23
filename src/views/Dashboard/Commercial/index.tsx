@@ -90,26 +90,24 @@ export default function CommercialView() {
     }
   );
 
-  const {
-    data: dataEstablishmentScansVsSaleInfo,
-    isFetching
-  } = useGetEstablishmentScansVsSalesChartInfoQuery(
-    {
-      companyId: currentCompany?.id,
-      establishmentId: currentEstablishmentId,
-      periodId: filters.period.id,
-      productId: filters.product?.id,
-      parcelId: filters.parcel?.id,
-      productionId: filters.production?.id
-    },
-    {
-      skip:
-        !currentCompany ||
-        !currentEstablishmentId ||
-        !filters?.period ||
-        currentCompany?.id === undefined
-    }
-  );
+  const { data: dataEstablishmentScansVsSaleInfo, isFetching } =
+    useGetEstablishmentScansVsSalesChartInfoQuery(
+      {
+        companyId: currentCompany?.id,
+        establishmentId: currentEstablishmentId,
+        periodId: filters.period.id,
+        productId: filters.product?.id,
+        parcelId: filters.parcel?.id,
+        productionId: filters.production?.id
+      },
+      {
+        skip:
+          !currentCompany ||
+          !currentEstablishmentId ||
+          !filters?.period ||
+          currentCompany?.id === undefined
+      }
+    );
 
   const {
     data: dataEstablishmentProductsReputation,
@@ -132,10 +130,8 @@ export default function CommercialView() {
     }
   );
 
-  const [
-    fetchScansByEstablishment,
-    { data: filteredScans, isLoading: isLoadingScans }
-  ] = historyApi.endpoints.getScansByEstablishment.useLazyQuery();
+  const [fetchScansByEstablishment, { data: filteredScans, isLoading: isLoadingScans }] =
+    historyApi.endpoints.getScansByEstablishment.useLazyQuery();
 
   const [
     getEstablishmentProducts,
@@ -469,7 +465,7 @@ export default function CommercialView() {
                       })
                     }
                     color="gray.500">
-                    This month
+                    {intl.formatMessage({ id: 'app.thisMonth' })}
                   </MenuItem>
                   <MenuItem
                     onClick={() =>
@@ -479,7 +475,7 @@ export default function CommercialView() {
                       })
                     }
                     color="gray.500">
-                    This year
+                    {intl.formatMessage({ id: 'app.thisYear' })}
                   </MenuItem>
                 </MenuList>
               </Menu>
@@ -527,9 +523,10 @@ export default function CommercialView() {
                         ...lineBarChartOptions,
                         xaxis: {
                           ...lineBarChartOptions.xaxis,
-                          categories: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.options?.map(
-                            (option) => option.toString()
-                          )
+                          categories:
+                            dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.options?.map(
+                              (option) => option.toString()
+                            )
                         }
                       }}
                     />

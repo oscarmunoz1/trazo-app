@@ -29,19 +29,20 @@ import { drawerStyles } from './components/drawer';
 import { extendTheme } from '@chakra-ui/react';
 import { globalStyles } from './styles';
 import { linkStyles } from './components/link';
+
 // import { mode } from "@chakra-ui/theme-tools";
 export default extendTheme(
-	{ breakpoints }, // Breakpoints
-	globalStyles,
-	buttonStyles, // Button styles
-	badgeStyles, // Badge styles
-	linkStyles, // Link styles
-	drawerStyles, // Sidebar variant for Chakra's drawer
-	CardComponent, // Card component
-	CardBodyComponent, // Card Body component
-	CardFooterComponent, // Card Footer component
-	CardHeaderComponent, // Card Header component
-	MainPanelComponent, // Main Panel component
-	PanelContentComponent, // Panel Content component
-	PanelContainerComponent // Panel Container component
+  { breakpoints }, // Breakpoints
+  globalStyles,
+  buttonStyles, // Button styles
+  badgeStyles, // Badge styles
+  linkStyles, // Link styles
+  drawerStyles, // Sidebar variant for Chakra's drawer
+  CardComponent, // Card component
+  CardBodyComponent, // Card Body component
+  CardFooterComponent, // Card Footer component
+  CardHeaderComponent, // Card Header component
+  MainPanelComponent, // Main Panel component
+  PanelContentComponent, // Panel Content component
+  PanelContainerComponent // Panel Container component
 );

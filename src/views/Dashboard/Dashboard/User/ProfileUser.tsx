@@ -38,7 +38,7 @@ import { useGetParcelQuery } from 'store/api/productApi';
 import { useSelector } from 'react-redux';
 import { useUpdateUserMutation } from 'store/api/userApi';
 import { zodResolver } from '@hookform/resolvers/zod';
-
+import { useIntl } from 'react-intl';
 const formSchemaBasic = object({
   first_name: string().min(1, 'First name is required'),
   last_name: string().min(1, 'Last name is required'),
@@ -47,6 +47,7 @@ const formSchemaBasic = object({
 });
 
 function ProfileUser() {
+  const intl = useIntl();
   const textColor = useColorModeValue('gray.700', 'white');
   const bgColor = useColorModeValue('white', 'gray.700');
   const navigate = useNavigate();
@@ -120,7 +121,9 @@ function ProfileUser() {
   }, [isSuccess, data, dispatch, navigate]);
 
   return (
-    <BoxBackground title={'User Profile'} subtitle={'Modify the form below to edit your profile '}>
+    <BoxBackground
+      title={intl.formatMessage({ id: 'app.userProfile' })}
+      subtitle={intl.formatMessage({ id: 'app.modifyFormToEditProfile' })}>
       <Flex
         direction="column"
         bg={bgColor}
@@ -133,7 +136,7 @@ function ProfileUser() {
               <Card>
                 <CardHeader mb="32px">
                   <Text fontSize="lg" color={textColor} fontWeight="bold">
-                    Main Info
+                    {intl.formatMessage({ id: 'app.mainInfo' })}
                   </Text>
                 </CardHeader>
 
@@ -181,9 +184,9 @@ function ProfileUser() {
                             ms="4px"
                             borderRadius="15px"
                             type="text"
-                            placeholder="First name"
+                            placeholder={intl.formatMessage({ id: 'app.firstName' })}
                             name="first_name"
-                            label="First name"
+                            label={intl.formatMessage({ id: 'app.firstName' })}
                           />
 
                           <FormInput
@@ -191,9 +194,9 @@ function ProfileUser() {
                             ms="4px"
                             borderRadius="15px"
                             type="text"
-                            placeholder="Last name"
+                            placeholder={intl.formatMessage({ id: 'app.lastName' })}
                             name="last_name"
-                            label="Last name"
+                            label={intl.formatMessage({ id: 'app.lastName' })}
                           />
                         </Stack>
                         <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
@@ -202,18 +205,18 @@ function ProfileUser() {
                             ms="4px"
                             borderRadius="15px"
                             type="text"
-                            placeholder="Email"
+                            placeholder={intl.formatMessage({ id: 'app.email' })}
                             name="email"
-                            label="Email"
+                            label={intl.formatMessage({ id: 'app.email' })}
                           />
                           <FormInput
                             fontSize="xs"
                             ms="4px"
                             borderRadius="15px"
                             type="text"
-                            placeholder="Phone"
+                            placeholder={intl.formatMessage({ id: 'app.phone' })}
                             name="phone"
-                            label="Phone"
+                            label={intl.formatMessage({ id: 'app.phone' })}
                           />
                         </Stack>
                       </Stack>
@@ -235,7 +238,7 @@ function ProfileUser() {
                             />
                           ) : (
                             <Text fontSize="xs" color="#fff" fontWeight="bold">
-                              SAVE
+                              {intl.formatMessage({ id: 'app.save' })}
                             </Text>
                           )}
                         </Button>

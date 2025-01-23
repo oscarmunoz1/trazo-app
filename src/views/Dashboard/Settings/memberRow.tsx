@@ -18,8 +18,10 @@ import {
 } from '@chakra-ui/react';
 
 import { IoEllipsisVerticalSharp } from 'react-icons/io5';
+import { useIntl } from 'react-intl';
 
 const ScansRow = (props) => {
+  const intl = useIntl();
   const { name, establishments, role } = props;
   const textColor = useColorModeValue('gray.700', 'white');
 
@@ -61,7 +63,7 @@ const ScansRow = (props) => {
               <Flex color={textColor} cursor="pointer" align="center" p="4px">
                 {/* <Icon as={FaPencilAlt} me="4px" /> */}
                 <Text fontSize="sm" fontWeight="500">
-                  Edit
+                  {intl.formatMessage({ id: 'app.edit' })}
                 </Text>
               </Flex>
             </MenuItem>
@@ -69,7 +71,7 @@ const ScansRow = (props) => {
               <Flex color="red.500" cursor="pointer" align="center" p="4px">
                 {/* <Icon as={FaTrashAlt} me="4px" /> */}
                 <Text fontSize="sm" fontWeight="500">
-                  Delete
+                  {intl.formatMessage({ id: 'app.delete' })}
                 </Text>
               </Flex>
             </MenuItem>
