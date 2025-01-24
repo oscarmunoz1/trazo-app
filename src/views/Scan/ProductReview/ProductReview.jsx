@@ -74,6 +74,7 @@ const registerSchema = object({
 });
 
 function ProductReview() {
+  const bgColor = useColorModeValue('white', 'gray.800');
   const textColor = useColorModeValue('gray.700', 'white');
   const { getRootProps, getInputProps } = useDropzone();
   const navigate = useNavigate();
@@ -93,17 +94,18 @@ function ProductReview() {
     formState: { errors, isSubmitSuccessful }
   } = methods;
 
-  const { data: historyData, error, isLoading, isFetching, refetch } = useGetPublicHistoryQuery(
-    productionId || '',
-    {
-      skip: productionId === undefined
-    }
-  );
+  const {
+    data: historyData,
+    error,
+    isLoading,
+    isFetching,
+    refetch
+  } = useGetPublicHistoryQuery(productionId || '', {
+    skip: productionId === undefined
+  });
 
-  const [
-    sendReview,
-    { data, isError, error: errorReview, isLoading: isLoadingReview, isSuccess }
-  ] = useSendReviewMutation();
+  const [sendReview, { data, isError, error: errorReview, isLoading: isLoadingReview, isSuccess }] =
+    useSendReviewMutation();
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -177,197 +179,210 @@ function ProductReview() {
           w={{ sm: '100%', md: '80%', lg: '75%' }}
           p={{ sm: '16px', md: '32px', lg: '48px' }}
           boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px">
-          <CardHeader mb="22px" justifyContent={'center'}>
-            <Flex direction={'column'} w="100%">
-              <Flex direction={'row'} gap="25px">
-                {historyData?.images.length > 0 && (
-                  <Image src={historyData?.images[0]} w="100px" h="80px" borderRadius="5px" />
-                )}
-                <Text fontSize="md" fontWeight={'bold'} color={textColor}>
-                  {historyData?.product.name} - {historyData?.company},{' '}
-                  {historyData?.parcel.establishment.name}
-                </Text>
-              </Flex>
-              <HSeparator my="16px" />
-            </Flex>
+          <CardHeader mb="42px">
+            <Text color={textColor} fontSize="lg" fontWeight="bold">
+              Your Review
+            </Text>
           </CardHeader>
           <CardBody>
-            <FormProvider {...methods}>
-              <form onSubmit={handleSubmit(onSubmitHandler)} style={{ width: '100%' }}>
-                {isSuccess ? (
-                  <>
-                    <Text
-                      display={'flex'}
-                      fontSize={'md'}
-                      fontWeight={'300'}
-                      justifyContent={'center'}
-                      alignItems={'center'}
-                      textAlign={'center'}>
-                      Review sent successfully!
-                    </Text>
-                    <Text
-                      display={'flex'}
-                      fontSize={'md'}
-                      fontWeight={'300'}
-                      justifyContent={'center'}
-                      alignItems={'center'}
-                      textAlign={'center'}
-                      pt={'10px'}
-                      onClick={() => navigate(`/production/${productionId}`)}
-                      cursor={'pointer'}
-                      textDecoration={'underline'}
-                      color={'gray.500'}>
-                      Click here to go back to the production page.
-                    </Text>
-                  </>
-                ) : (
-                  <Flex direction="column" gap="20px" w={'100%'}>
-                    <Flex direction="column" gap="10px">
-                      <Text fontSize="md" fontWeight={'bold'} color={textColor}>
-                        Overall Rating
+            <Flex direction="column" w="100%">
+              <Flex direction={'column'} w="100%">
+                <Flex direction={'row'} gap="25px">
+                  {historyData?.images.length > 0 && (
+                    <Image src={historyData?.images[0]} w="100px" h="80px" borderRadius="5px" />
+                  )}
+                  <Text fontSize="md" fontWeight={'bold'} color={textColor}>
+                    {historyData?.product.name} - {historyData?.company},{' '}
+                    {historyData?.parcel.establishment.name}
+                  </Text>
+                </Flex>
+                <HSeparator my="16px" />
+              </Flex>
+              <FormProvider {...methods}>
+                <form onSubmit={handleSubmit(onSubmitHandler)} style={{ width: '100%' }}>
+                  {isSuccess ? (
+                    <>
+                      <Text
+                        display={'flex'}
+                        fontSize={'md'}
+                        fontWeight={'300'}
+                        justifyContent={'center'}
+                        alignItems={'center'}
+                        textAlign={'center'}>
+                        Review sent successfully!
                       </Text>
-                      <Stack
-                        direction="row"
-                        spacing="12px"
-                        //   color="orange.300"
-                        mb="16px">
-                        <Icon
-                          as={
-                            rating == 1 || rating == 2 || rating == 3 || rating == 4 || rating == 5
-                              ? BsStarFill
-                              : BsStar
-                          }
-                          color={
-                            rating == 1 || rating == 2 || rating == 3 || rating == 4 || rating == 5
-                              ? 'orange.300'
-                              : 'gray.300'
-                          }
-                          w="26px"
-                          h="26px"
-                          cursor={'pointer'}
-                          onClick={() => setRating(1)}
-                        />
-                        <Icon
-                          cursor={'pointer'}
-                          color={
-                            rating == 2 || rating == 3 || rating == 4 || rating == 5
-                              ? 'orange.300'
-                              : 'gray.300'
-                          }
-                          as={
-                            rating == 2 || rating == 3 || rating == 4 || rating == 5
-                              ? BsStarFill
-                              : BsStar
-                          }
-                          w="26px"
-                          h="26px"
-                          onClick={() => setRating(2)}
-                        />
-                        <Icon
-                          as={rating == 3 || rating == 4 || rating == 5 ? BsStarFill : BsStar}
-                          cursor={'pointer'}
-                          color={
-                            rating == 3 || rating == 4 || rating == 5 ? 'orange.300' : 'gray.300'
-                          }
-                          w="26px"
-                          h="26px"
-                          onClick={() => setRating(3)}
-                        />
-                        <Icon
-                          as={rating == 4 || rating == 5 ? BsStarFill : BsStar}
-                          cursor={'pointer'}
-                          color={rating == 4 || rating == 5 ? 'orange.300' : 'gray.300'}
-                          w="26px"
-                          h="26px"
-                          onClick={() => setRating(4)}
-                        />
-                        <Icon
-                          as={rating == 5 ? BsStarFill : BsStar}
-                          cursor={'pointer'}
-                          color={rating == 5 ? 'orange.300' : 'gray.300'}
-                          w="26px"
-                          h="26px"
-                          onClick={() => setRating(5)}
-                        />
-                      </Stack>
-                    </Flex>
-                    <Flex direction="column" gap="10px">
-                      <Text fontSize="md" fontWeight={'bold'} color={textColor}>
-                        Add a headline
+                      <Text
+                        display={'flex'}
+                        fontSize={'md'}
+                        fontWeight={'300'}
+                        justifyContent={'center'}
+                        alignItems={'center'}
+                        textAlign={'center'}
+                        pt={'10px'}
+                        onClick={() => navigate(`/`)}
+                        cursor={'pointer'}
+                        textDecoration={'underline'}
+                        color={'gray.500'}>
+                        Click here to go back to the production page.
                       </Text>
-                      <FormControl>
-                        <FormInput
-                          name="headline"
-                          placeholder="What's most important to know?"
-                          fontSize="xs"
-                        />
-                      </FormControl>
-                    </Flex>
-                    <Flex direction="column" gap="10px">
-                      <Text fontSize="md" fontWeight={'bold'} color={textColor}>
-                        Add a photo
-                      </Text>
-                      <Flex
-                        align="center"
-                        justify="center"
-                        border="1px dashed #E2E8F0"
-                        borderRadius="15px"
-                        w="100%"
-                        minH="130px"
-                        cursor="pointer"
-                        {...getRootProps({ className: 'dropzone' })}>
-                        <Input {...getInputProps()} />
-                        <Button variant="no-hover">
-                          <Text color="gray.400" fontWeight="normal">
-                            Drop files here to upload
-                          </Text>
-                        </Button>
+                    </>
+                  ) : (
+                    <Flex direction="column" gap="20px" w={'100%'}>
+                      <Flex direction="column" gap="10px">
+                        <Text fontSize="md" fontWeight={'bold'} color={textColor}>
+                          Overall Rating
+                        </Text>
+                        <Stack
+                          direction="row"
+                          spacing="12px"
+                          //   color="orange.300"
+                          mb="16px">
+                          <Icon
+                            as={
+                              rating == 1 ||
+                              rating == 2 ||
+                              rating == 3 ||
+                              rating == 4 ||
+                              rating == 5
+                                ? BsStarFill
+                                : BsStar
+                            }
+                            color={
+                              rating == 1 ||
+                              rating == 2 ||
+                              rating == 3 ||
+                              rating == 4 ||
+                              rating == 5
+                                ? 'orange.300'
+                                : 'gray.300'
+                            }
+                            w="26px"
+                            h="26px"
+                            cursor={'pointer'}
+                            onClick={() => setRating(1)}
+                          />
+                          <Icon
+                            cursor={'pointer'}
+                            color={
+                              rating == 2 || rating == 3 || rating == 4 || rating == 5
+                                ? 'orange.300'
+                                : 'gray.300'
+                            }
+                            as={
+                              rating == 2 || rating == 3 || rating == 4 || rating == 5
+                                ? BsStarFill
+                                : BsStar
+                            }
+                            w="26px"
+                            h="26px"
+                            onClick={() => setRating(2)}
+                          />
+                          <Icon
+                            as={rating == 3 || rating == 4 || rating == 5 ? BsStarFill : BsStar}
+                            cursor={'pointer'}
+                            color={
+                              rating == 3 || rating == 4 || rating == 5 ? 'orange.300' : 'gray.300'
+                            }
+                            w="26px"
+                            h="26px"
+                            onClick={() => setRating(3)}
+                          />
+                          <Icon
+                            as={rating == 4 || rating == 5 ? BsStarFill : BsStar}
+                            cursor={'pointer'}
+                            color={rating == 4 || rating == 5 ? 'orange.300' : 'gray.300'}
+                            w="26px"
+                            h="26px"
+                            onClick={() => setRating(4)}
+                          />
+                          <Icon
+                            as={rating == 5 ? BsStarFill : BsStar}
+                            cursor={'pointer'}
+                            color={rating == 5 ? 'orange.300' : 'gray.300'}
+                            w="26px"
+                            h="26px"
+                            onClick={() => setRating(5)}
+                          />
+                        </Stack>
                       </Flex>
-                    </Flex>
-                    <Flex direction="column" gap="10px">
-                      <Text fontSize="md" fontWeight={'bold'} color={textColor}>
-                        Add a written review
-                      </Text>
-                      <Flex direction={'column'}>
-                        <Textarea
-                          placeholder="What did you like or dislike? What did you use this product for?"
-                          minH="120px"
-                          fontSize="14px"
+                      <Flex direction="column" gap="10px">
+                        <Text fontSize="md" fontWeight={'bold'} color={textColor}>
+                          Add a headline
+                        </Text>
+                        <FormControl>
+                          <FormInput
+                            name="headline"
+                            placeholder="What's most important to know?"
+                            fontSize="xs"
+                          />
+                        </FormControl>
+                      </Flex>
+                      <Flex direction="column" gap="10px">
+                        <Text fontSize="md" fontWeight={'bold'} color={textColor}>
+                          Add a photo
+                        </Text>
+                        <Flex
+                          align="center"
+                          justify="center"
+                          border="1px dashed #E2E8F0"
                           borderRadius="15px"
-                          borderColor={errors.review ? 'red.500' : 'inherit'}
-                          name="review"
-                          ml={'4px'}
-                          {...register('review')}
-                        />
-                        {errors.review && (
-                          <Text fontSize="xs" color="red.500" mt="4px" pl="12px">
-                            {errors.review.message}
+                          w="100%"
+                          minH="130px"
+                          cursor="pointer"
+                          {...getRootProps({ className: 'dropzone' })}>
+                          <Input {...getInputProps()} />
+                          <Button variant="no-hover">
+                            <Text color="gray.400" fontWeight="normal">
+                              Drop files here to upload
+                            </Text>
+                          </Button>
+                        </Flex>
+                      </Flex>
+                      <Flex direction="column" gap="10px">
+                        <Text fontSize="md" fontWeight={'bold'} color={textColor}>
+                          Add a written review
+                        </Text>
+                        <Flex direction={'column'}>
+                          <Textarea
+                            placeholder="What did you like or dislike? What did you use this product for?"
+                            minH="120px"
+                            fontSize="14px"
+                            borderRadius="15px"
+                            borderColor={errors.review ? 'red.500' : 'inherit'}
+                            name="review"
+                            ml={'4px'}
+                            {...register('review')}
+                          />
+                          {errors.review && (
+                            <Text fontSize="xs" color="red.500" mt="4px" pl="12px">
+                              {errors.review.message}
+                            </Text>
+                          )}
+                        </Flex>
+                      </Flex>
+                      <Button
+                        bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+                        _hover={{
+                          bg: 'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)'
+                        }}
+                        alignSelf="flex-end"
+                        mt="24px"
+                        w={{ sm: '75px', lg: '100px' }}
+                        h="35px"
+                        type="submit">
+                        {isLoading ? (
+                          <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
+                        ) : (
+                          <Text fontSize="xs" color="#fff" fontWeight="bold">
+                            SEND
                           </Text>
                         )}
-                      </Flex>
+                      </Button>
                     </Flex>
-                    <Button
-                      bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                      _hover={{
-                        bg: 'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)'
-                      }}
-                      alignSelf="flex-end"
-                      mt="24px"
-                      w={{ sm: '75px', lg: '100px' }}
-                      h="35px"
-                      type="submit">
-                      {isLoading ? (
-                        <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
-                      ) : (
-                        <Text fontSize="xs" color="#fff" fontWeight="bold">
-                          SEND
-                        </Text>
-                      )}
-                    </Button>
-                  </Flex>
-                )}
-              </form>
-            </FormProvider>
+                  )}
+                </form>
+              </FormProvider>
+            </Flex>
           </CardBody>
         </Card>
       </Flex>

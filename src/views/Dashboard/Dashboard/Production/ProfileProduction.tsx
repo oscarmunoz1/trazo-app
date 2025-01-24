@@ -70,7 +70,9 @@ function ProfileProduction() {
                 <MenuList>
                   <MenuItem
                     onClick={() =>
-                      navigate(`/admin/dashboard/establishment/${establishmentId}/change`)
+                      navigate(
+                        `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${productionId}/change`
+                      )
                     }>
                     <Flex color={textColor} cursor="pointer" align="center" p="4px">
                       <Text fontSize="sm" fontWeight="500">

@@ -58,6 +58,7 @@ import productPage2 from 'assets/img/ProductImage2.png';
 import productPage3 from 'assets/img/ProductImage3.png';
 import productPage4 from 'assets/img/ProductImage4.png';
 import { zodResolver } from '@hookform/resolvers/zod';
+import defaultEstablishmentImage from 'assets/img/basic-auth.png';
 
 // Assets
 
@@ -234,12 +235,15 @@ function Capture() {
     formState: { errors, isSubmitSuccessful }
   } = methods;
 
-  const { data: historyData, error, isLoading, isFetching, refetch } = useGetPublicHistoryQuery(
-    productionId || '',
-    {
-      skip: productionId === undefined
-    }
-  );
+  const {
+    data: historyData,
+    error,
+    isLoading,
+    isFetching,
+    refetch
+  } = useGetPublicHistoryQuery(productionId || '', {
+    skip: productionId === undefined
+  });
 
   useEffect(() => {
     if (productionId) {
@@ -625,90 +629,91 @@ function Capture() {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    <Tr>
-                      <Td minW="300px" paddingInlineStart={'0'}>
-                        <Flex align="center">
-                          <Box w="40px" h="40px" me="14px">
-                            <Image src={productPage2} w="100%" h="100%" borderRadius="12px" />
-                          </Box>
-                          <Text color={textColor} fontSize="sm" fontWeight="bold">
-                            Christopher Knight Home
-                          </Text>
-                        </Flex>
-                      </Td>
-                      <Td>
-                        <Stack direction="row" color="gray.700" spacing="2px">
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                          <Icon as={BsStarHalf} w="10px" h="10px" />
-                        </Stack>
-                      </Td>
-                    </Tr>
-                    <Tr>
-                      <Td paddingInlineStart={'0'}>
-                        <Flex align="center">
-                          <Box w="40px" h="40px" me="14px">
-                            <Image src={productPage3} w="100%" h="100%" borderRadius="12px" />
-                          </Box>
-                          <Text color={textColor} fontSize="sm" fontWeight="bold">
-                            Bar Height Swivel Barstool
-                          </Text>
-                        </Flex>
-                      </Td>
-                      <Td>
-                        <Stack direction="row" color="gray.700" spacing="2px">
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                        </Stack>
-                      </Td>
-                    </Tr>
-                    <Tr>
-                      <Td paddingInlineStart={'0'}>
-                        <Flex align="center">
-                          <Box w="40px" h="40px" me="14px">
-                            <Image src={productPage4} w="100%" h="100%" borderRadius="12px" />
-                          </Box>
-                          <Text color={textColor} fontSize="sm" fontWeight="bold">
-                            Signature Design by Ashley
-                          </Text>
-                        </Flex>
-                      </Td>
-                      <Td>
-                        <Stack direction="row" color="gray.700" spacing="2px">
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                        </Stack>
-                      </Td>
-                    </Tr>
-                    <Tr>
-                      <Td paddingInlineStart={'0'} border="none">
-                        <Flex align="center">
-                          <Box w="40px" h="40px" me="14px">
-                            <Image src={productPage2} w="100%" h="100%" borderRadius="12px" />
-                          </Box>
-                          <Text color={textColor} fontSize="sm" fontWeight="bold">
-                            Modern Square
-                          </Text>
-                        </Flex>
-                      </Td>
-                      <Td border="none">
-                        <Stack direction="row" color="gray.700" spacing="2px">
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                          <Icon as={BsStarFill} w="10px" h="10px" />
-                          <Icon as={BsStarHalf} w="10px" h="10px" />
-                        </Stack>
-                      </Td>
-                    </Tr>
+                    {historyData?.similar_histories.map((history: any) => (
+                      <Tr
+                        onClick={() =>
+                          navigate(`/production/${history.id}`, {
+                            replace: true
+                          })
+                        }
+                        cursor="pointer"
+                        key={history.id}>
+                        <Td minW="300px" paddingInlineStart={'0'}>
+                          <Flex align="center">
+                            <Box w="40px" h="40px" me="14px">
+                              <Image
+                                src={history.image || defaultEstablishmentImage}
+                                w="100%"
+                                h="100%"
+                                borderRadius="12px"
+                              />
+                            </Box>
+                            <Text color={textColor} fontSize="sm" fontWeight="bold">
+                              {history.product.name}
+                            </Text>
+                          </Flex>
+                        </Td>
+                        <Td>
+                          <Stack direction="row" spacing="12px" color="orange.300" mb="16px">
+                            <Icon
+                              as={
+                                history?.reputation >= 1
+                                  ? BsStarFill
+                                  : history?.reputation > 0.5
+                                  ? BsStarHalf
+                                  : BsStar
+                              }
+                              w="18px"
+                              h="18px"
+                            />
+                            <Icon
+                              as={
+                                history?.reputation >= 2
+                                  ? BsStarFill
+                                  : history?.reputation > 1.5
+                                  ? BsStarHalf
+                                  : BsStar
+                              }
+                              w="18px"
+                              h="18px"
+                            />
+                            <Icon
+                              as={
+                                history?.reputation >= 3
+                                  ? BsStarFill
+                                  : history?.reputation > 2.5
+                                  ? BsStarHalf
+                                  : BsStar
+                              }
+                              w="18px"
+                              h="18px"
+                            />
+                            <Icon
+                              as={
+                                history?.reputation >= 4
+                                  ? BsStarFill
+                                  : history?.reputation > 3.5
+                                  ? BsStarHalf
+                                  : BsStar
+                              }
+                              w="18px"
+                              h="18px"
+                            />
+                            <Icon
+                              as={
+                                history?.reputation === 5
+                                  ? BsStarFill
+                                  : history?.reputation > 4.5
+                                  ? BsStarHalf
+                                  : BsStar
+                              }
+                              w="18px"
+                              h="18px"
+                            />
+                          </Stack>
+                        </Td>
+                      </Tr>
+                    ))}
                   </Tbody>
                 </Table>
               </Box>

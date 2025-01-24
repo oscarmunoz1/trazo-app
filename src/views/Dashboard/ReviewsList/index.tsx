@@ -61,7 +61,7 @@ export default function ReviewsListView() {
           <Stack width="100%" spacing={6}>
             {!isLoading &&
               reviews?.map((review, index) => (
-                <NavLink key={index} to={`/production/${review.history.id}/review/${review.id}`}>
+                <NavLink key={index} to={`/production/${review.history.id}/`}>
                   <Box
                     p={6}
                     shadow="sm"
