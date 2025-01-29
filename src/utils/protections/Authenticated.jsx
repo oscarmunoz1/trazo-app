@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
 import { PRODUCER, SUPERUSER, CONSUMER } from '../../config';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { LOGIN_PAGE_URL } from 'config/routes';
 import { useSelector } from 'react-redux';
@@ -9,6 +9,7 @@ const Authenticated = ({ allowedRoles, mustBeCompanyAdmin = false }) => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const isLoading = useSelector((state) => state.auth.isLoading);
   const currentCompany = useSelector((state) => state.company.currentCompany);
+  const [subdomain, setSubDomain] = useState('');
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -17,7 +18,39 @@ const Authenticated = ({ allowedRoles, mustBeCompanyAdmin = false }) => {
   const { establishmentId } = useParams();
 
   useEffect(() => {
-    if (currentUser?.user_type === PRODUCER || currentUser?.user_type === SUPERUSER) {
+    const host = window.location.host;
+    const arr = host
+      .split('.')
+      .slice(0, host.includes(import.meta.env.VITE_APP_BASE_DOMAIN) ? -1 : -2);
+
+    if (arr.length > 0) {
+      if (arr[0] === 'app') {
+        setSubDomain('producer');
+      } else if (arr[0] === 'consumer') {
+        setSubDomain('consumer');
+      } else {
+        setSubDomain('');
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated && currentUser && subdomain) {
+      const isConsumerUser = currentUser.user_type === CONSUMER;
+
+      if (isConsumerUser && subdomain === 'producer') {
+        window.location.href = `${window.location.protocol}//consumer.${
+          import.meta.env.VITE_APP_BASE_DOMAIN
+        }${window.location.port ? ':' + window.location.port : ''}/admin/dashboard/scans`;
+      }
+    }
+  }, [isAuthenticated, currentUser, subdomain]);
+
+  useEffect(() => {
+    if (
+      (currentUser?.user_type === PRODUCER || currentUser?.user_type === SUPERUSER) &&
+      subdomain === 'producer'
+    ) {
       const id = Number(establishmentId);
 
       if (
@@ -38,10 +71,13 @@ const Authenticated = ({ allowedRoles, mustBeCompanyAdmin = false }) => {
         }
       }
     }
-  }, [currentCompany, establishmentId, navigate, currentUser]);
+  }, [currentCompany, establishmentId, navigate, currentUser, subdomain]);
 
   useEffect(() => {
-    if (currentUser?.user_type === PRODUCER || currentUser?.user_type === SUPERUSER) {
+    if (
+      (currentUser?.user_type === PRODUCER || currentUser?.user_type === SUPERUSER) &&
+      subdomain === 'producer'
+    ) {
       if (currentUser?.companies.length === 0) {
         navigate(`/admin/dashboard/select-company`);
       } else if (
@@ -52,7 +88,7 @@ const Authenticated = ({ allowedRoles, mustBeCompanyAdmin = false }) => {
         navigate(`/admin/dashboard/establishment/add`);
       }
     }
-  }, [currentCompany, currentUser, navigate]);
+  }, [currentCompany, currentUser, navigate, subdomain]);
 
   const nextUrl = LOGIN_PAGE_URL + (pathname !== '/' ? '?next=' + pathname : '');
 

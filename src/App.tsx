@@ -215,7 +215,7 @@ const App = () => {
           </Route>
         )}
         {subdomain === 'consumer' && (
-          <Route element={<Authenticated allowedRoles={[CONSUMER]} />}>
+          <Route element={<Authenticated allowedRoles={[CONSUMER, SUPERUSER, PRODUCER]} />}>
             <Route path="/admin/dashboard/*" element={<AdminConsumerLayout />}>
               <Route index element={<Navigate to="scans" replace />} />
               <Route path="scans" element={<ScannedProductsView />} />

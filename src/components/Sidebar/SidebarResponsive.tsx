@@ -37,9 +37,28 @@ import Overview from 'views/Pages/Profile/Overview/index';
 import { RootState } from 'store/index';
 import { SidebarContext } from 'contexts/SidebarContext';
 import SidebarHelp from './SidebarHelp';
-import logo from 'assets/img/trazo.png';
+import logo from 'assets/img/trazo2.png';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
+import { Route } from 'types/common';
+
+type SidebarProps = {
+  logoText: string;
+  routes: any;
+  sidebarVariant: string;
+  toggleSidebar: boolean;
+};
+
+type ParcelType = {
+  id: number;
+  name: string;
+};
+
+type EstablishmentType = {
+  id: number;
+  name: string;
+  parcels: ParcelType[];
+};
 
 type SidebarResponsiveProps = {
   display: string;
@@ -54,6 +73,8 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
   const [dynamicRoutes, setDynamicRoutes] = useState([]);
   const [certificationsRoutes, setCertificationsRoutes] = useState([]);
   const [commercialDynamicRoutes, setCommercialDynamicRoutes] = useState([]);
+  const { sidebarWidth, setSidebarWidth, toggleSidebar } = React.useContext(SidebarContext);
+
   // this is for the rest of the collapses
   //  BRAND
   //  Chakra Color Mode
@@ -74,9 +95,9 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
-    const dynamicRoutes =
+    const dynamicRoutes: Route[] =
       establishments &&
-      establishments.map((e) => {
+      establishments.map((e: EstablishmentType) => {
         return {
           name: e.name,
           path: `/dashboard/establishment/${e.id}`,
@@ -88,7 +109,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
           regex: new RegExp(
             `^\\/admin\\/dashboard\\/establishment\\/${e.id}(\\/parcel\\/[0-9]+)?$`
           ),
-          items: e?.parcels?.map((p) => {
+          items: e?.parcels?.map((p: ParcelType) => {
             return {
               name: p.name,
               path: `/dashboard/establishment/${e.id}/parcel/${p.id}`,
@@ -110,7 +131,6 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
           path: `/dashboard/establishment/${establishments[0].id}/certifications/parcels`,
           secondaryNavbar: true,
           layout: '/admin',
-          // regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/certifications\/parcels$/,
           regex: new RegExp(
             `^\\/admin\\/dashboard\\/establishment\\/${establishments[0].id}\\/certifications\\/parcels$`
           )
@@ -128,7 +148,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
 
     const commercialDynamicRoutes =
       establishments &&
-      establishments.map((e) => {
+      establishments.map((e: EstablishmentType) => {
         return {
           name: e.name,
           path: `/dashboard/establishment/${e.id}/commercial`,
@@ -147,22 +167,23 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
     }
   }, [establishments]);
 
-  const activeRoute = (regex) => {
+  const activeRoute = (regex: RegExp) => {
     return regex.test(location.pathname);
   };
 
-  const createAccordionLinks = (routes) => {
+  const createAccordionLinks = (routes: Route[] | undefined) => {
     let inactiveColor = useColorModeValue('gray.400', 'gray.400');
     let activeColor = useColorModeValue('gray.700', 'white');
     return routes?.map((prop, index) => {
       return (
         <NavLink to={prop.layout + prop.path}>
-          <ListItem pt="5px" ms="26px" key={index}>
+          <ListItem pt="5px" ms={sidebarWidth === 275 ? '26px' : '0px'} key={index}>
             <Text
+              mb="4px"
               color={activeRoute(prop.regex) ? activeColor : inactiveColor}
               fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}
               fontSize="sm">
-              {prop.name}
+              {sidebarWidth === 275 ? prop.name : prop.name[0]}
             </Text>
           </ListItem>
         </NavLink>
@@ -194,7 +215,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
         return (
           <>
             <Text
-              fontSize={'xs'}
+              fontSize={sidebarWidth === 275 ? 'md' : 'xs'}
               color={activeColor}
               fontWeight="bold"
               mx="auto"
@@ -204,7 +225,9 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
               }}
               py="12px"
               key={index}>
-              {prop.name}
+              {Object.keys(intl?.messages).includes(`app.${prop.id}`)
+                ? intl.formatMessage({ id: `app.${prop.id}` })
+                : prop.name}
             </Text>
             {createLinks(prop.items)}
           </>
@@ -273,16 +296,25 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                         </Text>
                       </Flex>
                     ) : (
-                      <HStack spacing={'0px'} ps={'0px'} ms={'8px'}>
+                      <HStack
+                        spacing={sidebarWidth === 275 ? '22px' : '0px'}
+                        ps={sidebarWidth === 275 ? '10px' : '0px'}
+                        ms={sidebarWidth === 275 ? '0px' : '8px'}>
+                        <Icon
+                          as={FaCircle}
+                          w="10px"
+                          color="green.400"
+                          display={sidebarWidth === 275 ? 'block' : 'none'}
+                        />
                         {prop.establishmentId ? (
-                          <NavLink color="red" to={prop.layout + prop.path}>
+                          <NavLink to={prop.layout + prop.path}>
                             <Text color={activeColor} my="auto" fontSize="sm">
-                              {prop.name}
+                              {sidebarWidth === 275 ? prop.name : prop.name[0]}
                             </Text>
                           </NavLink>
                         ) : (
                           <Text color={activeColor} my="auto" fontSize="sm">
-                            {prop.name}
+                            {sidebarWidth === 275 ? prop.name : prop.name[0]}
                           </Text>
                         )}
                       </HStack>
@@ -351,15 +383,29 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                 )}
                 <AccordionIcon
                   color="gray.400"
-                  display={prop.icon ? 'none' : 'block'}
-                  transform={prop.icon ? null : 'translateX(-70%)'}
+                  display={
+                    prop.icon
+                      ? sidebarWidth === 275 && !prop.isCompanySettings
+                        ? 'block'
+                        : 'none'
+                      : 'block'
+                  }
+                  transform={
+                    prop.icon && !prop.isCompanySettings
+                      ? null
+                      : sidebarWidth === 275
+                      ? null
+                      : 'translateX(-70%)'
+                  }
                 />
               </AccordionButton>
               <AccordionPanel
                 pe={prop.icon ? null : '0px'}
                 display={prop.isCompanySettings ? 'none' : 'block'}
-                p="8px 0px"
-                ps={prop.icon ? null : '8px'}>
+                pb="8px"
+                ps={
+                  prop.icon && !prop.isCompanySettings ? null : sidebarWidth === 275 ? null : '8px'
+                }>
                 {(dynamicRoutes || certificationsRoutes || commercialDynamicRoutes) && (
                   <List>
                     {
@@ -413,17 +459,22 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
               </Box>
             ) : (
               <ListItem>
-                <HStack spacing={'8px'} py="5px" px={'0px'}>
+                <HStack
+                  spacing={
+                    sidebarWidth === 275 ? (activeRoute(prop.regex) ? '22px' : '26px') : '8px'
+                  }
+                  py="5px"
+                  px={sidebarWidth === 275 ? '10px' : '0px'}>
                   <Icon
                     as={FaCircle}
                     w={activeRoute(prop.regex) ? '10px' : '6px'}
                     color="green.400"
-                    display={'none'}
+                    display={sidebarWidth === 275 ? 'block' : 'none'}
                   />
                   <Text
                     color={activeRoute(prop.regex) ? activeColor : inactiveColor}
                     fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}>
-                    {prop.name}
+                    {sidebarWidth === 275 ? prop.name : prop.name[0]}
                   </Text>
                 </HStack>
               </ListItem>
@@ -432,221 +483,6 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
         );
       }
     });
-    // return routes?.map((prop, index) => {
-    //   if (prop.category) {
-    //     return (
-    //       <>
-    //         <Text
-    //           fontSize={'md'}
-    //           color={activeColor}
-    //           fontWeight="bold"
-    //           mx="auto"
-    //           ps={{
-    //             sm: '10px',
-    //             xl: '16px'
-    //           }}
-    //           py="12px"
-    //           key={index}>
-    //           {prop.name}
-    //         </Text>
-    //         {createLinks(prop.items)}
-    //       </>
-    //     );
-    //   }
-    //   if (prop.collapse) {
-    //     return (
-    //       <Accordion allowToggle>
-    //         <AccordionItem border="none">
-    //           <AccordionButton
-    //             display="flex"
-    //             align="center"
-    //             justify="center"
-    //             key={index}
-    //             borderRadius="15px"
-    //             _focus={{ boxShadow: 'none' }}
-    //             _hover={{ boxShadow: 'none' }}
-    //             px={prop.icon ? null : '0px'}
-    //             py={prop.icon ? '12px' : null}
-    //             bg={activeRoute(prop.regex) && prop.icon ? activeAccordionBg : 'transparent'}>
-    //             {activeRoute(prop.regex) ? (
-    //               <Button
-    //                 boxSize="initial"
-    //                 justifyContent="flex-start"
-    //                 alignItems="center"
-    //                 bg="transparent"
-    //                 transition={variantChange}
-    //                 mx={{
-    //                   xl: 'auto'
-    //                 }}
-    //                 px="0px"
-    //                 borderRadius="15px"
-    //                 _hover="none"
-    //                 w="100%"
-    //                 _active={{
-    //                   bg: 'inherit',
-    //                   transform: 'none',
-    //                   borderColor: 'transparent'
-    //                 }}>
-    //                 {prop.icon ? (
-    //                   <Flex>
-    //                     <IconBox
-    //                       bg={activeBg}
-    //                       color={activeColorIcon}
-    //                       h="30px"
-    //                       w="30px"
-    //                       me="12px"
-    //                       transition={variantChange}>
-    //                       {prop.icon}
-    //                     </IconBox>
-    //                     {prop.establishmentId ? (
-    //                       <NavLink color="red" to={prop.layout + prop.path}>
-    //                         <Text color={activeColor} my="auto" fontSize="sm" display={'block'}>
-    //                           {prop.name}
-    //                         </Text>
-    //                       </NavLink>
-    //                     ) : (
-    //                       <Text color={activeColor} my="auto" fontSize="sm" display={'block'}>
-    //                         {prop.name}
-    //                       </Text>
-    //                     )}
-    //                   </Flex>
-    //                 ) : (
-    //                   <HStack spacing={'22px'} ps="10px" ms="0px">
-    //                     <Icon as={FaCircle} w="10px" color="green.400" />
-    //                     <Text color={activeColor} my="auto" fontSize="sm">
-    //                       {prop.name}
-    //                     </Text>
-    //                   </HStack>
-    //                 )}
-    //               </Button>
-    //             ) : (
-    //               <Button
-    //                 boxSize="initial"
-    //                 justifyContent="flex-start"
-    //                 alignItems="center"
-    //                 bg="transparent"
-    //                 mx={{
-    //                   xl: 'auto'
-    //                 }}
-    //                 px="0px"
-    //                 borderRadius="15px"
-    //                 _hover="none"
-    //                 w="100%"
-    //                 _active={{
-    //                   bg: 'inherit',
-    //                   transform: 'none',
-    //                   borderColor: 'transparent'
-    //                 }}
-    //                 _focus={{
-    //                   boxShadow: 'none'
-    //                 }}>
-    //                 {prop.icon ? (
-    //                   <Flex>
-    //                     <IconBox
-    //                       bg={inactiveBg}
-    //                       color={inactiveColorIcon}
-    //                       h="30px"
-    //                       w="30px"
-    //                       me="12px"
-    //                       transition={variantChange}>
-    //                       {prop.icon}
-    //                     </IconBox>
-    //                     <Text color={inactiveColor} my="auto" fontSize="sm">
-    //                       {prop.name}
-    //                     </Text>
-    //                   </Flex>
-    //                 ) : (
-    //                   <HStack spacing={'26px'} ps={'10px'} ms={'0px'}>
-    //                     <Icon as={FaCircle} w="6px" color="green.400" />
-    //                     {prop.establishmentId ? (
-    //                       <NavLink color="red" to={prop.layout + prop.path}>
-    //                         <Text color={inactiveColor} my="auto" fontSize="md" fontWeight="normal">
-    //                           {prop.name}
-    //                         </Text>
-    //                       </NavLink>
-    //                     ) : (
-    //                       <Text color={inactiveColor} my="auto" fontSize="md" fontWeight="normal">
-    //                         {prop.name}
-    //                       </Text>
-    //                     )}
-    //                   </HStack>
-    //                 )}
-    //               </Button>
-    //             )}
-    //             <AccordionIcon color="gray.400" />
-    //           </AccordionButton>
-    //           <AccordionPanel pe={prop.icon ? null : '0px'} pb="8px">
-    //             {(dynamicRoutes || certificationsRoutes || commercialDynamicRoutes) && (
-    //               <List>
-    //                 {
-    //                   prop.icon
-    //                     ? createLinks(
-    //                         prop.isDashboard && !prop.items
-    //                           ? dynamicRoutes
-    //                           : prop.isCertifications
-    //                           ? certificationsRoutes
-    //                           : prop.isCommercial
-    //                           ? commercialDynamicRoutes
-    //                           : prop.items
-    //                       ) // for bullet accordion links
-    //                     : createAccordionLinks(
-    //                         prop.isDashboard && !prop.items
-    //                           ? dynamicRoutes
-    //                           : prop.isCertifications
-    //                           ? certificationsRoutes
-    //                           : prop.isCommercial
-    //                           ? commercialDynamicRoutes
-    //                           : prop.items
-    //                       ) // for non-bullet accordion links
-    //                 }
-    //               </List>
-    //             )}
-    //           </AccordionPanel>
-    //         </AccordionItem>
-    //       </Accordion>
-    //     );
-    //   } else {
-    //     return (
-    //       <NavLink to={prop.layout + prop.path}>
-    //         {prop.icon ? (
-    //           <Box>
-    //             <HStack spacing="14px" py="15px" px="15px">
-    //               <IconBox
-    //                 bg="green.400"
-    //                 color="white"
-    //                 h="30px"
-    //                 w="30px"
-    //                 transition={variantChange}>
-    //                 {prop.icon}
-    //               </IconBox>
-    //               <Text
-    //                 color={activeRoute(prop.regex) ? activeColor : inactiveColor}
-    //                 fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}
-    //                 fontSize="sm">
-    //                 {prop.name}
-    //               </Text>
-    //             </HStack>
-    //           </Box>
-    //         ) : (
-    //           <ListItem>
-    //             <HStack spacing="22px" py="5px" px="10px">
-    //               <Icon
-    //                 as={FaCircle}
-    //                 w={activeRoute(prop.regex) ? '10px' : '6px'}
-    //                 color="green.400"
-    //               />
-    //               <Text
-    //                 color={activeRoute(prop.regex) ? activeColor : inactiveColor}
-    //                 fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}>
-    //                 {prop.name}
-    //               </Text>
-    //             </HStack>
-    //           </ListItem>
-    //         )}
-    //       </NavLink>
-    //     );
-    //   }
-    // });
   };
 
   const { logoText, routes } = props;

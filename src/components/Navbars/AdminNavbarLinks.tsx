@@ -34,7 +34,7 @@ import {
 } from '@chakra-ui/react';
 // Custom Icons
 import { ProfileIcon, SettingsIcon } from 'components/Icons/Icons';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Custom Components
 import { ItemContent } from 'components/Menu/ItemContent';
@@ -67,6 +67,8 @@ type HeaderLinksProps = {
 export default function HeaderLinks(props: HeaderLinksProps) {
   const intl = useIntl();
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;
+  const [subdomain, setSubDomain] = useState<string>('');
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -78,6 +80,23 @@ export default function HeaderLinks(props: HeaderLinksProps) {
   let searchIcon = useColorModeValue('gray.700', 'gray.200');
 
   const [logout, { isLoading, isSuccess, error, isError }] = useLogoutMutation();
+
+  useEffect(() => {
+    const host = window.location.host;
+    const arr = host
+      .split('.')
+      .slice(0, host.includes(import.meta.env.VITE_APP_BASE_DOMAIN) ? -1 : -2);
+
+    if (arr.length > 0) {
+      if (arr[0] === 'app') {
+        setSubDomain('producer');
+      } else if (arr[0] === 'consumer') {
+        setSubDomain('consumer');
+      } else {
+        setSubDomain('');
+      }
+    }
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -101,46 +120,49 @@ export default function HeaderLinks(props: HeaderLinksProps) {
   const settingsRef = React.useRef();
   return (
     <Flex pe={{ sm: '0px', md: '16px' }} w={{ sm: '100%', md: 'auto' }} alignItems="center">
-      <InputGroup
-        cursor="pointer"
-        bg={inputBg}
-        borderRadius="15px"
-        w={{
-          sm: '60%',
-          md: '200px'
-        }}
-        me={{ sm: '20px', md: '20px' }}
-        _focus={{
-          borderColor: { mainTeal }
-        }}
-        _active={{
-          borderColor: { mainTeal }
-        }}>
-        <InputLeftElement
-          children={
-            <IconButton
-              bg="inherit"
-              borderRadius="inherit"
-              _hover="none"
-              _active={{
-                bg: 'inherit',
-                transform: 'none',
-                borderColor: 'transparent'
-              }}
-              _focus={{
-                boxShadow: 'none'
-              }}
-              icon={<SearchIcon color={searchIcon} w="15px" h="15px" />}></IconButton>
-          }
-        />
-        <Input
-          fontSize="xs"
-          py="11px"
-          color={mainText}
-          placeholder={intl.formatMessage({ id: 'app.typeHere' })}
-          borderRadius="inherit"
-        />
-      </InputGroup>
+      {subdomain === 'producer' && (
+        <InputGroup
+          cursor="pointer"
+          bg={inputBg}
+          borderRadius="15px"
+          w={{
+            sm: '60%',
+            md: '200px'
+          }}
+          me={{ sm: '20px', md: '20px' }}
+          _focus={{
+            borderColor: { mainTeal }
+          }}
+          _active={{
+            borderColor: { mainTeal }
+          }}>
+          <InputLeftElement
+            children={
+              <IconButton
+                bg="inherit"
+                borderRadius="inherit"
+                _hover="none"
+                _active={{
+                  bg: 'inherit',
+                  transform: 'none',
+                  borderColor: 'transparent'
+                }}
+                _focus={{
+                  boxShadow: 'none'
+                }}
+                icon={<SearchIcon color={searchIcon} w="15px" h="15px" />}></IconButton>
+            }
+          />
+
+          <Input
+            fontSize="xs"
+            py="11px"
+            color={mainText}
+            placeholder={intl.formatMessage({ id: 'app.typeHere' })}
+            borderRadius="inherit"
+          />
+        </InputGroup>
+      )}
       {/* <NavLink to="/auth/signin"> */}
       <Button
         ms="0px"
@@ -183,7 +205,7 @@ export default function HeaderLinks(props: HeaderLinksProps) {
         <MenuButton>
           <BellIcon color={navbarIcon} w="18px" h="18px" />
         </MenuButton>
-        <MenuList p="16px 8px">
+        {/* <MenuList p="16px 8px">
           <Flex flexDirection="column">
             <MenuItem borderRadius="8px" mb="10px">
               <ItemContent
@@ -213,7 +235,7 @@ export default function HeaderLinks(props: HeaderLinksProps) {
               />
             </MenuItem>
           </Flex>
-        </MenuList>
+        </MenuList> */}
       </Menu>
     </Flex>
   );
