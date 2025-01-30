@@ -69,7 +69,7 @@ import { setUserCompany } from 'store/features/userSlice';
 import { useCreateCompanyMutation } from 'store/api/companyApi';
 import { useDropzone } from 'react-dropzone';
 import { zodResolver } from '@hookform/resolvers/zod';
-
+import { useIntl } from 'react-intl';
 // Custom components
 
 const formSchemaInfo = object({
@@ -91,6 +91,7 @@ const formSchemaSocials = object({
 
 function NewCompany() {
   // Chakra color mode
+  const intl = useIntl();
   const textColor = useColorModeValue('gray.700', 'white');
   const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
   const bgColor = useColorModeValue('white', 'gray.700');
@@ -232,7 +233,7 @@ function NewCompany() {
                 color={activeBullets.mainInfo ? { textColor } : 'gray.300'}
                 fontWeight={activeBullets.mainInfo ? 'bold' : 'normal'}
                 display={{ sm: 'none', md: 'block' }}>
-                1. Main Info
+                {intl.formatMessage({ id: 'app.mainInfo' })}
               </Text>
             </Flex>
           </Tab>
@@ -280,7 +281,7 @@ function NewCompany() {
                 color={activeBullets.description ? { textColor } : 'gray.300'}
                 fontWeight={activeBullets.description ? 'bold' : 'normal'}
                 display={{ sm: 'none', md: 'block' }}>
-                2. Description
+                {intl.formatMessage({ id: 'app.description' })}
               </Text>
             </Flex>
           </Tab>
@@ -330,7 +331,7 @@ function NewCompany() {
                 transition="all .3s ease"
                 _hover={{ color: textColor }}
                 display={{ sm: 'none', md: 'block' }}>
-                3. Media
+                {intl.formatMessage({ id: 'app.media' })}
               </Text>
             </Flex>
           </Tab>
@@ -361,7 +362,7 @@ function NewCompany() {
                 transition="all .3s ease"
                 _hover={{ color: textColor }}
                 display={{ sm: 'none', md: 'block' }}>
-                4. Socials
+                {intl.formatMessage({ id: 'app.socials' })}
               </Text>
             </Flex>
           </Tab>
@@ -372,7 +373,7 @@ function NewCompany() {
             <Card>
               <CardHeader mb="22px">
                 <Text color={textColor} fontSize="lg" fontWeight="bold">
-                  Company Info
+                  {intl.formatMessage({ id: 'app.companyInfo' })}
                 </Text>
               </CardHeader>
               <CardBody>
@@ -383,16 +384,16 @@ function NewCompany() {
                         <FormControl>
                           <FormInput
                             name="name"
-                            label="Name"
-                            placeholder="Company name"
+                            label={intl.formatMessage({ id: 'app.name' })}
+                            placeholder={intl.formatMessage({ id: 'app.companyName' })}
                             fontSize="xs"
                           />
                         </FormControl>
                         <FormControl>
                           <FormInput
                             name="address"
-                            label="Address"
-                            placeholder="Company address"
+                            label={intl.formatMessage({ id: 'app.address' })}
+                            placeholder={intl.formatMessage({ id: 'app.companyAddress' })}
                             fontSize="xs"
                           />
                         </FormControl>
@@ -401,16 +402,16 @@ function NewCompany() {
                         <FormControl>
                           <FormInput
                             name="country"
-                            label="Country"
-                            placeholder="Company Country"
+                            label={intl.formatMessage({ id: 'app.country' })}
+                            placeholder={intl.formatMessage({ id: 'app.companyCountry' })}
                             fontSize="xs"
                           />
                         </FormControl>
                         <FormControl>
                           <FormInput
                             name="city"
-                            label="City"
-                            placeholder="Company City"
+                            label={intl.formatMessage({ id: 'app.city' })}
+                            placeholder={intl.formatMessage({ id: 'app.companyCity' })}
                             fontSize="xs"
                           />
                         </FormControl>
@@ -419,8 +420,8 @@ function NewCompany() {
                         <FormControl>
                           <FormInput
                             name="state"
-                            label="State"
-                            placeholder="Company state"
+                            label={intl.formatMessage({ id: 'app.state' })}
+                            placeholder={intl.formatMessage({ id: 'app.companyState' })}
                             fontSize="xs"
                           />
                         </FormControl>
@@ -435,7 +436,7 @@ function NewCompany() {
                         h="35px"
                         type="submit">
                         <Text fontSize="xs" color="#fff" fontWeight="bold">
-                          NEXT
+                          {intl.formatMessage({ id: 'app.next' })}
                         </Text>
                       </Button>
                     </Stack>
@@ -448,7 +449,7 @@ function NewCompany() {
             <Card>
               <CardHeader mb="32px">
                 <Text fontSize="lg" color={textColor} fontWeight="bold">
-                  Description
+                  {intl.formatMessage({ id: 'app.description' })}
                 </Text>
               </CardHeader>
               <CardBody>
@@ -468,7 +469,7 @@ function NewCompany() {
                           h="35px"
                           onClick={() => mainInfoTab.current.click()}>
                           <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                            PREV
+                            {intl.formatMessage({ id: 'app.prev' })}
                           </Text>
                         </Button>
                         <Button
@@ -480,7 +481,7 @@ function NewCompany() {
                           h="35px"
                           type="submit">
                           <Text fontSize="xs" color="#fff" fontWeight="bold">
-                            NEXT
+                            {intl.formatMessage({ id: 'app.next' })}
                           </Text>
                         </Button>
                       </Flex>
@@ -495,13 +496,13 @@ function NewCompany() {
             <Card>
               <CardHeader mb="22px">
                 <Text color={textColor} fontSize="xl" fontWeight="bold" mb="3px">
-                  Media
+                  {intl.formatMessage({ id: 'app.media' })}
                 </Text>
               </CardHeader>
               <CardBody>
                 <Flex direction="column" w="100%">
                   <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
-                    Company image
+                    {intl.formatMessage({ id: 'app.companyImage' })}
                   </Text>
                   <Flex
                     align="center"
@@ -515,7 +516,7 @@ function NewCompany() {
                     <Input {...getInputProps()} />
                     <Button variant="no-hover">
                       <Text color="gray.400" fontWeight="normal">
-                        Drop the image here to upload
+                        {intl.formatMessage({ id: 'app.dropTheImageHereToUpload' })}
                       </Text>
                     </Button>
                   </Flex>
@@ -529,7 +530,7 @@ function NewCompany() {
                       h="35px"
                       onClick={() => descriptionTab.current.click()}>
                       <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                        PREV
+                        {intl.formatMessage({ id: 'app.prev' })}
                       </Text>
                     </Button>
                     <Button
@@ -541,7 +542,7 @@ function NewCompany() {
                       h="35px"
                       onClick={() => socialsTab.current.click()}>
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
-                        NEXT
+                        {intl.formatMessage({ id: 'app.next' })}
                       </Text>
                     </Button>
                   </Flex>
@@ -553,7 +554,7 @@ function NewCompany() {
             <Card>
               <CardHeader mb="32px">
                 <Text fontSize="lg" color={textColor} fontWeight="bold">
-                  Socials
+                  {intl.formatMessage({ id: 'app.socials' })}
                 </Text>
               </CardHeader>
               <CardBody>
@@ -564,7 +565,7 @@ function NewCompany() {
                         <FormControl>
                           <FormInput
                             name="facebook"
-                            label="Facebook Account"
+                            label={intl.formatMessage({ id: 'app.facebookAccount' })}
                             placeholder="https://"
                             fontSize="xs"
                           />
@@ -572,7 +573,7 @@ function NewCompany() {
                         <FormControl>
                           <FormInput
                             name="instagram"
-                            label="Instagram Account"
+                            label={intl.formatMessage({ id: 'app.instagramAccount' })}
                             placeholder="https://"
                             fontSize="xs"
                           />
@@ -588,7 +589,7 @@ function NewCompany() {
                           h="35px"
                           onClick={() => mediaTab.current.click()}>
                           <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                            PREV
+                            {intl.formatMessage({ id: 'app.prev' })}
                           </Text>
                         </Button>
 
@@ -601,7 +602,7 @@ function NewCompany() {
                           h="35px"
                           type="submit">
                           <Text fontSize="xs" color="#fff" fontWeight="bold">
-                            SEND
+                            {intl.formatMessage({ id: 'app.send' })}
                           </Text>
                         </Button>
                       </Flex>

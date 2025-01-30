@@ -42,6 +42,7 @@ import signInImage from 'assets/img/signIn.png';
 import { useDispatch } from 'react-redux';
 import { useLoginMutation } from 'store/api/authApi';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useIntl } from 'react-intl';
 
 const loginSchema = object({
   email: string().min(1, 'Email address is required').email('Email Address is invalid'),
@@ -53,7 +54,7 @@ const loginSchema = object({
 
 function SignIn() {
   const dispatch = useDispatch();
-
+  const intl = useIntl();
   // Chakra color mode
   const titleColor = useColorModeValue('green.500', 'green.400');
   const textColor = useColorModeValue('gray.400', 'white');
@@ -112,26 +113,30 @@ function SignIn() {
             p="48px"
             mt={{ md: '150px', lg: '80px' }}>
             <Heading color={titleColor} fontSize="32px" mb="10px">
-              Welcome Back
+              {intl.formatMessage({ id: 'app.welcomeBack' })}
             </Heading>
             <Text mb="36px" ms="4px" color={textColor} fontWeight="bold" fontSize="14px">
-              Enter your email and password to sign in
+              {intl.formatMessage({ id: 'app.enterYourEmailAndPasswordToSignIn' })}
             </Text>
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmitHandler)}>
                 <FormControl isInvalid={isError}>
-                  <FormInput name="email" label="Email" placeholder="Your email address" />
+                  <FormInput
+                    name="email"
+                    label="Email"
+                    placeholder={intl.formatMessage({ id: 'app.yourEmailAddress' })}
+                  />
                   <FormInput
                     name="password"
                     label="Password"
-                    placeholder="Your password"
+                    placeholder={intl.formatMessage({ id: 'app.yourPassword' })}
                     type="password"
                   />
                   {isError && <FormErrorMessage pl="4px">{error.data.detail}</FormErrorMessage>}
                   <FormControl display="flex" alignItems="center">
                     <Switch id="remember-login" colorScheme="green" me="10px" />
                     <FormLabel htmlFor="remember-login" mb="0" ms="1" fontWeight="normal">
-                      Remember me
+                      {intl.formatMessage({ id: 'app.rememberMe' })}
                     </FormLabel>
                   </FormControl>
                   <Button
@@ -149,7 +154,7 @@ function SignIn() {
                     _active={{
                       bg: 'green.400'
                     }}>
-                    SIGN IN
+                    {intl.formatMessage({ id: 'app.signIn' })}
                   </Button>
                 </FormControl>
               </form>
@@ -161,14 +166,14 @@ function SignIn() {
               maxW="100%"
               mt="0px">
               <Text color={textColor} fontWeight="medium">
-                Don't have an account?
+                {intl.formatMessage({ id: 'app.dontHaveAnAccount' })}
                 <Link
                   color={titleColor}
                   as="span"
                   ms="5px"
                   fontWeight="bold"
                   onClick={() => navigate('/auth/signup')}>
-                  Sign Up
+                  {intl.formatMessage({ id: 'app.signUp' })}
                 </Link>
               </Text>
             </Flex>

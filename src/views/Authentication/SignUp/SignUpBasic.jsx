@@ -17,7 +17,7 @@ import { FaApple, FaFacebook, FaGoogle } from 'react-icons/fa';
 import { FormProvider, useForm } from 'react-hook-form';
 import React, { useEffect } from 'react';
 import { object, string } from 'zod';
-
+import { useIntl } from 'react-intl';
 // Assets
 import BgSignUp from 'assets/img/backgroundImage.png';
 import FormInput from 'components/Forms/FormInput';
@@ -40,6 +40,7 @@ const registerSchema = object({
 });
 
 function SignUp() {
+  const intl = useIntl();
   const titleColor = useColorModeValue('green.500', 'green.400');
   const textColor = useColorModeValue('gray.700', 'white');
   const bgColor = useColorModeValue('white', 'gray.700');
@@ -65,7 +66,7 @@ function SignUp() {
   }, [isSubmitSuccessful]);
 
   const onSubmitHandler = (values) => {
-    registerUser({...values, user_type: 4});
+    registerUser({ ...values, user_type: 4 });
   };
 
   return (
@@ -105,7 +106,7 @@ function SignUp() {
         mt="6.5rem"
         pt={'55px'}>
         <Text fontSize="4xl" color="white" fontWeight="bold">
-          Welcome!
+          {intl.formatMessage({ id: 'app.welcome' })}
         </Text>
         <Text
           fontSize="md"
@@ -114,7 +115,7 @@ function SignUp() {
           mt="10px"
           mb="26px"
           w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}>
-          You can login by completing the form below or by using your social account.
+          {intl.formatMessage({ id: 'app.youCanLoginBy' })}
         </Text>
       </Flex>
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
@@ -129,12 +130,12 @@ function SignUp() {
           boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)">
           {isSuccess ? (
             <Text color="green.400" fontWeight="bold" textAlign="center" mb="22px">
-              Registration successful. Please check your email to verify your account.
+              {intl.formatMessage({ id: 'app.registrationSuccessful' })}
             </Text>
           ) : (
             <>
               <Text fontSize="xl" color={textColor} fontWeight="bold" textAlign="center" mb="22px">
-                Register With
+                {intl.formatMessage({ id: 'app.registerWith' })}
               </Text>
               <HStack spacing="15px" justify="center" mb="22px">
                 <Flex
@@ -186,24 +187,36 @@ function SignUp() {
                 </Flex>
               </HStack>
               <Text fontSize="lg" color="gray.400" fontWeight="bold" textAlign="center" mb="22px">
-                or
+                {intl.formatMessage({ id: 'app.or' })}
               </Text>
               <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(onSubmitHandler)}>
                   <FormControl isInvalid={errors.name}>
-                    <FormInput name="first_name" label="First Name" placeholder="Your first name" />
-                    <FormInput name="last_name" label="Last Name" placeholder="Your last name" />
-                    <FormInput name="email" label="Email" placeholder="Your email address" />
+                    <FormInput
+                      name="first_name"
+                      label={intl.formatMessage({ id: 'app.firstName' })}
+                      placeholder={intl.formatMessage({ id: 'app.yourFirstName' })}
+                    />
+                    <FormInput
+                      name="last_name"
+                      label={intl.formatMessage({ id: 'app.lastName' })}
+                      placeholder={intl.formatMessage({ id: 'app.yourLastName' })}
+                    />
+                    <FormInput
+                      name="email"
+                      label={intl.formatMessage({ id: 'app.email' })}
+                      placeholder={intl.formatMessage({ id: 'app.yourEmailAddress' })}
+                    />
                     <FormInput
                       name="password"
-                      label="Password"
-                      placeholder="Your password"
+                      label={intl.formatMessage({ id: 'app.password' })}
+                      placeholder={intl.formatMessage({ id: 'app.yourPassword' })}
                       type="password"
                     />
                     <FormInput
                       name="password2"
-                      label="Confirm Password"
-                      placeholder="Confirm your password"
+                      label={intl.formatMessage({ id: 'app.confirmPassword' })}
+                      placeholder={intl.formatMessage({ id: 'app.confirmYourPassword' })}
                       type="password"
                     />
                     {/* <FormControl display="flex" alignItems="center" mb="24px">
@@ -235,7 +248,7 @@ function SignUp() {
                       {isLoading ? (
                         <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
                       ) : (
-                        'SIGN UP'
+                        intl.formatMessage({ id: 'app.signUp' })
                       )}
                     </Button>
                   </FormControl>
@@ -248,7 +261,7 @@ function SignUp() {
                 maxW="100%"
                 mt="0px">
                 <Text color={textColor} fontWeight="medium">
-                  Already have an account?
+                  {intl.formatMessage({ id: 'app.alreadyHaveAnAccount' })}
                   <Link
                     color={titleColor}
                     as="span"
@@ -256,7 +269,7 @@ function SignUp() {
                     href="#"
                     fontWeight="bold"
                     onClick={() => navigate('/auth/signin')}>
-                    Sign In
+                    {intl.formatMessage({ id: 'app.signIn' })}
                   </Link>
                 </Text>
               </Flex>
