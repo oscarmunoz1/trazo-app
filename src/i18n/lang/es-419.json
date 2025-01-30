@@ -171,5 +171,8 @@
   "app.firstName": "Nombre",
   "app.lastName": "Apellido",
   "app.email": "Correo electrónico",
-  "app.phone": "Teléfono"
+  "app.phone": "Teléfono",
+  "app.createCompany": "Crear una nueva compañía",
+  "app.modifyForm": "Modifica el formulario a continuación para editar la compañía seleccionada.",
+  "app.completeForm": "Completa el formulario a continuación para crear una nueva compañía."
 }

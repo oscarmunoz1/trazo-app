@@ -171,5 +171,8 @@
   "app.firstName": "First name",
   "app.lastName": "Last name",
   "app.email": "Email",
-  "app.phone": "Phone"
+  "app.phone": "Phone",
+  "app.createCompany": "Create a new Company",
+  "app.modifyForm": "Modify the form below to edit the selected Company.",
+  "app.completeForm": "Complete the form below to create a new Company."
 }

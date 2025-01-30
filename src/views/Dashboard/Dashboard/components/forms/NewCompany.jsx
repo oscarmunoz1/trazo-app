@@ -184,8 +184,9 @@ function NewCompany() {
       direction="column"
       bg={bgColor}
       boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
-      borderRadius="15px">
-      <Tabs variant="unstyled" mt="24px" alignSelf="center">
+      borderRadius="15px"
+      w="90%">
+      <Tabs variant="unstyled" mt="24px" alignSelf="center" w="100%">
         <TabList display="flex" align="center">
           <Tab
             ref={mainInfoTab}

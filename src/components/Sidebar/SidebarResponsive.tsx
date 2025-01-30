@@ -73,7 +73,6 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
   const [dynamicRoutes, setDynamicRoutes] = useState([]);
   const [certificationsRoutes, setCertificationsRoutes] = useState([]);
   const [commercialDynamicRoutes, setCommercialDynamicRoutes] = useState([]);
-  const { sidebarWidth, setSidebarWidth, toggleSidebar } = React.useContext(SidebarContext);
 
   // this is for the rest of the collapses
   //  BRAND
@@ -177,13 +176,13 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
     return routes?.map((prop, index) => {
       return (
         <NavLink to={prop.layout + prop.path}>
-          <ListItem pt="5px" ms={sidebarWidth === 275 ? '26px' : '0px'} key={index}>
+          <ListItem pt="5px" ms={'26px'} key={index}>
             <Text
               mb="4px"
               color={activeRoute(prop.regex) ? activeColor : inactiveColor}
               fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}
               fontSize="sm">
-              {sidebarWidth === 275 ? prop.name : prop.name[0]}
+              {prop.name}
             </Text>
           </ListItem>
         </NavLink>
@@ -215,7 +214,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
         return (
           <>
             <Text
-              fontSize={sidebarWidth === 275 ? 'md' : 'xs'}
+              fontSize={'md'}
               color={activeColor}
               fontWeight="bold"
               mx="auto"
@@ -296,25 +295,17 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                         </Text>
                       </Flex>
                     ) : (
-                      <HStack
-                        spacing={sidebarWidth === 275 ? '22px' : '0px'}
-                        ps={sidebarWidth === 275 ? '10px' : '0px'}
-                        ms={sidebarWidth === 275 ? '0px' : '8px'}>
-                        <Icon
-                          as={FaCircle}
-                          w="10px"
-                          color="green.400"
-                          display={sidebarWidth === 275 ? 'block' : 'none'}
-                        />
+                      <HStack spacing={'22px'} ps={'10px'} ms={'0px'}>
+                        <Icon as={FaCircle} w="10px" color="green.400" display={'block'} />
                         {prop.establishmentId ? (
                           <NavLink to={prop.layout + prop.path}>
                             <Text color={activeColor} my="auto" fontSize="sm">
-                              {sidebarWidth === 275 ? prop.name : prop.name[0]}
+                              {prop.name}
                             </Text>
                           </NavLink>
                         ) : (
                           <Text color={activeColor} my="auto" fontSize="sm">
-                            {sidebarWidth === 275 ? prop.name : prop.name[0]}
+                            {prop.name}
                           </Text>
                         )}
                       </HStack>
@@ -383,29 +374,15 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                 )}
                 <AccordionIcon
                   color="gray.400"
-                  display={
-                    prop.icon
-                      ? sidebarWidth === 275 && !prop.isCompanySettings
-                        ? 'block'
-                        : 'none'
-                      : 'block'
-                  }
-                  transform={
-                    prop.icon && !prop.isCompanySettings
-                      ? null
-                      : sidebarWidth === 275
-                      ? null
-                      : 'translateX(-70%)'
-                  }
+                  display={prop.icon ? (!prop.isCompanySettings ? 'block' : 'none') : 'block'}
+                  transform={prop.icon && !prop.isCompanySettings ? null : 'translateX(-70%)'}
                 />
               </AccordionButton>
               <AccordionPanel
                 pe={prop.icon ? null : '0px'}
                 display={prop.isCompanySettings ? 'none' : 'block'}
                 pb="8px"
-                ps={
-                  prop.icon && !prop.isCompanySettings ? null : sidebarWidth === 275 ? null : '8px'
-                }>
+                ps={prop.icon && !prop.isCompanySettings ? null : null}>
                 {(dynamicRoutes || certificationsRoutes || commercialDynamicRoutes) && (
                   <List>
                     {
@@ -459,22 +436,17 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
               </Box>
             ) : (
               <ListItem>
-                <HStack
-                  spacing={
-                    sidebarWidth === 275 ? (activeRoute(prop.regex) ? '22px' : '26px') : '8px'
-                  }
-                  py="5px"
-                  px={sidebarWidth === 275 ? '10px' : '0px'}>
+                <HStack spacing={activeRoute(prop.regex) ? '22px' : '26px'} py="5px" px={'10px'}>
                   <Icon
                     as={FaCircle}
                     w={activeRoute(prop.regex) ? '10px' : '6px'}
                     color="green.400"
-                    display={sidebarWidth === 275 ? 'block' : 'none'}
+                    display={'block'}
                   />
                   <Text
                     color={activeRoute(prop.regex) ? activeColor : inactiveColor}
                     fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}>
-                    {sidebarWidth === 275 ? prop.name : prop.name[0]}
+                    {prop.name}
                   </Text>
                 </HStack>
               </ListItem>

@@ -27,8 +27,10 @@ import NewCompany from '../components/forms/NewCompany';
 import NewParcel from '../components/forms/NewParcel';
 import { useSignUpMutation } from 'store/api/authApi';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useIntl } from 'react-intl';
 
 function AddCompany({ isEdit = false }) {
+  const intl = useIntl();
   const titleColor = useColorModeValue('green.500', 'green.400');
   const textColor = useColorModeValue('gray.700', 'white');
   const bgColor = useColorModeValue('white', 'gray.700');
@@ -72,7 +74,9 @@ function AddCompany({ isEdit = false }) {
         mt="6.5rem"
         pt={'55px'}>
         <Text fontSize="4xl" color="white" fontWeight="bold">
-          {isEdit ? 'Edit the selected Company' : 'Create a new Company'}
+          {isEdit
+            ? intl.formatMessage({ id: 'app.editCompany' })
+            : intl.formatMessage({ id: 'app.createCompany' })}
         </Text>
         <Text
           fontSize="md"
@@ -82,12 +86,12 @@ function AddCompany({ isEdit = false }) {
           mb="26px"
           w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}>
           {isEdit
-            ? 'Modify the form below to edit the selected Company.'
-            : 'Complete the form below to create a new Company.'}
+            ? intl.formatMessage({ id: 'app.modifyForm' })
+            : intl.formatMessage({ id: 'app.completeForm' })}
         </Text>
       </Flex>
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
-        {isEdit ? <NewCompany /> : <NewCompany />}
+        <NewCompany />
       </Flex>
     </Flex>
   );
