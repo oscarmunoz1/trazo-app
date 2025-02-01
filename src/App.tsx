@@ -186,6 +186,9 @@ const App = () => {
                 exact
                 element={<CommercialView />}
               />
+
+              {/* Company config routes */}
+              <Route path="settings" exact element={<SettingsView />} />
             </Route>
           </Route>
         )}

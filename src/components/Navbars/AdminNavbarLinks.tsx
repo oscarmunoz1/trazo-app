@@ -49,8 +49,8 @@ import avatar3 from 'assets/img/avatars/avatar3.png';
 import { clearCurrentCompany } from 'store/features/companySlice';
 import { clearUser } from 'store/features/userSlice';
 import { logout as logoutAction } from 'store/features/authSlice';
-import routes from 'routes.tsx';
-import { useDispatch } from 'react-redux';
+import defaultRoutes from '../../routes';
+import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { useLogoutMutation } from 'store/api/authApi';
 import { useNavigate } from 'react-router-dom';
@@ -68,6 +68,7 @@ export default function HeaderLinks(props: HeaderLinksProps) {
   const intl = useIntl();
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;
   const [subdomain, setSubDomain] = useState<string>('');
+  const [routes, setRoutes] = useState();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -80,6 +81,32 @@ export default function HeaderLinks(props: HeaderLinksProps) {
   let searchIcon = useColorModeValue('gray.700', 'gray.200');
 
   const [logout, { isLoading, isSuccess, error, isError }] = useLogoutMutation();
+
+  const currentUser = useSelector((state) => state.userState.user);
+
+  useEffect(() => {
+    const routes = [...defaultRoutes];
+    if (
+      currentUser?.companies.length > 0 &&
+      currentUser?.companies[0].role === 'Company Admin' &&
+      !routes.some((route) => route.id === 'companySettings') // Check if route already exists
+    ) {
+      const companySettingRoute = {
+        id: 'companySettings',
+        name: 'Company Settings',
+        path: '/dashboard/settings',
+        icon: <SettingsIcon color="inherit" />,
+        authIcon: <SettingsIcon color="inherit" />,
+        layout: '/admin',
+        collapse: true,
+        isCompanySettings: true,
+        regex: /^\/admin\/dashboard\/settings$/
+      };
+      routes.push(companySettingRoute);
+    }
+
+    setRoutes(routes);
+  }, [currentUser]);
 
   useEffect(() => {
     const host = window.location.host;
