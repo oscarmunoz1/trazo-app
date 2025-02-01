@@ -293,7 +293,7 @@ function NewParcel() {
     {
       name: 'mainInfo',
       ref: mainInfoTab,
-      label: '1. Main Info',
+      label: intl.formatMessage({ id: 'app.mainInfo' }),
       nextTab: 'location',
       onClick: () =>
         setActiveBullets({
@@ -307,7 +307,7 @@ function NewParcel() {
     {
       name: 'location',
       ref: locationTab,
-      label: '2. Location',
+      label: intl.formatMessage({ id: 'app.location' }),
       nextTab: 'description',
       onClick: () =>
         setActiveBullets({
@@ -321,7 +321,7 @@ function NewParcel() {
     {
       name: 'description',
       ref: descriptionTab,
-      label: '3. Description',
+      label: intl.formatMessage({ id: 'app.description' }),
       nextTab: 'media',
       onClick: () =>
         setActiveBullets({
@@ -335,7 +335,7 @@ function NewParcel() {
     {
       name: 'media',
       ref: mediaTab,
-      label: '4. Media',
+      label: intl.formatMessage({ id: 'app.media' }),
       nextTab: 'certificate',
       onClick: () =>
         setActiveBullets({
@@ -349,7 +349,7 @@ function NewParcel() {
     {
       name: 'certificate',
       ref: certificationTab,
-      label: '5. Certificate',
+      label: intl.formatMessage({ id: 'app.certificate' }),
       onClick: () =>
         setActiveBullets({
           mainInfo: true,
@@ -429,7 +429,7 @@ function NewParcel() {
                       h="35px"
                       onClick={() => mainInfoTab.current.click()}>
                       <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                        PREV
+                        {intl.formatMessage({ id: 'app.prev' })}
                       </Text>
                     </Button>
                     <Button
@@ -441,7 +441,7 @@ function NewParcel() {
                       h="35px"
                       type="submit">
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
-                        NEXT
+                        {intl.formatMessage({ id: 'app.next' })}
                       </Text>
                     </Button>
                   </Flex>
@@ -455,13 +455,13 @@ function NewParcel() {
         <Card>
           <CardHeader mb="22px">
             <Text color={textColor} fontSize="xl" fontWeight="bold" mb="3px">
-              Media
+              {intl.formatMessage({ id: 'app.media' })}
             </Text>
           </CardHeader>
           <CardBody>
             <Flex direction="column" w="100%">
               <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
-                Parcel images
+                {intl.formatMessage({ id: 'app.parcelImages' })}
               </Text>
               <Flex
                 align="center"
@@ -503,7 +503,7 @@ function NewParcel() {
                     </Flex>
                   ) : (
                     <Text color="gray.400" fontWeight="normal">
-                      Drop files here to upload
+                      {intl.formatMessage({ id: 'app.dropFilesHereToUpload' })}
                     </Text>
                   )}
                 </Button>
@@ -549,10 +549,12 @@ function NewParcel() {
               w="80%"
               mx="auto">
               <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
-                Do you want to certificate this parcel?
+                {intl.formatMessage({ id: 'app.doYouWantToCertificateThisParcel' })}
               </Text>
               <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                In the following inputs you must give detailed information in order to certify this
+                {intl.formatMessage({
+                  id: 'app.inTheFollowingInputsYouMustGiveDetailedInformationInOrderToCertifyThisParcel'
+                })}
                 parcel.
               </Text>
             </Flex>
@@ -572,7 +574,7 @@ function NewParcel() {
                         {...registerCertificate('certificate')}
                       />
                       <FormLabel htmlFor="certificate" mb="0" ms="1" fontWeight="normal">
-                        Yes, I want to certify this parcel
+                        {intl.formatMessage({ id: 'app.yesIWantToCertifyThisParcel' })}
                       </FormLabel>
                     </FormControl>
                     <FormInput
@@ -580,9 +582,9 @@ function NewParcel() {
                       ms="4px"
                       borderRadius="15px"
                       type="text"
-                      placeholder="Contact number of the parcel"
+                      placeholder={intl.formatMessage({ id: 'app.contactNumberOfTheParcel' })}
                       name="contactNumber"
-                      label="Contact number"
+                      label={intl.formatMessage({ id: 'app.contactNumber' })}
                       disabled={!certificateValue}
                     />
                     <FormInput
@@ -590,9 +592,9 @@ function NewParcel() {
                       ms="4px"
                       borderRadius="15px"
                       type="text"
-                      placeholder="Address of the parcel"
+                      placeholder={intl.formatMessage({ id: 'app.addressOfTheParcel' })}
                       name="address"
-                      label="Address"
+                      label={intl.formatMessage({ id: 'app.address' })}
                       disabled={!certificateValue}
                     />
                     <Flex justify="space-between" width={'100%'}>
@@ -605,7 +607,7 @@ function NewParcel() {
                         h="35px"
                         onClick={() => prevTab.current.click()}>
                         <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                          PREV
+                          {intl.formatMessage({ id: 'app.prev' })}
                         </Text>
                       </Button>
                       <Button
@@ -622,7 +624,7 @@ function NewParcel() {
                           <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
                         ) : (
                           <Text fontSize="xs" color="#fff" fontWeight="bold">
-                            SEND
+                            {intl.formatMessage({ id: 'app.send' })}
                           </Text>
                         )}
                       </Button>

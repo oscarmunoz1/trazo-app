@@ -75,7 +75,7 @@ const CarouselHorizontal = ({ title, description, data }: CarouselHorizontalProp
               xl: 'repeat(3, 1fr)',
               '2xl': 'repeat(4, 1fr)'
             }}
-            templateRows={{ sm: '1fr 1fr 1fr auto', md: '1fr 2fr', xl: '1fr' }}
+            templateRows={{ sm: '1fr', md: '1fr', xl: '1fr' }}
             gap="24px">
             {data.map((parcel) => (
               <CarouselCard

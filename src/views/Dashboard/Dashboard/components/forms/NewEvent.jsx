@@ -141,7 +141,7 @@ const orderOptions = (values) => {
 
 function NewEstablishment() {
   const intl = useIntl();
-  // Chakra color mode 
+  // Chakra color mode
   const textColor = useColorModeValue('gray.700', 'white');
   const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
   const bgProfile = useColorModeValue(
@@ -320,7 +320,7 @@ function NewEstablishment() {
     {
       name: 'basic',
       ref: basicTab,
-      label: '1. Basic',
+      label: intl.formatMessage({ id: 'app.basic' }),
       nextTab: 'mainInfo',
       onClick: () =>
         setActiveBullets({
@@ -333,7 +333,7 @@ function NewEstablishment() {
     {
       name: 'mainInfo',
       ref: mainInfoTab,
-      label: '2. Main Info',
+      label: intl.formatMessage({ id: 'app.mainInfo' }),
       nextTab: 'description',
       onClick: () =>
         setActiveBullets({
@@ -346,7 +346,7 @@ function NewEstablishment() {
     {
       name: 'description',
       ref: descriptionTab,
-      label: '3. Description',
+      label: intl.formatMessage({ id: 'app.description' }),
       nextTab: 'media',
       onClick: () =>
         setActiveBullets({
@@ -359,7 +359,7 @@ function NewEstablishment() {
     {
       name: 'media',
       ref: mediaTab,
-      label: '4. Media',
+      label: intl.formatMessage({ id: 'app.media' }),
       nextTab: null,
       onClick: () =>
         setActiveBullets({
@@ -376,7 +376,8 @@ function NewEstablishment() {
       tabsList={tabsList}
       activeBullets={activeBullets}
       lineWidth={29}
-      lineLeft={['52px', '39px']}>
+      // lineLeft={['52px', '39px']}
+    >
       <TabPanel>
         <Card>
           <CardHeader mb="22px">
@@ -462,7 +463,9 @@ function NewEstablishment() {
                   <Flex>
                     <FormControl>
                       <FormLabel pl={'12px'} fontSize="xs" fontWeight="bold" mb={'4px'}>
-                        {intl.formatMessage({ id: 'app.selectTheOthersParcelsToWhichTheEventWasApplied' })}
+                        {intl.formatMessage({
+                          id: 'app.selectTheOthersParcelsToWhichTheEventWasApplied'
+                        })}
                       </FormLabel>
                       <Select
                         value={value}
@@ -474,6 +477,7 @@ function NewEstablishment() {
                         classNamePrefix="select"
                         onChange={onChange}
                         options={parcels}
+                        noOptionsMessage={() => intl.formatMessage({ id: 'app.noOptions' })}
                       />
                     </FormControl>
                   </Flex>

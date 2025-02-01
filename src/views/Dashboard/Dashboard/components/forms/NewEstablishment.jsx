@@ -67,7 +67,7 @@ import { useDropzone } from 'react-dropzone';
 import { useGoogleMap } from '@react-google-maps/api';
 import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
-
+import { useIntl } from 'react-intl';
 const formSchemaInfo = object({
   name: string().min(1, 'Name is required'),
   country: string().min(1, 'Country is required'),
@@ -131,6 +131,7 @@ function NewEstablishment() {
   const currentEstablishment = useSelector((state) => state.form.currentForm?.establishment);
   const navigate = useNavigate();
   const currentCompany = useSelector((state) => state.company.currentCompany);
+  const intl = useIntl();
   const [skills, setSkills] = useState([
     {
       name: 'chakra-ui',
@@ -262,7 +263,7 @@ function NewEstablishment() {
     {
       ref: mainInfoTab,
       name: 'mainInfo',
-      label: '1. Main Info',
+      label: intl.formatMessage({ id: 'app.mainInfo' }),
       nextTab: 'description',
       onClick: () =>
         setActiveBullets({
@@ -275,7 +276,7 @@ function NewEstablishment() {
     {
       ref: descriptionTab,
       name: 'description',
-      label: '2. Description',
+      label: intl.formatMessage({ id: 'app.description' }),
       nextTab: 'media',
       onClick: () =>
         setActiveBullets({
@@ -288,7 +289,7 @@ function NewEstablishment() {
     {
       ref: mediaTab,
       name: 'media',
-      label: '3. Media',
+      label: intl.formatMessage({ id: 'app.media' }),
       nextTab: 'socials',
       onClick: () =>
         setActiveBullets({
@@ -301,7 +302,7 @@ function NewEstablishment() {
     {
       ref: socialsTab,
       name: 'socials',
-      label: '4. Socials',
+      label: intl.formatMessage({ id: 'app.socials' }),
       onClick: () =>
         setActiveBullets({
           mainInfo: true,
@@ -325,7 +326,7 @@ function NewEstablishment() {
         <Card>
           <CardHeader mb="22px">
             <Text color={textColor} fontSize="lg" fontWeight="bold">
-              Establishment Info
+              {intl.formatMessage({ id: 'app.establishmentInfo' })}
             </Text>
           </CardHeader>
           <CardBody>
@@ -336,16 +337,16 @@ function NewEstablishment() {
                     <FormControl>
                       <FormInput
                         name="name"
-                        label="Name"
-                        placeholder="Establishment name"
+                        label={intl.formatMessage({ id: 'app.name' })}
+                        placeholder={intl.formatMessage({ id: 'app.establishmentName' })}
                         fontSize="xs"
                       />
                     </FormControl>
                     <FormControl>
                       <FormInput
                         name="country"
-                        label="Country"
-                        placeholder="Establishment country"
+                        label={intl.formatMessage({ id: 'app.country' })}
+                        placeholder={intl.formatMessage({ id: 'app.establishmentCountry' })}
                         fontSize="xs"
                       />
                     </FormControl>
@@ -354,8 +355,8 @@ function NewEstablishment() {
                     <FormControl>
                       <FormInput
                         name="state"
-                        label="State"
-                        placeholder="Establishment state"
+                        label={intl.formatMessage({ id: 'app.state' })}
+                        placeholder={intl.formatMessage({ id: 'app.establishmentState' })}
                         fontSize="xs"
                       />
                     </FormControl>
@@ -372,16 +373,16 @@ function NewEstablishment() {
                     <FormControl>
                       <FormInput
                         name="address"
-                        label="Address"
-                        placeholder="Establishment address"
+                        label={intl.formatMessage({ id: 'app.address' })}
+                        placeholder={intl.formatMessage({ id: 'app.establishmentAddress' })}
                         fontSize="xs"
                       />
                     </FormControl>
                     <FormControl>
                       <FormInput
                         name="zone"
-                        label="Zone"
-                        placeholder="Establishment zone"
+                        label={intl.formatMessage({ id: 'app.zone' })}
+                        placeholder={intl.formatMessage({ id: 'app.establishmentZone' })}
                         fontSize="xs"
                       />
                     </FormControl>
@@ -396,7 +397,7 @@ function NewEstablishment() {
                     h="35px"
                     type="submit">
                     <Text fontSize="xs" color="#fff" fontWeight="bold">
-                      NEXT
+                      {intl.formatMessage({ id: 'app.next' })}
                     </Text>
                   </Button>
                 </Stack>
@@ -410,7 +411,7 @@ function NewEstablishment() {
         <Card>
           <CardHeader mb="32px">
             <Text fontSize="lg" color={textColor} fontWeight="bold">
-              Description
+              {intl.formatMessage({ id: 'app.description' })}
             </Text>
           </CardHeader>
           <CardBody>
@@ -430,7 +431,7 @@ function NewEstablishment() {
                       h="35px"
                       onClick={() => mainInfoTab.current.click()}>
                       <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                        PREV
+                        {intl.formatMessage({ id: 'app.prev' })}
                       </Text>
                     </Button>
                     <Button
@@ -442,7 +443,7 @@ function NewEstablishment() {
                       h="35px"
                       type="submit">
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
-                        NEXT
+                        {intl.formatMessage({ id: 'app.next' })}
                       </Text>
                     </Button>
                   </Flex>
@@ -456,13 +457,13 @@ function NewEstablishment() {
         <Card>
           <CardHeader mb="22px">
             <Text color={textColor} fontSize="xl" fontWeight="bold" mb="3px">
-              Media
+              {intl.formatMessage({ id: 'app.media' })}
             </Text>
           </CardHeader>
           <CardBody>
             <Flex direction="column" w="100%">
               <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
-                Parcel images
+                {intl.formatMessage({ id: 'app.parcelImages' })}
               </Text>
               <Flex
                 align="center"
@@ -504,7 +505,7 @@ function NewEstablishment() {
                     </Flex>
                   ) : (
                     <Text color="gray.400" fontWeight="normal">
-                      Drop files here to upload
+                      {intl.formatMessage({ id: 'app.dropFilesHereToUpload' })}
                     </Text>
                   )}
                 </Button>
@@ -519,7 +520,7 @@ function NewEstablishment() {
                   h="35px"
                   onClick={() => descriptionTab.current.click()}>
                   <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                    PREV
+                    {intl.formatMessage({ id: 'app.prev' })}
                   </Text>
                 </Button>
                 <Button
@@ -531,7 +532,7 @@ function NewEstablishment() {
                   h="35px"
                   onClick={() => socialsTab.current.click()}>
                   <Text fontSize="xs" color="#fff" fontWeight="bold">
-                    NEXT
+                    {intl.formatMessage({ id: 'app.next' })}
                   </Text>
                 </Button>
               </Flex>
@@ -543,7 +544,7 @@ function NewEstablishment() {
         <Card>
           <CardHeader mb="32px">
             <Text fontSize="lg" color={textColor} fontWeight="bold">
-              Socials
+              {intl.formatMessage({ id: 'app.socials' })}
             </Text>
           </CardHeader>
           <CardBody>
@@ -554,7 +555,7 @@ function NewEstablishment() {
                     <FormControl>
                       <FormInput
                         name="facebook"
-                        label="Facebook Account"
+                        label={intl.formatMessage({ id: 'app.facebookAccount' })}
                         placeholder="https://"
                         fontSize="xs"
                       />
@@ -562,7 +563,7 @@ function NewEstablishment() {
                     <FormControl>
                       <FormInput
                         name="instagram"
-                        label="Instagram Account"
+                        label={intl.formatMessage({ id: 'app.instagramAccount' })}
                         placeholder="https://"
                         fontSize="xs"
                       />
@@ -578,7 +579,7 @@ function NewEstablishment() {
                       h="35px"
                       onClick={() => mediaTab.current.click()}>
                       <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                        PREV
+                        {intl.formatMessage({ id: 'app.prev' })}
                       </Text>
                     </Button>
 
@@ -591,7 +592,7 @@ function NewEstablishment() {
                       h="35px"
                       type="submit">
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
-                        SEND
+                        {intl.formatMessage({ id: 'app.send' })}
                       </Text>
                     </Button>
                   </Flex>

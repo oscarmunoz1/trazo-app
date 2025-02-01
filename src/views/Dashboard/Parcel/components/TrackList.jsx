@@ -120,11 +120,11 @@ const TrackList = ({ amount }) => {
           <Flex direction="column">
             {currentHistory?.product && (
               <Text fontSize="sm" color="gray.400" fontWeight="normal">
-                The production of the product{' '}
+                {intl.formatMessage({ id: 'app.theProductionOf' })}{' '}
                 <Text fontWeight="bold" as="span" color="green.300">
                   {`${currentHistory?.product}`}{' '}
                 </Text>
-                has been started on{' '}
+                {intl.formatMessage({ id: 'app.hasBeenStarted' })}{' '}
                 <Text fontWeight="bold" as="span" color="green.300">
                   {`${new Date(currentHistory?.start_date).toLocaleDateString('en-US')}`}{' '}
                 </Text>
@@ -146,7 +146,7 @@ const TrackList = ({ amount }) => {
                   <TimelineRow
                     key={event.id}
                     logo={event.certified ? FaRegCheckCircle : FaRegDotCircle}
-                    title={event.type}
+                    title={intl.formatMessage({ id: `${event.type}` }) || event.type}
                     date={new Date(event.date).toDateString()}
                     color={event.certified ? 'green.300' : 'blue.400'}
                     index={index}

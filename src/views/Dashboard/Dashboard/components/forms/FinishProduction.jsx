@@ -73,6 +73,7 @@ import { useDropzone } from 'react-dropzone';
 import { useFinishCurrentHistoryMutation } from 'store/api/historyApi.js';
 import { useGoogleMap } from '@react-google-maps/api';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useIntl } from 'react-intl';
 
 const formSchemaBasic = object({
   production_amount: string()
@@ -84,6 +85,7 @@ const formSchemaBasic = object({
 });
 
 function FinishProduction() {
+  const intl = useIntl();
   // Chakra color mode
   const textColor = useColorModeValue('gray.700', 'white');
   const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
@@ -110,10 +112,8 @@ function FinishProduction() {
 
   const { parcelId, establishmentId } = useParams();
 
-  const [
-    finishCurrentHistory,
-    { data, error, isSuccess, isLoading }
-  ] = useFinishCurrentHistoryMutation();
+  const [finishCurrentHistory, { data, error, isSuccess, isLoading }] =
+    useFinishCurrentHistoryMutation();
 
   const basicMethods = useForm({
     resolver: zodResolver(formSchemaBasic)
@@ -161,7 +161,7 @@ function FinishProduction() {
             <Card>
               <CardHeader mb="32px">
                 <Text fontSize="lg" color={textColor} fontWeight="bold">
-                  Main Info
+                  {intl.formatMessage({ id: 'app.mainInfo' })}
                 </Text>
               </CardHeader>
 
@@ -172,11 +172,11 @@ function FinishProduction() {
                       <Flex flexDir={'column'} flexGrow={1}>
                         <FormInput
                           fontSize="xs"
-                          label="Production amount"
+                          label={intl.formatMessage({ id: 'app.productionAmount' })}
                           ms="4px"
                           borderRadius="15px"
                           type="text"
-                          placeholder="Volume of the product"
+                          placeholder={intl.formatMessage({ id: 'app.volumeOfTheProduct' })}
                           mb="24px"
                           name="production_amount"
                         />
@@ -184,11 +184,11 @@ function FinishProduction() {
                       <Flex flexDir={'column'} flexGrow={1}>
                         <FormInput
                           fontSize="xs"
-                          label="Lot number"
+                          label={intl.formatMessage({ id: 'app.lotNumber' })}
                           ms="4px"
                           borderRadius="15px"
                           type="text"
-                          placeholder="Lot number"
+                          placeholder={intl.formatMessage({ id: 'app.lotNumber' })}
                           mb="24px"
                           name="lot_id"
                         />
@@ -196,7 +196,7 @@ function FinishProduction() {
                     </Flex>
                     <Flex flexDir={'column'}>
                       <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-                        Finish date
+                        {intl.formatMessage({ id: 'app.finishDate' })}
                       </FormLabel>
                       <FormInput
                         fontSize="xs"
@@ -209,19 +209,19 @@ function FinishProduction() {
                       />
                     </Flex>
                     <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-                      Observations
+                      {intl.formatMessage({ id: 'app.observations' })}
                     </FormLabel>
                     <Textarea
                       fontSize="xs"
                       ms="4px"
                       borderRadius="15px"
                       type="text"
-                      placeholder="Description of the event"
+                      placeholder={intl.formatMessage({ id: 'app.descriptionOfTheEvent' })}
                       mb="24px"
                       {...register('observation')}
                     />
                     <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
-                      Production images
+                      {intl.formatMessage({ id: 'app.productionImages' })}
                     </Text>
                     <Flex
                       align="center"
@@ -263,7 +263,7 @@ function FinishProduction() {
                           </Flex>
                         ) : (
                           <Text color="gray.400" fontWeight="normal">
-                            Drop files here to upload
+                            {intl.formatMessage({ id: 'app.dropFilesHereToUpload' })}
                           </Text>
                         )}
                       </Button>
@@ -281,7 +281,7 @@ function FinishProduction() {
                           <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
                         ) : (
                           <Text fontSize="xs" color="#fff" fontWeight="bold">
-                            SEND
+                            {intl.formatMessage({ id: 'app.send' })}
                           </Text>
                         )}
                       </Button>

@@ -28,8 +28,10 @@ import { IoEllipsisVerticalSharp } from 'react-icons/io5';
 import TimelineRow from 'components/Tables/TimelineRow';
 import { useGetHistoryQuery } from 'store/api/historyApi';
 import { useSelector } from 'react-redux';
+import { useIntl } from 'react-intl';
 
 function ProfileProduction() {
+  const intl = useIntl();
   const textColor = useColorModeValue('gray.700', 'white');
   const navigate = useNavigate();
   const { establishmentId, productionId, parcelId } = useParams();
@@ -52,8 +54,10 @@ function ProfileProduction() {
 
   return (
     <BoxBackground
-      title={'Production Detail'}
-      subtitle={'Here you can see the information of the production you have selected.'}>
+      title={intl.formatMessage({ id: 'app.productionDetail' })}
+      subtitle={intl.formatMessage({
+        id: 'app.hereYouCanSeeTheInformationOfTheProductionYouHaveSelected'
+      })}>
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px" width={'100%'}>
         <Card
           mt={{ md: '24px' }}
@@ -76,7 +80,7 @@ function ProfileProduction() {
                     }>
                     <Flex color={textColor} cursor="pointer" align="center" p="4px">
                       <Text fontSize="sm" fontWeight="500">
-                        EDIT
+                        {intl.formatMessage({ id: 'app.edit' })}
                       </Text>
                     </Flex>
                   </MenuItem>
@@ -84,7 +88,7 @@ function ProfileProduction() {
                     <Flex color="red.500" cursor="pointer" align="center" p="4px">
                       {/* <Icon as={FaTrashAlt} me="4px" /> */}
                       <Text fontSize="sm" fontWeight="500">
-                        DELETE
+                        {intl.formatMessage({ id: 'app.delete' })}
                       </Text>
                     </Flex>
                   </MenuItem>
@@ -162,7 +166,7 @@ function ProfileProduction() {
                     />
                   </Stack>
                   <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                    Product
+                    {intl.formatMessage({ id: 'app.product' })}
                   </Text>
                   <Text color={textColor} fontWeight="bold" fontSize="2xl" mb="12px">
                     {historyData?.product}
@@ -176,12 +180,12 @@ function ProfileProduction() {
                     display="flex"
                     alignItems="center"
                     justifyContent="center">
-                    CERTIFIED
+                    {intl.formatMessage({ id: 'app.certified' })}
                   </Badge>
                   <Flex direction="column">
                     <Flex align="center" mb="15px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        Location:{' '}
+                        {intl.formatMessage({ id: 'app.location' })}:
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
                         {establishment?.location}
@@ -189,7 +193,7 @@ function ProfileProduction() {
                     </Flex>
                     <Flex align="center" mb="10px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        Establishment:
+                        {intl.formatMessage({ id: 'app.establishment' })}:
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
                         {establishment?.name}
@@ -198,7 +202,7 @@ function ProfileProduction() {
 
                     <Flex align="center" mb="10px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        Parcel:{' '}
+                        {intl.formatMessage({ id: 'app.parcel' })}:
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
                         {historyData?.parcel}
@@ -206,7 +210,7 @@ function ProfileProduction() {
                     </Flex>
                     <Flex align="center" mb="10px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        Production:{' '}
+                        {intl.formatMessage({ id: 'app.production' })}:
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
                         {`${new Date(historyData?.start_date).toLocaleDateString()}-${new Date(
@@ -226,7 +230,7 @@ function ProfileProduction() {
               <Flex direction={{ base: 'column', lg: 'row' }}>
                 <Flex px="24px" py="24px" width={{ md: '100%', lg: '50%' }} direction={'column'}>
                   <Text fontSize="xl" color={textColor} fontWeight="bold" pb="24px">
-                    Events
+                    {intl.formatMessage({ id: 'app.events' })}
                   </Text>
                   <Flex>
                     <Flex direction="column" width={'100%'} paddingBottom={'24px'}>
@@ -235,7 +239,7 @@ function ProfileProduction() {
                           <TimelineRow
                             key={event.id}
                             logo={event.certified ? FaRegCheckCircle : FaRegDotCircle}
-                            title={event.type}
+                            title={intl.formatMessage({ id: event.type })}
                             date={new Date(event.date).toDateString()}
                             color={event.certified ? 'green.300' : 'blue.400'}
                             index={index}
@@ -261,7 +265,7 @@ function ProfileProduction() {
                   h="50%"
                   direction={'column'}>
                   <Text fontSize="xl" color={textColor} fontWeight="bold" pb="24px">
-                    QR Code
+                    {intl.formatMessage({ id: 'app.qrCode' })}
                   </Text>
                   <Image src={historyData?.qr_code} alt="illustration" />
                 </Flex>

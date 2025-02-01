@@ -132,10 +132,8 @@ function NewProduction() {
 
   const currentCompany = useSelector((state) => state.company.currentCompany);
 
-  const [
-    createProduction,
-    { data, isSuccess: isSuccessProduction }
-  ] = useCreateProductionMutation();
+  const [createProduction, { data, isSuccess: isSuccessProduction }] =
+    useCreateProductionMutation();
 
   const basicMethods = useForm({
     resolver: zodResolver(formSchemaBasic)
@@ -274,6 +272,7 @@ function NewProduction() {
                         styles={styles}
                         value={value}
                         onChange={(newValue) => setValue(newValue)}
+                        placeholder={intl.formatMessage({ id: 'app.select' })}
                       />
                       {productValueError === null && (
                         <Text fontSize="xs" color="red.500" mt={'0px'} pl={'12px'}>

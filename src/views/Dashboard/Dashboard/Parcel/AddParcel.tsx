@@ -1,15 +1,20 @@
 import BoxBackground from '../components/BoxBackground';
 import EditParcel from '../components/forms/EditParcel';
 import NewParcel from '../components/forms/NewParcel';
-
+import { useIntl } from 'react-intl';
 function AddParcel({ isEdit = false }) {
+  const intl = useIntl();
   return (
     <BoxBackground
-      title={isEdit ? 'Edit the selected Parcel' : 'Add a new Parcel'}
+      title={
+        isEdit
+          ? intl.formatMessage({ id: 'app.editParcel' })
+          : intl.formatMessage({ id: 'app.addParcel' })
+      }
       subtitle={
         isEdit
-          ? 'Modify the form below to edit the selected parcel.'
-          : 'Complete the form below to add a new parcel to your establishment.'
+          ? intl.formatMessage({ id: 'app.editParcelSubtitle' })
+          : intl.formatMessage({ id: 'app.addParcelSubtitle' })
       }>
       {isEdit ? <EditParcel /> : <NewParcel />}
     </BoxBackground>

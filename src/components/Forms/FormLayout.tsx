@@ -72,17 +72,13 @@ function FormLayout(props) {
       }
     }
     if (tabsList.length === 4) {
-      if (index === tabsList.length - 2) {
-        return '32px';
-      } else {
-        return '52px';
-      }
+      return { base: '40px', sm: '28px', smd: '36px', smdd: '62px', smddd: '74px', md: '83px' };
+    } else if (tabsList.length === 5) {
+      return { base: '40px', sm: '28px', smd: '23px', smdd: '50px', smddd: '59px', md: '62px' };
+    } else if (index === tabsList.length - 2) {
+      return '32px';
     } else {
-      if (index === tabsList.length - 2) {
-        return '32px';
-      } else {
-        return '43px';
-      }
+      return '45px';
     }
   };
 
@@ -103,9 +99,13 @@ function FormLayout(props) {
                 <Tab
                   ref={tab.ref}
                   _focus="none"
-                  w={{ base: '80px', smdd: '200px' }}
+                  w={
+                    tabsList.length === 4
+                      ? { base: '80px', sm: '100px', smdd: '160px', smddd: '200px', md: '200px' }
+                      : { base: '60px', sm: '80px', smdd: '140px', smddd: '180px', md: '180px' }
+                  }
                   onClick={() => tab.onClick()}>
-                  <Flex direction="column" justify="center" align="center">
+                  <Flex direction="column" justify="center" align="center" w="100%">
                     <Icon
                       as={BsCircleFill}
                       color={activeBullets[tab.name] ? textColor : 'gray.300'}
@@ -122,7 +122,7 @@ function FormLayout(props) {
                       fontWeight={activeBullets[tab.name] ? 'bold' : 'normal'}
                       transition="all .3s ease"
                       _hover={{ color: textColor }}
-                      display={{ base: 'none', smdd: 'block' }}>
+                      display={{ base: 'none', smddd: 'block' }}>
                       {tab.label}
                     </Text>
                   </Flex>
@@ -133,23 +133,24 @@ function FormLayout(props) {
                 <Tab
                   ref={tab.ref}
                   _focus="none"
-                  w={{ base: '80px', smdd: '200px' }}
+                  w={
+                    tabsList.length === 4
+                      ? { base: '80px', sm: '100px', smdd: '160px', smddd: '200px', md: '200px' }
+                      : { base: '60px', sm: '80px', smdd: '140px', smddd: '180px', md: '180px' }
+                  }
                   onClick={() => tab.onClick()}>
                   <Flex
                     direction="column"
                     justify="center"
                     align="center"
                     position="relative"
+                    w="100%"
                     _before={{
                       content: "''",
                       width: `${tabWidth + lineWidth}px`,
                       height: '3px',
                       bg: activeBullets[tab.nextTab] ? textColor : 'gray.200',
-                      left: {
-                        base: '20px',
-                        sm: '8px',
-                        smdd: lineLeft
-                      },
+                      left: lineLeft,
                       top: {
                         base: activeBullets[tab.name] ? '6px' : '4px',
                         sm: null
@@ -173,7 +174,7 @@ function FormLayout(props) {
                       overflow="hidden"
                       color={activeBullets[tab.name] ? { textColor } : 'gray.300'}
                       fontWeight={activeBullets[tab.name] ? 'bold' : 'normal'}
-                      display={{ base: 'none', smdd: 'block' }}>
+                      display={{ base: 'none', smddd: 'block' }}>
                       {tab.label}
                     </Text>
                   </Flex>

@@ -9,12 +9,14 @@ import CardBody from 'components/Card/CardBody';
 import CardFooter from 'components/Card/CardFooter.tsx';
 import CardHeader from 'components/Card/CardHeader';
 import { setRef } from '@fullcalendar/react';
+import { useIntl } from 'react-intl';
 
 const options = {
   googleMapApiKey: 'AIzaSyCLHij6DjbLLkhTsTvrRhwuKf8ZGXrx-Q8'
 };
 
 const MapCreator = (props) => {
+  const intl = useIntl();
   const { handleNext, prevTab, center, zoom, mapPolygon } = props;
   const bgButton = useColorModeValue(
     'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)',
@@ -79,10 +81,10 @@ const MapCreator = (props) => {
           w="80%"
           mx="auto">
           <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
-            Where is the Parcel located?
+            {intl.formatMessage({ id: 'app.whereIsTheParcelLocated' })}
           </Text>
           <Text color="gray.400" fontWeight="normal" fontSize="sm">
-            Indicate the location of the parcel
+            {intl.formatMessage({ id: 'app.indicateTheLocationOfTheParcel' })}
           </Text>
         </Flex>
       </CardHeader>
@@ -128,7 +130,7 @@ const MapCreator = (props) => {
                   fontSize="xs"
                   variant="no-hover"
                   onClick={() => setPolygon([])}>
-                  CLEAR
+                  {intl.formatMessage({ id: 'app.clear' })}
                 </Button>
                 <Button
                   variant="outline"
@@ -136,7 +138,9 @@ const MapCreator = (props) => {
                   minW="110px"
                   fontSize="xs"
                   onClick={() => setDrawingMode((prevState) => !prevState)}>
-                  {drawingMode ? 'STOP EDITING' : 'EDIT MODE'}
+                  {drawingMode
+                    ? intl.formatMessage({ id: 'app.stopEditing' })
+                    : intl.formatMessage({ id: 'app.editMode' })}
                 </Button>
               </Flex>
             </>
@@ -154,7 +158,7 @@ const MapCreator = (props) => {
             h="35px"
             onClick={() => prevTab.current.click()}>
             <Text fontSize="xs" color="gray.700" fontWeight="bold">
-              PREV
+              {intl.formatMessage({ id: 'app.prev' })}
             </Text>
           </Button>
           <Button
@@ -168,7 +172,7 @@ const MapCreator = (props) => {
             h="35px"
             onClick={handleOnFinish}>
             <Text fontSize="xs" color="#fff" fontWeight="bold">
-              NEXT
+              {intl.formatMessage({ id: 'app.next' })}
             </Text>
           </Button>
         </Flex>

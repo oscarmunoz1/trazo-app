@@ -22,8 +22,10 @@ import ImageCarousel from 'components/ImageCarousel/ImageCarousel';
 import { IoEllipsisVerticalSharp } from 'react-icons/io5';
 import { useGetParcelQuery } from 'store/api/productApi';
 import { useSelector } from 'react-redux';
+import { useIntl } from 'react-intl';
 
 function ProfileEstablishment() {
+  const intl = useIntl();
   const textColor = useColorModeValue('gray.700', 'white');
   const navigate = useNavigate();
   const { establishmentId, parcelId } = useParams();
@@ -36,7 +38,13 @@ function ProfileEstablishment() {
 
   const currentParcel = useSelector((state) => state.product.currentParcel);
 
-  const { data: parcelData, error, isLoading, isFetching, refetch } = useGetParcelQuery(
+  const {
+    data: parcelData,
+    error,
+    isLoading,
+    isFetching,
+    refetch
+  } = useGetParcelQuery(
     { companyId: currentCompany?.id, establishmentId, parcelId },
     {
       skip:
@@ -58,11 +66,10 @@ function ProfileEstablishment() {
     }
   }, [establishmentId, establishments]);
 
-
   return (
     <BoxBackground
-      title="Parcel Profile"
-      subtitle="Here you can see the information of your parcel.">
+      title={intl.formatMessage({ id: 'app.parcelProfile' })}
+      subtitle={intl.formatMessage({ id: 'app.hereYouCanSeeTheInformationOfYourParcel' })}>
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px" w={'100%'}>
         <Card
           mt={{ md: '24px' }}
@@ -85,14 +92,14 @@ function ProfileEstablishment() {
                     }>
                     <Flex color={textColor} cursor="pointer" align="center" p="4px">
                       <Text fontSize="sm" fontWeight="500">
-                        EDIT
+                        {intl.formatMessage({ id: 'app.edit' })}
                       </Text>
                     </Flex>
                   </MenuItem>
                   <MenuItem>
                     <Flex color="red.500" cursor="pointer" align="center" p="4px">
                       <Text fontSize="sm" fontWeight="500">
-                        DELETE
+                        {intl.formatMessage({ id: 'app.delete' })}
                       </Text>
                     </Flex>
                   </MenuItem>
@@ -110,7 +117,7 @@ function ProfileEstablishment() {
                     {parcelData?.name}
                   </Text>
                   <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                    Company
+                    {intl.formatMessage({ id: 'app.company' })}
                   </Text>
                   <Text color={textColor} fontWeight="bold" fontSize="2xl" mb="12px">
                     {currentCompany?.name}
@@ -119,7 +126,7 @@ function ProfileEstablishment() {
                   <Flex direction="column">
                     <Flex align="center" mb="10px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        Address:
+                        {intl.formatMessage({ id: 'app.address' })}:
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
                         {establishment?.address}
@@ -127,7 +134,7 @@ function ProfileEstablishment() {
                     </Flex>
                     <Flex align="center" mb="10px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        Area:{' '}
+                        {intl.formatMessage({ id: 'app.area' })}:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
                         {parcelData?.area}
@@ -136,7 +143,7 @@ function ProfileEstablishment() {
 
                     <Flex align="center" mb="10px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        City:{' '}
+                        {intl.formatMessage({ id: 'app.city' })}:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
                         {establishment?.city}
@@ -144,7 +151,7 @@ function ProfileEstablishment() {
                     </Flex>
                     <Flex align="center" mb="10px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        State:{' '}
+                        {intl.formatMessage({ id: 'app.state' })}:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
                         {establishment?.state}
@@ -153,7 +160,7 @@ function ProfileEstablishment() {
                     {establishment?.zone && (
                       <Flex align="center" mb="10px">
                         <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                          Zone:
+                          {intl.formatMessage({ id: 'app.zone' })}:
                         </Text>
                         <Text fontSize="md" color="gray.500" fontWeight="400">
                           {establishment?.zone}
