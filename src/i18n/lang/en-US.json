@@ -250,6 +250,8 @@
   "event.production.harvest": "Harvest",
   "event.production.pruning": "Pruning",
   "event.production.planting": "Planting",
+  "event.production.harvesting": "Harvesting",
+  "event.production.irrigation": "Irrigation",
   "app.completeTheFormBelowToFinishTheCurrentProductionOnYourParcel": "Complete the form below to finish the current production on your parcel.",
   "app.productionAmount": "Production amount",
   "app.lotNumber": "Lot number",

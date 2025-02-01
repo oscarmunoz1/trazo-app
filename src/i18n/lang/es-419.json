@@ -254,6 +254,8 @@
   "event.production.harvest": "Cosecha",
   "event.production.pruning": "Poda",
   "event.production.planting": "Plantación",
+  "event.production.irrigation": "Riego",
+  "event.production.harvesting": "Cosecha",
   "app.completeTheFormBelowToFinishTheCurrentProductionOnYourParcel": "Completa el formulario a continuación para finalizar la producción actual en tu parcela.",
   "app.productionAmount": "Cantidad de producción",
   "app.lotNumber": "Número de lote",
