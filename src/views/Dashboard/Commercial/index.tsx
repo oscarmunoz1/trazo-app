@@ -11,7 +11,8 @@ import {
   SimpleGrid,
   Stack,
   Text,
-  useColorModeValue
+  useColorModeValue,
+  CircularProgress
 } from '@chakra-ui/react';
 import { NavLink, useLocation, useMatch, useParams } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
@@ -249,22 +250,22 @@ export default function CommercialView() {
   }, [dataEstablishmentScansVsSaleInfo]);
 
   useEffect(() => {
-    if (dataEstablishmentProductsReputation != undefined && reputationChartRef.current) {
+    if (reputationChartRef.current) {
       reputationChartRef.current.chart.updateSeries([
         {
           name: 'Average',
-          data: dataEstablishmentProductsReputation?.products_reputation?.series
+          data: dataEstablishmentProductsReputation?.products_reputation?.series || []
         }
       ]);
       reputationChartRef.current.chart.updateOptions({
         ...barChartOptionsCharts1,
         xaxis: {
           ...barChartOptionsCharts1.xaxis,
-          categories: dataEstablishmentProductsReputation?.products_reputation?.options
+          categories: dataEstablishmentProductsReputation?.products_reputation?.options || []
         }
       });
     }
-  }, [dataEstablishmentProductsReputation]);
+  }, [dataEstablishmentProductsReputation, reputationChartRef.current]);
 
   const scansColumnsNames = [
     intl.formatMessage({ id: 'app.date' }),
@@ -543,28 +544,34 @@ export default function CommercialView() {
                 </CardHeader>
                 <CardBody h="100%">
                   <Box w="100%" h="100%">
-                    <BarChart
-                      chartRef={reputationChartRef}
-                      chartData={
-                        dataEstablishmentProductsReputation != null &&
-                        barChartDataCharts1.map((chart) => {
-                          return {
-                            name: chart.name,
-                            data: dataEstablishmentProductsReputation?.products_reputation?.series
-                          };
-                        })
-                      }
-                      chartOptions={
-                        dataEstablishmentProductsReputation != null && {
+                    {isFetchingEstablishmentProductsReputation ? (
+                      <Flex justify="center" align="center" h="100%">
+                        <CircularProgress isIndeterminate color="green.300" />
+                      </Flex>
+                    ) : (
+                      <BarChart
+                        chartRef={reputationChartRef}
+                        chartData={
+                          dataEstablishmentProductsReputation != null
+                            ? barChartDataCharts1.map((chart) => ({
+                                name: chart.name,
+                                data:
+                                  dataEstablishmentProductsReputation?.products_reputation
+                                    ?.series || []
+                              }))
+                            : [{ name: '', data: [] }]
+                        }
+                        chartOptions={{
                           ...barChartOptionsCharts1,
                           xaxis: {
                             ...barChartOptionsCharts1?.xaxis,
                             categories:
-                              dataEstablishmentProductsReputation?.products_reputation?.options
+                              dataEstablishmentProductsReputation?.products_reputation?.options ||
+                              []
                           }
-                        }
-                      }
-                    />
+                        }}
+                      />
+                    )}
                   </Box>
                 </CardBody>
               </Card>
