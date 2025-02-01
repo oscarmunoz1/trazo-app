@@ -264,5 +264,16 @@
   "app.events": "Eventos",
   "app.qrCode": "Código QR",
   "app.establishment": "Establecimiento",
-  "app.noParcelsYet": "No hay parcelas todavía, empieza creando la primera."
+  "app.noParcelsYet": "No hay parcelas todavía, empieza creando la primera.",
+  "app.productDetails": "Detalles del producto",
+  "app.welcomeMessage": "Aquí puedes encontrar toda la información sobre el producto que escaneaste.",
+  "app.iBoughtIt": "¡Lo compré!",
+  "app.shareYourInitialProductImpression": "Comparte tu primera impresión del producto",
+  "app.commentSentSuccessfully": "¡Comentario enviado correctamente!",
+  "app.yourFirstImpressionHere": "Tu primera impresión aquí...",
+  "app.similarProducts": "Productos similares",
+  "app.review": "Reseña",
+  "app.noReviewsYet": "No hay reseñas todavía, empieza agregando una nueva.",
+  "app.noSimilarProductsYet": "No hay productos similares todavía, empieza agregando uno nuevo.",
+  "app.parcelLocation": "Ubicación de la parcela"
 }

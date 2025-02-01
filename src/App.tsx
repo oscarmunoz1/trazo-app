@@ -194,14 +194,19 @@ const App = () => {
         )}
 
         {subdomain === 'consumer' && (
-          <Route element={<Authenticated allowedRoles={config.protected.roles} />}>
-            <Route path={config.protected.path} element={<AdminConsumerLayout />}>
-              {/* Consumer routes */}
-              <Route index element={<Navigate to="scans" replace />} />
-              <Route path="scans" element={<ScannedProductsView />} />
-              <Route path="reviews" element={<ReviewsListView />} />
+          <>
+            <Route element={<AuthLayout />}>
+              <Route path="/production/:productionId" element={<ProductDetail />} />
             </Route>
-          </Route>
+            <Route element={<Authenticated allowedRoles={config.protected.roles} />}>
+              <Route path={config.protected.path} element={<AdminConsumerLayout />}>
+                {/* Consumer routes */}
+                <Route index element={<Navigate to="scans" replace />} />
+                <Route path="scans" element={<ScannedProductsView />} />
+                <Route path="reviews" element={<ReviewsListView />} />
+              </Route>
+            </Route>
+          </>
         )}
 
         {/* Default redirect based on subdomain */}

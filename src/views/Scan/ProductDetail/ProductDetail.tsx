@@ -99,137 +99,6 @@ function Capture() {
     resolver: zodResolver(registerSchema)
   });
 
-  const currentHistory = [
-    {
-      id: 60,
-      name: 'Nombre del evento realizado',
-      description: '<p>x</p>',
-      date: '2023-07-16T15:48:00Z',
-      image: null,
-      certified: true,
-      index: 1,
-      type: 'HW',
-      temperature: 12,
-      humidity: 12,
-      time_period: null,
-      observation: null,
-      history: 35,
-      created_by: null
-    },
-    {
-      id: 61,
-      name: 'Nombre del evento realizado',
-      description: '<p>x</p>',
-      date: '2023-07-16T15:48:00Z',
-      image: null,
-      certified: false,
-      index: 1,
-      type: 'HW',
-      temperature: 12,
-      humidity: 12,
-      time_period: null,
-      observation: null,
-      history: 35,
-      created_by: null
-    },
-    {
-      id: 62,
-      name: 'Nombre del evento realizado',
-      description: '<p>x</p>',
-      date: '2023-07-16T15:48:00Z',
-      image: null,
-      certified: true,
-      index: 1,
-      type: 'HW',
-      temperature: 12,
-      humidity: 12,
-      time_period: null,
-      observation: null,
-      history: 35,
-      created_by: null
-    },
-    {
-      id: 64,
-      name: 'Nombre del evento realizado',
-      description: '<p>x</p>',
-      date: '2023-07-16T15:48:00Z',
-      image: null,
-      certified: false,
-      index: 1,
-      type: 'HW',
-      temperature: 12,
-      humidity: 12,
-      time_period: null,
-      observation: null,
-      history: 35,
-      created_by: null
-    },
-    {
-      id: 60,
-      name: 'Nombre del evento realizado',
-      description: '<p>x</p>',
-      date: '2023-07-16T15:48:00Z',
-      image: null,
-      certified: true,
-      index: 1,
-      type: 'HW',
-      temperature: 12,
-      humidity: 12,
-      time_period: null,
-      observation: null,
-      history: 35,
-      created_by: null
-    },
-    {
-      id: 61,
-      name: 'Nombre del evento realizado',
-      description: '<p>x</p>',
-      date: '2023-07-16T15:48:00Z',
-      image: null,
-      certified: false,
-      index: 1,
-      type: 'HW',
-      temperature: 12,
-      humidity: 12,
-      time_period: null,
-      observation: null,
-      history: 35,
-      created_by: null
-    },
-    {
-      id: 62,
-      name: 'Nombre del evento realizado',
-      description: '<p>x</p>',
-      date: '2023-07-16T15:48:00Z',
-      image: null,
-      certified: true,
-      index: 1,
-      type: 'HW',
-      temperature: 12,
-      humidity: 12,
-      time_period: null,
-      observation: null,
-      history: 35,
-      created_by: null
-    },
-    {
-      id: 64,
-      name: 'Nombre del evento realizado',
-      description: '<p>x</p>',
-      date: '2023-07-16T15:48:00Z',
-      image: null,
-      certified: true,
-      index: 1,
-      type: 'HW',
-      temperature: 12,
-      humidity: 12,
-      time_period: null,
-      observation: null,
-      history: 35,
-      created_by: null
-    }
-  ];
-
   const {
     reset,
     handleSubmit,
@@ -320,7 +189,7 @@ function Capture() {
         mt="6.5rem"
         pt={'55px'}>
         <Text fontSize="4xl" color="white" fontWeight="bold">
-          Welcome!
+          {intl.formatMessage({ id: 'app.welcome' })}
         </Text>
         <Text
           fontSize="md"
