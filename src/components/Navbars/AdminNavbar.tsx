@@ -159,12 +159,13 @@ export default function AdminNavbar(props: AdminNavbarProps) {
       }}>
       <Flex
         w="100%"
+        h="100%"
         flexDirection={{
-          sm: 'column',
+          sm: 'column-reverse',
           md: 'row'
         }}
         alignItems={{ xl: 'center' }}>
-        <Box mb={{ sm: '8px', md: '0px' }}>
+        <Box mb={{ sm: '8px', md: '0px' }} h="100%" pt={{ sm: '16px', md: '0px' }}>
           <Breadcrumb>
             <BreadcrumbItem color={mainText}>
               <BreadcrumbLink href="/admin/dashboard/" color={secondaryText}>
@@ -189,7 +190,10 @@ export default function AdminNavbar(props: AdminNavbarProps) {
             )}
           </Breadcrumb>
         </Box>
-        <Box ms="auto" w={{ sm: '100%', md: 'unset' }}>
+        <Box
+          ms="auto"
+          w={{ sm: '100%', md: 'unset' }}
+          justifyContent={{ sm: 'flex-end', md: 'flex-start' }}>
           <AdminNavbarLinks
             onOpen={props.onOpen}
             logoText={props.logoText}

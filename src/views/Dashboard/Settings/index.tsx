@@ -156,49 +156,6 @@ export default function SettingsView() {
     console.log(data);
   };
 
-  const users = [
-    {
-      name: 'Oscar Muñoz',
-      establishments: ['Chacra 1', 'Chacra 2'],
-      role: 'Company Admin'
-    },
-    {
-      name: 'Augusto Bonet',
-      establishments: ['Chacra 2'],
-      role: 'Dealer'
-    },
-    {
-      name: 'Nicolas Salvo',
-      establishments: ['Chacra 1'],
-      role: 'Domain Supervisor'
-    },
-    {
-      name: 'Santiago Rosas',
-      establishments: ['Chacra 1', 'Chacra 3'],
-      role: 'Domain Supervisor'
-    },
-    {
-      name: 'Mateo de los Santos',
-      establishments: ['Chacra 1', 'Chacra 2'],
-      role: 'Company Admin'
-    },
-    {
-      name: 'Bruno Vairo',
-      establishments: ['Chacra 2'],
-      role: 'Domain Worker'
-    },
-    {
-      name: 'Francisco Reobasco',
-      establishments: ['Chacra 3', 'Chacra 4'],
-      role: 'Dealer'
-    },
-    {
-      name: 'Nicolas Machado',
-      establishments: ['Chacra 3', 'Chacra 4'],
-      role: 'Domain Worker'
-    }
-  ];
-
   const { data: userRoles } = useGetUserRolesQuery();
 
   useEffect(() => {

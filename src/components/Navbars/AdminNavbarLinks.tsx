@@ -38,7 +38,7 @@ import React, { useEffect, useState } from 'react';
 
 // Custom Components
 import { ItemContent } from 'components/Menu/ItemContent';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import SidebarResponsive from 'components/Sidebar/SidebarResponsive';
@@ -69,6 +69,7 @@ export default function HeaderLinks(props: HeaderLinksProps) {
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;
   const [subdomain, setSubDomain] = useState<string>('');
   const [routes, setRoutes] = useState();
+  const [isHome, setIsHome] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -83,6 +84,17 @@ export default function HeaderLinks(props: HeaderLinksProps) {
   const [logout, { isLoading, isSuccess, error, isError }] = useLogoutMutation();
 
   const currentUser = useSelector((state) => state.userState.user);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    // Use regex to match /admin/dashboard/establishments/NUMBER pattern
+    const establishmentPattern = /^\/admin\/dashboard\/establishment\/\d+$/;
+    console.log(location.pathname);
+    console.log(establishmentPattern.test(location.pathname));
+
+    setIsHome(establishmentPattern.test(location.pathname));
+  }, [location.pathname]);
 
   useEffect(() => {
     const routes = [...defaultRoutes];
@@ -146,8 +158,12 @@ export default function HeaderLinks(props: HeaderLinksProps) {
   }
   const settingsRef = React.useRef();
   return (
-    <Flex pe={{ sm: '0px', md: '16px' }} w={{ sm: '100%', md: 'auto' }} alignItems="center">
-      {subdomain === 'producer' && (
+    <Flex
+      pe={{ sm: '0px', md: '16px' }}
+      w={{ sm: '100%', md: 'auto' }}
+      alignItems="center"
+      justifyContent={{ sm: 'flex-end', md: 'flex-start' }}>
+      {subdomain === 'producer' && isHome && (
         <InputGroup
           cursor="pointer"
           bg={inputBg}
