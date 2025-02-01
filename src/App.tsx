@@ -205,6 +205,9 @@ const App = () => {
                 <Route path="scans" element={<ScannedProductsView />} />
                 <Route path="reviews" element={<ReviewsListView />} />
               </Route>
+              <Route element={<AuthLayout />}>
+                <Route path="production/:productionId/review/:scanId" element={<ProductReview />} />
+              </Route>
             </Route>
           </>
         )}
