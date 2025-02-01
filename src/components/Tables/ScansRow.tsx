@@ -1,5 +1,6 @@
 // Chakra imports
 import { Button, Flex, Link, Stack, Td, Text, Tr, useColorModeValue } from '@chakra-ui/react';
+import { useIntl } from 'react-intl';
 
 type ScansRowProps = {
   date: string;
@@ -10,6 +11,7 @@ type ScansRowProps = {
 };
 
 const ScansRow = (props: ScansRowProps) => {
+  const intl = useIntl();
   const { date, product, location, parcel, comment } = props;
   const textColor = useColorModeValue('gray.700', 'white');
 
@@ -49,7 +51,7 @@ const ScansRow = (props: ScansRowProps) => {
           fontWeight="bold"
           alignSelf={{ sm: 'flex-start', md: 'flex-end' }}
           mt={{ sm: '16px', md: '0px' }}>
-          VIEW
+          {intl.formatMessage({ id: 'app.view' })}
         </Button>
       </Td>
     </Tr>

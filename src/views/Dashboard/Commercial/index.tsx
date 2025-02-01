@@ -267,6 +267,27 @@ export default function CommercialView() {
     }
   }, [dataEstablishmentProductsReputation, reputationChartRef.current]);
 
+  useEffect(() => {
+    if (chartRef.current) {
+      chartRef.current.chart.updateSeries(
+        lineBarChartData.map((data) => {
+          if (data.name === 'Sales') {
+            return {
+              name: data.name,
+              type: data.type,
+              data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series?.sales || []
+            };
+          }
+          return {
+            name: data.name,
+            type: data.type,
+            data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series?.scans || []
+          };
+        })
+      );
+    }
+  }, [dataEstablishmentScansVsSaleInfo, chartRef.current]);
+
   const scansColumnsNames = [
     intl.formatMessage({ id: 'app.date' }),
     intl.formatMessage({ id: 'app.product' }),
@@ -506,20 +527,24 @@ export default function CommercialView() {
                   <Box w="100%" h="100%">
                     <LineBarChart
                       chartRef={chartRef}
-                      chartData={lineBarChartData.map((data) => {
-                        if (data.name === 'Sales') {
-                          return {
-                            name: data.name,
-                            type: data.type,
-                            data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series.sales
-                          };
-                        }
-                        return {
-                          name: data.name,
-                          type: data.type,
-                          data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales.series.scans
-                        };
-                      })}
+                      chartData={
+                        dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series
+                          ? lineBarChartData.map((data) => ({
+                              name: data.name,
+                              type: data.type,
+                              data:
+                                data.name === 'Sales'
+                                  ? dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.sales ||
+                                    []
+                                  : dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.scans ||
+                                    []
+                            }))
+                          : lineBarChartData.map((data) => ({
+                              name: data.name,
+                              type: data.type,
+                              data: []
+                            }))
+                      }
                       chartOptions={{
                         ...lineBarChartOptions,
                         xaxis: {
@@ -527,7 +552,7 @@ export default function CommercialView() {
                           categories:
                             dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.options?.map(
                               (option) => option.toString()
-                            )
+                            ) || []
                         }
                       }}
                     />
