@@ -59,6 +59,7 @@ import productPage3 from 'assets/img/ProductImage3.png';
 import productPage4 from 'assets/img/ProductImage4.png';
 import { zodResolver } from '@hookform/resolvers/zod';
 import defaultEstablishmentImage from 'assets/img/basic-auth.png';
+import { useIntl } from 'react-intl';
 
 // Assets
 
@@ -89,7 +90,7 @@ function Capture() {
   const [currentImage, setCurrentImage] = useState(productPage1);
   const { productionId } = useParams();
   const [commentValue, setCommentValue] = useState('');
-
+  const intl = useIntl();
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: options.googleMapApiKey
   });
@@ -328,7 +329,7 @@ function Capture() {
           mt="10px"
           mb="26px"
           w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}>
-          Here you can find all the information about the product you scanned.
+          {intl.formatMessage({ id: 'app.welcomeMessage' })}
         </Text>
       </Flex>
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="-30px">
@@ -339,7 +340,7 @@ function Capture() {
           boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px">
           <CardHeader mb="42px">
             <Text color={textColor} fontSize="lg" fontWeight="bold">
-              Product Details
+              {intl.formatMessage({ id: 'app.productDetails' })}
             </Text>
           </CardHeader>
           <CardBody>
@@ -422,13 +423,13 @@ function Capture() {
                     display="flex"
                     alignItems="center"
                     justifyContent="center">
-                    CERTIFIED
+                    {intl.formatMessage({ id: 'app.certified' })}
                   </Badge>
 
                   <Flex direction="column">
                     <Flex align="center" mb="15px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        Establishment:{' '}
+                        {intl.formatMessage({ id: 'app.establishment' })}:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
                         <Link textDecoration={'underline'}>
@@ -438,7 +439,7 @@ function Capture() {
                     </Flex>
                     <Flex align="center" mb="15px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        Location:{' '}
+                        {intl.formatMessage({ id: 'app.location' })}:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
                         {historyData?.parcel.establishment.location}
@@ -446,7 +447,7 @@ function Capture() {
                     </Flex>
                     <Flex align="center" mb="15px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        Parcel:{' '}
+                        {intl.formatMessage({ id: 'app.parcel' })}:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
                         <Link textDecoration={'underline'}>{historyData?.parcel.name}</Link>
@@ -454,7 +455,7 @@ function Capture() {
                     </Flex>
                     <Flex align="center" mb="15px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        Production:{' '}
+                        {intl.formatMessage({ id: 'app.production' })}:{' '}
                       </Text>
                       <Text fontSize="md" color="gray.500" fontWeight="400">
                         {`${new Date(historyData?.start_date).toLocaleDateString()} - ${new Date(
@@ -464,7 +465,7 @@ function Capture() {
                     </Flex>
                     <Flex align="center" mb="15px">
                       <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        Social Media:{' '}
+                        {intl.formatMessage({ id: 'app.socialMedia' })}:{' '}
                       </Text>
                       <Flex>
                         <Link
@@ -514,7 +515,11 @@ function Capture() {
                         <TimelineRow
                           key={event.id}
                           logo={event.certified ? FaRegCheckCircle : FaRegDotCircle}
-                          title={event.type}
+                          title={
+                            event.event_type != 3
+                              ? intl.formatMessage({ id: `${event.type}` })
+                              : event.name
+                          }
                           date={new Date(event.date).toDateString()}
                           color={event.certified ? 'green.300' : 'blue.400'}
                           index={index}
@@ -532,7 +537,7 @@ function Capture() {
                   px="24px"
                   height={'340px'}>
                   <Text fontSize="xl" color={textColor} fontWeight="bold" pb="24px">
-                    Parcel location
+                    {intl.formatMessage({ id: 'app.parcelLocation' })}
                   </Text>
                   {isLoaded && historyData && (
                     <GoogleMap
@@ -571,23 +576,23 @@ function Capture() {
                   onClick={() =>
                     navigate(`/production/${productionId}/review/${historyData?.history_scan}`)
                   }>
-                  I BOUGHT IT
+                  {intl.formatMessage({ id: 'app.iBoughtIt' })}
                 </Button>
               </Flex>
               <Flex pt="14px" pb="34px">
                 <FormControl>
                   <FormLabel color={textColor} fontWeight="bold" fontSize="md">
-                    Share your initial product impression
+                    {intl.formatMessage({ id: 'app.shareYourInitialProductImpression' })}
                   </FormLabel>
                   {isSuccessComment ? (
                     <Flex justifyContent={'center'} my="34px">
                       <Text fontSize="md" color={'gray.500'} fontWeight="normal">
-                        Comment sent successfully!
+                        {intl.formatMessage({ id: 'app.commentSentSuccessfully' })}
                       </Text>
                     </Flex>
                   ) : (
                     <Textarea
-                      placeholder="Your first impression here..."
+                      placeholder={intl.formatMessage({ id: 'app.yourFirstImpressionHere' })}
                       minH="120px"
                       fontSize="14px"
                       borderRadius="15px"
@@ -608,23 +613,23 @@ function Capture() {
                       fontWeight="bold"
                       disabled={isLoadingComment || !commentValue || isSuccessComment}
                       onClick={() => onSubmitHandler()}>
-                      SEND
+                      {intl.formatMessage({ id: 'app.send' })}
                     </Button>
                   </Flex>
                 </FormControl>
               </Flex>
               <Text fontSize="lg" color={textColor} fontWeight="bold" mb="24px">
-                Similar Products
+                {intl.formatMessage({ id: 'app.similarProducts' })}
               </Text>
               <Box w="100%">
                 <Table variant="simple" w="100%">
                   <Thead>
                     <Tr>
                       <Th color="gray.400" fontSize="xs" paddingInlineStart={'0'}>
-                        Name
+                        {intl.formatMessage({ id: 'app.name' })}
                       </Th>
                       <Th color="gray.400" fontSize="xs">
-                        Review
+                        {intl.formatMessage({ id: 'app.review' })}
                       </Th>
                     </Tr>
                   </Thead>

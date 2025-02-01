@@ -363,8 +363,8 @@ function NewEstablishment() {
                     <FormControl>
                       <FormInput
                         name="city"
-                        label="City"
-                        placeholder="Establishment city"
+                        label={intl.formatMessage({ id: 'app.city' })}
+                        placeholder={intl.formatMessage({ id: 'app.establishmentCity' })}
                         fontSize="xs"
                       />
                     </FormControl>

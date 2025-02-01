@@ -263,5 +263,6 @@
   "app.hereYouCanSeeTheInformationOfTheProductionYouHaveSelected": "Aquí puedes ver la información de la producción que has seleccionado.",
   "app.events": "Eventos",
   "app.qrCode": "Código QR",
-  "app.establishment": "Establecimiento"
+  "app.establishment": "Establecimiento",
+  "app.noParcelsYet": "No hay parcelas todavía, empieza creando la primera."
 }

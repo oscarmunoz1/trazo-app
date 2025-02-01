@@ -146,7 +146,11 @@ const TrackList = ({ amount }) => {
                   <TimelineRow
                     key={event.id}
                     logo={event.certified ? FaRegCheckCircle : FaRegDotCircle}
-                    title={intl.formatMessage({ id: `${event.type}` }) || event.type}
+                    title={
+                      event.event_type != 3
+                        ? intl.formatMessage({ id: `${event.type}` })
+                        : event.name
+                    }
                     date={new Date(event.date).toDateString()}
                     color={event.certified ? 'green.300' : 'blue.400'}
                     index={index}

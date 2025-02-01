@@ -97,7 +97,7 @@ const CarouselHorizontal = ({ title, description, data }: CarouselHorizontalProp
               justifyContent={'center'}
               alignItems={'center'}
               textAlign={'center'}>
-              No parcels yet, start by creating the first parcel.
+              {intl.formatMessage({ id: 'app.noParcelsYet' })}
             </Text>
           </Flex>
         )}

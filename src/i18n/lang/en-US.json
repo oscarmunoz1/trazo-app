@@ -259,5 +259,17 @@
   "app.hereYouCanSeeTheInformationOfTheProductionYouHaveSelected": "Here you can see the information of the production you have selected.",
   "app.events": "Events",
   "app.qrCode": "QR Code",
-  "app.establishment": "Establishment"
+  "app.establishment": "Establishment",
+  "app.noParcelsYet": "No parcels yet, start by creating the first parcel.",
+  "app.welcomeMessage": "Here you can find all the information about the product you scanned.",
+  "app.productDetails": "Product Details",
+  "app.parcelLocation": "Parcel location",
+  "app.iBoughtIt": "I BOUGHT IT",
+  "app.shareYourInitialProductImpression": "Share your initial product impression",
+  "app.commentSentSuccessfully": "Comment sent successfully!",
+  "app.yourFirstImpressionHere": "Your first impression here...",
+  "app.similarProducts": "Similar Products",
+  "app.review": "Review",
+  "app.noReviewsYet": "No reviews yet, start by adding a new one.",
+  "app.noSimilarProductsYet": "No similar products yet, start by adding a new one."
 }
