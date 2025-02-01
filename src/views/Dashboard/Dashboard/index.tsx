@@ -109,8 +109,8 @@ export default function DashboardView() {
         {intl.formatMessage({ id: 'app.establishments' })}
       </Text>
       <Grid
-        templateColumns={{ sm: '1fr', md: '1fr 1fr auto', xl: 'repeat(4, 1fr)' }}
-        templateRows={{ sm: '1fr 1fr auto', md: '1fr', xl: '1fr' }}
+        templateColumns={{ sm: '1fr 1fr auto', md: '1fr 2fr auto', xl: 'repeat(4, 1fr)' }}
+        templateRows={{ sm: '1fr  auto', md: '1fr', xl: '1fr' }}
         gap="24px">
         {establishments ? (
           establishments.map((prop, key) => (
