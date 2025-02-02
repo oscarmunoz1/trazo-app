@@ -224,28 +224,33 @@ export default function CommercialView() {
   };
 
   useEffect(() => {
-    if (dataEstablishmentScansVsSaleInfo && chartRef.current) {
-      chartRef.current.chart.updateSeries([
-        {
-          name: 'Scans',
-          type: 'bar',
-          data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series.scans
-        },
-        {
-          name: 'Sales',
-          type: 'line',
-          data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series.sales
-        }
-      ]);
-      chartRef.current.chart.updateOptions({
-        ...lineBarChartOptions,
-        xaxis: {
-          ...lineBarChartOptions.xaxis,
-          categories: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.options?.map((option) =>
-            option.toString()
-          )
-        }
-      });
+    try {
+      if (chartRef.current?.chart && dataEstablishmentScansVsSaleInfo?.scans_vs_sales) {
+        const series = lineBarChartData.map((data) => ({
+          name: data.name,
+          type: data.type,
+          data:
+            data.name === 'Sales'
+              ? dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.sales
+              : dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.scans
+        }));
+
+        const options = {
+          ...lineBarChartOptions,
+          xaxis: {
+            ...lineBarChartOptions.xaxis,
+            categories: dataEstablishmentScansVsSaleInfo.scans_vs_sales.options?.map(String) || []
+          }
+        };
+
+        // Force chart update
+        setTimeout(() => {
+          chartRef.current.chart.updateOptions(options, false, true);
+          chartRef.current.chart.updateSeries(series);
+        }, 0);
+      }
+    } catch (error) {
+      console.error('Error updating chart:', error);
     }
   }, [dataEstablishmentScansVsSaleInfo]);
 
@@ -292,27 +297,6 @@ export default function CommercialView() {
       console.error('Error updating reputation chart:', error);
     }
   }, [dataEstablishmentProductsReputation, textColor]);
-
-  useEffect(() => {
-    if (chartRef.current) {
-      chartRef.current.chart.updateSeries(
-        lineBarChartData.map((data) => {
-          if (data.name === 'Sales') {
-            return {
-              name: data.name,
-              type: data.type,
-              data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series?.sales || []
-            };
-          }
-          return {
-            name: data.name,
-            type: data.type,
-            data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series?.scans || []
-          };
-        })
-      );
-    }
-  }, [dataEstablishmentScansVsSaleInfo, chartRef.current]);
 
   const scansColumnsNames = [
     intl.formatMessage({ id: 'app.date' }),
@@ -553,31 +537,31 @@ export default function CommercialView() {
                   <Box w="100%" h="100%">
                     <LineBarChart
                       chartRef={chartRef}
-                      chartData={
-                        dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series
-                          ? lineBarChartData.map((data) => ({
-                              name: data.name,
-                              type: data.type,
-                              data:
-                                data.name === 'Sales'
-                                  ? dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.sales ||
-                                    []
-                                  : dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.scans ||
-                                    []
-                            }))
-                          : lineBarChartData.map((data) => ({
-                              name: data.name,
-                              type: data.type,
-                              data: []
-                            }))
-                      }
+                      chartData={lineBarChartData.map((data) => ({
+                        name: data.name,
+                        type: data.type,
+                        data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series
+                          ? (data.name === 'Sales'
+                              ? dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.sales
+                              : dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.scans) || []
+                          : []
+                      }))}
                       chartOptions={{
                         ...lineBarChartOptions,
+                        chart: {
+                          ...lineBarChartOptions.chart,
+                          animations: {
+                            enabled: true,
+                            dynamicAnimation: {
+                              speed: 350
+                            }
+                          }
+                        },
                         xaxis: {
                           ...lineBarChartOptions.xaxis,
                           categories:
                             dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.options?.map(
-                              (option) => option.toString()
+                              String
                             ) || []
                         }
                       }}
