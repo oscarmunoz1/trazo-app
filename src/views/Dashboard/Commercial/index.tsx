@@ -223,6 +223,21 @@ export default function CommercialView() {
     });
   };
 
+  const formatCategories = (options: string[]) => {
+    if (!options) return [];
+
+    switch (filters.period.id) {
+      case 'week':
+        return options.map((day) => intl.formatMessage({ id: `app.days.${day.toLowerCase()}` }));
+      case 'year':
+        return options.map((month) =>
+          intl.formatMessage({ id: `app.months.${month.toLowerCase()}` })
+        );
+      default:
+        return options;
+    }
+  };
+
   useEffect(() => {
     console.log('Chart Status:', {
       hasRef: !!chartRef.current,
@@ -256,8 +271,7 @@ export default function CommercialView() {
             },
             xaxis: {
               ...lineBarChartOptions.xaxis,
-              categories:
-                dataEstablishmentScansVsSaleInfo.scans_vs_sales.options?.map(String) || [],
+              categories: formatCategories(dataEstablishmentScansVsSaleInfo.scans_vs_sales.options),
               labels: {
                 show: true,
                 style: {
@@ -279,7 +293,7 @@ export default function CommercialView() {
         data: dataEstablishmentScansVsSaleInfo
       });
     }
-  }, [dataEstablishmentScansVsSaleInfo, textColor]);
+  }, [dataEstablishmentScansVsSaleInfo, textColor, filters.period.id, intl]);
 
   useEffect(() => {
     try {
@@ -597,10 +611,9 @@ export default function CommercialView() {
                           },
                           xaxis: {
                             ...lineBarChartOptions.xaxis,
-                            categories:
-                              dataEstablishmentScansVsSaleInfo.scans_vs_sales.options?.map(
-                                String
-                              ) || [],
+                            categories: formatCategories(
+                              dataEstablishmentScansVsSaleInfo.scans_vs_sales.options
+                            ),
                             labels: {
                               show: true,
                               style: {

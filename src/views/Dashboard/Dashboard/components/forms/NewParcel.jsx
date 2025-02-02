@@ -367,7 +367,7 @@ function NewParcel() {
         <Card>
           <CardHeader mb="22px">
             <Text color={textColor} fontSize="lg" fontWeight="bold">
-              Parcel Info
+              {intl.formatMessage({ id: 'app.parcelInfo' })}
             </Text>
           </CardHeader>
           <CardBody>
@@ -376,10 +376,20 @@ function NewParcel() {
                 <Stack direction="column" spacing="20px" w="100%">
                   <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
                     <FormControl>
-                      <FormInput name="name" label="Name" placeholder="Parcel name" fontSize="xs" />
+                      <FormInput
+                        name="name"
+                        label={intl.formatMessage({ id: 'app.name' })}
+                        placeholder={intl.formatMessage({ id: 'app.parcelName' })}
+                        fontSize="xs"
+                      />
                     </FormControl>
                     <FormControl>
-                      <FormInput name="area" label="Area" placeholder="Parcel area" fontSize="xs" />
+                      <FormInput
+                        name="area"
+                        label={intl.formatMessage({ id: 'app.area' })}
+                        placeholder={intl.formatMessage({ id: 'app.parcelArea' })}
+                        fontSize="xs"
+                      />
                     </FormControl>
                   </Stack>
 
@@ -392,7 +402,7 @@ function NewParcel() {
                     h="35px"
                     type="submit">
                     <Text fontSize="xs" color="#fff" fontWeight="bold">
-                      NEXT
+                      {intl.formatMessage({ id: 'app.next' })}
                     </Text>
                   </Button>
                 </Stack>
@@ -409,7 +419,7 @@ function NewParcel() {
         <Card>
           <CardHeader mb="32px">
             <Text fontSize="lg" color={textColor} fontWeight="bold">
-              Description
+              {intl.formatMessage({ id: 'app.description' })}
             </Text>
           </CardHeader>
           <CardBody>
