@@ -300,106 +300,61 @@ function ProfileProduction() {
                   direction={'column'}
                   align="center"
                   bg={useColorModeValue('white', 'gray.700')}
-                  borderRadius="2xl"
-                  boxShadow="xl"
-                  position="relative"
-                  backdropFilter="blur(10px)"
-                  border="1px solid"
-                  borderColor={useColorModeValue('gray.100', 'gray.700')}>
-                  <Flex direction="column" align="center" mb={6}>
-                    <Text fontSize="2xl" color={textColor} fontWeight="bold" mb={2}>
-                      {intl.formatMessage({ id: 'app.qrCode' })}
-                    </Text>
-                    <Text fontSize="sm" color="gray.500" textAlign="center">
-                      {intl.formatMessage({ id: 'app.scanToViewDetails' })}
-                    </Text>
-                  </Flex>
+                  borderRadius="xl"
+                  boxShadow="sm"
+                  position="relative">
+                  <Text fontSize="xl" color={textColor} fontWeight="bold" mb="4">
+                    {intl.formatMessage({ id: 'app.qrCode' })}
+                  </Text>
 
                   <Box
                     position="relative"
-                    borderRadius="2xl"
+                    borderRadius="xl"
                     overflow="hidden"
-                    boxShadow="2xl"
-                    bg={useColorModeValue('white', 'gray.800')}
-                    p={8}
+                    boxShadow="lg"
+                    p={6}
+                    bg="white"
                     transition="all 0.3s ease"
-                    _hover={{ transform: 'scale(1.02)' }}>
+                    _hover={{ transform: 'scale(1.02)', boxShadow: 'xl' }}>
+                    <Image
+                      src={historyData?.qr_code}
+                      alt="QR Code"
+                      w="300px"
+                      h="300px"
+                      objectFit="contain"
+                      quality={100}
+                    />
+
                     <Box
                       position="absolute"
                       top={0}
                       left={0}
                       right={0}
                       bottom={0}
-                      bg={useColorModeValue('gray.50', 'gray.700')}
-                      opacity={0.5}
-                      filter="blur(40px)"
-                      transform="translate(0, 20px)"
-                      borderRadius="2xl"
-                      zIndex={0}
-                    />
-
-                    <Box position="relative" zIndex={1}>
-                      <Image
-                        src={historyData?.qr_code}
-                        alt="QR Code"
-                        w="300px"
-                        h="300px"
-                        objectFit="contain"
-                        quality={100}
-                        filter="drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.1))"
-                      />
-                    </Box>
-
-                    <Flex
-                      position="absolute"
-                      top={0}
-                      left={0}
-                      right={0}
-                      bottom={0}
                       opacity={0}
-                      transition="all 0.3s ease"
+                      transition="opacity 0.2s"
                       _hover={{ opacity: 1 }}
                       bg="blackAlpha.50"
-                      backdropFilter="blur(4px)"
+                      display="flex"
                       alignItems="center"
-                      justifyContent="center"
-                      borderRadius="2xl">
+                      justifyContent="center">
                       <Button
                         leftIcon={<Icon as={FiDownload} />}
                         colorScheme="green"
                         size="lg"
-                        onClick={downloadQRCode}
-                        _hover={{
-                          transform: 'translateY(-2px)',
-                          boxShadow: 'lg'
-                        }}
-                        _active={{
-                          transform: 'translateY(0)'
-                        }}>
+                        onClick={downloadQRCode}>
                         {intl.formatMessage({ id: 'app.downloadQRCode' })}
                       </Button>
-                    </Flex>
+                    </Box>
                   </Box>
 
-                  <VStack spacing={4} mt={6}>
-                    <Badge
-                      colorScheme="green"
-                      px={4}
-                      py={2}
-                      borderRadius="full"
-                      fontSize="md"
-                      textTransform="none"
-                      boxShadow="sm"
-                      _hover={{
-                        transform: 'translateY(-1px)',
-                        boxShadow: 'md'
-                      }}>
+                  <VStack spacing={2} mt={4}>
+                    <Text fontSize="sm" color="gray.500" textAlign="center">
+                      {intl.formatMessage({ id: 'app.scanToViewDetails' })}
+                    </Text>
+                    <Badge colorScheme="green" px={3} py={1} borderRadius="full">
                       {historyData?.product}
                     </Badge>
-
-                    <Text fontSize="xs" color="gray.500" textAlign="center" maxW="80%">
-                      {`ID: ${productionId}`}
-                    </Text>
                   </VStack>
                 </Flex>
               </Flex>
