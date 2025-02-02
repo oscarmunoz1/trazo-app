@@ -105,7 +105,7 @@ export default function DashboardView() {
 
   return (
     <Flex flexDirection="column" pt={{ base: '120px', md: '75px' }}>
-      <Box mb={6}>
+      <Box>
         <Flex justify="space-between" align="center" mb={4} px={{ base: 2, md: 0 }}>
           <Text
             color={mainText}

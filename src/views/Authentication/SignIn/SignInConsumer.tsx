@@ -52,10 +52,9 @@ export default function SignInConsumer() {
   useEffect(() => {
     if (data && isSuccess) {
       dispatch(loginAction(data));
-      const nextPath = location.state?.next || '/admin/dashboard/scans';
-      navigate(nextPath);
+      navigate(location.state?.next || '/admin/dashboard/scans', { replace: true });
     }
-  }, [data, isSuccess, location.state, navigate]);
+  }, [data, dispatch, isSuccess, location.state, navigate]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {

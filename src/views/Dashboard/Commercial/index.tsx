@@ -240,13 +240,6 @@ export default function CommercialView() {
   };
 
   useEffect(() => {
-    console.log('Chart Status:', {
-      hasRef: !!chartRef.current,
-      hasChartInstance: !!chartRef.current?.chart,
-      hasData: !!dataEstablishmentScansVsSaleInfo?.scans_vs_sales,
-      data: dataEstablishmentScansVsSaleInfo
-    });
-
     try {
       if (chartRef.current?.chart && dataEstablishmentScansVsSaleInfo?.scans_vs_sales) {
         const series = lineBarChartData.map((data) => ({
@@ -289,12 +282,15 @@ export default function CommercialView() {
         chartRef.current.chart.updateSeries(series);
       }
     } catch (error) {
-      console.error('Error updating chart:', error, {
-        chartRef: chartRef.current,
-        data: dataEstablishmentScansVsSaleInfo
-      });
+      console.error('Error updating chart:', error);
     }
-  }, [dataEstablishmentScansVsSaleInfo, textColor, filters.period.id, intl]);
+  }, [
+    dataEstablishmentScansVsSaleInfo,
+    textColor,
+    filters.period.id,
+    intl,
+    currentEstablishmentId
+  ]);
 
   useEffect(() => {
     try {
@@ -302,43 +298,41 @@ export default function CommercialView() {
         reputationChartRef.current?.chart &&
         dataEstablishmentProductsReputation?.products_reputation
       ) {
-        setTimeout(() => {
-          reputationChartRef.current.chart.updateSeries([
-            {
-              name: 'Average',
-              data: dataEstablishmentProductsReputation.products_reputation.series
-            }
-          ]);
+        reputationChartRef.current.chart.updateSeries([
+          {
+            name: 'Average',
+            data: dataEstablishmentProductsReputation.products_reputation.series
+          }
+        ]);
 
-          reputationChartRef.current.chart.updateOptions({
-            ...barChartOptionsCharts1,
-            chart: {
-              ...barChartOptionsCharts1.chart,
-              animations: {
-                enabled: true
-              },
-              toolbar: {
-                show: false
-              }
+        reputationChartRef.current.chart.updateOptions({
+          ...barChartOptionsCharts1,
+          chart: {
+            ...barChartOptionsCharts1.chart,
+            animations: {
+              enabled: true
             },
-            xaxis: {
-              ...barChartOptionsCharts1.xaxis,
-              categories: dataEstablishmentProductsReputation.products_reputation.options,
-              labels: {
-                show: true,
-                style: {
-                  colors: textColor,
-                  fontSize: '12px'
-                }
+            toolbar: {
+              show: false
+            }
+          },
+          xaxis: {
+            ...barChartOptionsCharts1.xaxis,
+            categories: dataEstablishmentProductsReputation.products_reputation.options,
+            labels: {
+              show: true,
+              style: {
+                colors: textColor,
+                fontSize: '12px'
               }
             }
-          });
-        }, 100);
+          }
+        });
       }
     } catch (error) {
       console.error('Error updating reputation chart:', error);
     }
-  }, [dataEstablishmentProductsReputation, textColor]);
+  }, [dataEstablishmentProductsReputation, textColor, currentEstablishmentId]);
 
   const scansColumnsNames = [
     intl.formatMessage({ id: 'app.date' }),
