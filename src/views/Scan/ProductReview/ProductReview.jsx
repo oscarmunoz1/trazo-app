@@ -63,6 +63,7 @@ import { useDropzone } from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import { useSendReviewMutation } from 'store/api/reviewApi';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useIntl } from 'react-intl';
 
 // import CameraCard from "./components/CameraCard";
 
@@ -74,6 +75,7 @@ const registerSchema = object({
 });
 
 function ProductReview() {
+  const intl = useIntl();
   const bgColor = useColorModeValue('white', 'gray.800');
   const textColor = useColorModeValue('gray.700', 'white');
   const { getRootProps, getInputProps } = useDropzone();
@@ -161,7 +163,7 @@ function ProductReview() {
         mt="6.5rem"
         pt={'55px'}>
         <Text fontSize="4xl" color="white" fontWeight="bold">
-          Product Review
+          {intl.formatMessage({ id: 'app.productReview' })}
         </Text>
         <Text
           fontSize="md"
@@ -170,7 +172,7 @@ function ProductReview() {
           mt="10px"
           mb="26px"
           w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}>
-          Here you can make a review of the product you are scanning.
+          {intl.formatMessage({ id: 'app.productReviewDescription' })}
         </Text>
       </Flex>
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="-30px">
@@ -181,7 +183,7 @@ function ProductReview() {
           boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px">
           <CardHeader mb="42px">
             <Text color={textColor} fontSize="lg" fontWeight="bold">
-              Your Review
+              {intl.formatMessage({ id: 'app.yourReview' })}
             </Text>
           </CardHeader>
           <CardBody>
@@ -223,14 +225,14 @@ function ProductReview() {
                         cursor={'pointer'}
                         textDecoration={'underline'}
                         color={'gray.500'}>
-                        Click here to go back to the production page.
+                        {intl.formatMessage({ id: 'app.clickHereToGoBackToTheProductionPage' })}
                       </Text>
                     </>
                   ) : (
                     <Flex direction="column" gap="20px" w={'100%'}>
                       <Flex direction="column" gap="10px">
                         <Text fontSize="md" fontWeight={'bold'} color={textColor}>
-                          Overall Rating
+                          {intl.formatMessage({ id: 'app.overallRating' })}
                         </Text>
                         <Stack
                           direction="row"
@@ -307,19 +309,21 @@ function ProductReview() {
                       </Flex>
                       <Flex direction="column" gap="10px">
                         <Text fontSize="md" fontWeight={'bold'} color={textColor}>
-                          Add a headline
+                          {intl.formatMessage({ id: 'app.addAHeadline' })}
                         </Text>
                         <FormControl>
                           <FormInput
                             name="headline"
-                            placeholder="What's most important to know?"
+                            placeholder={intl.formatMessage({
+                              id: 'app.whatIsMostImportantToKnow'
+                            })}
                             fontSize="xs"
                           />
                         </FormControl>
                       </Flex>
                       <Flex direction="column" gap="10px">
                         <Text fontSize="md" fontWeight={'bold'} color={textColor}>
-                          Add a photo
+                          {intl.formatMessage({ id: 'app.addAPhoto' })}
                         </Text>
                         <Flex
                           align="center"
@@ -333,18 +337,20 @@ function ProductReview() {
                           <Input {...getInputProps()} />
                           <Button variant="no-hover">
                             <Text color="gray.400" fontWeight="normal">
-                              Drop files here to upload
+                              {intl.formatMessage({ id: 'app.dropFilesHereToUpload' })}
                             </Text>
                           </Button>
                         </Flex>
                       </Flex>
                       <Flex direction="column" gap="10px">
                         <Text fontSize="md" fontWeight={'bold'} color={textColor}>
-                          Add a written review
+                          {intl.formatMessage({ id: 'app.addAWrittenReview' })}
                         </Text>
                         <Flex direction={'column'}>
                           <Textarea
-                            placeholder="What did you like or dislike? What did you use this product for?"
+                            placeholder={intl.formatMessage({
+                              id: 'app.whatDidYouLikeOrDislikeWhatDidYouUseThisProductFor'
+                            })}
                             minH="120px"
                             fontSize="14px"
                             borderRadius="15px"
@@ -374,7 +380,7 @@ function ProductReview() {
                           <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
                         ) : (
                           <Text fontSize="xs" color="#fff" fontWeight="bold">
-                            SEND
+                            {intl.formatMessage({ id: 'app.send' })}
                           </Text>
                         )}
                       </Button>

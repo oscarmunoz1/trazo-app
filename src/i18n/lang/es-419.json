@@ -301,5 +301,14 @@
   "app.months.december": "Diciembre",
   "app.parcelInfo": "Info. de la parcela",
   "app.parcelName": "Nombre de la parcela",
-  "app.parcelArea": "Área de la parcela"
+  "app.parcelArea": "Área de la parcela",
+  "app.productReview": "Reseña del producto",
+  "app.productReviewDescription": "Aquí puedes hacer una reseña del producto que estás escaneando.",
+  "app.yourReview": "Tu reseña",
+  "app.clickHereToGoBackToTheProductionPage": "Haz clic aquí para volver a la página de producción.",
+  "app.overallRating": "Calificación general",
+  "app.addAHeadline": "Agrega un titular",
+  "app.whatIsMostImportantToKnow": "¿Qué es lo más importante de saber?",
+  "app.addAPhoto": "Agrega una foto",
+  "app.addAWrittenReview": "Agrega una reseña escrita"
 }

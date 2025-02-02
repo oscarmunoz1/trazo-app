@@ -294,5 +294,17 @@
   "app.months.september": "September",
   "app.months.october": "October",
   "app.months.november": "November",
-  "app.months.december": "December"
+  "app.months.december": "December",
+  "app.parcelInfo": "Parcel Info",
+  "app.parcelName": "Parcel Name",
+  "app.parcelArea": "Parcel Area",
+  "app.productReview": "Product Review",
+  "app.productReviewDescription": "Here you can make a review of the product you are scanning.",
+  "app.yourReview": "Your Review",
+  "app.clickHereToGoBackToTheProductionPage": "Click here to go back to the production page.",
+  "app.overallRating": "Overall Rating",
+  "app.addAHeadline": "Add a Headline",
+  "app.whatIsMostImportantToKnow": "What's most important to know?",
+  "app.addAPhoto": "Add a Photo",
+  "app.addAWrittenReview": "Add a Written Review"
 }

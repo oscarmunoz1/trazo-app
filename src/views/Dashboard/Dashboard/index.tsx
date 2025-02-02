@@ -105,65 +105,105 @@ export default function DashboardView() {
 
   return (
     <Flex flexDirection="column" pt={{ base: '120px', md: '75px' }}>
-      <Text color={mainText} bg="inherit" borderRadius="inherit" fontWeight="bold" padding="10px">
-        {intl.formatMessage({ id: 'app.establishments' })}
-      </Text>
-      <Grid
-        templateColumns={{ sm: '1fr 1fr auto', md: '1fr 2fr auto', xl: 'repeat(4, 1fr)' }}
-        templateRows={{ sm: '1fr  auto', md: '1fr', xl: '1fr' }}
-        gap="24px">
-        {establishments ? (
-          establishments.map((prop, key) => (
-            <NavLink
-              minW="260px"
-              to={`/admin/dashboard/establishment/${prop.id}`}
-              style={{ textDecoration: 'none' }}>
-              <Box
-                transition="all 0.3s"
-                _hover={{
-                  boxShadow: shadowHover
-                }}>
-                <MiniStatistics
-                  key={key}
-                  isSelected={prop.id === establishment?.id}
-                  title={prop.name}
-                  amount={`${prop.city || prop.zone || ''}, ${prop.state}`}
-                  percentage={55}
-                  icon={<HomeIcon h={'24px'} w={'24px'} color={iconBoxInside} />}
-                  bgGradient={prop.id === establishment?.id ? selectedGradient : bgGradient}
-                  textColor={prop.id === establishment?.id ? 'white' : mainText}
-                  borderWidth="1px"
-                  borderColor={prop.id === establishment?.id ? 'transparent' : borderColor}
-                  borderRadius="2xl"
-                />
-              </Box>
-            </NavLink>
-          ))
-        ) : (
-          <Card minH="115px" bg={cardBg} />
-        )}
-        <Button
-          p="0px"
-          w="95px"
-          h="95px"
-          bg="transparent"
-          color="green.500"
-          borderRadius="15px"
-          border="2px dashed"
-          borderColor="green.200"
-          _hover={{
-            bg: 'green.50',
-            borderColor: 'green.500'
+      <Box mb={6}>
+        <Flex justify="space-between" align="center" mb={4} px={{ base: 2, md: 0 }}>
+          <Text
+            color={mainText}
+            bg="inherit"
+            borderRadius="inherit"
+            fontWeight="bold"
+            fontSize={{ base: 'lg', md: 'xl' }}
+            padding={{ base: '8px', md: '10px' }}>
+            {intl.formatMessage({ id: 'app.establishments' })}
+          </Text>
+        </Flex>
+
+        <Grid
+          templateColumns={{
+            base: 'repeat(auto-fill, minmax(200px, 1fr))',
+            sm: 'repeat(auto-fill, minmax(220px, 1fr))',
+            md: 'repeat(auto-fill, minmax(240px, 1fr))'
           }}
-          onClick={toggleAddEstablishment}>
-          <Flex direction="column" justifyContent="center" align="center" h="120px">
-            <Icon as={FaPlus} w="15px" h="15px" mb="10px" />
-            <Text fontSize="md" fontWeight="bold">
-              {intl.formatMessage({ id: 'app.new' })}
-            </Text>
-          </Flex>
-        </Button>
-      </Grid>
+          gap={{ base: 3, md: 4 }}
+          px={{ base: 2, md: 2 }}>
+          {establishments ? (
+            <>
+              {establishments.map((prop) => (
+                <NavLink
+                  key={prop.id}
+                  to={`/admin/dashboard/establishment/${prop.id}`}
+                  style={{ textDecoration: 'none' }}>
+                  <Card
+                    p={{ base: 3, md: 4 }}
+                    cursor="pointer"
+                    bg={prop.id === establishment?.id ? 'green.500' : cardBg}
+                    _hover={{
+                      transform: 'translateY(-2px)',
+                      boxShadow: 'lg',
+                      transition: 'all 0.2s'
+                    }}>
+                    <Flex align="center" gap={{ base: 2, md: 3 }}>
+                      <Box
+                        bg={prop.id === establishment?.id ? 'white' : 'green.500'}
+                        p={{ base: 1.5, md: 2 }}
+                        borderRadius="md">
+                        <HomeIcon
+                          h={{ base: '20px', md: '24px' }}
+                          w={{ base: '20px', md: '24px' }}
+                          color={prop.id === establishment?.id ? 'green.500' : 'white'}
+                        />
+                      </Box>
+                      <Box>
+                        <Text
+                          fontWeight="bold"
+                          fontSize={{ base: 'sm', md: 'md' }}
+                          color={prop.id === establishment?.id ? 'white' : textColor}>
+                          {prop.name}
+                        </Text>
+                        <Text
+                          fontSize={{ base: 'xs', md: 'sm' }}
+                          color={prop.id === establishment?.id ? 'white' : 'gray.500'}>
+                          {`${prop.city || prop.zone || ''}, ${prop.state}`}
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Card>
+                </NavLink>
+              ))}
+              <Button
+                p="0px"
+                w={{ base: '70px', md: '80px' }}
+                h={{ base: '70px', md: '80px' }}
+                bg="transparent"
+                color="green.500"
+                borderRadius="15px"
+                border="2px dashed"
+                borderColor="green.200"
+                _hover={{
+                  bg: 'green.50',
+                  borderColor: 'green.500',
+                  transform: 'translateY(-2px)',
+                  boxShadow: shadowHover
+                }}
+                onClick={toggleAddEstablishment}>
+                <Flex direction="column" justifyContent="center" align="center">
+                  <Icon
+                    as={FaPlus}
+                    w={{ base: '10px', md: '12px' }}
+                    h={{ base: '10px', md: '12px' }}
+                    mb={{ base: '6px', md: '8px' }}
+                  />
+                  <Text fontSize={{ base: 'xs', md: 'sm' }} fontWeight="bold">
+                    {intl.formatMessage({ id: 'app.new' })}
+                  </Text>
+                </Flex>
+              </Button>
+            </>
+          ) : (
+            <Card minH="115px" bg={cardBg} />
+          )}
+        </Grid>
+      </Box>
 
       <Grid
         templateColumns={{ md: '1fr', lg: '1.8fr 1.2fr' }}

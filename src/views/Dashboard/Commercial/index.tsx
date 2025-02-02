@@ -12,7 +12,8 @@ import {
   Stack,
   Text,
   useColorModeValue,
-  CircularProgress
+  CircularProgress,
+  Grid
 } from '@chakra-ui/react';
 import { NavLink, useLocation, useMatch, useParams } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
@@ -349,33 +350,71 @@ export default function CommercialView() {
 
   return (
     <Flex flexDirection="column" pt={{ base: '120px', md: '75px' }}>
-      <Text
-        color={mainText}
-        href="#"
-        bg="inherit"
-        borderRadius="inherit"
-        fontWeight="bold"
-        padding="10px">
-        {intl.formatMessage({ id: 'app.establishments' })}
-      </Text>
-      <SimpleGrid columns={{ sm: 1, md: 3, xl: 4 }} spacing="24px">
-        {establishments ? (
-          establishments.map((prop, key) => (
-            <NavLink to={`/admin/dashboard/establishment/${prop.id}/commercial/`}>
-              <MiniStatistics
-                key={key}
-                isSelected={prop.id === establishment?.id}
-                title={prop.name}
-                amount={`${prop.city || prop.zone || ''}, ${prop.state}`}
-                percentage={55}
-                icon={<HomeIcon h={'24px'} w={'24px'} color={iconBoxInside} />}
-              />
-            </NavLink>
-          ))
-        ) : (
-          <Card minH="115px" bg={cardColor} />
-        )}
-      </SimpleGrid>
+      <Box mb={6}>
+        <Text
+          color={mainText}
+          bg="inherit"
+          borderRadius="inherit"
+          fontWeight="bold"
+          padding="10px"
+          mb={4}>
+          {intl.formatMessage({ id: 'app.establishments' })}
+        </Text>
+
+        <Grid
+          templateColumns={{
+            base: '1fr',
+            sm: 'repeat(2, 1fr)',
+            md: 'repeat(3, 1fr)',
+            lg: 'repeat(4, 1fr)',
+            xl: 'repeat(5, 1fr)'
+          }}
+          gap={6}
+          px={2}>
+          {establishments ? (
+            establishments.map((prop) => (
+              <NavLink key={prop.id} to={`/admin/dashboard/establishment/${prop.id}/commercial/`}>
+                <Card
+                  p={4}
+                  cursor="pointer"
+                  bg={prop.id === establishment?.id ? 'green.500' : cardColor}
+                  _hover={{
+                    transform: 'translateY(-2px)',
+                    boxShadow: 'lg',
+                    transition: 'all 0.2s'
+                  }}>
+                  <Flex align="center" gap={3}>
+                    <Box
+                      bg={prop.id === establishment?.id ? 'white' : 'green.500'}
+                      p={2}
+                      borderRadius="md">
+                      <HomeIcon
+                        h={'24px'}
+                        w={'24px'}
+                        color={prop.id === establishment?.id ? 'green.500' : 'white'}
+                      />
+                    </Box>
+                    <Box>
+                      <Text
+                        fontWeight="bold"
+                        color={prop.id === establishment?.id ? 'white' : textColor}>
+                        {prop.name}
+                      </Text>
+                      <Text
+                        fontSize="sm"
+                        color={prop.id === establishment?.id ? 'white' : 'gray.500'}>
+                        {`${prop.city || prop.zone || ''}, ${prop.state}`}
+                      </Text>
+                    </Box>
+                  </Flex>
+                </Card>
+              </NavLink>
+            ))
+          ) : (
+            <Card minH="115px" bg={cardColor} />
+          )}
+        </Grid>
+      </Box>
       <Flex mt={'20px'} mb={'20px'} w={'100%'} gap="20px" flexDirection={'column'}>
         <Flex flexDirection={'column'}>
           <Flex
