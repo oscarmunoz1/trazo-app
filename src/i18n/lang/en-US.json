@@ -274,5 +274,6 @@
   "app.review": "Review",
   "app.noReviewsYet": "No reviews yet, start by adding a new one.",
   "app.noSimilarProductsYet": "No similar products yet, start by adding a new one.",
-  "app.view": "View"
+  "app.view": "View",
+  "app.hide": "Hide"
 }

@@ -8,11 +8,13 @@ type ScansRowProps = {
   location: string;
   parcel: string;
   comment: string;
+  isExpanded: boolean;
+  onExpand: () => void;
 };
 
 const ScansRow = (props: ScansRowProps) => {
   const intl = useIntl();
-  const { date, product, location, parcel, comment } = props;
+  const { date, product, location, parcel, comment, isExpanded, onExpand } = props;
   const textColor = useColorModeValue('gray.700', 'white');
 
   return (
@@ -39,9 +41,9 @@ const ScansRow = (props: ScansRowProps) => {
       </Td>
       <Td paddingInlineStart={'20px'} paddingInlineEnd={'20px'}>
         <Button
-          onClick={() => console.log('click')}
+          onClick={comment ? onExpand : undefined}
           variant="no-hover"
-          bg={comment ? 'green.400' : 'white'}
+          bg={comment ? (isExpanded ? 'green.500' : 'green.400') : 'white'}
           w="100px"
           h="35px"
           fontSize="xs"
@@ -51,7 +53,9 @@ const ScansRow = (props: ScansRowProps) => {
           fontWeight="bold"
           alignSelf={{ sm: 'flex-start', md: 'flex-end' }}
           mt={{ sm: '16px', md: '0px' }}>
-          {intl.formatMessage({ id: 'app.view' })}
+          {comment
+            ? intl.formatMessage({ id: isExpanded ? 'app.hide' : 'app.view' })
+            : intl.formatMessage({ id: 'app.view' })}
         </Button>
       </Td>
     </Tr>

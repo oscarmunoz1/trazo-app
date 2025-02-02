@@ -25,6 +25,7 @@ import {
   Th,
   Thead,
   Tr,
+  Td,
   useColorModeValue
 } from '@chakra-ui/react';
 
@@ -32,14 +33,19 @@ import {
 import Card from 'components/Card/Card';
 import CardBody from 'components/Card/CardBody.tsx';
 import CardHeader from 'components/Card/CardHeader.tsx';
-import React from 'react';
+import React, { useState } from 'react';
 import ScansRow from 'components/Tables/ScansRow';
 import { useIntl } from 'react-intl';
 
 const ScansList = ({ title, labels, scansData }) => {
   const intl = useIntl();
+  const [expandedRowId, setExpandedRowId] = useState(null);
   // Chakra Color Mode
   const textColor = useColorModeValue('gray.700', 'white');
+
+  const handleExpandRow = (index) => {
+    setExpandedRowId(expandedRowId === index ? null : index);
+  };
 
   return (
     <Card px="0px" height="780px">
@@ -81,9 +87,24 @@ const ScansList = ({ title, labels, scansData }) => {
           </Thead>
           <Tbody>
             {scansData &&
-              scansData.map((sale) => {
-                return <ScansRow {...sale} />;
-              })}
+              scansData.map((scan, index) => (
+                <React.Fragment key={index}>
+                  <ScansRow
+                    {...scan}
+                    isExpanded={expandedRowId === index}
+                    onExpand={() => handleExpandRow(index)}
+                  />
+                  {expandedRowId === index && (
+                    <Tr>
+                      <Td colSpan={labels.length} paddingInlineStart={'20px'}>
+                        <Text color={textColor} fontSize="sm" p={4} bg="gray.50" borderRadius="md">
+                          {scan.comment}
+                        </Text>
+                      </Td>
+                    </Tr>
+                  )}
+                </React.Fragment>
+              ))}
           </Tbody>
         </Table>
       </CardBody>

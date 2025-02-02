@@ -278,5 +278,6 @@
   "app.noReviewsYet": "No hay reseñas todavía, empieza agregando una nueva.",
   "app.noSimilarProductsYet": "No hay productos similares todavía, empieza agregando uno nuevo.",
   "app.parcelLocation": "Ubicación de la parcela",
-  "app.view": "Ver"
+  "app.view": "Ver",
+  "app.hide": "Ocultar"
 }
