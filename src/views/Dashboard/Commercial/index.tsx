@@ -121,23 +121,11 @@ export default function CommercialView() {
   const {
     data: dataEstablishmentProductsReputation,
     isFetching: isFetchingEstablishmentProductsReputation
-  } = useGetEstablishmentProductReputationQuery(
-    {
-      companyId: currentCompany?.id,
-      establishmentId: currentEstablishmentId,
-      periodId: filters.period.id,
-      productId: filters.product?.id,
-      parcelId: filters.parcel?.id,
-      productionId: filters.production?.id
-    },
-    {
-      skip:
-        !currentEstablishmentId ||
-        !filters?.period ||
-        !currentCompany ||
-        currentCompany?.id === undefined
-    }
-  );
+  } = useGetEstablishmentProductReputationQuery(queryParams, {
+    skip: !queryParams.companyId || !queryParams.establishmentId || !queryParams.periodId,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true
+  });
 
   const [fetchScansByEstablishment, { data: filteredScans, isLoading: isLoadingScans }] =
     historyApi.endpoints.getScansByEstablishment.useLazyQuery();
