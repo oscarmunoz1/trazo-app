@@ -250,22 +250,48 @@ export default function CommercialView() {
   }, [dataEstablishmentScansVsSaleInfo]);
 
   useEffect(() => {
-    if (reputationChartRef.current) {
-      reputationChartRef.current.chart.updateSeries([
-        {
-          name: 'Average',
-          data: dataEstablishmentProductsReputation?.products_reputation?.series || []
-        }
-      ]);
-      reputationChartRef.current.chart.updateOptions({
-        ...barChartOptionsCharts1,
-        xaxis: {
-          ...barChartOptionsCharts1.xaxis,
-          categories: dataEstablishmentProductsReputation?.products_reputation?.options || []
-        }
-      });
+    try {
+      if (
+        reputationChartRef.current?.chart &&
+        dataEstablishmentProductsReputation?.products_reputation
+      ) {
+        setTimeout(() => {
+          reputationChartRef.current.chart.updateSeries([
+            {
+              name: 'Average',
+              data: dataEstablishmentProductsReputation.products_reputation.series
+            }
+          ]);
+
+          reputationChartRef.current.chart.updateOptions({
+            ...barChartOptionsCharts1,
+            chart: {
+              ...barChartOptionsCharts1.chart,
+              animations: {
+                enabled: true
+              },
+              toolbar: {
+                show: false
+              }
+            },
+            xaxis: {
+              ...barChartOptionsCharts1.xaxis,
+              categories: dataEstablishmentProductsReputation.products_reputation.options,
+              labels: {
+                show: true,
+                style: {
+                  colors: textColor,
+                  fontSize: '12px'
+                }
+              }
+            }
+          });
+        }, 100);
+      }
+    } catch (error) {
+      console.error('Error updating reputation chart:', error);
     }
-  }, [dataEstablishmentProductsReputation, reputationChartRef.current]);
+  }, [dataEstablishmentProductsReputation, textColor]);
 
   useEffect(() => {
     if (chartRef.current) {
@@ -576,23 +602,36 @@ export default function CommercialView() {
                     ) : (
                       <BarChart
                         chartRef={reputationChartRef}
-                        chartData={
-                          dataEstablishmentProductsReputation != null
-                            ? barChartDataCharts1.map((chart) => ({
-                                name: chart.name,
-                                data:
-                                  dataEstablishmentProductsReputation?.products_reputation
-                                    ?.series || []
-                              }))
-                            : [{ name: '', data: [] }]
-                        }
+                        chartData={[
+                          {
+                            name: 'Average',
+                            data:
+                              dataEstablishmentProductsReputation?.products_reputation?.series || []
+                          }
+                        ]}
                         chartOptions={{
                           ...barChartOptionsCharts1,
+                          chart: {
+                            ...barChartOptionsCharts1.chart,
+                            animations: {
+                              enabled: true
+                            },
+                            toolbar: {
+                              show: false
+                            }
+                          },
                           xaxis: {
-                            ...barChartOptionsCharts1?.xaxis,
+                            ...barChartOptionsCharts1.xaxis,
                             categories:
                               dataEstablishmentProductsReputation?.products_reputation?.options ||
-                              []
+                              [],
+                            labels: {
+                              show: true,
+                              style: {
+                                colors: textColor,
+                                fontSize: '12px'
+                              }
+                            }
                           }
                         }}
                       />
