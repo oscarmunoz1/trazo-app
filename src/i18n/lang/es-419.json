@@ -311,5 +311,8 @@
   "app.whatIsMostImportantToKnow": "¿Qué es lo más importante de saber?",
   "app.addAPhoto": "Agrega una foto",
   "app.addAWrittenReview": "Agrega una reseña escrita",
-  "app.noScansAvailable": "No hay escaneos disponibles"
+  "app.noScansAvailable": "No hay escaneos disponibles",
+  "app.whatDidYouLikeOrDislikeWhatDidYouUseThisProductFor": "¿Qué te gustó o no te gustó? ¿Qué usaste este producto para?",
+  "app.downloadQRCode": "Descargar código QR",
+  "app.scanToViewDetails": "Escanea para ver los detalles"
 }

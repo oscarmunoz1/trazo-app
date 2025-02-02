@@ -307,5 +307,8 @@
   "app.whatIsMostImportantToKnow": "What's most important to know?",
   "app.addAPhoto": "Add a Photo",
   "app.addAWrittenReview": "Add a Written Review",
-  "app.noScansAvailable": "No scans available"
+  "app.noScansAvailable": "No scans available",
+  "app.whatDidYouLikeOrDislikeWhatDidYouUseThisProductFor": "What did you like or dislike? What did you use this product for?",
+  "app.downloadQRCode": "Download QR Code",
+  "app.scanToViewDetails": "Scan to view details"
 }

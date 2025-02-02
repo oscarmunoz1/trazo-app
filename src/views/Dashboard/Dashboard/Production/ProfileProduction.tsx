@@ -1,6 +1,8 @@
 // Chakra imports
 import {
   Badge,
+  Box,
+  Button,
   Flex,
   Icon,
   Image,
@@ -11,10 +13,12 @@ import {
   Stack,
   Text,
   useColorModeValue,
-  useDisclosure
+  useDisclosure,
+  VStack
 } from '@chakra-ui/react';
 import { BsStar, BsStarFill, BsStarHalf } from 'react-icons/bs';
 import { FaRegCheckCircle, FaRegDotCircle } from 'react-icons/fa';
+import { FiDownload } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -51,6 +55,34 @@ function ProfileProduction() {
       setEstablishment(establishment);
     }
   }, [establishmentId, establishments]);
+
+  const downloadQRCode = async () => {
+    try {
+      // Fetch the image
+      const response = await fetch(historyData?.qr_code);
+      const blob = await response.blob();
+
+      // Create object URL
+      const url = window.URL.createObjectURL(blob);
+
+      // Create download link
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `qr-code-${historyData?.product}-${new Date(
+        historyData?.start_date
+      ).toLocaleDateString()}.png`;
+
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading QR code:', error);
+    }
+  };
 
   return (
     <BoxBackground
@@ -263,15 +295,112 @@ function ProfileProduction() {
                 <Flex
                   px="24px"
                   py="24px"
-                  maxW={'300px'}
-                  maxH={'300px'}
+                  maxW={'400px'}
                   w="50%"
-                  h="50%"
-                  direction={'column'}>
-                  <Text fontSize="xl" color={textColor} fontWeight="bold" pb="24px">
-                    {intl.formatMessage({ id: 'app.qrCode' })}
-                  </Text>
-                  <Image src={historyData?.qr_code} alt="illustration" />
+                  direction={'column'}
+                  align="center"
+                  bg={useColorModeValue('white', 'gray.700')}
+                  borderRadius="2xl"
+                  boxShadow="xl"
+                  position="relative"
+                  backdropFilter="blur(10px)"
+                  border="1px solid"
+                  borderColor={useColorModeValue('gray.100', 'gray.700')}>
+                  <Flex direction="column" align="center" mb={6}>
+                    <Text fontSize="2xl" color={textColor} fontWeight="bold" mb={2}>
+                      {intl.formatMessage({ id: 'app.qrCode' })}
+                    </Text>
+                    <Text fontSize="sm" color="gray.500" textAlign="center">
+                      {intl.formatMessage({ id: 'app.scanToViewDetails' })}
+                    </Text>
+                  </Flex>
+
+                  <Box
+                    position="relative"
+                    borderRadius="2xl"
+                    overflow="hidden"
+                    boxShadow="2xl"
+                    bg={useColorModeValue('white', 'gray.800')}
+                    p={8}
+                    transition="all 0.3s ease"
+                    _hover={{ transform: 'scale(1.02)' }}>
+                    <Box
+                      position="absolute"
+                      top={0}
+                      left={0}
+                      right={0}
+                      bottom={0}
+                      bg={useColorModeValue('gray.50', 'gray.700')}
+                      opacity={0.5}
+                      filter="blur(40px)"
+                      transform="translate(0, 20px)"
+                      borderRadius="2xl"
+                      zIndex={0}
+                    />
+
+                    <Box position="relative" zIndex={1}>
+                      <Image
+                        src={historyData?.qr_code}
+                        alt="QR Code"
+                        w="300px"
+                        h="300px"
+                        objectFit="contain"
+                        quality={100}
+                        filter="drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.1))"
+                      />
+                    </Box>
+
+                    <Flex
+                      position="absolute"
+                      top={0}
+                      left={0}
+                      right={0}
+                      bottom={0}
+                      opacity={0}
+                      transition="all 0.3s ease"
+                      _hover={{ opacity: 1 }}
+                      bg="blackAlpha.50"
+                      backdropFilter="blur(4px)"
+                      alignItems="center"
+                      justifyContent="center"
+                      borderRadius="2xl">
+                      <Button
+                        leftIcon={<Icon as={FiDownload} />}
+                        colorScheme="green"
+                        size="lg"
+                        onClick={downloadQRCode}
+                        _hover={{
+                          transform: 'translateY(-2px)',
+                          boxShadow: 'lg'
+                        }}
+                        _active={{
+                          transform: 'translateY(0)'
+                        }}>
+                        {intl.formatMessage({ id: 'app.downloadQRCode' })}
+                      </Button>
+                    </Flex>
+                  </Box>
+
+                  <VStack spacing={4} mt={6}>
+                    <Badge
+                      colorScheme="green"
+                      px={4}
+                      py={2}
+                      borderRadius="full"
+                      fontSize="md"
+                      textTransform="none"
+                      boxShadow="sm"
+                      _hover={{
+                        transform: 'translateY(-1px)',
+                        boxShadow: 'md'
+                      }}>
+                      {historyData?.product}
+                    </Badge>
+
+                    <Text fontSize="xs" color="gray.500" textAlign="center" maxW="80%">
+                      {`ID: ${productionId}`}
+                    </Text>
+                  </VStack>
                 </Flex>
               </Flex>
             </Flex>

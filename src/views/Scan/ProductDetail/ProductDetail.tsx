@@ -278,7 +278,7 @@ function Capture() {
                     />
                   </Stack>
                   <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                    Company
+                    {intl.formatMessage({ id: 'app.company' })}
                   </Text>
                   <Text color={textColor} fontWeight="bold" fontSize="3xl" mb="12px">
                     {historyData?.company}
