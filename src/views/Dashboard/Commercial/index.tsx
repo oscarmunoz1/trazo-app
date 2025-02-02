@@ -240,50 +240,82 @@ export default function CommercialView() {
   };
 
   useEffect(() => {
-    try {
-      if (chartRef.current?.chart && dataEstablishmentScansVsSaleInfo?.scans_vs_sales) {
-        const series = lineBarChartData.map((data) => ({
-          name: data.name,
-          type: data.type,
-          data:
-            data.name === 'Sales'
-              ? dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.sales || []
-              : dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.scans || []
-        }));
+    let isSubscribed = true;
 
-        chartRef.current.chart.updateOptions(
-          {
-            ...lineBarChartOptions,
-            chart: {
-              ...lineBarChartOptions.chart,
-              animations: {
-                enabled: true,
-                dynamicAnimation: {
-                  speed: 350
+    const updateChart = async () => {
+      try {
+        // Wait for next tick to ensure chart is mounted
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        if (!isSubscribed || !chartRef.current?.chart) return;
+
+        // Reset chart first
+        chartRef.current.chart.updateOptions({
+          ...lineBarChartOptions,
+          chart: {
+            ...lineBarChartOptions.chart,
+            animations: {
+              enabled: false
+            }
+          }
+        });
+
+        if (dataEstablishmentScansVsSaleInfo?.scans_vs_sales) {
+          const series = lineBarChartData.map((data) => ({
+            name: data.name,
+            type: data.type,
+            data:
+              data.name === 'Sales'
+                ? dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.sales || []
+                : dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.scans || []
+          }));
+
+          chartRef.current.chart.updateOptions(
+            {
+              ...lineBarChartOptions,
+              chart: {
+                ...lineBarChartOptions.chart,
+                animations: {
+                  enabled: true,
+                  dynamicAnimation: {
+                    speed: 350
+                  }
+                }
+              },
+              xaxis: {
+                ...lineBarChartOptions.xaxis,
+                categories: formatCategories(
+                  dataEstablishmentScansVsSaleInfo.scans_vs_sales.options
+                ),
+                labels: {
+                  show: true,
+                  style: {
+                    colors: textColor,
+                    fontSize: '12px'
+                  }
                 }
               }
             },
-            xaxis: {
-              ...lineBarChartOptions.xaxis,
-              categories: formatCategories(dataEstablishmentScansVsSaleInfo.scans_vs_sales.options),
-              labels: {
-                show: true,
-                style: {
-                  colors: textColor,
-                  fontSize: '12px'
-                }
-              }
-            }
-          },
-          false,
-          true
-        );
+            false,
+            true
+          );
 
-        chartRef.current.chart.updateSeries(series);
+          chartRef.current.chart.updateSeries(series);
+        }
+      } catch (error) {
+        console.error('Error updating chart:', error, {
+          hasChartRef: !!chartRef.current,
+          hasChartInstance: !!chartRef.current?.chart,
+          hasData: !!dataEstablishmentScansVsSaleInfo?.scans_vs_sales
+        });
       }
-    } catch (error) {
-      console.error('Error updating chart:', error);
-    }
+    };
+
+    updateChart();
+
+    return () => {
+      isSubscribed = false;
+    };
   }, [
     dataEstablishmentScansVsSaleInfo,
     textColor,

@@ -310,5 +310,6 @@
   "app.addAHeadline": "Agrega un titular",
   "app.whatIsMostImportantToKnow": "¿Qué es lo más importante de saber?",
   "app.addAPhoto": "Agrega una foto",
-  "app.addAWrittenReview": "Agrega una reseña escrita"
+  "app.addAWrittenReview": "Agrega una reseña escrita",
+  "app.noScansAvailable": "No hay escaneos disponibles"
 }

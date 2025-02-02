@@ -86,7 +86,7 @@ const ScansList = ({ title, labels, scansData }) => {
             </Tr>
           </Thead>
           <Tbody>
-            {scansData &&
+            {scansData && scansData.length > 0 ? (
               scansData.map((scan, index) => (
                 <React.Fragment key={index}>
                   <ScansRow
@@ -104,7 +104,18 @@ const ScansList = ({ title, labels, scansData }) => {
                     </Tr>
                   )}
                 </React.Fragment>
-              ))}
+              ))
+            ) : (
+              <Tr>
+                <Td colSpan={labels.length} borderBottom="none">
+                  <Flex justify="center" align="center" py={8} borderBottom="none">
+                    <Text color={textColor} fontSize="md">
+                      {intl.formatMessage({ id: 'app.noScansAvailable' })}
+                    </Text>
+                  </Flex>
+                </Td>
+              </Tr>
+            )}
           </Tbody>
         </Table>
       </CardBody>

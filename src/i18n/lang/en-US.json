@@ -306,5 +306,6 @@
   "app.addAHeadline": "Add a Headline",
   "app.whatIsMostImportantToKnow": "What's most important to know?",
   "app.addAPhoto": "Add a Photo",
-  "app.addAWrittenReview": "Add a Written Review"
+  "app.addAWrittenReview": "Add a Written Review",
+  "app.noScansAvailable": "No scans available"
 }
