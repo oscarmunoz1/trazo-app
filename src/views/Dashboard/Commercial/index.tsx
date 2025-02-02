@@ -151,21 +151,36 @@ export default function CommercialView() {
   }, []);
 
   useEffect(() => {
-    let establishment;
-    if (establishments) {
-      establishment = establishments.filter(
-        (establishment) => establishment.id.toString() === establishmentId
-      )[0];
-      setCurrentEstablishmentId(establishmentId);
-      setEstablishment(establishment);
-      setFilters({
-        parcel: null,
-        product: null,
-        production: null,
-        period: { id: 'week', name: intl.formatMessage({ id: 'app.thisWeek' }) }
-      });
-    }
-  }, [establishmentId, establishments]);
+    const updateEstablishment = async () => {
+      if (establishments) {
+        const establishment = establishments.find((est) => est.id.toString() === establishmentId);
+
+        if (establishment) {
+          // First update establishment ID
+          setCurrentEstablishmentId(establishmentId);
+
+          // Then update establishment
+          setEstablishment(establishment);
+
+          // Wait for next tick before updating filters
+          await new Promise((resolve) => setTimeout(resolve, 0));
+
+          // Finally update filters
+          setFilters((prev) => ({
+            parcel: null,
+            product: null,
+            production: null,
+            period: {
+              id: 'week',
+              name: intl.formatMessage({ id: 'app.thisWeek' })
+            }
+          }));
+        }
+      }
+    };
+
+    updateEstablishment();
+  }, [establishmentId, establishments, intl]);
 
   const { data: dataProducts } = useGetEstablishmentProductsQuery(
     { companyId: currentCompany?.id, establishmentId: currentEstablishmentId },
@@ -240,6 +255,7 @@ export default function CommercialView() {
   };
 
   useEffect(() => {
+    console.log('currentEstablishmentId', currentEstablishmentId);
     let isSubscribed = true;
 
     const updateChart = async () => {
