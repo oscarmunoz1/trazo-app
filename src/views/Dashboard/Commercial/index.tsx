@@ -74,6 +74,25 @@ export default function CommercialView() {
 
   const currentCompany = useSelector((state) => state.company.currentCompany);
 
+  const queryParams = React.useMemo(
+    () => ({
+      companyId: currentCompany?.id,
+      establishmentId: currentEstablishmentId,
+      periodId: filters.period.id,
+      productId: filters.product?.id,
+      parcelId: filters.parcel?.id,
+      productionId: filters.production?.id
+    }),
+    [
+      currentCompany?.id,
+      currentEstablishmentId,
+      filters.period.id,
+      filters.product?.id,
+      filters.parcel?.id,
+      filters.production?.id
+    ]
+  );
+
   const { data: dataEstablishmentScans } = useGetScansByEstablishmentQuery(
     {
       companyId: currentCompany?.id,
@@ -93,23 +112,11 @@ export default function CommercialView() {
   );
 
   const { data: dataEstablishmentScansVsSaleInfo, isFetching } =
-    useGetEstablishmentScansVsSalesChartInfoQuery(
-      {
-        companyId: currentCompany?.id,
-        establishmentId: currentEstablishmentId,
-        periodId: filters.period.id,
-        productId: filters.product?.id,
-        parcelId: filters.parcel?.id,
-        productionId: filters.production?.id
-      },
-      {
-        skip:
-          !currentCompany ||
-          !currentEstablishmentId ||
-          !filters?.period ||
-          currentCompany?.id === undefined
-      }
-    );
+    useGetEstablishmentScansVsSalesChartInfoQuery(queryParams, {
+      skip: !queryParams.companyId || !queryParams.establishmentId || !queryParams.periodId,
+      refetchOnMountOrArgChange: true,
+      refetchOnReconnect: true
+    });
 
   const {
     data: dataEstablishmentProductsReputation,
