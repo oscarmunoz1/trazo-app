@@ -48,6 +48,7 @@ import BgSignUp from 'assets/img/backgroundImage.png';
 import Card from 'components/Card/Card';
 import CardBody from 'components/Card/CardBody';
 import CardHeader from 'components/Card/CardHeader';
+import BoxBackground from '../../../views/Dashboard/Dashboard/components/BoxBackground';
 import FormInput from 'components/Forms/FormInput';
 import { HSeparator } from 'components/Separator/Separator';
 import HTMLRenderer from 'components/Utils/HTMLRenderer';
@@ -127,55 +128,10 @@ function ProductReview() {
   };
 
   return (
-    <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden" w="100%">
-      <Box
-        position="absolute"
-        minH={{ base: '70vh', md: '50vh' }}
-        w={{ md: 'calc(100vw - 50px)' }}
-        borderRadius={{ md: '15px' }}
-        left="0"
-        right="0"
-        bgRepeat="no-repeat"
-        overflow="hidden"
-        zIndex="-1"
-        top="0"
-        bgImage={BgSignUp}
-        marginInlineEnd={'25px'}
-        _before={{
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-          background: 'linear-gradient(180deg, rgba(0,128,0,0.85) 0%, rgba(0,128,0,0.6) 100%)',
-          borderRadius: '15px',
-          zIndex: 0
-        }}
-        bgSize="cover"
-        mx={{ md: 'auto' }}
-        mt={{ md: '14px' }}></Box>
-      <Flex
-        direction="column"
-        textAlign="center"
-        justifyContent="center"
-        align="center"
-        mt="6.5rem"
-        pt={'55px'}>
-        <Text fontSize="4xl" color="white" fontWeight="bold">
-          {intl.formatMessage({ id: 'app.productReview' })}
-        </Text>
-        <Text
-          fontSize="md"
-          color="white"
-          fontWeight="normal"
-          mt="10px"
-          mb="26px"
-          w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}>
-          {intl.formatMessage({ id: 'app.productReviewDescription' })}
-        </Text>
-      </Flex>
-      <Flex alignItems="center" justifyContent="center" mb="60px" mt="-30px">
+    <BoxBackground
+      title={intl.formatMessage({ id: 'app.productReview' })}
+      subtitle={intl.formatMessage({ id: 'app.productReviewDescription' })}>
+      <Flex alignItems="center" justifyContent="center" mb="60px" mt="-30px" w="100%">
         <Card
           mt={{ md: '75px' }}
           w={{ sm: '100%', md: '80%', lg: '75%' }}
@@ -392,7 +348,7 @@ function ProductReview() {
           </CardBody>
         </Card>
       </Flex>
-    </Flex>
+    </BoxBackground>
   );
 }
 

@@ -443,7 +443,9 @@ function Capture() {
                   fontSize="xs"
                   fontWeight="bold"
                   onClick={() =>
-                    navigate(`/production/${productionId}/review/${historyData?.history_scan}`)
+                    navigate(
+                      `/admin/dashboard/production/${productionId}/review/${historyData?.history_scan}`
+                    )
                   }>
                   {intl.formatMessage({ id: 'app.iBoughtIt' })}
                 </Button>

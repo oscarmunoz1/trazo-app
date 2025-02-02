@@ -37,11 +37,13 @@ const Authenticated = ({ allowedRoles, mustBeCompanyAdmin = false }) => {
   useEffect(() => {
     if (isAuthenticated && currentUser && subdomain) {
       const isConsumerUser = currentUser.user_type === CONSUMER;
+      const params = new URLSearchParams(window.location.search);
+      const intendedPath = params.get('next') || '/admin/dashboard/scans';
 
       if (isConsumerUser && subdomain === 'producer') {
         window.location.href = `${window.location.protocol}//consumer.${
           import.meta.env.VITE_APP_BASE_DOMAIN
-        }${window.location.port ? ':' + window.location.port : ''}/admin/dashboard/scans`;
+        }${window.location.port ? ':' + window.location.port : ''}${intendedPath}`;
       }
     }
   }, [isAuthenticated, currentUser, subdomain]);
