@@ -224,6 +224,13 @@ export default function CommercialView() {
   };
 
   useEffect(() => {
+    console.log('Chart Status:', {
+      hasRef: !!chartRef.current,
+      hasChartInstance: !!chartRef.current?.chart,
+      hasData: !!dataEstablishmentScansVsSaleInfo?.scans_vs_sales,
+      data: dataEstablishmentScansVsSaleInfo
+    });
+
     try {
       if (chartRef.current?.chart && dataEstablishmentScansVsSaleInfo?.scans_vs_sales) {
         const series = lineBarChartData.map((data) => ({
@@ -231,28 +238,48 @@ export default function CommercialView() {
           type: data.type,
           data:
             data.name === 'Sales'
-              ? dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.sales
-              : dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.scans
+              ? dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.sales || []
+              : dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.scans || []
         }));
 
-        const options = {
-          ...lineBarChartOptions,
-          xaxis: {
-            ...lineBarChartOptions.xaxis,
-            categories: dataEstablishmentScansVsSaleInfo.scans_vs_sales.options?.map(String) || []
-          }
-        };
+        chartRef.current.chart.updateOptions(
+          {
+            ...lineBarChartOptions,
+            chart: {
+              ...lineBarChartOptions.chart,
+              animations: {
+                enabled: true,
+                dynamicAnimation: {
+                  speed: 350
+                }
+              }
+            },
+            xaxis: {
+              ...lineBarChartOptions.xaxis,
+              categories:
+                dataEstablishmentScansVsSaleInfo.scans_vs_sales.options?.map(String) || [],
+              labels: {
+                show: true,
+                style: {
+                  colors: textColor,
+                  fontSize: '12px'
+                }
+              }
+            }
+          },
+          false,
+          true
+        );
 
-        // Force chart update
-        setTimeout(() => {
-          chartRef.current.chart.updateOptions(options, false, true);
-          chartRef.current.chart.updateSeries(series);
-        }, 0);
+        chartRef.current.chart.updateSeries(series);
       }
     } catch (error) {
-      console.error('Error updating chart:', error);
+      console.error('Error updating chart:', error, {
+        chartRef: chartRef.current,
+        data: dataEstablishmentScansVsSaleInfo
+      });
     }
-  }, [dataEstablishmentScansVsSaleInfo]);
+  }, [dataEstablishmentScansVsSaleInfo, textColor]);
 
   useEffect(() => {
     try {
@@ -535,37 +562,56 @@ export default function CommercialView() {
                 </CardHeader>
                 <CardBody h="100%">
                   <Box w="100%" h="100%">
-                    <LineBarChart
-                      chartRef={chartRef}
-                      chartData={lineBarChartData.map((data) => ({
-                        name: data.name,
-                        type: data.type,
-                        data: dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.series
-                          ? (data.name === 'Sales'
-                              ? dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.sales
-                              : dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.scans) || []
-                          : []
-                      }))}
-                      chartOptions={{
-                        ...lineBarChartOptions,
-                        chart: {
-                          ...lineBarChartOptions.chart,
-                          animations: {
-                            enabled: true,
-                            dynamicAnimation: {
-                              speed: 350
+                    {isFetching ? (
+                      <Flex justify="center" align="center" h="100%">
+                        <CircularProgress isIndeterminate color="green.300" />
+                        <Text ml={4} color={textColor}>
+                          Loading chart data...
+                        </Text>
+                      </Flex>
+                    ) : !dataEstablishmentScansVsSaleInfo?.scans_vs_sales ? (
+                      <Flex justify="center" align="center" h="100%">
+                        <Text color={textColor}>No data available</Text>
+                      </Flex>
+                    ) : (
+                      <LineBarChart
+                        chartRef={chartRef}
+                        chartData={lineBarChartData.map((data) => ({
+                          name: data.name,
+                          type: data.type,
+                          data:
+                            data.name === 'Sales'
+                              ? dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.sales || []
+                              : dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.scans || []
+                        }))}
+                        chartOptions={{
+                          ...lineBarChartOptions,
+                          chart: {
+                            ...lineBarChartOptions.chart,
+                            animations: {
+                              enabled: true,
+                              dynamicAnimation: {
+                                speed: 350
+                              }
+                            }
+                          },
+                          xaxis: {
+                            ...lineBarChartOptions.xaxis,
+                            categories:
+                              dataEstablishmentScansVsSaleInfo.scans_vs_sales.options?.map(
+                                String
+                              ) || [],
+                            labels: {
+                              show: true,
+                              style: {
+                                colors: textColor,
+                                fontSize: '12px'
+                              }
                             }
                           }
-                        },
-                        xaxis: {
-                          ...lineBarChartOptions.xaxis,
-                          categories:
-                            dataEstablishmentScansVsSaleInfo?.scans_vs_sales?.options?.map(
-                              String
-                            ) || []
-                        }
-                      }}
-                    />
+                        }}
+                      />
+                    )}
                   </Box>
                 </CardBody>
               </Card>
