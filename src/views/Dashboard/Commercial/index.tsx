@@ -348,45 +348,71 @@ export default function CommercialView() {
   ]);
 
   useEffect(() => {
-    try {
-      if (
-        reputationChartRef.current?.chart &&
-        dataEstablishmentProductsReputation?.products_reputation
-      ) {
-        reputationChartRef.current.chart.updateSeries([
-          {
-            name: 'Average',
-            data: dataEstablishmentProductsReputation.products_reputation.series
-          }
-        ]);
+    let isSubscribed = true;
 
+    const updateReputationChart = async () => {
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        if (!isSubscribed || !reputationChartRef.current?.chart) return;
+
+        // Reset chart first
         reputationChartRef.current.chart.updateOptions({
           ...barChartOptionsCharts1,
           chart: {
             ...barChartOptionsCharts1.chart,
             animations: {
-              enabled: true
-            },
-            toolbar: {
-              show: false
-            }
-          },
-          xaxis: {
-            ...barChartOptionsCharts1.xaxis,
-            categories: dataEstablishmentProductsReputation.products_reputation.options,
-            labels: {
-              show: true,
-              style: {
-                colors: textColor,
-                fontSize: '12px'
-              }
+              enabled: false
             }
           }
         });
+
+        if (dataEstablishmentProductsReputation?.products_reputation) {
+          reputationChartRef.current.chart.updateSeries([
+            {
+              name: 'Average',
+              data: dataEstablishmentProductsReputation.products_reputation.series
+            }
+          ]);
+
+          reputationChartRef.current.chart.updateOptions({
+            ...barChartOptionsCharts1,
+            chart: {
+              ...barChartOptionsCharts1.chart,
+              animations: {
+                enabled: true
+              },
+              toolbar: {
+                show: false
+              }
+            },
+            xaxis: {
+              ...barChartOptionsCharts1.xaxis,
+              categories: dataEstablishmentProductsReputation.products_reputation.options,
+              labels: {
+                show: true,
+                style: {
+                  colors: textColor,
+                  fontSize: '12px'
+                }
+              }
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Error updating reputation chart:', error, {
+          hasChartRef: !!reputationChartRef.current,
+          hasChartInstance: !!reputationChartRef.current?.chart,
+          hasData: !!dataEstablishmentProductsReputation?.products_reputation
+        });
       }
-    } catch (error) {
-      console.error('Error updating reputation chart:', error);
-    }
+    };
+
+    updateReputationChart();
+
+    return () => {
+      isSubscribed = false;
+    };
   }, [dataEstablishmentProductsReputation, textColor, currentEstablishmentId]);
 
   const scansColumnsNames = [
