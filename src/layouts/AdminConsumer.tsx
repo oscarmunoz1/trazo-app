@@ -14,8 +14,9 @@ import Sidebar from 'components/Sidebar/Sidebar';
 import { SidebarContext } from 'contexts/SidebarContext';
 import theme from 'theme/theme';
 import ConsumerSidebar from 'components/Sidebar/ConsumerSidebar';
+import ConsumerSidebarResponsive from 'components/Sidebar/ConsumerSidebarResponsive';
 
-const consumerRoutes = [
+export const consumerRoutes = [
   {
     name: 'Scans',
     path: 'scans',
@@ -59,13 +60,15 @@ export default function AdminConsumerLayout(props: any) {
           toggleSidebar,
           setToggleSidebar
         }}>
-        <ConsumerSidebar
-          routes={consumerRoutes}
-          logoText={''}
-          sidebarVariant={sidebarVariant}
-          display="none"
-          {...rest}
-        />
+        <>
+          <ConsumerSidebar
+            routes={consumerRoutes}
+            logoText={''}
+            sidebarVariant={sidebarVariant}
+            display="none"
+            {...rest}
+          />
+        </>
         <MainPanel
           w={{
             base: '100%',

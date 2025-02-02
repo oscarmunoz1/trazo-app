@@ -418,24 +418,23 @@ export default function AuthNavbar(props: AuthNavbarProps) {
               onClick={() => navigate(`/admin/dashboard/profile`)}
             />
           </>
-        ) : (
-          null
-          // <Link to="pricing">
-          //   <Button
-          //     bg={bgButton}
-          //     color={colorButton}
-          //     fontSize="xs"
-          //     variant="no-hover"
-          //     borderRadius="35px"
-          //     px="30px"
-          //     display={{
-          //       sm: 'none',
-          //       lg: 'flex'
-          //     }}>
-          //     {intl.formatMessage({ id: 'app.buyNow' })}
-          //   </Button>
-          // </Link>
-        )}
+        ) : null
+        // <Link to="pricing">
+        //   <Button
+        //     bg={bgButton}
+        //     color={colorButton}
+        //     fontSize="xs"
+        //     variant="no-hover"
+        //     borderRadius="35px"
+        //     px="30px"
+        //     display={{
+        //       sm: 'none',
+        //       lg: 'flex'
+        //     }}>
+        //     {intl.formatMessage({ id: 'app.buyNow' })}
+        //   </Button>
+        // </Link>
+        }
       </Flex>
     </Flex>
   );

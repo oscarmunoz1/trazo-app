@@ -42,6 +42,8 @@ import { NavLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import SidebarResponsive from 'components/Sidebar/SidebarResponsive';
+import ConsumerSidebarResponsive from 'components/Sidebar/ConsumerSidebarResponsive';
+import { consumerRoutes } from 'layouts/AdminConsumer';
 // Assets
 import avatar1 from 'assets/img/avatars/avatar1.png';
 import avatar2 from 'assets/img/avatars/avatar2.png';
@@ -228,13 +230,21 @@ export default function HeaderLinks(props: HeaderLinksProps) {
         onClick={() => navigate(`/admin/dashboard/profile`)}
       />
       {/* </NavLink> */}
-      <SidebarResponsive
-        logoText={props.logoText}
-        secondary={props.secondary}
-        routes={routes}
-        // logo={logo}
-        {...rest}
-      />
+      {subdomain === 'consumer' ? (
+        <ConsumerSidebarResponsive
+          logoText={props.logoText}
+          secondary={props.secondary}
+          routes={consumerRoutes}
+          {...rest}
+        />
+      ) : (
+        <SidebarResponsive
+          logoText={props.logoText}
+          secondary={props.secondary}
+          routes={routes}
+          {...rest}
+        />
+      )}
       <SettingsIcon
         cursor="pointer"
         me="16px"
