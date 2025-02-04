@@ -429,11 +429,10 @@ export default function CommercialView() {
             base: '1fr',
             sm: 'repeat(2, 1fr)',
             md: 'repeat(3, 1fr)',
-            lg: 'repeat(4, 1fr)',
-            xl: 'repeat(5, 1fr)'
+            lg: 'repeat(auto-fill, minmax(240px, 1fr))'
           }}
-          gap={6}
-          px={2}>
+          gap={{ base: 3, md: 4 }}
+          px={{ base: 4, md: 2 }}>
           {establishments ? (
             establishments.map((prop) => (
               <NavLink key={prop.id} to={`/admin/dashboard/establishment/${prop.id}/commercial/`}>

@@ -84,7 +84,7 @@ export default function ParcelView() {
             readMoreLink={`/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/profile`}
             image={
               <Image
-                src={data?.image || BgMusicCard}
+                src={data?.image || (!isLoading && !isFetching && BgMusicCard)}
                 alt="chakra image"
                 objectFit={'cover'}
                 minWidth={{ md: '300px', lg: 'auto' }}

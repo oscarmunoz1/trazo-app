@@ -172,8 +172,8 @@ export default function DashboardView() {
               ))}
               <Button
                 p="0px"
-                w={{ base: '70px', md: '80px' }}
-                h={{ base: '70px', md: '80px' }}
+                w={{ base: '64px', md: '77px' }}
+                h={{ base: '64px', md: '77px' }}
                 bg="transparent"
                 color="green.500"
                 borderRadius="15px"

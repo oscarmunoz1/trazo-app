@@ -42,8 +42,8 @@ const CarouselHorizontal = ({ title, description, data }: CarouselHorizontalProp
           </Flex>
           <Button
             p="0px"
-            w="95px"
-            h="95px"
+            w={{ base: '64px', md: '77px' }}
+            h={{ base: '64px', md: '77px' }}
             bg="transparent"
             color="green.500"
             borderRadius="15px"
