@@ -234,6 +234,7 @@ export default function DashboardView() {
                 height="100%"
                 objectFit={'cover'}
                 borderRadius="15px"
+                loading="lazy"
               />
             }
           />

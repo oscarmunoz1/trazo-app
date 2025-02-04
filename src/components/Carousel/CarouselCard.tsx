@@ -12,6 +12,8 @@ import {
 
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import { useState } from 'react';
+import Shimmer from 'components/Shimmer/Shimmer';
 
 type CarouselCardProps = {
   id: number;
@@ -23,6 +25,7 @@ type CarouselCardProps = {
 };
 
 const CarouselCard = ({ id, image, name, category, buttonText, avatars }: CarouselCardProps) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
   // Chakra color mode
   const textColor = useColorModeValue('gray.700', 'white');
 
@@ -37,7 +40,20 @@ const CarouselCard = ({ id, image, name, category, buttonText, avatars }: Carous
         mb="20px"
         position="relative"
         borderRadius="15px">
-        <Image width="100%" height="100%" objectFit="cover" src={image} borderRadius="15px" />
+        {!imageLoaded && <Shimmer />}
+        <Image
+          width="100%"
+          height="100%"
+          objectFit="cover"
+          src={image}
+          borderRadius="15px"
+          position={!imageLoaded ? 'absolute' : 'relative'}
+          top="0"
+          left="0"
+          opacity={imageLoaded ? 1 : 0}
+          transition="opacity 0.3s ease-in-out"
+          onLoad={() => setImageLoaded(true)}
+        />
         <Box
           w="100%"
           h="100%"
