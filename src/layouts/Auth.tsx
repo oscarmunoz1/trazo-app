@@ -117,7 +117,7 @@ export default function Pages() {
     <ChakraProvider theme={theme} resetCss={false} w="100%">
       <Box ref={navRef} w="100%">
         <Portal containerRef={navRef}>
-          <AuthNavbar secondary={false} logoText="traceit" />
+          <AuthNavbar secondary={false} logoText="trazo" />
         </Portal>
         <Box w="100%">
           <Box ref={wrapper} w="100%">
