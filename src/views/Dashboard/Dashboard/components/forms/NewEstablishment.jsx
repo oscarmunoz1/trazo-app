@@ -68,6 +68,9 @@ import { useGoogleMap } from '@react-google-maps/api';
 import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useIntl } from 'react-intl';
+import { useS3Upload } from 'hooks/useS3Upload';
+import { useFormContext } from 'react-hook-form';
+
 const formSchemaInfo = object({
   name: string().min(1, 'Name is required'),
   country: string().min(1, 'Country is required'),
@@ -202,7 +205,11 @@ function NewEstablishment() {
 
   const { reset: socialsReset, handleSubmit: socialsSubmit } = socialsMethods;
 
-  const onSubmitInfo = (data) => {
+  const { uploadFiles, isUploading } = useS3Upload();
+  const { setValue, watch } = useFormContext();
+  const images = watch('album.images') || [];
+
+  const onSubmitInfo = async (data) => {
     dispatch(setForm({ establishment: data }));
     descriptionTab.current.click();
   };
@@ -319,6 +326,46 @@ function NewEstablishment() {
     maxFiles: 5 // Maximum number of files
     // maxSize: 1024 * 1024 * 5, // Maximum file size (5 MB)
   });
+
+  const handleFileUpload = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    try {
+      const urls = await uploadFiles(files, 'establishment');
+      // Store both files and URLs temporarily
+      setValue('album.images', [
+        ...images,
+        ...files.map((file, index) => ({
+          file,
+          preview: URL.createObjectURL(file),
+          url: urls[index] // Store the S3 URL
+        }))
+      ]);
+    } catch (error) {
+      // Handle error
+    }
+  };
+
+  const onSubmit = async (data) => {
+    // Extract only the URLs for the final submission
+    const submissionData = {
+      ...data,
+      album: {
+        images: data.album.images.map((img) => img.url)
+      }
+    };
+
+    try {
+      await createEstablishment({
+        companyId: currentCompany.id,
+        establishment: submissionData
+      }).unwrap();
+      // Handle success
+    } catch (error) {
+      // Handle error
+    }
+  };
 
   return (
     <FormLayout tabsList={tabsList} activeBullets={activeBullets}>
@@ -530,9 +577,9 @@ function NewEstablishment() {
                   mt="24px"
                   w="100px"
                   h="35px"
-                  onClick={() => socialsTab.current.click()}>
+                  onClick={handleFileUpload}>
                   <Text fontSize="xs" color="#fff" fontWeight="bold">
-                    {intl.formatMessage({ id: 'app.next' })}
+                    {intl.formatMessage({ id: 'app.upload' })}
                   </Text>
                 </Button>
               </Flex>

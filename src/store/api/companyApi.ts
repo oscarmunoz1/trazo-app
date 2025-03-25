@@ -28,22 +28,21 @@ const companyApi = baseApi.injectEndpoints({
       query: ({ companyId, establishment }) => {
         const formData = new FormData();
 
-        establishment.album.images.forEach((file) => {
-          formData.append('album[images]', file);
-        });
-
         for (const [key, value] of Object.entries(establishment)) {
           if (key !== 'album') {
             formData.append(key, value);
           }
         }
 
+        establishment.album.images.forEach((url) => {
+          formData.append('album[images][]', url);
+        });
+
         return {
           url: ESTABLISHMENT_URL(companyId),
           method: 'POST',
-          credentials: 'include',
           body: formData,
-          formData: true
+          credentials: 'include'
         };
       },
       invalidatesTags: (result) => (result ? ['Establishment'] : [])

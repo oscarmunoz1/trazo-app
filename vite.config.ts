@@ -34,6 +34,7 @@ export default defineConfig({
     alias: [
       { find: 'views', replacement: resolve(__dirname, './src/views') },
       { find: 'components', replacement: resolve(__dirname, './src/components') },
+      { find: 'hooks', replacement: resolve(__dirname, './src/hooks') },
       { find: 'utils', replacement: resolve(__dirname, './src/utils') },
       { find: 'assets', replacement: resolve(__dirname, './src/assets') },
       { find: 'store', replacement: resolve(__dirname, './src/store') },

@@ -74,6 +74,7 @@ export const PUBLIC_HISTORY_URL = (historyId: string) =>
   `${ROOT_URL}/histories/${historyId}/public_history/`;
 export const COMMENT_HISTORY_URL = (scanId: string) =>
   `${ROOT_URL}/public_scans/${scanId}/comment/`;
+export const UPLOAD_URLS_URL = `${ROOT_URL}/upload-urls/`;
 
 // User URLs
 export const USER_URL = (userId: string) =>
