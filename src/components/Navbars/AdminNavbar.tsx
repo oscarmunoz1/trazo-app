@@ -15,13 +15,28 @@
 
 */
 
+// Add the getDaysRemaining function
+const getDaysRemaining = (trialEndDate: string | null | undefined): number => {
+  if (!trialEndDate) return 0;
+
+  const end = new Date(trialEndDate);
+  const now = new Date();
+  const diffTime = end.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  return diffDays > 0 ? diffDays : 0;
+};
+
 import {
   Box,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   Flex,
-  useColorModeValue
+  useColorModeValue,
+  Tag,
+  TagLabel,
+  TagLeftIcon
 } from '@chakra-ui/react';
 import { useContext, useEffect, useState } from 'react';
 
@@ -31,6 +46,7 @@ import { SidebarContext } from 'contexts/SidebarContext';
 import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { FaClock } from 'react-icons/fa';
 
 type AdminNavbarProps = {
   brandText: string;
@@ -56,6 +72,8 @@ export default function AdminNavbar(props: AdminNavbarProps) {
   const establishments = useSelector(
     (state: RootState) => state.company.currentCompany?.establishments
   );
+
+  const subscription = useSelector((state) => state.company.currentCompany?.subscription);
 
   useEffect(() => {
     if (establishmentId) {

@@ -28,7 +28,8 @@
       "views/*": ["./views/*"],
       "assets/*": ["./assets/*"],
       "variables/*": ["./variables/*"],
-      "hooks/*": ["./hooks/*"]
+      "hooks/*": ["./hooks/*"],
+      "services/*": ["./services/*"]
     }
   },
   "include": ["src"],

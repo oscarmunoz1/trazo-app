@@ -102,7 +102,6 @@ function Sidebar(props: SidebarProps) {
     return regex.test(location.pathname);
   };
 
-
   useEffect(() => {
     const dynamicRoutes: Route[] =
       establishments &&

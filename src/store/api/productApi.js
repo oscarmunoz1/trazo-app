@@ -26,16 +26,27 @@ export const productApi = baseApi.injectEndpoints({
     createParcel: build.mutation({
       query: ({ companyId, establishmentId, parcelData }) => {
         const formData = new FormData();
-        parcelData.album.images.forEach((file) => {
-          formData.append('album[images]', file);
-        });
+
+        // Handle either uploaded_image_urls or direct file uploads
+        if (parcelData.uploaded_image_urls && parcelData.uploaded_image_urls.length > 0) {
+          // Append each URL individually with the correct index format
+          parcelData.uploaded_image_urls.forEach((url, index) => {
+            if (url && url.startsWith('http')) {
+              formData.append(`uploaded_image_urls[${index}]`, url);
+            }
+          });
+        } else if (parcelData.album && parcelData.album.images) {
+          parcelData.album.images.forEach((file) => {
+            formData.append('album[images]', file);
+          });
+        }
 
         formData.append('name', parcelData.name);
         formData.append('description', parcelData.description);
-        formData.append('area', parcelData.area);
-        formData.append('certified', parcelData.certified);
-        formData.append('polygon', JSON.stringify(parcelData.polygon));
-        formData.append('map_metadata', JSON.stringify(parcelData.map_metadata));
+        formData.append('area', parcelData.area || '0'); // Ensure area is a string number
+        formData.append('certified', parcelData.certified || false);
+        formData.append('polygon', JSON.stringify(parcelData.polygon || []));
+        formData.append('map_metadata', JSON.stringify(parcelData.map_metadata || {}));
         formData.append('establishment', establishmentId);
 
         return {
@@ -51,16 +62,27 @@ export const productApi = baseApi.injectEndpoints({
     updateParcel: build.mutation({
       query: ({ companyId, establishmentId, parcelId, parcelData }) => {
         const formData = new FormData();
-        parcelData.album.images.forEach((file) => {
-          formData.append('album[images]', file);
-        });
+
+        // Handle either uploaded_image_urls or direct file uploads
+        if (parcelData.uploaded_image_urls && parcelData.uploaded_image_urls.length > 0) {
+          // Append each URL individually with the correct index format
+          parcelData.uploaded_image_urls.forEach((url, index) => {
+            if (url && url.startsWith('http')) {
+              formData.append(`uploaded_image_urls[${index}]`, url);
+            }
+          });
+        } else if (parcelData.album && parcelData.album.images) {
+          parcelData.album.images.forEach((file) => {
+            formData.append('album[images]', file);
+          });
+        }
 
         formData.append('name', parcelData.name);
         formData.append('description', parcelData.description);
-        formData.append('area', parcelData.area);
-        formData.append('certified', parcelData.certified);
-        formData.append('polygon', JSON.stringify(parcelData.polygon));
-        formData.append('map_metadata', JSON.stringify(parcelData.map_metadata));
+        formData.append('area', parcelData.area || '0'); // Ensure area is a string number
+        formData.append('certified', parcelData.certified || false);
+        formData.append('polygon', JSON.stringify(parcelData.polygon || []));
+        formData.append('map_metadata', JSON.stringify(parcelData.map_metadata || {}));
 
         return {
           url: PARCEL_URL(companyId, establishmentId, parcelId),

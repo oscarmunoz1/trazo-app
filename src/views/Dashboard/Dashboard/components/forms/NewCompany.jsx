@@ -176,9 +176,10 @@ function NewCompany() {
       dispatch(setCompany(dataCompany));
       const { id, name } = dataCompany;
       dispatch(setUserCompany({ id, name }));
-      navigate(`/admin/dashboard/establishment/add`);
+
+      navigate(`/admin/dashboard/pricing?new_company=true&company_id=${id}`);
     }
-  }, [isSuccessCompany]);
+  }, [isSuccessCompany, dataCompany, dispatch, navigate]);
 
   const tabsList = [
     {

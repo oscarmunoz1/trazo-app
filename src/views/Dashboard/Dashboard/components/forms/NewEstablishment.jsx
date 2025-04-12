@@ -40,7 +40,8 @@ import {
   TagCloseButton,
   TagLabel,
   Text,
-  useColorModeValue
+  useColorModeValue,
+  useToast
 } from '@chakra-ui/react';
 import { Form, FormProvider, useForm } from 'react-hook-form';
 import React, { useEffect, useReducer, useRef, useState } from 'react';
@@ -70,6 +71,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useIntl } from 'react-intl';
 import { useS3Upload } from 'hooks/useS3Upload';
 import { useFormContext } from 'react-hook-form';
+import { useFileUpload } from '../../../../../services/uploadService';
 
 const formSchemaInfo = object({
   name: string().min(1, 'Name is required'),
@@ -205,9 +207,14 @@ function NewEstablishment() {
 
   const { reset: socialsReset, handleSubmit: socialsSubmit } = socialsMethods;
 
-  const { uploadFiles, isUploading } = useS3Upload();
-  const { setValue, watch } = useFormContext();
-  const images = watch('album.images') || [];
+  const mediaFormMethods = useForm();
+
+  const { uploadMultipleFiles } = useFileUpload();
+
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedImageUrls, setUploadedImageUrls] = useState([]);
+
+  const toast = useToast();
 
   const onSubmitInfo = async (data) => {
     dispatch(setForm({ establishment: data }));
@@ -246,11 +253,13 @@ function NewEstablishment() {
         }
       })
     );
+
+    // Create the establishment using the uploaded image URLs
     createEstablishment({
       companyId: currentCompany.id,
       establishment: {
         ...currentEstablishment,
-        album: { images: acceptedFiles },
+        uploaded_image_urls: uploadedImageUrls, // Use the stored URLs
         ...(data?.facebook && { facebook: data.facebook }),
         ...(data?.instagram && { instagram: data.instagram }),
         company: currentCompany.id
@@ -321,49 +330,56 @@ function NewEstablishment() {
   ];
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    // onDrop,
-    // accept: "image/*", // Accepted file types
-    maxFiles: 5 // Maximum number of files
-    // maxSize: 1024 * 1024 * 5, // Maximum file size (5 MB)
+    onDrop: (acceptedFiles) => {
+      // Store the file names for preview purposes
+      const fileNames = acceptedFiles.map((file) => file.name);
+      setUploadedImageUrls(fileNames);
+      console.log('Dropped files:', fileNames);
+    }
   });
 
-  const handleFileUpload = async (e) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length === 0) return;
-
-    try {
-      const urls = await uploadFiles(files, 'establishment');
-      // Store both files and URLs temporarily
-      setValue('album.images', [
-        ...images,
-        ...files.map((file, index) => ({
-          file,
-          preview: URL.createObjectURL(file),
-          url: urls[index] // Store the S3 URL
-        }))
-      ]);
-    } catch (error) {
-      // Handle error
+  const handleFileUpload = async () => {
+    if (acceptedFiles.length === 0) {
+      toast({
+        title: intl.formatMessage({ id: 'app.noFilesSelected' }),
+        description: intl.formatMessage({ id: 'app.pleaseSelectFilesToUpload' }),
+        status: 'warning',
+        duration: 5000,
+        isClosable: true
+      });
+      return;
     }
-  };
 
-  const onSubmit = async (data) => {
-    // Extract only the URLs for the final submission
-    const submissionData = {
-      ...data,
-      album: {
-        images: data.album.images.map((img) => img.url)
-      }
-    };
+    setIsUploading(true);
 
     try {
-      await createEstablishment({
-        companyId: currentCompany.id,
-        establishment: submissionData
-      }).unwrap();
-      // Handle success
+      // Upload all files and get URLs
+      const urls = await uploadMultipleFiles(acceptedFiles);
+
+      // Store the uploaded URLs
+      setUploadedImageUrls(urls);
+
+      toast({
+        title: intl.formatMessage({ id: 'app.uploadSuccess' }),
+        description: intl.formatMessage({ id: 'app.filesUploaded' }, { count: urls.length }),
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+
+      // Proceed to next step
+      socialsTab.current.click();
     } catch (error) {
-      // Handle error
+      console.error('Error uploading files:', error);
+      toast({
+        title: intl.formatMessage({ id: 'app.uploadError' }),
+        description: intl.formatMessage({ id: 'app.fileUploadFailed' }),
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -508,82 +524,86 @@ function NewEstablishment() {
             </Text>
           </CardHeader>
           <CardBody>
-            <Flex direction="column" w="100%">
-              <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
-                {intl.formatMessage({ id: 'app.parcelImages' })}
-              </Text>
-              <Flex
-                align="center"
-                justify="center"
-                border="1px dashed #E2E8F0"
-                borderRadius="15px"
-                w="100%"
-                maxWidth={'980px'}
-                cursor="pointer"
-                overflowY={'auto'}
-                minH={'175px'}
-                {...getRootProps({ className: 'dropzone' })}>
-                <Input {...getInputProps()} />
-                <Button variant="no-hover">
-                  {acceptedFiles.length > 0 ? (
-                    <Flex gap="20px" p="20px" flexWrap={'wrap'}>
-                      {acceptedFiles.map((file, index) => (
-                        <Box key={index}>
-                          <img
-                            src={URL.createObjectURL(file)} // Create a preview URL for the image
-                            alt={file.name}
-                            style={{
-                              width: '150px',
-                              height: '100px',
-                              borderRadius: '15px',
-                              objectFit: 'contain'
-                            }}
-                          />
-                          <Text
-                            color="gray.400"
-                            fontWeight="normal"
-                            maxWidth="150px"
-                            textOverflow={'ellipsis'}
-                            overflow={'hidden'}>
-                            {file.name}
-                          </Text>
-                        </Box>
-                      ))}
-                    </Flex>
-                  ) : (
-                    <Text color="gray.400" fontWeight="normal">
-                      {intl.formatMessage({ id: 'app.dropFilesHereToUpload' })}
+            <FormProvider {...mediaFormMethods}>
+              <Flex direction="column" w="100%">
+                <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
+                  {intl.formatMessage({ id: 'app.establishmentImages' })}
+                </Text>
+                <Flex
+                  align="center"
+                  justify="center"
+                  border="1px dashed #E2E8F0"
+                  borderRadius="15px"
+                  w="100%"
+                  maxWidth={'980px'}
+                  cursor="pointer"
+                  overflowY={'auto'}
+                  minH={'175px'}
+                  {...getRootProps({ className: 'dropzone' })}>
+                  <Input {...getInputProps()} />
+                  <Button variant="no-hover">
+                    {acceptedFiles.length > 0 ? (
+                      <Flex gap="20px" p="20px" flexWrap={'wrap'}>
+                        {acceptedFiles.map((file, index) => (
+                          <Box key={index}>
+                            <img
+                              src={URL.createObjectURL(file)} // Create a preview URL for the image
+                              alt={file.name}
+                              style={{
+                                width: '150px',
+                                height: '100px',
+                                borderRadius: '15px',
+                                objectFit: 'contain'
+                              }}
+                            />
+                            <Text
+                              color="gray.400"
+                              fontWeight="normal"
+                              maxWidth="150px"
+                              textOverflow={'ellipsis'}
+                              overflow={'hidden'}>
+                              {file.name}
+                            </Text>
+                          </Box>
+                        ))}
+                      </Flex>
+                    ) : (
+                      <Text color="gray.400" fontWeight="normal">
+                        {intl.formatMessage({ id: 'app.dropFilesHereToUpload' })}
+                      </Text>
+                    )}
+                  </Button>
+                </Flex>
+                <Flex justify="space-between">
+                  <Button
+                    variant="no-hover"
+                    bg={bgPrevButton}
+                    alignSelf="flex-end"
+                    mt="24px"
+                    w="100px"
+                    h="35px"
+                    onClick={() => descriptionTab.current.click()}>
+                    <Text fontSize="xs" color="gray.700" fontWeight="bold">
+                      {intl.formatMessage({ id: 'app.prev' })}
                     </Text>
-                  )}
-                </Button>
+                  </Button>
+                  <Button
+                    variant="no-hover"
+                    bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+                    alignSelf="flex-end"
+                    mt="24px"
+                    w="100px"
+                    h="35px"
+                    onClick={handleFileUpload}
+                    isLoading={isUploading}
+                    loadingText={intl.formatMessage({ id: 'app.uploading' })}>
+                    <Text fontSize="xs" color="#fff" fontWeight="bold">
+                      {intl.formatMessage({ id: 'app.upload' })}
+                    </Text>
+                  </Button>
+                </Flex>
               </Flex>
-              <Flex justify="space-between">
-                <Button
-                  variant="no-hover"
-                  bg={bgPrevButton}
-                  alignSelf="flex-end"
-                  mt="24px"
-                  w="100px"
-                  h="35px"
-                  onClick={() => descriptionTab.current.click()}>
-                  <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                    {intl.formatMessage({ id: 'app.prev' })}
-                  </Text>
-                </Button>
-                <Button
-                  variant="no-hover"
-                  bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                  alignSelf="flex-end"
-                  mt="24px"
-                  w="100px"
-                  h="35px"
-                  onClick={handleFileUpload}>
-                  <Text fontSize="xs" color="#fff" fontWeight="bold">
-                    {intl.formatMessage({ id: 'app.upload' })}
-                  </Text>
-                </Button>
-              </Flex>
-            </Flex>
+            </FormProvider>
           </CardBody>
         </Card>
       </TabPanel>

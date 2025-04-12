@@ -8,7 +8,9 @@ import { useSelector } from 'react-redux';
 const Authenticated = ({ allowedRoles, mustBeCompanyAdmin = false }) => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const isLoading = useSelector((state) => state.auth.isLoading);
+  console.log('Authenticated');
   const currentCompany = useSelector((state) => state.company.currentCompany);
+  console.log('currentCompany', currentCompany);
   const [subdomain, setSubDomain] = useState('');
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -87,7 +89,12 @@ const Authenticated = ({ allowedRoles, mustBeCompanyAdmin = false }) => {
         currentCompany?.establishments &&
         currentCompany.establishments.length === 0
       ) {
-        navigate(`/admin/dashboard/establishment/add`);
+        if (
+          currentCompany.subscription ||
+          (currentCompany.subscription_plan && currentCompany.subscription_plan.id)
+        ) {
+          navigate(`/admin/dashboard/establishment/add`);
+        }
       }
     }
   }, [currentCompany, currentUser, navigate, subdomain]);

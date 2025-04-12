@@ -24,12 +24,20 @@ function SignUp() {
   console.log('error', error?.data?.error);
 
   useEffect(() => {
-    const email = searchParams.get('email');
+    // Get the raw query string parameter
+    const rawEmail = searchParams.get('email');
+
+    // If you need to display the properly decoded email
+    const displayEmail = rawEmail ? decodeURIComponent(rawEmail) : null;
+
     const code = searchParams.get('code');
-    if (email && code) {
-      verifyEmail({ email, code });
+
+    if (displayEmail && code) {
+      console.log('Sending verification request for:', displayEmail);
+      // Use the decoded email for the API call
+      verifyEmail({ email: displayEmail, code });
     }
-  }, [searchParams]);
+  }, [searchParams, verifyEmail]);
 
   useEffect(() => {
     if (error?.data?.error === 'User is already verified') {

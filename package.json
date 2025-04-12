@@ -20,6 +20,7 @@
     "@hookform/resolvers": "^2.9.11",
     "@react-google-maps/api": "^2.18.1",
     "@reduxjs/toolkit": "^1.9.1",
+    "@stripe/stripe-js": "^7.0.0",
     "@types/jest": "^29.5.8",
     "@types/node": "^20.9.2",
     "@types/react": "^18.2.0",

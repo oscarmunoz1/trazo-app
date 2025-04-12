@@ -19,6 +19,7 @@ import { BsFillClipboardCheckFill } from 'react-icons/bs';
 import { HomeIcon } from 'components/Icons/Icons';
 import { Route } from 'types/common';
 import { useIntl } from 'react-intl';
+import { FaChartBar } from 'react-icons/fa';
 
 // const intl = useIntl();
 
@@ -45,6 +46,17 @@ const dashRoutes: Route[] = [
     collapse: true,
     isCommercial: true,
     regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/commercial$/
+  },
+  {
+    id: 'planUsage',
+    name: 'Plan Usage',
+    path: '/dashboard/plan-usage',
+    icon: <FaChartBar color="inherit" />,
+    authIcon: <FaChartBar color="inherit" />,
+    layout: '/admin',
+    collapse: true,
+    isCompanySettings: true,
+    regex: /^\/admin\/dashboard\/plan-usage$/
   }
 ];
 

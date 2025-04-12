@@ -103,8 +103,41 @@ export default function DashboardView() {
     navigate('/admin/dashboard/establishment/add');
   };
 
+  const activeCompany = useSelector((state) => state.company.currentCompany);
+
+  // Get subscription from the company
+  const subscription = activeCompany?.subscription;
+
   return (
     <Flex flexDirection="column" pt={{ base: '120px', md: '75px' }}>
+      {/* Trial Banner */}
+      {subscription && subscription.status === 'trialing' && (
+        <Box
+          p={4}
+          bg="green.50"
+          borderRadius="md"
+          mb={4}
+          borderLeft="4px solid"
+          borderColor="green.500">
+          <Flex align="center" justify="space-between">
+            <Box>
+              <Text fontSize="lg" fontWeight="bold" color="green.700">
+                {intl.formatMessage({ id: 'app.trialActive' })}
+              </Text>
+              <Text color="green.700">
+                {intl.formatMessage(
+                  { id: 'app.trialEndsOn' },
+                  { date: new Date(subscription.trial_end).toLocaleDateString() }
+                )}
+              </Text>
+            </Box>
+            <Button colorScheme="green" size="sm" onClick={() => navigate('/account/billing')}>
+              {intl.formatMessage({ id: 'app.manageTrial' })}
+            </Button>
+          </Flex>
+        </Box>
+      )}
+
       <Box>
         <Flex justify="space-between" align="center" mb={4} px={{ base: 2, md: 0 }}>
           <Text

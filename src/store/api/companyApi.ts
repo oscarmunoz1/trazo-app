@@ -26,22 +26,38 @@ const companyApi = baseApi.injectEndpoints({
     }),
     createEstablishment: build.mutation({
       query: ({ companyId, establishment }) => {
+        // If we have uploaded image URLs, send them as JSON
+        if (establishment.uploaded_image_urls && establishment.uploaded_image_urls.length > 0) {
+          return {
+            url: ESTABLISHMENT_URL(companyId),
+            method: 'POST',
+            body: establishment,
+            credentials: 'include'
+          };
+        }
+
+        // Otherwise, use the existing form data approach as a fallback
         const formData = new FormData();
 
+        // Add all regular fields to formData
         for (const [key, value] of Object.entries(establishment)) {
           if (key !== 'album') {
             formData.append(key, value);
           }
         }
 
-        establishment.album.images.forEach((url) => {
-          formData.append('album[images][]', url);
-        });
+        // Handle direct file uploads (legacy method)
+        if (establishment.album?.images && establishment.album.images.length > 0) {
+          establishment.album.images.forEach((file, index) => {
+            formData.append(`album_${index}`, file);
+          });
+        }
 
         return {
           url: ESTABLISHMENT_URL(companyId),
           method: 'POST',
           body: formData,
+          formData: true,
           credentials: 'include'
         };
       },

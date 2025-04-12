@@ -33,12 +33,13 @@ import {
   TabPanels,
   Tabs,
   Text,
+  useToast,
   useColorModeValue
 } from '@chakra-ui/react';
 import { DrawingManager, GoogleMap, Polygon, useLoadScript } from '@react-google-maps/api';
 import { FormProvider, useForm } from 'react-hook-form';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { boolean, object, string } from 'zod';
+import { boolean, object, string, number } from 'zod';
 import { clearForm, setForm } from 'store/features/formSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -59,10 +60,14 @@ import { useDropzone } from 'react-dropzone';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useIntl } from 'react-intl';
+import { useFileUpload } from 'services/uploadService';
 
 const formSchemaInfo = object({
   name: string().min(1, 'Name is required'),
-  area: string().min(1, 'Area is required')
+  area: string()
+    .min(1, 'Area is required')
+    .refine((val) => !isNaN(parseFloat(val)), 'Area must be a valid number')
+    .transform((val) => parseFloat(val))
 });
 
 const formSchemaDescription = object({
@@ -137,6 +142,7 @@ function NewParcel() {
   const listenersRef = useRef([]);
   const { establishmentId } = useParams();
   const intl = useIntl();
+  const toast = useToast();
 
   const [drawingMode, setDrawingMode] = useState(false);
   const [polygon, setPolygon] = useState(null);
@@ -154,11 +160,16 @@ function NewParcel() {
     certificate: false
   });
 
+  const [uploadedImageUrls, setUploadedImageUrls] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const { uploadMultipleFiles } = useFileUpload();
+
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    // onDrop,
-    // accept: "image/*", // Accepted file types
-    maxFiles: 5 // Maximum number of files
-    // maxSize: 1024 * 1024 * 5, // Maximum file size (5 MB)
+    onDrop: (acceptedFiles) => {
+      // Store the file names for preview purposes
+      const fileNames = acceptedFiles.map((file) => file.name);
+      console.log('Dropped files:', fileNames);
+    }
   });
 
   const onMapClick = (e) => {
@@ -258,19 +269,86 @@ function NewParcel() {
 
   const [createParcel, { data, error, isSuccess, isLoading }] = useCreateParcelMutation();
 
+  const handleFileUpload = async () => {
+    if (acceptedFiles.length === 0) {
+      toast({
+        title: intl.formatMessage({ id: 'app.noFilesSelected' }),
+        description: intl.formatMessage({ id: 'app.pleaseSelectFilesToUpload' }),
+        status: 'warning',
+        duration: 5000,
+        isClosable: true
+      });
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      // Upload all files and get URLs
+      const urls = await uploadMultipleFiles(acceptedFiles);
+
+      // Validate URLs and store only valid ones
+      const validUrls = urls.filter(
+        (url) => url && typeof url === 'string' && url.startsWith('http')
+      );
+
+      if (validUrls.length === 0) {
+        throw new Error('No valid URLs were returned from the upload service');
+      }
+
+      // Store the uploaded URLs
+      setUploadedImageUrls(validUrls);
+
+      toast({
+        title: intl.formatMessage({ id: 'app.uploadSuccess' }),
+        description: intl.formatMessage({ id: 'app.filesUploaded' }, { count: validUrls.length }),
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+
+      // Proceed to next step
+      certificationTab.current.click();
+    } catch (error) {
+      console.error('Error uploading files:', error);
+      toast({
+        title: intl.formatMessage({ id: 'app.uploadError' }),
+        description: intl.formatMessage({ id: 'app.fileUploadFailed' }),
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const onSubmitCertificate = (data) => {
     const { product, ...currentParcelData } = currentParcel;
     if (product) {
       currentParcelData['product'] = product;
     }
+
+    // Ensure area is a valid number
+    let area = currentParcelData.area;
+    if (typeof area === 'string') {
+      area = parseFloat(area) || 0;
+    }
+
+    // Filter out any invalid URLs
+    const validImageUrls = uploadedImageUrls.filter(
+      (url) => url && typeof url === 'string' && url.startsWith('http')
+    );
+
     createParcel({
       companyId: currentCompany?.id,
       establishmentId,
       parcelData: {
         ...currentParcel,
         ...data,
+        area: area, // Make sure area is a number
         establishment: parseInt(establishmentId),
-        album: { images: acceptedFiles },
+        uploaded_image_urls: validImageUrls, // Only send valid URLs
         certified: data.certificate
       }
     });
@@ -538,9 +616,10 @@ function NewParcel() {
                   mt="24px"
                   w="100px"
                   h="35px"
-                  onClick={() => certificationTab.current.click()}>
+                  isLoading={isUploading}
+                  onClick={handleFileUpload}>
                   <Text fontSize="xs" color="#fff" fontWeight="bold">
-                    {intl.formatMessage({ id: 'app.next' })}
+                    {intl.formatMessage({ id: 'app.upload' })}
                   </Text>
                 </Button>
               </Flex>

@@ -65,7 +65,7 @@ const authApi = baseApi.injectEndpoints({
           url: VERIFY_EMAIL_URL,
           method: 'POST',
           body: {
-            email: email.toLowerCase(),
+            email: email,
             code: code
           },
           headers: {

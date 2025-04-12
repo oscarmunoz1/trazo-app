@@ -79,3 +79,12 @@ export const UPLOAD_URLS_URL = `${ROOT_URL}/upload-urls/`;
 // User URLs
 export const USER_URL = (userId: string) =>
   userId ? `${ROOT_URL}/users/${userId}/` : `${ROOT_URL}/users/`;
+
+// Subscription and Billing URLs
+export const PLANS_URL = `${ROOT_URL}/subscriptions/plans/`;
+export const SUBSCRIPTIONS_URL = `${ROOT_URL}/subscriptions/`;
+export const ADDONS_URL = `${ROOT_URL}/subscriptions/addons/`;
+export const PAYMENT_METHODS_URL = `${ROOT_URL}/subscriptions/payment-methods/`;
+export const INVOICES_URL = `${ROOT_URL}/subscriptions/invoices/`;
+export const CREATE_CHECKOUT_SESSION_URL = `${ROOT_URL}/subscriptions/checkout/create_session/`;
+export const COMPLETE_CHECKOUT_URL = `${ROOT_URL}/subscriptions/checkout/complete_checkout/`;
