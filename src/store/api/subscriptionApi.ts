@@ -31,11 +31,15 @@ export interface Plan {
 }
 
 export interface CheckoutSessionRequest {
-  plan_id: string;
+  plan_id?: string;
   company_id: string;
-  interval: string;
+  interval?: string;
   new_company?: boolean;
   trial_days?: number;
+
+  // Add-on parameters
+  addon_type?: 'extraProduction' | 'extraParcel' | 'extraStorage';
+  quantity?: number;
 }
 
 export interface CheckoutSessionResponse {
@@ -74,7 +78,15 @@ export const subscriptionApi = baseApi.injectEndpoints({
         headers: {
           'Content-Type': 'application/json'
         }
-      })
+      }),
+      // For add-on purchases, we'll want to refresh company data
+      invalidatesTags: (result, error, request) =>
+        request.addon_type
+          ? [
+              { type: 'Company', id: request.company_id },
+              { type: 'Subscription', id: 'LIST' }
+            ]
+          : []
     }),
     completeCheckout: builder.mutation<CompleteCheckoutResponse, CompleteCheckoutRequest>({
       query: (body) => ({
@@ -87,7 +99,10 @@ export const subscriptionApi = baseApi.injectEndpoints({
         }
       }),
       // Invalidate the company data to force a refresh
-      invalidatesTags: ['Company']
+      invalidatesTags: (result, error, request) => [
+        { type: 'Company', id: request.company_id },
+        { type: 'Subscription', id: 'LIST' }
+      ]
     })
   })
 });

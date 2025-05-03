@@ -13,6 +13,8 @@ export interface Company {
   establishments: Establishment[];
   parcels?: Parcel[];
   subscription?: Subscription;
+  has_subscription?: boolean;
+  subscription_plan?: any;
 }
 
 interface Employee {
@@ -25,22 +27,26 @@ interface Employee {
 }
 
 export interface Establishment {
-  id: string;
+  id: string | number;
   name: string;
-  address: string;
-  postcode: string;
-  city: string;
-  country: string;
-  phone: string;
-  email: string;
-  website: string;
-  employees: Employee[];
+  description?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  zone?: string;
+  image?: string;
   parcels?: Parcel[];
+  // Add other properties as needed
 }
 
 export interface Parcel {
   id: string | number;
   name: string;
+  description?: string;
+  image?: string;
+  has_current_production?: boolean;
+  // Add other properties as needed
 }
 
 export interface Subscription {

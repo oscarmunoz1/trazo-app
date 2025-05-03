@@ -41,7 +41,8 @@ import {
   TagCloseButton,
   TagLabel,
   Text,
-  useColorModeValue
+  useColorModeValue,
+  useToast
 } from '@chakra-ui/react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { GoogleMap, Polygon, useLoadScript } from '@react-google-maps/api';
@@ -97,6 +98,7 @@ function NewCompany() {
   const bgColor = useColorModeValue('white', 'gray.700');
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [activeBullets, setActiveBullets] = useState({
     mainInfo: true,
@@ -164,10 +166,27 @@ function NewCompany() {
   ] = useCreateCompanyMutation();
 
   const onSubmitSocials = (data) => {
+    console.log('Submitting company data:', { ...currentCompany, ...data });
+
     createCompany({
       ...currentCompany,
       ...data
-    });
+    })
+      .unwrap()
+      .then((response) => {
+        console.log('Company created successfully:', response);
+      })
+      .catch((error) => {
+        console.error('Error creating company:', error);
+        toast({
+          title: 'Error creating company',
+          description:
+            error.data?.detail || 'There was an error creating your company. Please try again.',
+          status: 'error',
+          duration: 5000,
+          isClosable: true
+        });
+      });
   };
 
   useEffect(() => {

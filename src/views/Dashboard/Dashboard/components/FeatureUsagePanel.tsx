@@ -15,14 +15,25 @@ import {
 import { FaBuilding, FaMapMarkedAlt, FaLeaf, FaQrcode, FaDatabase } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
+import { RootState } from 'store';
+import { Company, Establishment } from 'types/company';
 
 function FeatureUsagePanel() {
   const intl = useIntl();
-  const activeCompany = useSelector((state) => state.company.currentCompany);
+  const activeCompany = useSelector((state: RootState) => state.company.currentCompany) as Company;
   const subscription = activeCompany?.subscription;
   const plan = subscription?.plan;
   const features = plan?.features || {};
   const isTrial = subscription?.status === 'trialing';
+
+  // Helper function to count total parcels across all establishments
+  const countTotalParcels = (): number => {
+    if (!activeCompany?.establishments) return 0;
+
+    return activeCompany.establishments.reduce((total: number, establishment: Establishment) => {
+      return total + (establishment.parcels?.length || 0);
+    }, 0);
+  };
 
   const usageMetrics = [
     {
@@ -35,7 +46,7 @@ function FeatureUsagePanel() {
     {
       icon: FaMapMarkedAlt,
       name: 'app.parcels',
-      used: activeCompany?.parcels?.length || 0,
+      used: countTotalParcels(),
       limit: features.max_parcels || 0,
       colorScheme: 'green'
     },

@@ -16,14 +16,27 @@ export const fileApi = baseApi.injectEndpoints({
 
     // Upload file directly to backend (used in development)
     localUpload: build.mutation<{ file_url: string; path: string }, FormData>({
-      query: (formData) => ({
-        url: '/api/local-upload/',
-        method: 'POST',
-        body: formData,
-        // Don't set Content-Type, it will be set automatically with the boundary
-        formData: true,
-        credentials: 'include'
-      })
+      query: (formData) => {
+        // Log what we're sending for debugging
+        console.log('Sending FormData:', formData);
+
+        return {
+          url: '/api/local-upload/',
+          method: 'POST',
+          body: formData,
+          formData: true,
+          // IMPORTANT: RTK Query's formData option doesn't properly set the Content-Type
+          // So we need to use fetch directly and NOT set Content-Type at all
+          // The browser will automatically set it with the correct boundary
+          prepareHeaders: (headers: Headers) => {
+            // Remove Content-Type completely to let browser set it
+            headers.delete('Content-Type');
+            // Keep the rest of the headers
+            return headers;
+          },
+          credentials: 'include'
+        };
+      }
     })
   }),
   overrideExisting: false

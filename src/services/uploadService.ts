@@ -12,6 +12,10 @@ export const useFileUpload = () => {
    */
   const uploadFile = async (file: File): Promise<string> => {
     const isDevelopment = process.env.NODE_ENV === 'development';
+    console.log(
+      `Uploading file in ${isDevelopment ? 'development' : 'production'} mode:`,
+      file.name
+    );
 
     if (isDevelopment) {
       // In development, upload directly to backend

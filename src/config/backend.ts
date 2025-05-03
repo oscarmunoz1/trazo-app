@@ -82,7 +82,11 @@ export const USER_URL = (userId: string) =>
 
 // Subscription and Billing URLs
 export const PLANS_URL = `${ROOT_URL}/subscriptions/plans/`;
-export const SUBSCRIPTIONS_URL = `${ROOT_URL}/subscriptions/`;
+export const SUBSCRIPTIONS_URL = (subscriptionId?: string) =>
+  subscriptionId
+    ? `${ROOT_URL}/subscriptions/subscriptions/${subscriptionId}/`
+    : `${ROOT_URL}/subscriptions/subscriptions/`;
+export const SUBSCRIPTION_DASHBOARD_URL = `${ROOT_URL}/subscriptions/subscriptions/dashboard/`;
 export const ADDONS_URL = `${ROOT_URL}/subscriptions/addons/`;
 export const PAYMENT_METHODS_URL = `${ROOT_URL}/subscriptions/payment-methods/`;
 export const INVOICES_URL = `${ROOT_URL}/subscriptions/invoices/`;

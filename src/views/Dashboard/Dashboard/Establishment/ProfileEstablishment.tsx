@@ -39,7 +39,11 @@ function ProfileEstablishment() {
 
   const currentCompany = useSelector((state) => state.company.currentCompany);
 
-  const { data: establishmentData, error, isLoading } = useGetEstablishmentQuery(
+  const {
+    data: establishmentData,
+    error,
+    isLoading
+  } = useGetEstablishmentQuery(
     {
       companyId: currentCompany?.id,
       establishmentId

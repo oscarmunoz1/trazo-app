@@ -70,12 +70,40 @@ export default function DashboardView() {
   );
 
   const establishments = useSelector((state) => state.company.currentCompany?.establishments);
+  const activeCompany = useSelector((state) => state.company.currentCompany);
+
+  // Check subscription from the company
+  const subscription = activeCompany?.subscription;
+  const isLoadingCompany = useSelector((state) => state.company.isLoading);
 
   // to check for active links and opened collapses
   let location = useLocation();
 
   const iconBoxInside = useColorModeValue('white', 'white');
   let mainText = useColorModeValue('gray.700', 'gray.200');
+
+  // Early check for subscription when component first renders
+  // This helps catch cases before useEffect runs
+  if (
+    !isLoadingCompany &&
+    activeCompany &&
+    Object.keys(activeCompany).length > 0 &&
+    'id' in activeCompany &&
+    (!subscription || activeCompany.has_subscription === false) &&
+    !location.pathname.includes('/pricing') &&
+    !location.pathname.includes('/stripe-success')
+  ) {
+    console.log('DashboardView immediate check - redirecting to pricing');
+    const redirectUrl = `/admin/dashboard/pricing?new_company=false&company_id=${activeCompany.id}`;
+    // Use window.location for most direct redirect
+    window.location.href = redirectUrl;
+    // Return loading indicator to prevent rendering the rest of the component
+    return (
+      <Flex justify="center" align="center" h="100vh">
+        Redirecting...
+      </Flex>
+    );
+  }
 
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName, isDashboard = false) => {
@@ -88,6 +116,54 @@ export default function DashboardView() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // Add subscription check - redirect to pricing if user has company but no subscription
+  useEffect(() => {
+    // Skip check if we don't have company data yet or if loading
+    if (isLoadingCompany || !activeCompany) {
+      console.log('Skipping subscription check - company loading or not available');
+      return;
+    }
+
+    console.log('Checking subscription:', {
+      activeCompany,
+      subscription,
+      hasSubscription: activeCompany?.has_subscription,
+      pathname: location.pathname,
+      fullUrl: window.location.href
+    });
+
+    // Check if user has company but no subscription
+    if (
+      activeCompany &&
+      Object.keys(activeCompany).length > 0 &&
+      'id' in activeCompany &&
+      (!subscription || activeCompany.has_subscription === false) &&
+      !location.pathname.includes('/pricing') &&
+      !location.pathname.includes('/stripe-success')
+    ) {
+      console.log('No subscription found, redirecting to pricing');
+
+      // Store company ID in localStorage instead of URL parameters
+      localStorage.setItem('subscription_company_id', String(activeCompany.id));
+
+      // Redirect URL - without query parameters
+      const redirectUrl = `/admin/dashboard/pricing`;
+
+      // Try React Router navigation
+      navigate(redirectUrl, {
+        replace: true
+      });
+
+      // Fallback to direct browser redirect if navigation doesn't work
+      setTimeout(() => {
+        if (!window.location.href.includes('pricing')) {
+          console.log('Fallback: Using direct browser redirect');
+          window.location.href = redirectUrl;
+        }
+      }, 100);
+    }
+  }, [activeCompany, subscription, isLoadingCompany, navigate, location.pathname]);
 
   useEffect(() => {
     let establishment;
@@ -103,35 +179,34 @@ export default function DashboardView() {
     navigate('/admin/dashboard/establishment/add');
   };
 
-  const activeCompany = useSelector((state) => state.company.currentCompany);
-
-  // Get subscription from the company
-  const subscription = activeCompany?.subscription;
-
   return (
     <Flex flexDirection="column" pt={{ base: '120px', md: '75px' }}>
       {/* Trial Banner */}
       {subscription && subscription.status === 'trialing' && (
         <Box
           p={4}
-          bg="green.50"
-          borderRadius="md"
+          bg="white"
+          borderRadius="lg"
           mb={4}
-          borderLeft="4px solid"
-          borderColor="green.500">
+          borderLeftWidth="4px"
+          borderLeftColor="green.500"
+          boxShadow="md">
           <Flex align="center" justify="space-between">
             <Box>
               <Text fontSize="lg" fontWeight="bold" color="green.700">
                 {intl.formatMessage({ id: 'app.trialActive' })}
               </Text>
-              <Text color="green.700">
+              <Text color="gray.700">
                 {intl.formatMessage(
                   { id: 'app.trialEndsOn' },
                   { date: new Date(subscription.trial_end).toLocaleDateString() }
                 )}
               </Text>
             </Box>
-            <Button colorScheme="green" size="sm" onClick={() => navigate('/account/billing')}>
+            <Button
+              colorScheme="green"
+              size="md"
+              onClick={() => navigate('/admin/dashboard/account/billing')}>
               {intl.formatMessage({ id: 'app.manageTrial' })}
             </Button>
           </Flex>

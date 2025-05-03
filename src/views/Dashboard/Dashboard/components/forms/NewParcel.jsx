@@ -61,6 +61,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useIntl } from 'react-intl';
 import { useFileUpload } from 'services/uploadService';
+import useSubscriptionCheck from 'hooks/useSubscriptionCheck';
+import SubscriptionLimitModal from 'components/Modals/SubscriptionLimitModal';
 
 const formSchemaInfo = object({
   name: string().min(1, 'Name is required'),
@@ -439,87 +441,68 @@ function NewParcel() {
     }
   ];
 
+  // Check subscription limits
+  const { isChecking, canCreate, showLimitModal, setShowLimitModal, usage, currentPlan } =
+    useSubscriptionCheck('parcel', establishmentId);
+
+  // When component mounts, save the current path to localStorage
+  // for potential return after subscription upgrade
+  useEffect(() => {
+    localStorage.setItem('last_form_path', window.location.pathname);
+  }, []);
+
+  // Return early if subscription check is in progress
+  if (isChecking) {
+    return (
+      <Flex justify="center" align="center" h="400px">
+        <CircularProgress isIndeterminate color="blue.500" />
+        <Text ml={4}>{intl.formatMessage({ id: 'app.checking' })}</Text>
+      </Flex>
+    );
+  }
+
   return (
-    <FormLayout tabsList={tabsList} activeBullets={activeBullets}>
-      <TabPanel>
-        <Card>
-          <CardHeader mb="22px">
-            <Text color={textColor} fontSize="lg" fontWeight="bold">
-              {intl.formatMessage({ id: 'app.parcelInfo' })}
-            </Text>
-          </CardHeader>
-          <CardBody>
-            <FormProvider {...infoMethods}>
-              <form onSubmit={handleSubmit(onSubmitInfo)} style={{ width: '100%' }}>
-                <Stack direction="column" spacing="20px" w="100%">
-                  <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
-                    <FormControl>
-                      <FormInput
-                        name="name"
-                        label={intl.formatMessage({ id: 'app.name' })}
-                        placeholder={intl.formatMessage({ id: 'app.parcelName' })}
-                        fontSize="xs"
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormInput
-                        name="area"
-                        label={intl.formatMessage({ id: 'app.area' })}
-                        placeholder={intl.formatMessage({ id: 'app.parcelArea' })}
-                        fontSize="xs"
-                      />
-                    </FormControl>
-                  </Stack>
+    <>
+      {/* Subscription limit modal */}
+      <SubscriptionLimitModal
+        isOpen={showLimitModal}
+        onClose={() => setShowLimitModal(false)}
+        resourceType="parcel"
+        currentPlan={currentPlan}
+        usage={usage}
+      />
 
-                  <Button
-                    variant="no-hover"
-                    bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                    alignSelf="flex-end"
-                    mt="24px"
-                    w="100px"
-                    h="35px"
-                    type="submit">
-                    <Text fontSize="xs" color="#fff" fontWeight="bold">
-                      {intl.formatMessage({ id: 'app.next' })}
-                    </Text>
-                  </Button>
-                </Stack>
-              </form>
-            </FormProvider>
-          </CardBody>
-        </Card>
-      </TabPanel>
-      <TabPanel>
-        <MapCreator handleNext={handleNext} prevTab={mainInfoTab} />
-      </TabPanel>
-
-      <TabPanel>
-        <Card>
-          <CardHeader mb="32px">
-            <Text fontSize="lg" color={textColor} fontWeight="bold">
-              {intl.formatMessage({ id: 'app.description' })}
-            </Text>
-          </CardHeader>
-          <CardBody>
-            <FormProvider {...descriptionMethods}>
-              <form onSubmit={descriptionSubmit(onSubmitDescription)} style={{ width: '100%' }}>
-                <Flex direction="column" w="100%">
+      <FormLayout tabsList={tabsList} activeBullets={activeBullets}>
+        <TabPanel>
+          <Card>
+            <CardHeader mb="22px">
+              <Text color={textColor} fontSize="lg" fontWeight="bold">
+                {intl.formatMessage({ id: 'app.parcelInfo' })}
+              </Text>
+            </CardHeader>
+            <CardBody>
+              <FormProvider {...infoMethods}>
+                <form onSubmit={handleSubmit(onSubmitInfo)} style={{ width: '100%' }}>
                   <Stack direction="column" spacing="20px" w="100%">
-                    <Editor />
-                  </Stack>
-                  <Flex justify="space-between">
-                    <Button
-                      variant="no-hover"
-                      bg={bgPrevButton}
-                      alignSelf="flex-end"
-                      mt="24px"
-                      w="100px"
-                      h="35px"
-                      onClick={() => mainInfoTab.current.click()}>
-                      <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                        {intl.formatMessage({ id: 'app.prev' })}
-                      </Text>
-                    </Button>
+                    <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
+                      <FormControl>
+                        <FormInput
+                          name="name"
+                          label={intl.formatMessage({ id: 'app.name' })}
+                          placeholder={intl.formatMessage({ id: 'app.parcelName' })}
+                          fontSize="xs"
+                        />
+                      </FormControl>
+                      <FormControl>
+                        <FormInput
+                          name="area"
+                          label={intl.formatMessage({ id: 'app.area' })}
+                          placeholder={intl.formatMessage({ id: 'app.parcelArea' })}
+                          fontSize="xs"
+                        />
+                      </FormControl>
+                    </Stack>
+
                     <Button
                       variant="no-hover"
                       bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
@@ -532,200 +515,255 @@ function NewParcel() {
                         {intl.formatMessage({ id: 'app.next' })}
                       </Text>
                     </Button>
-                  </Flex>
-                </Flex>
-              </form>
-            </FormProvider>
-          </CardBody>
-        </Card>
-      </TabPanel>
-      <TabPanel>
-        <Card>
-          <CardHeader mb="22px">
-            <Text color={textColor} fontSize="xl" fontWeight="bold" mb="3px">
-              {intl.formatMessage({ id: 'app.media' })}
-            </Text>
-          </CardHeader>
-          <CardBody>
-            <Flex direction="column" w="100%">
-              <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
-                {intl.formatMessage({ id: 'app.parcelImages' })}
+                  </Stack>
+                </form>
+              </FormProvider>
+            </CardBody>
+          </Card>
+        </TabPanel>
+        <TabPanel>
+          <MapCreator handleNext={handleNext} prevTab={mainInfoTab} />
+        </TabPanel>
+
+        <TabPanel>
+          <Card>
+            <CardHeader mb="32px">
+              <Text fontSize="lg" color={textColor} fontWeight="bold">
+                {intl.formatMessage({ id: 'app.description' })}
               </Text>
-              <Flex
-                align="center"
-                justify="center"
-                border="1px dashed #E2E8F0"
-                borderRadius="15px"
-                w="100%"
-                maxWidth={'980px'}
-                cursor="pointer"
-                overflowY={'auto'}
-                minH={'175px'}
-                {...getRootProps({ className: 'dropzone' })}>
-                <Input {...getInputProps()} />
-                <Button variant="no-hover">
-                  {acceptedFiles.length > 0 ? (
-                    <Flex gap="20px" p="20px" flexWrap={'wrap'}>
-                      {acceptedFiles.map((file, index) => (
-                        <Box key={index}>
-                          <img
-                            src={URL.createObjectURL(file)} // Create a preview URL for the image
-                            alt={file.name}
-                            style={{
-                              width: '150px',
-                              height: '100px',
-                              borderRadius: '15px',
-                              objectFit: 'contain'
-                            }}
-                          />
-                          <Text
-                            color="gray.400"
-                            fontWeight="normal"
-                            maxWidth="150px"
-                            textOverflow={'ellipsis'}
-                            overflow={'hidden'}>
-                            {file.name}
-                          </Text>
-                        </Box>
-                      ))}
-                    </Flex>
-                  ) : (
-                    <Text color="gray.400" fontWeight="normal">
-                      {intl.formatMessage({ id: 'app.dropFilesHereToUpload' })}
-                    </Text>
-                  )}
-                </Button>
-              </Flex>
-              <Flex justify="space-between">
-                <Button
-                  variant="no-hover"
-                  bg={bgPrevButton}
-                  alignSelf="flex-end"
-                  mt="24px"
-                  w="100px"
-                  h="35px"
-                  onClick={() => descriptionTab.current.click()}>
-                  <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                    {intl.formatMessage({ id: 'app.prev' })}
-                  </Text>
-                </Button>
-                <Button
-                  variant="no-hover"
-                  bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                  alignSelf="flex-end"
-                  mt="24px"
-                  w="100px"
-                  h="35px"
-                  isLoading={isUploading}
-                  onClick={handleFileUpload}>
-                  <Text fontSize="xs" color="#fff" fontWeight="bold">
-                    {intl.formatMessage({ id: 'app.upload' })}
-                  </Text>
-                </Button>
-              </Flex>
-            </Flex>
-          </CardBody>
-        </Card>
-      </TabPanel>
-      <TabPanel>
-        <Card>
-          <CardHeader mb="40px">
-            <Flex
-              direction="column"
-              align="center"
-              justify="center"
-              textAlign="center"
-              w="80%"
-              mx="auto">
-              <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
-                {intl.formatMessage({ id: 'app.doYouWantToCertificateThisParcel' })}
-              </Text>
-              <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                {intl.formatMessage({
-                  id: 'app.inTheFollowingInputsYouMustGiveDetailedInformationInOrderToCertifyThisParcel'
-                })}
-                parcel.
-              </Text>
-            </Flex>
-          </CardHeader>
-          <CardBody>
-            <Flex direction="column" w="100%">
-              <Stack direction="column" spacing="20px">
-                <FormProvider {...methodsCertificate}>
-                  <form
-                    onSubmit={handleSubmitCertificate(onSubmitCertificate)}
-                    style={{ width: '100%' }}>
-                    <FormControl display="flex" alignItems="center" mb="25px">
-                      <Switch
-                        id="certificate"
-                        colorScheme="green"
-                        me="10px"
-                        {...registerCertificate('certificate')}
-                      />
-                      <FormLabel htmlFor="certificate" mb="0" ms="1" fontWeight="normal">
-                        {intl.formatMessage({ id: 'app.yesIWantToCertifyThisParcel' })}
-                      </FormLabel>
-                    </FormControl>
-                    <FormInput
-                      fontSize="xs"
-                      ms="4px"
-                      borderRadius="15px"
-                      type="text"
-                      placeholder={intl.formatMessage({ id: 'app.contactNumberOfTheParcel' })}
-                      name="contactNumber"
-                      label={intl.formatMessage({ id: 'app.contactNumber' })}
-                      disabled={!certificateValue}
-                    />
-                    <FormInput
-                      fontSize="xs"
-                      ms="4px"
-                      borderRadius="15px"
-                      type="text"
-                      placeholder={intl.formatMessage({ id: 'app.addressOfTheParcel' })}
-                      name="address"
-                      label={intl.formatMessage({ id: 'app.address' })}
-                      disabled={!certificateValue}
-                    />
-                    <Flex justify="space-between" width={'100%'}>
+            </CardHeader>
+            <CardBody>
+              <FormProvider {...descriptionMethods}>
+                <form onSubmit={descriptionSubmit(onSubmitDescription)} style={{ width: '100%' }}>
+                  <Flex direction="column" w="100%">
+                    <Stack direction="column" spacing="20px" w="100%">
+                      <Editor />
+                    </Stack>
+                    <Flex justify="space-between">
                       <Button
                         variant="no-hover"
                         bg={bgPrevButton}
                         alignSelf="flex-end"
                         mt="24px"
-                        w={{ sm: '75px', lg: '100px' }}
+                        w="100px"
                         h="35px"
-                        onClick={() => prevTab.current.click()}>
+                        onClick={() => mainInfoTab.current.click()}>
                         <Text fontSize="xs" color="gray.700" fontWeight="bold">
                           {intl.formatMessage({ id: 'app.prev' })}
                         </Text>
                       </Button>
                       <Button
+                        variant="no-hover"
                         bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                        _hover={{
-                          bg: 'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)'
-                        }}
                         alignSelf="flex-end"
                         mt="24px"
-                        w={{ sm: '75px', lg: '100px' }}
+                        w="100px"
                         h="35px"
                         type="submit">
-                        {isLoading ? (
-                          <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
-                        ) : (
-                          <Text fontSize="xs" color="#fff" fontWeight="bold">
-                            {intl.formatMessage({ id: 'app.send' })}
-                          </Text>
-                        )}
+                        <Text fontSize="xs" color="#fff" fontWeight="bold">
+                          {intl.formatMessage({ id: 'app.next' })}
+                        </Text>
                       </Button>
                     </Flex>
-                  </form>
-                </FormProvider>
-              </Stack>
-            </Flex>
-          </CardBody>
-        </Card>
-      </TabPanel>
-    </FormLayout>
+                  </Flex>
+                </form>
+              </FormProvider>
+            </CardBody>
+          </Card>
+        </TabPanel>
+        <TabPanel>
+          <Card>
+            <CardHeader mb="22px">
+              <Text color={textColor} fontSize="xl" fontWeight="bold" mb="3px">
+                {intl.formatMessage({ id: 'app.media' })}
+              </Text>
+            </CardHeader>
+            <CardBody>
+              <Flex direction="column" w="100%">
+                <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
+                  {intl.formatMessage({ id: 'app.parcelImages' })}
+                </Text>
+                <Flex
+                  align="center"
+                  justify="center"
+                  border="1px dashed #E2E8F0"
+                  borderRadius="15px"
+                  w="100%"
+                  maxWidth={'980px'}
+                  cursor="pointer"
+                  overflowY={'auto'}
+                  minH={'175px'}
+                  {...getRootProps({ className: 'dropzone' })}>
+                  <Input {...getInputProps()} />
+                  <Button variant="no-hover">
+                    {acceptedFiles.length > 0 ? (
+                      <Flex gap="20px" p="20px" flexWrap={'wrap'}>
+                        {acceptedFiles.map((file, index) => (
+                          <Box key={index}>
+                            <img
+                              src={URL.createObjectURL(file)} // Create a preview URL for the image
+                              alt={file.name}
+                              style={{
+                                width: '150px',
+                                height: '100px',
+                                borderRadius: '15px',
+                                objectFit: 'contain'
+                              }}
+                            />
+                            <Text
+                              color="gray.400"
+                              fontWeight="normal"
+                              maxWidth="150px"
+                              textOverflow={'ellipsis'}
+                              overflow={'hidden'}>
+                              {file.name}
+                            </Text>
+                          </Box>
+                        ))}
+                      </Flex>
+                    ) : (
+                      <Text color="gray.400" fontWeight="normal">
+                        {intl.formatMessage({ id: 'app.dropFilesHereToUpload' })}
+                      </Text>
+                    )}
+                  </Button>
+                </Flex>
+                <Flex justify="space-between">
+                  <Button
+                    variant="no-hover"
+                    bg={bgPrevButton}
+                    alignSelf="flex-end"
+                    mt="24px"
+                    w="100px"
+                    h="35px"
+                    onClick={() => descriptionTab.current.click()}>
+                    <Text fontSize="xs" color="gray.700" fontWeight="bold">
+                      {intl.formatMessage({ id: 'app.prev' })}
+                    </Text>
+                  </Button>
+                  <Button
+                    variant="no-hover"
+                    bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+                    alignSelf="flex-end"
+                    mt="24px"
+                    w="100px"
+                    h="35px"
+                    isLoading={isUploading}
+                    onClick={handleFileUpload}>
+                    <Text fontSize="xs" color="#fff" fontWeight="bold">
+                      {intl.formatMessage({ id: 'app.upload' })}
+                    </Text>
+                  </Button>
+                </Flex>
+              </Flex>
+            </CardBody>
+          </Card>
+        </TabPanel>
+        <TabPanel>
+          <Card>
+            <CardHeader mb="40px">
+              <Flex
+                direction="column"
+                align="center"
+                justify="center"
+                textAlign="center"
+                w="80%"
+                mx="auto">
+                <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
+                  {intl.formatMessage({ id: 'app.doYouWantToCertificateThisParcel' })}
+                </Text>
+                <Text color="gray.400" fontWeight="normal" fontSize="sm">
+                  {intl.formatMessage({
+                    id: 'app.inTheFollowingInputsYouMustGiveDetailedInformationInOrderToCertifyThisParcel'
+                  })}
+                  parcel.
+                </Text>
+              </Flex>
+            </CardHeader>
+            <CardBody>
+              <Flex direction="column" w="100%">
+                <Stack direction="column" spacing="20px">
+                  <FormProvider {...methodsCertificate}>
+                    <form
+                      onSubmit={handleSubmitCertificate(onSubmitCertificate)}
+                      style={{ width: '100%' }}>
+                      <FormControl display="flex" alignItems="center" mb="25px">
+                        <Switch
+                          id="certificate"
+                          colorScheme="green"
+                          me="10px"
+                          {...registerCertificate('certificate')}
+                        />
+                        <FormLabel htmlFor="certificate" mb="0" ms="1" fontWeight="normal">
+                          {intl.formatMessage({ id: 'app.yesIWantToCertifyThisParcel' })}
+                        </FormLabel>
+                      </FormControl>
+                      <FormInput
+                        fontSize="xs"
+                        ms="4px"
+                        borderRadius="15px"
+                        type="text"
+                        placeholder={intl.formatMessage({ id: 'app.contactNumberOfTheParcel' })}
+                        name="contactNumber"
+                        label={intl.formatMessage({ id: 'app.contactNumber' })}
+                        disabled={!certificateValue}
+                      />
+                      <FormInput
+                        fontSize="xs"
+                        ms="4px"
+                        borderRadius="15px"
+                        type="text"
+                        placeholder={intl.formatMessage({ id: 'app.addressOfTheParcel' })}
+                        name="address"
+                        label={intl.formatMessage({ id: 'app.address' })}
+                        disabled={!certificateValue}
+                      />
+                      <Flex justify="space-between" width={'100%'}>
+                        <Button
+                          variant="no-hover"
+                          bg={bgPrevButton}
+                          alignSelf="flex-end"
+                          mt="24px"
+                          w={{ sm: '75px', lg: '100px' }}
+                          h="35px"
+                          onClick={() => prevTab.current.click()}>
+                          <Text fontSize="xs" color="gray.700" fontWeight="bold">
+                            {intl.formatMessage({ id: 'app.prev' })}
+                          </Text>
+                        </Button>
+                        <Button
+                          bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+                          _hover={{
+                            bg: 'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)'
+                          }}
+                          alignSelf="flex-end"
+                          mt="24px"
+                          w={{ sm: '75px', lg: '100px' }}
+                          h="35px"
+                          type="submit">
+                          {isLoading ? (
+                            <CircularProgress
+                              isIndeterminate
+                              value={1}
+                              color="#313860"
+                              size="25px"
+                            />
+                          ) : (
+                            <Text fontSize="xs" color="#fff" fontWeight="bold">
+                              {intl.formatMessage({ id: 'app.send' })}
+                            </Text>
+                          )}
+                        </Button>
+                      </Flex>
+                    </form>
+                  </FormProvider>
+                </Stack>
+              </Flex>
+            </CardBody>
+          </Card>
+        </TabPanel>
+      </FormLayout>
+    </>
   );
 }
 

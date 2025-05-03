@@ -50,6 +50,16 @@ import theme from 'theme/theme';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
+// Define Company interface
+interface Company {
+  id: string | number;
+  name?: string;
+  subscription?: any;
+  establishments?: any[];
+  has_subscription?: boolean;
+  [key: string]: any; // Allow additional properties
+}
+
 export default function Dashboard(props: any) {
   const intl = useIntl();
   const { ...rest } = props;
@@ -65,6 +75,11 @@ export default function Dashboard(props: any) {
   );
 
   const currentUser = useSelector((state) => state.userState.user);
+
+  // Get active company state at component level
+  const activeCompany = useSelector(
+    (state: RootState) => state.company.currentCompany
+  ) as Company | null;
 
   const [routes, setRoutes] = useState();
 
@@ -121,6 +136,42 @@ export default function Dashboard(props: any) {
       setDynamicRoutes(dynamicRoutes);
     }
   }, [establishments]);
+
+  // Check subscription status and redirect if needed
+  useEffect(() => {
+    const currentPath = window.location.pathname;
+
+    console.log('Admin layout subscription check:', {
+      activeCompany,
+      hasSubscription: activeCompany?.has_subscription,
+      path: currentPath
+    });
+
+    // Skip checks for certain paths
+    if (
+      currentPath.includes('/pricing') ||
+      currentPath.includes('/stripe-success') ||
+      currentPath.includes('/select-company') ||
+      currentPath.includes('/account/billing')
+    ) {
+      return;
+    }
+
+    // Check if company exists but has no subscription
+    if (
+      activeCompany &&
+      typeof activeCompany === 'object' &&
+      Object.keys(activeCompany).length > 0 &&
+      'id' in activeCompany &&
+      activeCompany.has_subscription === false
+    ) {
+      const redirectUrl = `/admin/dashboard/pricing?new_company=false&company_id=${activeCompany.id}`;
+      console.log('Admin layout redirecting to:', redirectUrl);
+
+      // Use direct browser redirect
+      window.location.href = redirectUrl;
+    }
+  }, [activeCompany]);
 
   // ref for main panel div
   const mainPanel = React.createRef();

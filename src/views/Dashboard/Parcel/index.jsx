@@ -1,5 +1,5 @@
 // Chakra imports
-import { Flex, Grid, Image, Text, useColorModeValue } from '@chakra-ui/react';
+import { Flex, Grid, Image, Text, useColorModeValue, Box, Button, Icon } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { dashboardTableData, timelineData } from 'variables/general';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,17 +16,20 @@ import imageParcel1 from 'assets/img/ImageParcel1.png';
 import { setParcel } from 'store/features/productSlice';
 import { useGetParcelQuery } from 'store/api/productApi';
 import { useIntl } from 'react-intl';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 export default function ParcelView() {
   const intl = useIntl();
   const { establishmentId, parcelId } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const mainText = useColorModeValue('gray.700', 'gray.200');
   const cardColor = useColorModeValue('white', 'gray.700');
 
   const currentCompany = useSelector((state) => state.company.currentCompany);
+  // Get subscription from the company
+  const subscription = currentCompany?.subscription;
 
   const establishment = useSelector(
     (state) =>
@@ -59,6 +62,38 @@ export default function ParcelView() {
 
   return (
     <Flex flexDirection="column" pt={{ base: '120px', md: '75px' }}>
+      {/* Trial Banner */}
+      {subscription && subscription.status === 'trialing' && (
+        <Box
+          p={4}
+          bg="white"
+          borderRadius="lg"
+          mb={4}
+          borderLeftWidth="4px"
+          borderLeftColor="green.500"
+          boxShadow="md">
+          <Flex align="center" justify="space-between">
+            <Box>
+              <Text fontSize="lg" fontWeight="bold" color="green.700">
+                {intl.formatMessage({ id: 'app.trialActive' })}
+              </Text>
+              <Text color="gray.700">
+                {intl.formatMessage(
+                  { id: 'app.trialEndsOn' },
+                  { date: new Date(subscription.trial_end).toLocaleDateString() }
+                )}
+              </Text>
+            </Box>
+            <Button
+              colorScheme="green"
+              size="md"
+              onClick={() => navigate('/admin/dashboard/account/billing')}>
+              {intl.formatMessage({ id: 'app.manageTrial' })}
+            </Button>
+          </Flex>
+        </Box>
+      )}
+
       <Text
         color={mainText}
         href="#"

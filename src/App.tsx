@@ -49,6 +49,9 @@ import DashboardPricing from 'views/Dashboard/Dashboard/Pricing';
 import SubscriptionSuccess from 'views/Dashboard/Dashboard/Subscription/SubscriptionSuccess';
 import StripeSuccessRedirect from 'views/Dashboard/Dashboard/Subscription/StripeSuccessRedirect';
 import PlanUsage from 'views/Dashboard/PlanUsage';
+import Billing from 'views/Pages/Account/Billing';
+import NoSubscriptionRedirect from './utils/protections/NoSubscriptionRedirect';
+import NewProduction from 'views/Dashboard/Dashboard/components/forms/NewProduction';
 
 const App = () => {
   const location = useLocation();
@@ -111,14 +114,30 @@ const App = () => {
               {/* Routes accessible without subscription */}
               <Route path="select-company" element={<SelectCompanyView />} />
               <Route path="pricing" element={<DashboardPricing />} />
-              <Route path="account/billing" element={<StripeSuccessRedirect />} />
-              <Route path="stripe/success" element={<StripeSuccessRedirect />} />
+              <Route path="account/billing" element={<Billing />} />
+              <Route path="stripe-success" element={<StripeSuccessRedirect />} />
 
               {/* Routes requiring subscription */}
               <Route element={<SubscriptionRequired />}>
+                <Route
+                  index
+                  element={
+                    <NoSubscriptionRedirect>
+                      <DashboardView />
+                    </NoSubscriptionRedirect>
+                  }
+                />
                 <Route path="profile" element={<ProfileUser />} />
                 <Route path="establishment/add" element={<AddEstablishment />} />
-                <Route path="establishment/:establishmentId" exact element={<DashboardView />} />
+                <Route
+                  path="establishment/:establishmentId"
+                  exact
+                  element={
+                    <NoSubscriptionRedirect>
+                      <DashboardView />
+                    </NoSubscriptionRedirect>
+                  }
+                />
                 <Route
                   path="establishment/:establishmentId/change"
                   exact

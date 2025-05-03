@@ -11,7 +11,14 @@ const companyApi = baseApi.injectEndpoints({
         method: 'GET',
         credentials: 'include'
       }),
-      providesTags: (result, error, companyId) => (result ? [{ type: 'Company', companyId }] : [])
+      providesTags: (result, error, companyId) => [
+        { type: 'Company', id: companyId },
+        ...(result?.establishments?.map((est) => ({
+          type: 'Establishment' as const,
+          id: est.id
+        })) || []),
+        { type: 'Subscription', id: result?.subscription?.id }
+      ]
     }),
     createCompany: build.mutation({
       query: (formData) => {
@@ -19,10 +26,14 @@ const companyApi = baseApi.injectEndpoints({
           url: COMPANY_URL(),
           method: 'POST',
           credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+          },
           body: formData
         };
       },
-      invalidatesTags: (result) => (result ? ['Company'] : [])
+      invalidatesTags: ['Company']
     }),
     createEstablishment: build.mutation({
       query: ({ companyId, establishment }) => {
@@ -42,13 +53,13 @@ const companyApi = baseApi.injectEndpoints({
         // Add all regular fields to formData
         for (const [key, value] of Object.entries(establishment)) {
           if (key !== 'album') {
-            formData.append(key, value);
+            formData.append(key, value as string);
           }
         }
 
         // Handle direct file uploads (legacy method)
         if (establishment.album?.images && establishment.album.images.length > 0) {
-          establishment.album.images.forEach((file, index) => {
+          establishment.album.images.forEach((file: File, index: number) => {
             formData.append(`album_${index}`, file);
           });
         }
@@ -61,7 +72,7 @@ const companyApi = baseApi.injectEndpoints({
           credentials: 'include'
         };
       },
-      invalidatesTags: (result) => (result ? ['Establishment'] : [])
+      invalidatesTags: ['Establishment', 'Company']
     }),
     editEstablishment: build.mutation({
       query: ({ companyId, establishmentId, establishmentData }) => ({
@@ -70,7 +81,7 @@ const companyApi = baseApi.injectEndpoints({
         credentials: 'include',
         body: establishmentData
       }),
-      invalidatesTags: (result) => (result ? ['Establishment'] : [])
+      invalidatesTags: ['Establishment', 'Company']
     }),
     getEstablishment: build.query({
       query: ({ companyId, establishmentId }) => ({
@@ -78,13 +89,7 @@ const companyApi = baseApi.injectEndpoints({
         method: 'GET',
         credentials: 'include'
       }),
-      providesTags: (result, error, { companyId, establishmentId }) =>
-        result
-          ? [
-              { type: 'Establishment', companyId, establishmentId },
-              { type: 'Company', companyId }
-            ]
-          : [{ type: 'Company', companyId }]
+      providesTags: ['Establishment', 'Company']
     }),
     getCompanyMembers: build.query({
       query: ({ companyId }) => ({
@@ -92,7 +97,7 @@ const companyApi = baseApi.injectEndpoints({
         method: 'GET',
         credentials: 'include'
       }),
-      providesTags: (result, error, companyId) => (result ? [{ type: 'Company', companyId }] : [])
+      providesTags: ['Company']
     })
   }),
   overrideExisting: false

@@ -29,13 +29,18 @@ import {
   AccordionPanel,
   AccordionIcon,
   Skeleton,
+  SkeletonText,
   Input,
   InputGroup,
   InputLeftElement,
   Link,
   ButtonGroup,
   UnorderedList,
-  ListItem
+  ListItem,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription
 } from '@chakra-ui/react';
 import {
   FaCheckCircle,
@@ -66,7 +71,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 // Load Stripe outside of component to avoid recreating it on every render
 const stripePromise = loadStripe(import.meta.env.VITE_APP_STRIPE_PUBLIC_KEY);
 
-function Pricing({ inDashboard = false }) {
+function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
   const textColor = useColorModeValue('gray.700', 'white');
   const bgCardButton = useColorModeValue('white', '#151f31');
   const intl = useIntl();
@@ -76,6 +81,8 @@ function Pricing({ inDashboard = false }) {
 
   const [activeInterval, setActiveInterval] = useState('monthly');
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [isUpgradeFlow, setIsUpgradeFlow] = useState(false);
+  const [upgradeResourceType, setUpgradeResourceType] = useState(null);
 
   // Get user and company directly from Redux state instead of useAuth
   const user = useSelector((state) => state.userState.user);
@@ -131,16 +138,26 @@ function Pricing({ inDashboard = false }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [newCompanyFlow, setNewCompanyFlow] = useState(false);
-  const [companyId, setCompanyId] = useState(null);
+  const [urlCompanyId, setUrlCompanyId] = useState(null);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const newCompany = searchParams.get('new_company') === 'true';
     const companyIdParam = searchParams.get('company_id');
+    const returnPath = searchParams.get('return');
+    const resourceType = searchParams.get('resource');
+
+    if (resourceType) {
+      setUpgradeResourceType(resourceType);
+    }
+
+    if (returnPath === 'form') {
+      setIsUpgradeFlow(true);
+    }
 
     if (newCompany && companyIdParam) {
       setNewCompanyFlow(true);
-      setCompanyId(companyIdParam);
+      setUrlCompanyId(companyIdParam);
 
       // Show a notification that subscription is required
       toast({
@@ -152,7 +169,43 @@ function Pricing({ inDashboard = false }) {
         position: 'top'
       });
     }
+
+    // Save the return path for after subscription
+    if (returnPath) {
+      localStorage.setItem('subscription_return_path', returnPath);
+    }
   }, [location]);
+
+  // Handle successful subscription completion
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const status = searchParams.get('status');
+
+    if (status === 'success') {
+      // Get stored return path
+      const returnPath = localStorage.getItem('subscription_return_path');
+      localStorage.removeItem('subscription_return_path');
+
+      toast({
+        title: t('app.subscriptionUpgraded'),
+        description: t('app.youCanNowAddMoreResources'),
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+
+      // Redirect back to form if specified
+      if (returnPath === 'form') {
+        const lastFormPath = localStorage.getItem('last_form_path');
+        if (lastFormPath) {
+          localStorage.removeItem('last_form_path');
+          navigate(`${lastFormPath}?return=upgrade`);
+        } else {
+          navigate('/admin/dashboard');
+        }
+      }
+    }
+  }, [location.search, navigate, toast, t]);
 
   useEffect(() => {
     if (error) {
@@ -194,8 +247,8 @@ function Pricing({ inDashboard = false }) {
       return;
     }
 
-    // Use provided company ID from URL or active company
-    const targetCompanyId = companyId || activeCompany?.id;
+    // Prioritize directly passed companyId prop, then URL param, then active company
+    const targetCompanyId = directCompanyId || urlCompanyId || activeCompany?.id;
 
     if (!targetCompanyId) {
       toast({
@@ -287,12 +340,129 @@ function Pricing({ inDashboard = false }) {
     }
   };
 
-  const handleAddAddon = (addonType, quantity) => {
-    // Implementation of handleAddAddon function
+  const handleAddAddon = async (addonType, quantity) => {
+    if (!user) {
+      toast({
+        title: t('app.notLoggedIn'),
+        description: t('app.needLoginToSubscribe'),
+        status: 'warning',
+        duration: 5000,
+        isClosable: true
+      });
+      navigate('/auth/signin');
+      return;
+    }
+
+    // Prioritize directly passed companyId prop, then URL param, then active company
+    const targetCompanyId = directCompanyId || urlCompanyId || activeCompany?.id;
+
+    if (!targetCompanyId) {
+      toast({
+        title: t('app.noCompanySelected'),
+        description: t('app.createCompanyFirst'),
+        status: 'warning',
+        duration: 5000,
+        isClosable: true
+      });
+      return;
+    }
+
+    // Check if company has an active subscription
+    if (!activeCompany?.subscription) {
+      toast({
+        title: t('app.subscriptionRequired'),
+        description: t('app.needSubscriptionForAddons'),
+        status: 'warning',
+        duration: 5000,
+        isClosable: true
+      });
+      return;
+    }
+
+    try {
+      setCheckoutLoading(true);
+
+      // Get the current location to return to after purchase
+      const currentPath = window.location.pathname;
+      const currentSearch = window.location.search;
+      const returnUrl = currentPath + (currentSearch || '');
+
+      // Create checkout session for the addon
+      const response = await createCheckoutSession({
+        addon_type: addonType,
+        quantity: quantity,
+        company_id: targetCompanyId,
+        return_url: returnUrl
+      }).unwrap();
+
+      // Redirect to Stripe checkout
+      const stripe = await stripePromise;
+      await stripe.redirectToCheckout({
+        sessionId: response.sessionId
+      });
+    } catch (error) {
+      console.error('Error creating addon checkout session:', error);
+      toast({
+        title: t('app.error'),
+        description: t('app.checkoutError'),
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    } finally {
+      setCheckoutLoading(false);
+    }
   };
+
+  // Filtered plans - only show upgrades from current plan
+  const filteredPlans = useMemo(() => {
+    if (!plans || !plans.length) return [];
+
+    // If user is in upgrade flow and has a current plan, only show higher tier plans
+    if (isUpgradeFlow && activeCompany?.subscription_plan) {
+      const currentPlanIndex = plans.findIndex(
+        (plan) => plan.id === activeCompany.subscription_plan.id
+      );
+
+      // If we found the current plan, only show plans with higher index (more expensive)
+      if (currentPlanIndex >= 0) {
+        return plans.filter((_, index) => index > currentPlanIndex);
+      }
+    }
+
+    // Otherwise show all plans
+    return plans;
+  }, [plans, isUpgradeFlow, activeCompany]);
 
   return (
     <Box pt={inDashboard ? { base: '10px', md: '10px' } : { base: '130px', md: '80px' }}>
+      {/* Upgrade context banner */}
+      {isUpgradeFlow && (
+        <Alert
+          status="info"
+          variant="subtle"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          textAlign="center"
+          py={4}
+          mb={8}
+          borderRadius="lg"
+          bg={useColorModeValue('blue.50', 'blue.900')}>
+          <AlertIcon boxSize="40px" mr={0} />
+          <AlertTitle mt={4} mb={1} fontSize="lg">
+            {t('app.chooseAPlanToUpgrade')}
+          </AlertTitle>
+          <AlertDescription maxWidth="sm">
+            {upgradeResourceType === 'establishment'
+              ? t('app.upgradeToAddMoreEstablishments')
+              : upgradeResourceType === 'parcel'
+              ? t('app.upgradeToAddMoreParcels')
+              : t('app.upgradeToAddMoreResources')}
+          </AlertDescription>
+        </Alert>
+      )}
+
       {newCompanyFlow && (
         <Box
           mb={6}
@@ -357,249 +527,291 @@ function Pricing({ inDashboard = false }) {
 
         {loading ? (
           <SimpleGrid columns={{ base: 1, md: 3 }} spacing={10} px={{ base: 4, md: 8 }}>
-            {[1, 2, 3].map((i) => (
-              <Card key={i}>
-                <CardHeader>
-                  <Skeleton height="30px" width="40%" mb={2} />
-                  <Skeleton height="40px" width="60%" />
-                </CardHeader>
-                <CardBody>
-                  <Stack spacing={4}>
-                    {Array(6)
-                      .fill('')
-                      .map((_, index) => (
-                        <Flex key={index} align="center">
-                          <Skeleton height="20px" width="20px" mr="10px" />
-                          <Skeleton height="20px" width="70%" />
-                        </Flex>
-                      ))}
-                  </Stack>
-                </CardBody>
-                <CardFooter>
-                  <Skeleton height="40px" width="100%" />
-                </CardFooter>
+            {[...Array(3)].map((_, i) => (
+              <Card key={i} borderRadius="xl" overflow="hidden">
+                <Skeleton height="80px" />
+                <SkeletonText mt="4" noOfLines={8} spacing="4" p={5} />
+                <Skeleton height="40px" mt="2" />
               </Card>
             ))}
           </SimpleGrid>
         ) : (
-          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={10} px={{ base: 4, md: 8 }}>
-            {plans.map((plan) => (
-              <Card
-                key={plan.id}
-                boxShadow="rgba(0, 0, 0, 0.1) 0px 4px 12px"
-                _hover={{
-                  boxShadow: 'rgba(0, 0, 0, 0.15) 0px 8px 24px',
-                  transform: 'translateY(-4px)',
-                  transition: 'all 0.3s ease'
-                }}
-                borderRadius="xl"
-                overflow="hidden"
-                position="relative">
-                {/* Add trial badge */}
-                <Box
-                  position="absolute"
-                  top="0"
-                  right="0"
-                  bg="green.500"
-                  color="white"
-                  px={3}
-                  py={1}
-                  borderBottomLeftRadius="md"
-                  fontWeight="bold"
-                  zIndex={1}>
-                  {t('app.14DayTrial')}
-                </Box>
-
-                <CardHeader
-                  borderTopRadius="20px"
-                  bg={plan.name === 'Corporate' ? 'green.600' : 'blue.500'}
+          <>
+            {isUpgradeFlow && filteredPlans.length === 0 ? (
+              <Box textAlign="center" py={10}>
+                <Alert
+                  status="info"
+                  variant="subtle"
+                  flexDirection="column"
+                  alignItems="center"
+                  justifyContent="center"
+                  textAlign="center"
                   py={6}
-                  textAlign="center">
-                  <Box>
-                    <Tag size="sm" bg="whiteAlpha.200" color="white">
-                      {plan.name.toUpperCase()}
-                    </Tag>
-                    <Text mt={2} fontSize="5xl" fontWeight="bold" color="white">
-                      ${plan.price}
-                    </Text>
-                    <Text color="whiteAlpha.800" fontSize="sm">
-                      {activeInterval === 'monthly' ? t('app.perMonth') : t('app.perYear')}
-                    </Text>
-                  </Box>
-                </CardHeader>
-
-                {/* Features */}
-                <CardBody>
-                  {/* Add trial info */}
-                  <Box mb={4} p={2} bg="green.50" borderRadius="md">
-                    <Text fontSize="sm" color="green.700">
-                      <Icon as={FaCheckCircle} mr={2} />
-                      {t('app.freeTrial14Days')}
-                    </Text>
-                  </Box>
-
-                  <Stack spacing={4}>
-                    {/* Establishments */}
-                    <Flex align="center">
-                      <Icon
-                        w="22px"
-                        h="22px"
-                        as={getFeatureIcon('max_establishments')}
-                        mr="10px"
-                        color="green.500"
-                      />
-                      <Text color={textColor} fontWeight="normal" fontSize="md">
-                        {getFeatureDisplay(plan, 'max_establishments')}
-                      </Text>
-                    </Flex>
-
-                    {/* Establishments */}
-                    <Flex align="center">
-                      <Icon
-                        w="22px"
-                        h="22px"
-                        as={getFeatureIcon('max_parcels')}
-                        mr="10px"
-                        color="green.500"
-                      />
-                      <Text color={textColor} fontWeight="normal" fontSize="md">
-                        {plan.name === 'Corporate'
-                          ? `2 ${t('app.establishments')}`
-                          : `1 ${t('app.establishment')}`}
-                      </Text>
-                    </Flex>
-
-                    {/* Parcels */}
-                    <Flex align="center">
-                      <Icon
-                        w="22px"
-                        h="22px"
-                        as={getFeatureIcon('max_parcels')}
-                        mr="10px"
-                        color="green.500"
-                      />
-                      <Text color={textColor} fontWeight="normal" fontSize="md">
-                        {plan.name === 'Basic'
-                          ? `1 ${t('app.parcel')}`
-                          : plan.name === 'Standard'
-                          ? `2 ${t('app.parcels')}`
-                          : `4 ${t('app.parcels')} ${t('app.per')} ${t('app.establishment')}`}
-                      </Text>
-                    </Flex>
-
-                    {/* Productions */}
-                    <Flex align="center">
-                      <Icon
-                        w="22px"
-                        h="22px"
-                        as={getFeatureIcon('max_productions_per_year')}
-                        mr="10px"
-                        color="green.500"
-                      />
-                      <Text color={textColor} fontWeight="normal" fontSize="md">
-                        {getFeatureDisplay(plan, 'max_productions_per_year')}
-                      </Text>
-                    </Flex>
-
-                    {/* Establishment description */}
-                    <Flex align="center">
-                      <Icon
-                        w="22px"
-                        h="22px"
-                        as={
-                          plan.features?.establishment_full_description
-                            ? getFeatureIcon('max_establishments')
-                            : FaTimesCircle
-                        }
-                        mr="10px"
-                        color={
-                          plan.features?.establishment_full_description ? 'green.500' : 'red.500'
-                        }
-                      />
-                      <Text
-                        color={textColor}
-                        fontWeight="normal"
-                        fontSize="md"
-                        textDecoration={
-                          !plan.features?.establishment_full_description ? 'line-through' : 'none'
-                        }>
-                        {t('app.establishmentFullDescription')}
-                      </Text>
-                    </Flex>
-
-                    {/* Scans */}
-                    <Flex align="center">
-                      <Icon
-                        w="22px"
-                        h="22px"
-                        as={getFeatureIcon('monthly_scan_limit')}
-                        mr="10px"
-                        color="green.500"
-                      />
-                      <Text color={textColor} fontWeight="normal" fontSize="md">
-                        {getFeatureDisplay(plan, 'monthly_scan_limit')}
-                      </Text>
-                    </Flex>
-
-                    {/* Storage */}
-                    <Flex align="center">
-                      <Icon
-                        w="22px"
-                        h="22px"
-                        as={getFeatureIcon('storage_limit_gb')}
-                        mr="10px"
-                        color="green.500"
-                      />
-                      <Text color={textColor} fontWeight="normal" fontSize="md">
-                        {getFeatureDisplay(plan, 'storage_limit_gb')}
-                      </Text>
-                    </Flex>
-
-                    {/* Support */}
-                    <Flex align="center">
-                      <Icon
-                        w="22px"
-                        h="22px"
-                        as={getFeatureIcon('support_response_time')}
-                        mr="10px"
-                        color="green.500"
-                      />
-                      <Text color={textColor} fontWeight="normal" fontSize="md">
-                        {getFeatureDisplay(plan, 'support_response_time')}
-                      </Text>
-                    </Flex>
-                  </Stack>
-                </CardBody>
-
-                {/* Join Button */}
-                <CardFooter>
+                  borderRadius="lg">
+                  <AlertIcon boxSize="40px" mr={0} />
+                  <AlertTitle mt={4} mb={1} fontSize="lg">
+                    {t('app.alreadyOnHighestPlan')}
+                  </AlertTitle>
+                  <AlertDescription maxWidth="sm">
+                    {t('app.contactSalesForCustomPlan')}
+                  </AlertDescription>
                   <Button
-                    as={motion.button}
-                    colorScheme={plan.name === 'Corporate' ? 'green' : 'blue'}
-                    w="100%"
-                    py={6}
-                    onClick={() => handleSubscribe(plan.id)}
-                    isLoading={checkoutLoading}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    _hover={{
-                      bgGradient:
-                        plan.name === 'Corporate'
-                          ? 'linear(to-r, green.500, teal.500)'
-                          : 'linear(to-r, blue.500, cyan.500)',
-                      transform: 'translateY(-2px)',
-                      boxShadow: 'lg'
-                    }}>
-                    {t('app.startFreeTrial')}
+                    mt={6}
+                    colorScheme="blue"
+                    leftIcon={<Icon as={FaEnvelope} />}
+                    onClick={() => (window.location.href = 'mailto:sales@trazo.com')}>
+                    {t('app.contactSales')}
                   </Button>
-                  <Text fontSize="xs" mt={2} textAlign="center" color="gray.500">
-                    {t('app.creditCardRequired')}
-                  </Text>
-                </CardFooter>
-              </Card>
-            ))}
-          </SimpleGrid>
+                </Alert>
+              </Box>
+            ) : (
+              <SimpleGrid
+                columns={{
+                  base: 1,
+                  md: isUpgradeFlow && filteredPlans.length < 3 ? filteredPlans.length : 3
+                }}
+                spacing={10}
+                px={{ base: 4, md: 8 }}>
+                {filteredPlans.map((plan) => (
+                  <Card
+                    key={plan.id}
+                    boxShadow="rgba(0, 0, 0, 0.1) 0px 4px 12px"
+                    _hover={{
+                      boxShadow: 'rgba(0, 0, 0, 0.15) 0px 8px 24px',
+                      transform: 'translateY(-4px)',
+                      transition: 'all 0.3s ease'
+                    }}
+                    borderRadius="xl"
+                    overflow="hidden"
+                    position="relative">
+                    {/* Add trial badge */}
+                    <Box
+                      position="absolute"
+                      top="0"
+                      right="0"
+                      bg="green.500"
+                      color="white"
+                      px={3}
+                      py={1}
+                      borderBottomLeftRadius="md"
+                      fontWeight="bold"
+                      zIndex={1}>
+                      {t('app.14DayTrial')}
+                    </Box>
+
+                    {/* Add upgrade badge */}
+                    {isUpgradeFlow && (
+                      <Box
+                        position="absolute"
+                        top="0"
+                        left="0"
+                        bg="blue.500"
+                        color="white"
+                        px={3}
+                        py={1}
+                        borderBottomRightRadius="md"
+                        fontWeight="bold"
+                        zIndex={1}>
+                        {t('app.upgrade')}
+                      </Box>
+                    )}
+
+                    <CardHeader
+                      borderTopRadius="20px"
+                      bg={plan.name === 'Corporate' ? 'green.600' : 'blue.500'}
+                      py={6}
+                      textAlign="center">
+                      <Box>
+                        <Tag size="sm" bg="whiteAlpha.200" color="white">
+                          {plan.name.toUpperCase()}
+                        </Tag>
+                        <Text mt={2} fontSize="5xl" fontWeight="bold" color="white">
+                          ${plan.price}
+                        </Text>
+                        <Text color="whiteAlpha.800" fontSize="sm">
+                          {activeInterval === 'monthly' ? t('app.perMonth') : t('app.perYear')}
+                        </Text>
+                      </Box>
+                    </CardHeader>
+
+                    {/* Features */}
+                    <CardBody>
+                      {/* Add trial info */}
+                      <Box mb={4} p={2} bg="green.50" borderRadius="md">
+                        <Text fontSize="sm" color="green.700">
+                          <Icon as={FaCheckCircle} mr={2} />
+                          {t('app.freeTrial14Days')}
+                        </Text>
+                      </Box>
+
+                      <Stack spacing={4}>
+                        {/* Establishments */}
+                        <Flex align="center">
+                          <Icon
+                            w="22px"
+                            h="22px"
+                            as={getFeatureIcon('max_establishments')}
+                            mr="10px"
+                            color="green.500"
+                          />
+                          <Text color={textColor} fontWeight="normal" fontSize="md">
+                            {getFeatureDisplay(plan, 'max_establishments')}
+                          </Text>
+                        </Flex>
+
+                        {/* Establishments */}
+                        <Flex align="center">
+                          <Icon
+                            w="22px"
+                            h="22px"
+                            as={getFeatureIcon('max_parcels')}
+                            mr="10px"
+                            color="green.500"
+                          />
+                          <Text color={textColor} fontWeight="normal" fontSize="md">
+                            {plan.name === 'Corporate'
+                              ? `2 ${t('app.establishments')}`
+                              : `1 ${t('app.establishment')}`}
+                          </Text>
+                        </Flex>
+
+                        {/* Parcels */}
+                        <Flex align="center">
+                          <Icon
+                            w="22px"
+                            h="22px"
+                            as={getFeatureIcon('max_parcels')}
+                            mr="10px"
+                            color="green.500"
+                          />
+                          <Text color={textColor} fontWeight="normal" fontSize="md">
+                            {plan.name === 'Basic'
+                              ? `1 ${t('app.parcel')}`
+                              : plan.name === 'Standard'
+                              ? `2 ${t('app.parcels')}`
+                              : `4 ${t('app.parcels')} ${t('app.per')} ${t('app.establishment')}`}
+                          </Text>
+                        </Flex>
+
+                        {/* Productions */}
+                        <Flex align="center">
+                          <Icon
+                            w="22px"
+                            h="22px"
+                            as={getFeatureIcon('max_productions_per_year')}
+                            mr="10px"
+                            color="green.500"
+                          />
+                          <Text color={textColor} fontWeight="normal" fontSize="md">
+                            {getFeatureDisplay(plan, 'max_productions_per_year')}
+                          </Text>
+                        </Flex>
+
+                        {/* Establishment description */}
+                        <Flex align="center">
+                          <Icon
+                            w="22px"
+                            h="22px"
+                            as={
+                              plan.features?.establishment_full_description
+                                ? getFeatureIcon('max_establishments')
+                                : FaTimesCircle
+                            }
+                            mr="10px"
+                            color={
+                              plan.features?.establishment_full_description
+                                ? 'green.500'
+                                : 'red.500'
+                            }
+                          />
+                          <Text
+                            color={textColor}
+                            fontWeight="normal"
+                            fontSize="md"
+                            textDecoration={
+                              !plan.features?.establishment_full_description
+                                ? 'line-through'
+                                : 'none'
+                            }>
+                            {t('app.establishmentFullDescription')}
+                          </Text>
+                        </Flex>
+
+                        {/* Scans */}
+                        <Flex align="center">
+                          <Icon
+                            w="22px"
+                            h="22px"
+                            as={getFeatureIcon('monthly_scan_limit')}
+                            mr="10px"
+                            color="green.500"
+                          />
+                          <Text color={textColor} fontWeight="normal" fontSize="md">
+                            {getFeatureDisplay(plan, 'monthly_scan_limit')}
+                          </Text>
+                        </Flex>
+
+                        {/* Storage */}
+                        <Flex align="center">
+                          <Icon
+                            w="22px"
+                            h="22px"
+                            as={getFeatureIcon('storage_limit_gb')}
+                            mr="10px"
+                            color="green.500"
+                          />
+                          <Text color={textColor} fontWeight="normal" fontSize="md">
+                            {getFeatureDisplay(plan, 'storage_limit_gb')}
+                          </Text>
+                        </Flex>
+
+                        {/* Support */}
+                        <Flex align="center">
+                          <Icon
+                            w="22px"
+                            h="22px"
+                            as={getFeatureIcon('support_response_time')}
+                            mr="10px"
+                            color="green.500"
+                          />
+                          <Text color={textColor} fontWeight="normal" fontSize="md">
+                            {getFeatureDisplay(plan, 'support_response_time')}
+                          </Text>
+                        </Flex>
+                      </Stack>
+                    </CardBody>
+
+                    {/* Join Button */}
+                    <CardFooter>
+                      <Button
+                        as={motion.button}
+                        colorScheme={plan.name === 'Corporate' ? 'green' : 'blue'}
+                        w="100%"
+                        py={6}
+                        onClick={() => handleSubscribe(plan.id)}
+                        isLoading={checkoutLoading}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        _hover={{
+                          bgGradient:
+                            plan.name === 'Corporate'
+                              ? 'linear(to-r, green.500, teal.500)'
+                              : 'linear(to-r, blue.500, cyan.500)',
+                          transform: 'translateY(-2px)',
+                          boxShadow: 'lg'
+                        }}>
+                        {t('app.startFreeTrial')}
+                      </Button>
+                      <Text fontSize="xs" mt={2} textAlign="center" color="gray.500">
+                        {t('app.creditCardRequired')}
+                      </Text>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </SimpleGrid>
+            )}
+          </>
         )}
 
         {/* Add-ons Section */}
@@ -608,7 +820,7 @@ function Pricing({ inDashboard = false }) {
             {t('app.additionalServices')}
           </Text>
 
-          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8} px={{ base: 4, md: 8 }}>
+          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8} px={{ base: 4, md: 8 }} mt={8}>
             {/* Extra Production Add-on */}
             <Card boxShadow="md" borderRadius="lg">
               <CardHeader pb={0}>
@@ -642,18 +854,25 @@ function Pricing({ inDashboard = false }) {
                       <NumberDecrementStepper />
                     </NumberInputStepper>
                   </NumberInput>
+
+                  <Button
+                    colorScheme="blue"
+                    isFullWidth
+                    isLoading={checkoutLoading}
+                    onClick={() =>
+                      handleAddAddon('extraProduction', addonQuantities.extraProduction)
+                    }
+                    isDisabled={!activeCompany?.subscription}>
+                    {t('app.add')}
+                  </Button>
+
+                  {!activeCompany?.subscription && (
+                    <Text fontSize="sm" color="orange.500">
+                      {t('app.availableForSubscribers')}
+                    </Text>
+                  )}
                 </Stack>
               </CardBody>
-              <CardFooter>
-                <Button
-                  colorScheme="blue"
-                  isFullWidth
-                  onClick={() =>
-                    handleAddAddon('extraProduction', addonQuantities.extraProduction)
-                  }>
-                  {t('app.add')}
-                </Button>
-              </CardFooter>
             </Card>
 
             {/* Extra Parcel Add-on */}
@@ -668,17 +887,44 @@ function Pricing({ inDashboard = false }) {
               <CardBody>
                 <Stack spacing={4} align="center">
                   <Text fontSize="3xl" fontWeight="bold" color={textColor}>
-                    $20
+                    ${20 * addonQuantities.extraParcel}
                   </Text>
                   <Text color="gray.500">{t('app.perParcel')}</Text>
                   <Text textAlign="center">{t('app.extraParcelDescription')}</Text>
+
+                  <NumberInput
+                    min={1}
+                    max={10}
+                    value={addonQuantities.extraParcel}
+                    onChange={(valueString) =>
+                      setAddonQuantities({
+                        ...addonQuantities,
+                        extraParcel: parseInt(valueString)
+                      })
+                    }>
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
+
+                  <Button
+                    colorScheme="blue"
+                    isFullWidth
+                    isLoading={checkoutLoading}
+                    onClick={() => handleAddAddon('extraParcel', addonQuantities.extraParcel)}
+                    isDisabled={!activeCompany?.subscription}>
+                    {t('app.add')}
+                  </Button>
+
+                  {!activeCompany?.subscription && (
+                    <Text fontSize="sm" color="orange.500">
+                      {t('app.availableForSubscribers')}
+                    </Text>
+                  )}
                 </Stack>
               </CardBody>
-              <CardFooter pt={0}>
-                <Text fontSize="sm" color="gray.500" textAlign="center" w="100%">
-                  {t('app.availableForSubscribers')}
-                </Text>
-              </CardFooter>
             </Card>
 
             {/* Extra Storage Add-on */}
@@ -693,17 +939,44 @@ function Pricing({ inDashboard = false }) {
               <CardBody>
                 <Stack spacing={4} align="center">
                   <Text fontSize="3xl" fontWeight="bold" color={textColor}>
-                    $5
+                    ${5 * addonQuantities.extraStorage}
                   </Text>
                   <Text color="gray.500">{t('app.perMonth')}</Text>
                   <Text textAlign="center">{t('app.extraStorageDescription')}</Text>
+
+                  <NumberInput
+                    min={1}
+                    max={10}
+                    value={addonQuantities.extraStorage}
+                    onChange={(valueString) =>
+                      setAddonQuantities({
+                        ...addonQuantities,
+                        extraStorage: parseInt(valueString)
+                      })
+                    }>
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
+
+                  <Button
+                    colorScheme="blue"
+                    isFullWidth
+                    isLoading={checkoutLoading}
+                    onClick={() => handleAddAddon('extraStorage', addonQuantities.extraStorage)}
+                    isDisabled={!activeCompany?.subscription}>
+                    {t('app.add')}
+                  </Button>
+
+                  {!activeCompany?.subscription && (
+                    <Text fontSize="sm" color="orange.500">
+                      {t('app.availableForSubscribers')}
+                    </Text>
+                  )}
                 </Stack>
               </CardBody>
-              <CardFooter pt={0}>
-                <Text fontSize="sm" color="gray.500" textAlign="center" w="100%">
-                  {t('app.availableForSubscribers')}
-                </Text>
-              </CardFooter>
             </Card>
           </SimpleGrid>
         </Box>

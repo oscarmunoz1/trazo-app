@@ -1,10 +1,29 @@
-import BoxBackground from '../components/BoxBackground';
-import EditEstablishment from '../components/forms/EditEstablishment';
-import NewEstablishment from '../components/forms/NewEstablishment';
+import React, { useEffect } from 'react';
+import { Box, Text, useColorModeValue } from '@chakra-ui/react';
 import { useIntl } from 'react-intl';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+// @ts-ignore: JSX component in TS file
+import EditEstablishment from '../components/forms/EditEstablishment';
+// @ts-ignore: JSX component in TS file
+import NewEstablishment from '../components/forms/NewEstablishment';
+import BoxBackground from '../components/BoxBackground';
+import subscriptionToastHelper from '../../../../utils/toast/SubscriptionToastHelper';
 
-function AddEstablishment({ isEdit = false }) {
+interface Props {
+  isEdit?: boolean;
+}
+
+function AddEstablishment({ isEdit = false }: Props) {
   const intl = useIntl();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isUpgrade = searchParams.get('return') === 'upgrade';
+
+  // Clear any subscription success toasts when this component mounts
+  useEffect(() => {
+    subscriptionToastHelper.clearAllSubscriptionToastFlags();
+  }, []);
+
   return (
     <BoxBackground
       title={

@@ -20,18 +20,20 @@ import { BrowserRouter } from 'react-router-dom';
 import I18n from 'i18n/I18n';
 import { Provider } from 'react-redux';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { store } from './store';
+import { SubscriptionProvider } from './contexts/SubscriptionContext';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = createRoot(document.getElementById('root')!);
 
 root.render(
   <Provider store={store}>
     <BrowserRouter>
       <I18n>
-        <App />
+        <SubscriptionProvider>
+          <App />
+        </SubscriptionProvider>
       </I18n>
     </BrowserRouter>
-  </Provider>,
-  document.getElementById('root')
+  </Provider>
 );

@@ -41,7 +41,8 @@ import {
   TagLabel,
   Text,
   useColorModeValue,
-  useToast
+  useToast,
+  CircularProgress
 } from '@chakra-ui/react';
 import { Form, FormProvider, useForm } from 'react-hook-form';
 import React, { useEffect, useReducer, useRef, useState } from 'react';
@@ -72,6 +73,8 @@ import { useIntl } from 'react-intl';
 import { useS3Upload } from 'hooks/useS3Upload';
 import { useFormContext } from 'react-hook-form';
 import { useFileUpload } from '../../../../../services/uploadService';
+import useSubscriptionCheck from 'hooks/useSubscriptionCheck';
+import SubscriptionLimitModal from 'components/Modals/SubscriptionLimitModal';
 
 const formSchemaInfo = object({
   name: string().min(1, 'Name is required'),
@@ -137,6 +140,17 @@ function NewEstablishment() {
   const navigate = useNavigate();
   const currentCompany = useSelector((state) => state.company.currentCompany);
   const intl = useIntl();
+
+  // Check subscription limits
+  const { isChecking, canCreate, showLimitModal, setShowLimitModal, usage, currentPlan } =
+    useSubscriptionCheck('establishment');
+
+  // When component mounts, save the current path to localStorage
+  // for potential return after subscription upgrade
+  useEffect(() => {
+    localStorage.setItem('last_form_path', window.location.pathname);
+  }, []);
+
   const [skills, setSkills] = useState([
     {
       name: 'chakra-ui',
@@ -383,120 +397,151 @@ function NewEstablishment() {
     }
   };
 
+  const handleDirectFileUpload = () => {
+    if (acceptedFiles.length === 0) {
+      toast({
+        title: intl.formatMessage({ id: 'app.noFilesSelected' }),
+        description: intl.formatMessage({ id: 'app.pleaseSelectFilesToUpload' }),
+        status: 'warning',
+        duration: 5000,
+        isClosable: true
+      });
+      return;
+    }
+
+    // Get the base URL from environment or use default
+    const baseUrl = import.meta.env.VITE_APP_BACKEND_URL || 'http://localhost:8000';
+
+    // Create a FormData object directly
+    const formData = new FormData();
+
+    // Important: use the SAME field name as in the server-side code
+    formData.append('file', acceptedFiles[0]);
+
+    // Set isUploading to show loading state
+    setIsUploading(true);
+
+    // Use fetch directly instead of form submission
+    fetch(`${baseUrl}/api/local-upload/`, {
+      method: 'POST',
+      body: formData,
+      // Important: Do NOT set Content-Type header, let the browser set it with boundary
+      credentials: 'include'
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Upload failed with status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log('Upload successful:', data);
+        setUploadedImageUrls([data.file_url]);
+
+        toast({
+          title: intl.formatMessage({ id: 'app.uploadSuccess' }),
+          description: intl.formatMessage({ id: 'app.filesUploaded' }, { count: 1 }),
+          status: 'success',
+          duration: 5000,
+          isClosable: true
+        });
+
+        // Proceed to next step
+        socialsTab.current.click();
+      })
+      .catch((error) => {
+        console.error('Error uploading file:', error);
+        toast({
+          title: intl.formatMessage({ id: 'app.uploadError' }),
+          description: `${intl.formatMessage({ id: 'app.fileUploadFailed' })}: ${error.message}`,
+          status: 'error',
+          duration: 5000,
+          isClosable: true
+        });
+      })
+      .finally(() => {
+        setIsUploading(false);
+      });
+  };
+
   return (
-    <FormLayout tabsList={tabsList} activeBullets={activeBullets}>
-      <TabPanel>
-        <Card>
-          <CardHeader mb="22px">
-            <Text color={textColor} fontSize="lg" fontWeight="bold">
-              {intl.formatMessage({ id: 'app.establishmentInfo' })}
-            </Text>
-          </CardHeader>
-          <CardBody>
-            <FormProvider {...infoMethods}>
-              <form onSubmit={handleSubmit(onSubmitInfo)} style={{ width: '100%' }}>
-                <Stack direction="column" spacing="20px" w="100%">
-                  <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
-                    <FormControl>
-                      <FormInput
-                        name="name"
-                        label={intl.formatMessage({ id: 'app.name' })}
-                        placeholder={intl.formatMessage({ id: 'app.establishmentName' })}
-                        fontSize="xs"
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormInput
-                        name="country"
-                        label={intl.formatMessage({ id: 'app.country' })}
-                        placeholder={intl.formatMessage({ id: 'app.establishmentCountry' })}
-                        fontSize="xs"
-                      />
-                    </FormControl>
-                  </Stack>
-                  <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
-                    <FormControl>
-                      <FormInput
-                        name="state"
-                        label={intl.formatMessage({ id: 'app.state' })}
-                        placeholder={intl.formatMessage({ id: 'app.establishmentState' })}
-                        fontSize="xs"
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormInput
-                        name="city"
-                        label={intl.formatMessage({ id: 'app.city' })}
-                        placeholder={intl.formatMessage({ id: 'app.establishmentCity' })}
-                        fontSize="xs"
-                      />
-                    </FormControl>
-                  </Stack>
-                  <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
-                    <FormControl>
-                      <FormInput
-                        name="address"
-                        label={intl.formatMessage({ id: 'app.address' })}
-                        placeholder={intl.formatMessage({ id: 'app.establishmentAddress' })}
-                        fontSize="xs"
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormInput
-                        name="zone"
-                        label={intl.formatMessage({ id: 'app.zone' })}
-                        placeholder={intl.formatMessage({ id: 'app.establishmentZone' })}
-                        fontSize="xs"
-                      />
-                    </FormControl>
-                  </Stack>
+    <>
+      {/* Subscription limit modal */}
+      <SubscriptionLimitModal
+        isOpen={showLimitModal}
+        onClose={() => setShowLimitModal(false)}
+        resourceType="establishment"
+        currentPlan={currentPlan}
+        usage={usage}
+      />
 
-                  <Button
-                    variant="no-hover"
-                    bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                    alignSelf="flex-end"
-                    mt="24px"
-                    w="100px"
-                    h="35px"
-                    type="submit">
-                    <Text fontSize="xs" color="#fff" fontWeight="bold">
-                      {intl.formatMessage({ id: 'app.next' })}
-                    </Text>
-                  </Button>
-                </Stack>
-              </form>
-            </FormProvider>
-          </CardBody>
-        </Card>
-      </TabPanel>
-
-      <TabPanel>
-        <Card>
-          <CardHeader mb="32px">
-            <Text fontSize="lg" color={textColor} fontWeight="bold">
-              {intl.formatMessage({ id: 'app.description' })}
-            </Text>
-          </CardHeader>
-          <CardBody>
-            <FormProvider {...descriptionMethods}>
-              <form onSubmit={descriptionSubmit(onSubmitDescription)} style={{ width: '100%' }}>
-                <Flex direction="column" w="100%">
+      <FormLayout tabsList={tabsList} activeBullets={activeBullets}>
+        <TabPanel>
+          <Card>
+            <CardHeader mb="22px">
+              <Text color={textColor} fontSize="lg" fontWeight="bold">
+                {intl.formatMessage({ id: 'app.establishmentInfo' })}
+              </Text>
+            </CardHeader>
+            <CardBody>
+              <FormProvider {...infoMethods}>
+                <form onSubmit={handleSubmit(onSubmitInfo)} style={{ width: '100%' }}>
                   <Stack direction="column" spacing="20px" w="100%">
-                    <Editor />
-                  </Stack>
-                  <Flex justify="space-between">
-                    <Button
-                      variant="no-hover"
-                      bg={bgPrevButton}
-                      alignSelf="flex-end"
-                      mt="24px"
-                      w="100px"
-                      h="35px"
-                      onClick={() => mainInfoTab.current.click()}>
-                      <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                        {intl.formatMessage({ id: 'app.prev' })}
-                      </Text>
-                    </Button>
+                    <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
+                      <FormControl>
+                        <FormInput
+                          name="name"
+                          label={intl.formatMessage({ id: 'app.name' })}
+                          placeholder={intl.formatMessage({ id: 'app.establishmentName' })}
+                          fontSize="xs"
+                        />
+                      </FormControl>
+                      <FormControl>
+                        <FormInput
+                          name="country"
+                          label={intl.formatMessage({ id: 'app.country' })}
+                          placeholder={intl.formatMessage({ id: 'app.establishmentCountry' })}
+                          fontSize="xs"
+                        />
+                      </FormControl>
+                    </Stack>
+                    <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
+                      <FormControl>
+                        <FormInput
+                          name="state"
+                          label={intl.formatMessage({ id: 'app.state' })}
+                          placeholder={intl.formatMessage({ id: 'app.establishmentState' })}
+                          fontSize="xs"
+                        />
+                      </FormControl>
+                      <FormControl>
+                        <FormInput
+                          name="city"
+                          label={intl.formatMessage({ id: 'app.city' })}
+                          placeholder={intl.formatMessage({ id: 'app.establishmentCity' })}
+                          fontSize="xs"
+                        />
+                      </FormControl>
+                    </Stack>
+                    <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
+                      <FormControl>
+                        <FormInput
+                          name="address"
+                          label={intl.formatMessage({ id: 'app.address' })}
+                          placeholder={intl.formatMessage({ id: 'app.establishmentAddress' })}
+                          fontSize="xs"
+                        />
+                      </FormControl>
+                      <FormControl>
+                        <FormInput
+                          name="zone"
+                          label={intl.formatMessage({ id: 'app.zone' })}
+                          placeholder={intl.formatMessage({ id: 'app.establishmentZone' })}
+                          fontSize="xs"
+                        />
+                      </FormControl>
+                    </Stack>
+
                     <Button
                       variant="no-hover"
                       bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
@@ -509,133 +554,117 @@ function NewEstablishment() {
                         {intl.formatMessage({ id: 'app.next' })}
                       </Text>
                     </Button>
-                  </Flex>
-                </Flex>
-              </form>
-            </FormProvider>
-          </CardBody>
-        </Card>
-      </TabPanel>
-      <TabPanel>
-        <Card>
-          <CardHeader mb="22px">
-            <Text color={textColor} fontSize="xl" fontWeight="bold" mb="3px">
-              {intl.formatMessage({ id: 'app.media' })}
-            </Text>
-          </CardHeader>
-          <CardBody>
-            <FormProvider {...mediaFormMethods}>
-              <Flex direction="column" w="100%">
-                <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
-                  {intl.formatMessage({ id: 'app.establishmentImages' })}
-                </Text>
-                <Flex
-                  align="center"
-                  justify="center"
-                  border="1px dashed #E2E8F0"
-                  borderRadius="15px"
-                  w="100%"
-                  maxWidth={'980px'}
-                  cursor="pointer"
-                  overflowY={'auto'}
-                  minH={'175px'}
-                  {...getRootProps({ className: 'dropzone' })}>
-                  <Input {...getInputProps()} />
-                  <Button variant="no-hover">
-                    {acceptedFiles.length > 0 ? (
-                      <Flex gap="20px" p="20px" flexWrap={'wrap'}>
-                        {acceptedFiles.map((file, index) => (
-                          <Box key={index}>
-                            <img
-                              src={URL.createObjectURL(file)} // Create a preview URL for the image
-                              alt={file.name}
-                              style={{
-                                width: '150px',
-                                height: '100px',
-                                borderRadius: '15px',
-                                objectFit: 'contain'
-                              }}
-                            />
-                            <Text
-                              color="gray.400"
-                              fontWeight="normal"
-                              maxWidth="150px"
-                              textOverflow={'ellipsis'}
-                              overflow={'hidden'}>
-                              {file.name}
-                            </Text>
-                          </Box>
-                        ))}
-                      </Flex>
-                    ) : (
-                      <Text color="gray.400" fontWeight="normal">
-                        {intl.formatMessage({ id: 'app.dropFilesHereToUpload' })}
-                      </Text>
-                    )}
-                  </Button>
-                </Flex>
-                <Flex justify="space-between">
-                  <Button
-                    variant="no-hover"
-                    bg={bgPrevButton}
-                    alignSelf="flex-end"
-                    mt="24px"
-                    w="100px"
-                    h="35px"
-                    onClick={() => descriptionTab.current.click()}>
-                    <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                      {intl.formatMessage({ id: 'app.prev' })}
-                    </Text>
-                  </Button>
-                  <Button
-                    variant="no-hover"
-                    bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                    alignSelf="flex-end"
-                    mt="24px"
-                    w="100px"
-                    h="35px"
-                    onClick={handleFileUpload}
-                    isLoading={isUploading}
-                    loadingText={intl.formatMessage({ id: 'app.uploading' })}>
-                    <Text fontSize="xs" color="#fff" fontWeight="bold">
-                      {intl.formatMessage({ id: 'app.upload' })}
-                    </Text>
-                  </Button>
-                </Flex>
-              </Flex>
-            </FormProvider>
-          </CardBody>
-        </Card>
-      </TabPanel>
-      <TabPanel maxW="800px">
-        <Card>
-          <CardHeader mb="32px">
-            <Text fontSize="lg" color={textColor} fontWeight="bold">
-              {intl.formatMessage({ id: 'app.socials' })}
-            </Text>
-          </CardHeader>
-          <CardBody>
-            <FormProvider {...socialsMethods}>
-              <form onSubmit={socialsSubmit(onSubmitSocials)} style={{ width: '100%' }}>
-                <Flex direction="column" w="100%">
-                  <Stack direction="column" spacing="20px" w="100%">
-                    <FormControl>
-                      <FormInput
-                        name="facebook"
-                        label={intl.formatMessage({ id: 'app.facebookAccount' })}
-                        placeholder="https://"
-                        fontSize="xs"
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormInput
-                        name="instagram"
-                        label={intl.formatMessage({ id: 'app.instagramAccount' })}
-                        placeholder="https://"
-                        fontSize="xs"
-                      />
-                    </FormControl>
                   </Stack>
+                </form>
+              </FormProvider>
+            </CardBody>
+          </Card>
+        </TabPanel>
+
+        <TabPanel>
+          <Card>
+            <CardHeader mb="32px">
+              <Text fontSize="lg" color={textColor} fontWeight="bold">
+                {intl.formatMessage({ id: 'app.description' })}
+              </Text>
+            </CardHeader>
+            <CardBody>
+              <FormProvider {...descriptionMethods}>
+                <form onSubmit={descriptionSubmit(onSubmitDescription)} style={{ width: '100%' }}>
+                  <Flex direction="column" w="100%">
+                    <Stack direction="column" spacing="20px" w="100%">
+                      <Editor />
+                    </Stack>
+                    <Flex justify="space-between">
+                      <Button
+                        variant="no-hover"
+                        bg={bgPrevButton}
+                        alignSelf="flex-end"
+                        mt="24px"
+                        w="100px"
+                        h="35px"
+                        onClick={() => mainInfoTab.current.click()}>
+                        <Text fontSize="xs" color="gray.700" fontWeight="bold">
+                          {intl.formatMessage({ id: 'app.prev' })}
+                        </Text>
+                      </Button>
+                      <Button
+                        variant="no-hover"
+                        bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+                        alignSelf="flex-end"
+                        mt="24px"
+                        w="100px"
+                        h="35px"
+                        type="submit">
+                        <Text fontSize="xs" color="#fff" fontWeight="bold">
+                          {intl.formatMessage({ id: 'app.next' })}
+                        </Text>
+                      </Button>
+                    </Flex>
+                  </Flex>
+                </form>
+              </FormProvider>
+            </CardBody>
+          </Card>
+        </TabPanel>
+        <TabPanel>
+          <Card>
+            <CardHeader mb="22px">
+              <Text color={textColor} fontSize="xl" fontWeight="bold" mb="3px">
+                {intl.formatMessage({ id: 'app.media' })}
+              </Text>
+            </CardHeader>
+            <CardBody>
+              <FormProvider {...mediaFormMethods}>
+                <Flex direction="column" w="100%">
+                  <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
+                    {intl.formatMessage({ id: 'app.establishmentImages' })}
+                  </Text>
+                  <Flex
+                    align="center"
+                    justify="center"
+                    border="1px dashed #E2E8F0"
+                    borderRadius="15px"
+                    w="100%"
+                    maxWidth={'980px'}
+                    cursor="pointer"
+                    overflowY={'auto'}
+                    minH={'175px'}
+                    {...getRootProps({ className: 'dropzone' })}>
+                    <Input {...getInputProps()} />
+                    <Button variant="no-hover">
+                      {acceptedFiles.length > 0 ? (
+                        <Flex gap="20px" p="20px" flexWrap={'wrap'}>
+                          {acceptedFiles.map((file, index) => (
+                            <Box key={index}>
+                              <img
+                                src={URL.createObjectURL(file)} // Create a preview URL for the image
+                                alt={file.name}
+                                style={{
+                                  width: '150px',
+                                  height: '100px',
+                                  borderRadius: '15px',
+                                  objectFit: 'contain'
+                                }}
+                              />
+                              <Text
+                                color="gray.400"
+                                fontWeight="normal"
+                                maxWidth="150px"
+                                textOverflow={'ellipsis'}
+                                overflow={'hidden'}>
+                                {file.name}
+                              </Text>
+                            </Box>
+                          ))}
+                        </Flex>
+                      ) : (
+                        <Text color="gray.400" fontWeight="normal">
+                          {intl.formatMessage({ id: 'app.dropFilesHereToUpload' })}
+                        </Text>
+                      )}
+                    </Button>
+                  </Flex>
                   <Flex justify="space-between">
                     <Button
                       variant="no-hover"
@@ -644,12 +673,11 @@ function NewEstablishment() {
                       mt="24px"
                       w="100px"
                       h="35px"
-                      onClick={() => mediaTab.current.click()}>
+                      onClick={() => descriptionTab.current.click()}>
                       <Text fontSize="xs" color="gray.700" fontWeight="bold">
                         {intl.formatMessage({ id: 'app.prev' })}
                       </Text>
                     </Button>
-
                     <Button
                       variant="no-hover"
                       bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
@@ -657,19 +685,83 @@ function NewEstablishment() {
                       mt="24px"
                       w="100px"
                       h="35px"
-                      type="submit">
+                      onClick={handleFileUpload}
+                      isLoading={isUploading}
+                      loadingText={intl.formatMessage({ id: 'app.uploading' })}>
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
-                        {intl.formatMessage({ id: 'app.send' })}
+                        {intl.formatMessage({ id: 'app.upload' })}
                       </Text>
                     </Button>
                   </Flex>
                 </Flex>
-              </form>
-            </FormProvider>
-          </CardBody>
-        </Card>
-      </TabPanel>
-    </FormLayout>
+              </FormProvider>
+            </CardBody>
+          </Card>
+        </TabPanel>
+        <TabPanel maxW="800px">
+          <Card>
+            <CardHeader mb="32px">
+              <Text fontSize="lg" color={textColor} fontWeight="bold">
+                {intl.formatMessage({ id: 'app.socials' })}
+              </Text>
+            </CardHeader>
+            <CardBody>
+              <FormProvider {...socialsMethods}>
+                <form onSubmit={socialsSubmit(onSubmitSocials)} style={{ width: '100%' }}>
+                  <Flex direction="column" w="100%">
+                    <Stack direction="column" spacing="20px" w="100%">
+                      <FormControl>
+                        <FormInput
+                          name="facebook"
+                          label={intl.formatMessage({ id: 'app.facebookAccount' })}
+                          placeholder="https://"
+                          fontSize="xs"
+                        />
+                      </FormControl>
+                      <FormControl>
+                        <FormInput
+                          name="instagram"
+                          label={intl.formatMessage({ id: 'app.instagramAccount' })}
+                          placeholder="https://"
+                          fontSize="xs"
+                        />
+                      </FormControl>
+                    </Stack>
+                    <Flex justify="space-between">
+                      <Button
+                        variant="no-hover"
+                        bg={bgPrevButton}
+                        alignSelf="flex-end"
+                        mt="24px"
+                        w="100px"
+                        h="35px"
+                        onClick={() => mediaTab.current.click()}>
+                        <Text fontSize="xs" color="gray.700" fontWeight="bold">
+                          {intl.formatMessage({ id: 'app.prev' })}
+                        </Text>
+                      </Button>
+
+                      <Button
+                        variant="no-hover"
+                        bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
+                        alignSelf="flex-end"
+                        mt="24px"
+                        w="100px"
+                        h="35px"
+                        type="submit">
+                        <Text fontSize="xs" color="#fff" fontWeight="bold">
+                          {intl.formatMessage({ id: 'app.send' })}
+                        </Text>
+                      </Button>
+                    </Flex>
+                  </Flex>
+                </form>
+              </FormProvider>
+            </CardBody>
+          </Card>
+        </TabPanel>
+      </FormLayout>
+    </>
   );
 }
 

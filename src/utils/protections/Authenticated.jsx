@@ -94,6 +94,10 @@ const Authenticated = ({ allowedRoles, mustBeCompanyAdmin = false }) => {
           (currentCompany.subscription_plan && currentCompany.subscription_plan.id)
         ) {
           navigate(`/admin/dashboard/establishment/add`);
+        } else {
+          if (!currentCompany.has_subscription) {
+            navigate(`/admin/dashboard/pricing`);
+          }
         }
       }
     }
