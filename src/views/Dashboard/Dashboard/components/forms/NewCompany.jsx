@@ -42,7 +42,8 @@ import {
   TagLabel,
   Text,
   useColorModeValue,
-  useToast
+  useToast,
+  Tooltip
 } from '@chakra-ui/react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { GoogleMap, Polygon, useLoadScript } from '@react-google-maps/api';
@@ -72,13 +73,20 @@ import { useDropzone } from 'react-dropzone';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useIntl } from 'react-intl';
 import FormLayout from 'components/Forms/FormLayout';
+import { InfoOutlineIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 
 const formSchemaInfo = object({
   name: string().min(1, 'Name is required'),
+  tradename: string().optional(),
   address: string().min(1, 'Address is required'),
   country: string().min(1, 'Country is required'),
   state: string().min(1, 'State is required'),
-  city: string().min(1, 'City is required')
+  city: string().min(1, 'City is required'),
+  contact_email: string().email('Invalid email').optional(),
+  contact_phone: string().optional(),
+  website: string().optional(),
+  fiscal_id: string().optional(),
+  certifications: string().optional()
 });
 
 const formSchemaDescription = object({
@@ -254,6 +262,19 @@ function NewCompany() {
     }
   ];
 
+  // Section headings localized
+  const sectionHeadings = {
+    general: intl.formatMessage({
+      id: 'app.generalInformation',
+      defaultMessage: 'Información general'
+    }),
+    contact: intl.formatMessage({
+      id: 'app.contactInformation',
+      defaultMessage: 'Información de contacto'
+    }),
+    compliance: intl.formatMessage({ id: 'app.compliance', defaultMessage: 'Cumplimiento' })
+  };
+
   return (
     <FormLayout tabsList={tabsList} activeBullets={activeBullets}>
       <TabPanel>
@@ -267,6 +288,10 @@ function NewCompany() {
             <FormProvider {...infoMethods}>
               <form onSubmit={infoSubmit(onSubmitInfo)} style={{ width: '100%' }}>
                 <Stack direction="column" spacing="20px" w="100%">
+                  {/* General Info */}
+                  <Text fontWeight="bold" fontSize="lg" mb={2}>
+                    {sectionHeadings.general}
+                  </Text>
                   <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
                     <FormControl>
                       <FormInput
@@ -277,10 +302,20 @@ function NewCompany() {
                       />
                     </FormControl>
                     <FormControl>
+                      <FormLabel htmlFor="tradename" fontSize="xs" fontWeight="bold">
+                        {intl.formatMessage({ id: 'app.tradename' })}
+                        <Tooltip
+                          label={intl.formatMessage({
+                            id: 'app.tradenameHelp',
+                            defaultMessage:
+                              'Nombre alternativo o comercial de la empresa, si aplica.'
+                          })}>
+                          <InfoOutlineIcon ml={1} color="gray.400" cursor="pointer" />
+                        </Tooltip>
+                      </FormLabel>
                       <FormInput
-                        name="address"
-                        label={intl.formatMessage({ id: 'app.address' })}
-                        placeholder={intl.formatMessage({ id: 'app.companyAddress' })}
+                        name="tradename"
+                        placeholder={intl.formatMessage({ id: 'app.companyTradename' })}
                         fontSize="xs"
                       />
                     </FormControl>
@@ -288,9 +323,25 @@ function NewCompany() {
                   <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
                     <FormControl>
                       <FormInput
+                        name="address"
+                        label={intl.formatMessage({ id: 'app.address' })}
+                        placeholder={intl.formatMessage({ id: 'app.companyAddress' })}
+                        fontSize="xs"
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormInput
                         name="country"
                         label={intl.formatMessage({ id: 'app.country' })}
                         placeholder={intl.formatMessage({ id: 'app.companyCountry' })}
+                        fontSize="xs"
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormInput
+                        name="state"
+                        label={intl.formatMessage({ id: 'app.state' })}
+                        placeholder={intl.formatMessage({ id: 'app.companyState' })}
                         fontSize="xs"
                       />
                     </FormControl>
@@ -303,17 +354,74 @@ function NewCompany() {
                       />
                     </FormControl>
                   </Stack>
+                  {/* Contact Info */}
+                  <Text fontWeight="bold" fontSize="lg" mt={4} mb={2}>
+                    {sectionHeadings.contact}
+                  </Text>
                   <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
                     <FormControl>
                       <FormInput
-                        name="state"
-                        label={intl.formatMessage({ id: 'app.state' })}
-                        placeholder={intl.formatMessage({ id: 'app.companyState' })}
+                        name="contact_email"
+                        label={intl.formatMessage({ id: 'app.contactEmail' })}
+                        placeholder={intl.formatMessage({ id: 'app.companyContactEmail' })}
+                        fontSize="xs"
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormInput
+                        name="contact_phone"
+                        label={intl.formatMessage({ id: 'app.contactPhone' })}
+                        placeholder={intl.formatMessage({ id: 'app.companyContactPhone' })}
+                        fontSize="xs"
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormInput
+                        name="website"
+                        label={intl.formatMessage({ id: 'app.website' })}
+                        placeholder={intl.formatMessage({
+                          id: 'app.companyWebsite',
+                          defaultMessage: 'Sitio web de la compañía (ej: https://miempresa.com)'
+                        })}
                         fontSize="xs"
                       />
                     </FormControl>
                   </Stack>
-
+                  {/* Compliance */}
+                  <Text fontWeight="bold" fontSize="lg" mt={4} mb={2}>
+                    {sectionHeadings.compliance}
+                  </Text>
+                  <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
+                    <FormControl>
+                      <FormLabel htmlFor="fiscal_id" fontSize="xs" fontWeight="bold">
+                        {intl.formatMessage({ id: 'app.fiscalId' })}
+                        <Tooltip label={intl.formatMessage({ id: 'app.fiscalIdHelp' })}>
+                          <InfoOutlineIcon ml={1} color="gray.400" cursor="pointer" />
+                        </Tooltip>
+                      </FormLabel>
+                      <FormInput
+                        name="fiscal_id"
+                        placeholder={intl.formatMessage({
+                          id: 'app.companyFiscalId',
+                          defaultMessage: 'ID fiscal de la compañía (ej: RUT, NIT, CUIT)'
+                        })}
+                        fontSize="xs"
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel htmlFor="certifications" fontSize="xs" fontWeight="bold">
+                        {intl.formatMessage({ id: 'app.certifications' })}
+                        <Tooltip label={intl.formatMessage({ id: 'app.certificationsHelp' })}>
+                          <InfoOutlineIcon ml={1} color="gray.400" cursor="pointer" />
+                        </Tooltip>
+                      </FormLabel>
+                      <FormInput
+                        name="certifications"
+                        placeholder={intl.formatMessage({ id: 'app.companyCertifications' })}
+                        fontSize="xs"
+                      />
+                    </FormControl>
+                  </Stack>
                   <Button
                     variant="no-hover"
                     bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
@@ -321,7 +429,8 @@ function NewCompany() {
                     mt="24px"
                     w="100px"
                     h="35px"
-                    type="submit">
+                    type="submit"
+                    rightIcon={<ArrowForwardIcon color="#fff" boxSize={3} ml={2} />}>
                     <Text fontSize="xs" color="#fff" fontWeight="bold">
                       {intl.formatMessage({ id: 'app.next' })}
                     </Text>

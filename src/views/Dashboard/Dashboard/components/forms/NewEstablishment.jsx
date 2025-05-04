@@ -42,9 +42,10 @@ import {
   Text,
   useColorModeValue,
   useToast,
-  CircularProgress
+  CircularProgress,
+  Tooltip
 } from '@chakra-ui/react';
-import { Form, FormProvider, useForm } from 'react-hook-form';
+import { Form, FormProvider, useForm, useWatch } from 'react-hook-form';
 import React, { useEffect, useReducer, useRef, useState } from 'react';
 import { clearForm, setForm } from 'store/features/formSlice';
 import { object, string } from 'zod';
@@ -75,6 +76,7 @@ import { useFormContext } from 'react-hook-form';
 import { useFileUpload } from '../../../../../services/uploadService';
 import useSubscriptionCheck from 'hooks/useSubscriptionCheck';
 import SubscriptionLimitModal from 'components/Modals/SubscriptionLimitModal';
+import { InfoOutlineIcon } from '@chakra-ui/icons';
 
 const formSchemaInfo = object({
   name: string().min(1, 'Name is required'),
@@ -86,7 +88,10 @@ const formSchemaInfo = object({
 });
 
 const formSchemaDescription = object({
-  description: string().min(1, 'Description is required')
+  about: string().min(1, 'Required'),
+  main_activities: string().min(1, 'Required'),
+  location_highlights: string().optional(),
+  custom_message: string().optional()
 });
 
 const formSchemaSocials = object({
@@ -236,11 +241,16 @@ function NewEstablishment() {
   };
 
   const onSubmitDescription = (data) => {
+    console.log('onSubmitDescription called with:', data);
+    if (!mediaTab.current) {
+      console.error('mediaTab ref is not set');
+      return;
+    }
     dispatch(
       setForm({
         establishment: {
           ...currentEstablishment,
-          description: data.description
+          ...data
         }
       })
     );
@@ -464,6 +474,25 @@ function NewEstablishment() {
       });
   };
 
+  // Add a static country list for the dropdown
+  const countryOptions = [
+    {
+      value: '',
+      label: intl.formatMessage({ id: 'app.selectOption', defaultMessage: 'Selecciona una opción' })
+    },
+    { value: 'Chile', label: 'Chile' },
+    { value: 'Argentina', label: 'Argentina' },
+    { value: 'Uruguay', label: 'Uruguay' },
+    { value: 'Paraguay', label: 'Paraguay' },
+    { value: 'Peru', label: 'Perú' },
+    { value: 'Mexico', label: 'México' },
+    { value: 'Colombia', label: 'Colombia' },
+    { value: 'United States', label: 'Estados Unidos' },
+    { value: 'Spain', label: 'España' },
+    { value: 'Brazil', label: 'Brasil' },
+    { value: 'Other', label: intl.formatMessage({ id: 'app.other', defaultMessage: 'Otro' }) }
+  ];
+
   return (
     <>
       {/* Subscription limit modal */}
@@ -479,9 +508,21 @@ function NewEstablishment() {
         <TabPanel>
           <Card>
             <CardHeader mb="22px">
-              <Text color={textColor} fontSize="lg" fontWeight="bold">
-                {intl.formatMessage({ id: 'app.establishmentInfo' })}
-              </Text>
+              <Flex flexDirection="column">
+                <Text color={textColor} fontSize="xl" fontWeight="bold">
+                  {intl.formatMessage({
+                    id: 'app.establishmentInfo',
+                    defaultMessage: 'Información del establecimiento'
+                  })}
+                </Text>
+                <Text color="gray.500" fontSize="sm" mt={2}>
+                  {intl.formatMessage({
+                    id: 'app.establishmentInfoHelper',
+                    defaultMessage:
+                      'Completa la información principal de tu establecimiento. Estos datos serán usados para la gestión interna y la generación del perfil público.'
+                  })}
+                </Text>
+              </Flex>
             </CardHeader>
             <CardBody>
               <FormProvider {...infoMethods}>
@@ -494,32 +535,31 @@ function NewEstablishment() {
                           label={intl.formatMessage({ id: 'app.name' })}
                           placeholder={intl.formatMessage({ id: 'app.establishmentName' })}
                           fontSize="xs"
+                          autoComplete="organization"
                         />
                       </FormControl>
                       <FormControl>
-                        <FormInput
-                          name="country"
-                          label={intl.formatMessage({ id: 'app.country' })}
-                          placeholder={intl.formatMessage({ id: 'app.establishmentCountry' })}
+                        <FormLabel htmlFor="type" fontSize="xs" fontWeight="bold">
+                          {intl.formatMessage({ id: 'app.type' })}
+                          <Tooltip
+                            label={intl.formatMessage({
+                              id: 'app.typeHelp',
+                              defaultMessage:
+                                'Tipo de establecimiento (ej: planta, bodega, campo, oficina)'
+                            })}>
+                            <InfoOutlineIcon ml={1} color="gray.400" cursor="pointer" />
+                          </Tooltip>
+                        </FormLabel>
+                        <Input
+                          id="type"
+                          name="type"
+                          placeholder={intl.formatMessage({
+                            id: 'app.type',
+                            defaultMessage: 'Ej: campo, bodega, oficina'
+                          })}
                           fontSize="xs"
-                        />
-                      </FormControl>
-                    </Stack>
-                    <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
-                      <FormControl>
-                        <FormInput
-                          name="state"
-                          label={intl.formatMessage({ id: 'app.state' })}
-                          placeholder={intl.formatMessage({ id: 'app.establishmentState' })}
-                          fontSize="xs"
-                        />
-                      </FormControl>
-                      <FormControl>
-                        <FormInput
-                          name="city"
-                          label={intl.formatMessage({ id: 'app.city' })}
-                          placeholder={intl.formatMessage({ id: 'app.establishmentCity' })}
-                          fontSize="xs"
+                          autoComplete="off"
+                          {...infoMethods.register('type')}
                         />
                       </FormControl>
                     </Stack>
@@ -530,18 +570,196 @@ function NewEstablishment() {
                           label={intl.formatMessage({ id: 'app.address' })}
                           placeholder={intl.formatMessage({ id: 'app.establishmentAddress' })}
                           fontSize="xs"
+                          autoComplete="street-address"
                         />
                       </FormControl>
                       <FormControl>
                         <FormInput
-                          name="zone"
-                          label={intl.formatMessage({ id: 'app.zone' })}
-                          placeholder={intl.formatMessage({ id: 'app.establishmentZone' })}
+                          name="country"
+                          label={intl.formatMessage({ id: 'app.country' })}
+                          placeholder={intl.formatMessage({ id: 'app.establishmentCountry' })}
                           fontSize="xs"
+                          autoComplete="country"
                         />
                       </FormControl>
                     </Stack>
-
+                    <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
+                      <FormControl>
+                        <FormInput
+                          name="state"
+                          label={intl.formatMessage({ id: 'app.state' })}
+                          placeholder={intl.formatMessage({ id: 'app.establishmentState' })}
+                          fontSize="xs"
+                          autoComplete="address-level1"
+                        />
+                      </FormControl>
+                      <FormControl>
+                        <FormInput
+                          name="city"
+                          label={intl.formatMessage({ id: 'app.city' })}
+                          placeholder={intl.formatMessage({ id: 'app.establishmentCity' })}
+                          fontSize="xs"
+                          autoComplete="address-level2"
+                        />
+                      </FormControl>
+                    </Stack>
+                    <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
+                      <FormControl>
+                        <FormLabel htmlFor="zone" fontSize="xs" fontWeight="bold">
+                          {intl.formatMessage({ id: 'app.zone' })}
+                          <Tooltip
+                            label={intl.formatMessage({
+                              id: 'app.zoneHelp',
+                              defaultMessage: 'Zona o sector dentro de la ciudad o región'
+                            })}>
+                            <InfoOutlineIcon ml={1} color="gray.400" cursor="pointer" />
+                          </Tooltip>
+                        </FormLabel>
+                        <Input
+                          id="zone"
+                          name="zone"
+                          placeholder={intl.formatMessage({
+                            id: 'app.zone',
+                            defaultMessage: 'Ej: Norte, Sur, Centro'
+                          })}
+                          fontSize="xs"
+                          autoComplete="off"
+                          {...infoMethods.register('zone')}
+                        />
+                      </FormControl>
+                    </Stack>
+                    <Text fontWeight="bold" fontSize="lg" mt={4} mb={2}>
+                      {intl.formatMessage({
+                        id: 'app.contactInformation',
+                        defaultMessage: 'Información de contacto'
+                      })}
+                    </Text>
+                    <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
+                      <FormControl>
+                        <FormLabel htmlFor="contact_person" fontSize="xs" fontWeight="bold">
+                          {intl.formatMessage({
+                            id: 'app.contactPerson',
+                            defaultMessage: 'Persona de contacto'
+                          })}
+                          <Tooltip
+                            label={intl.formatMessage({
+                              id: 'app.contactPersonHelp',
+                              defaultMessage: 'Nombre de la persona responsable del establecimiento'
+                            })}>
+                            <InfoOutlineIcon ml={1} color="gray.400" cursor="pointer" />
+                          </Tooltip>
+                        </FormLabel>
+                        <Input
+                          id="contact_person"
+                          name="contact_person"
+                          placeholder={intl.formatMessage({
+                            id: 'app.contactPerson',
+                            defaultMessage: 'Ej: Juan Pérez'
+                          })}
+                          fontSize="xs"
+                          autoComplete="name"
+                          {...infoMethods.register('contact_person')}
+                        />
+                      </FormControl>
+                      <FormControl>
+                        <FormInput
+                          name="contact_email"
+                          label={intl.formatMessage({ id: 'app.contactEmail' })}
+                          placeholder={intl.formatMessage({
+                            id: 'app.companyContactEmail',
+                            defaultMessage: 'Ej: contacto@empresa.com'
+                          })}
+                          fontSize="xs"
+                          type="email"
+                          autoComplete="email"
+                        />
+                      </FormControl>
+                      <FormControl>
+                        <FormInput
+                          name="contact_phone"
+                          label={intl.formatMessage({ id: 'app.contactPhone' })}
+                          placeholder={intl.formatMessage({
+                            id: 'app.companyContactPhone',
+                            defaultMessage: 'Ej: +56 9 1234 5678'
+                          })}
+                          fontSize="xs"
+                          type="tel"
+                          autoComplete="tel"
+                          maxLength={20}
+                        />
+                      </FormControl>
+                    </Stack>
+                    <Text fontWeight="bold" fontSize="lg" mt={4} mb={2}>
+                      {intl.formatMessage({ id: 'app.coordinates', defaultMessage: 'Coordenadas' })}
+                      <Tooltip
+                        label={intl.formatMessage({
+                          id: 'app.coordinatesHelp',
+                          defaultMessage:
+                            'Latitud y longitud del establecimiento (puedes usar el mapa)'
+                        })}>
+                        <InfoOutlineIcon ml={1} color="gray.400" cursor="pointer" />
+                      </Tooltip>
+                    </Text>
+                    <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
+                      <FormControl>
+                        <FormInput
+                          name="latitude"
+                          label={intl.formatMessage({
+                            id: 'app.latitude',
+                            defaultMessage: 'Latitud'
+                          })}
+                          placeholder={intl.formatMessage({
+                            id: 'app.latitude',
+                            defaultMessage: 'Ej: -33.4489'
+                          })}
+                          fontSize="xs"
+                          type="number"
+                          autoComplete="off"
+                          step="any"
+                        />
+                      </FormControl>
+                      <FormControl>
+                        <FormInput
+                          name="longitude"
+                          label={intl.formatMessage({
+                            id: 'app.longitude',
+                            defaultMessage: 'Longitud'
+                          })}
+                          placeholder={intl.formatMessage({
+                            id: 'app.longitude',
+                            defaultMessage: 'Ej: -70.6693'
+                          })}
+                          fontSize="xs"
+                          type="number"
+                          autoComplete="off"
+                          step="any"
+                        />
+                      </FormControl>
+                    </Stack>
+                    <Text fontWeight="bold" fontSize="lg" mt={4} mb={2}>
+                      {intl.formatMessage({
+                        id: 'app.certifications',
+                        defaultMessage: 'Certificaciones'
+                      })}
+                      <Tooltip label={intl.formatMessage({ id: 'app.certificationsHelp' })}>
+                        <InfoOutlineIcon ml={1} color="gray.400" cursor="pointer" />
+                      </Tooltip>
+                    </Text>
+                    <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
+                      <FormControl w="100%">
+                        <Input
+                          id="certifications"
+                          name="certifications"
+                          placeholder={intl.formatMessage({
+                            id: 'app.companyCertifications',
+                            defaultMessage: 'Ej: orgánico, comercio justo'
+                          })}
+                          fontSize="xs"
+                          autoComplete="off"
+                          {...infoMethods.register('certifications')}
+                        />
+                      </FormControl>
+                    </Stack>
                     <Button
                       variant="no-hover"
                       bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
@@ -563,18 +781,175 @@ function NewEstablishment() {
 
         <TabPanel>
           <Card>
-            <CardHeader mb="32px">
-              <Text fontSize="lg" color={textColor} fontWeight="bold">
-                {intl.formatMessage({ id: 'app.description' })}
-              </Text>
+            <CardHeader mb="22px">
+              <Flex flexDirection="column">
+                <Text color={textColor} fontSize="xl" fontWeight="bold">
+                  {intl.formatMessage({
+                    id: 'app.description',
+                    defaultMessage: 'Descripción pública'
+                  })}
+                </Text>
+                <Text color="gray.500" fontSize="sm" mt={2}>
+                  {intl.formatMessage({
+                    id: 'app.descriptionHelper',
+                    defaultMessage:
+                      'Completa la información que será visible públicamente en el perfil del establecimiento.'
+                  })}
+                </Text>
+              </Flex>
             </CardHeader>
             <CardBody>
               <FormProvider {...descriptionMethods}>
-                <form onSubmit={descriptionSubmit(onSubmitDescription)} style={{ width: '100%' }}>
+                <form
+                  onSubmit={descriptionMethods.handleSubmit(onSubmitDescription, (errors) => {
+                    console.error('Validation errors:', errors);
+                  })}
+                  style={{ width: '100%' }}>
                   <Flex direction="column" w="100%">
-                    <Stack direction="column" spacing="20px" w="100%">
-                      <Editor />
+                    <Box
+                      mb={6}
+                      p={4}
+                      bg="yellow.50"
+                      borderRadius="md"
+                      border="1px solid"
+                      borderColor="yellow.200">
+                      <Text fontWeight="bold" color="yellow.800">
+                        {intl.formatMessage({
+                          id: 'app.publicFieldsNotice',
+                          defaultMessage:
+                            'La siguiente información será visible públicamente cuando alguien escanee el QR de este establecimiento.'
+                        })}
+                      </Text>
+                    </Box>
+                    <Stack direction="column" spacing="32px" w="100%">
+                      <Box>
+                        <Text fontWeight="bold" fontSize="xl" mb={2} mt={2}>
+                          {intl.formatMessage({
+                            id: 'app.aboutEstablishment',
+                            defaultMessage: 'Sobre el establecimiento'
+                          })}
+                          <Text as="span" color="red.500" ml={1}>
+                            *
+                          </Text>
+                        </Text>
+                        <FormControl isRequired mb={4}>
+                          <FormInput
+                            name="about"
+                            placeholder={intl.formatMessage({
+                              id: 'app.aboutEstablishmentPlaceholder',
+                              defaultMessage:
+                                'Describe brevemente qué es este establecimiento y su propósito principal.'
+                            })}
+                            fontSize="sm"
+                            textarea
+                            minRows={2}
+                          />
+                        </FormControl>
+                        <Text fontWeight="bold" fontSize="xl" mb={2} mt={6}>
+                          {intl.formatMessage({
+                            id: 'app.mainActivities',
+                            defaultMessage: 'Actividades principales / Servicios'
+                          })}
+                          <Text as="span" color="red.500" ml={1}>
+                            *
+                          </Text>
+                        </Text>
+                        <FormControl isRequired mb={2}>
+                          <FormInput
+                            name="main_activities"
+                            placeholder={intl.formatMessage({
+                              id: 'app.mainActivitiesPlaceholder',
+                              defaultMessage:
+                                '¿Qué actividades, cultivos o servicios se realizan aquí?'
+                            })}
+                            fontSize="sm"
+                            textarea
+                            minRows={2}
+                          />
+                        </FormControl>
+                      </Box>
+                      <Box borderTop="1px solid" borderColor="gray.200" pt={6}>
+                        <Flex align="center" mb={2}>
+                          <Text fontWeight="bold" fontSize="lg">
+                            {intl.formatMessage({
+                              id: 'app.locationHighlights',
+                              defaultMessage: 'Características de la ubicación'
+                            })}
+                          </Text>
+                          <Tooltip
+                            label={intl.formatMessage({
+                              id: 'app.locationHighlightsHelp',
+                              defaultMessage:
+                                'Características notables, accesibilidad, geografía (opcional).'
+                            })}>
+                            <InfoOutlineIcon ml={2} color="gray.400" cursor="pointer" />
+                          </Tooltip>
+                        </Flex>
+                        <FormControl mb={2}>
+                          <FormInput
+                            name="location_highlights"
+                            placeholder={intl.formatMessage({
+                              id: 'app.locationHighlightsPlaceholder',
+                              defaultMessage:
+                                'Características notables, accesibilidad, geografía (opcional).'
+                            })}
+                            fontSize="sm"
+                            textarea
+                            minRows={2}
+                          />
+                        </FormControl>
+                        <Text fontWeight="bold" fontSize="lg" mt={4} mb={2}>
+                          {intl.formatMessage({
+                            id: 'app.customMessage',
+                            defaultMessage: 'Mensaje o historia personalizada'
+                          })}
+                        </Text>
+                        <FormControl mb={2}>
+                          <FormInput
+                            name="custom_message"
+                            placeholder={intl.formatMessage({
+                              id: 'app.customMessagePlaceholder',
+                              defaultMessage:
+                                'Comparte una historia, mensaje o información adicional (opcional).'
+                            })}
+                            fontSize="sm"
+                            textarea
+                            minRows={2}
+                          />
+                        </FormControl>
+                      </Box>
                     </Stack>
+                    {/* Live Preview: show Step 1 info + public fields */}
+                    <Box
+                      mt={10}
+                      mb={6}
+                      p={6}
+                      borderRadius="lg"
+                      boxShadow="lg"
+                      bg={bgColor}
+                      border="2px solid #E2E8F0">
+                      <Flex align="center" mb={4}>
+                        <Text fontWeight="bold" fontSize="lg" mr={2}>
+                          {intl.formatMessage({
+                            id: 'app.publicProfilePreview',
+                            defaultMessage: 'Vista previa del perfil público'
+                          })}
+                        </Text>
+                        <Tooltip
+                          label={intl.formatMessage({
+                            id: 'app.publicProfilePreviewHelp',
+                            defaultMessage:
+                              'Así se verá tu establecimiento cuando alguien escanee el QR.'
+                          })}>
+                          <InfoOutlineIcon color="gray.400" cursor="pointer" />
+                        </Tooltip>
+                      </Flex>
+                      <LiveEstablishmentPreview
+                        control={descriptionMethods.control}
+                        intl={intl}
+                        infoValues={infoMethods.getValues()}
+                      />
+                    </Box>
                     <Flex justify="space-between">
                       <Button
                         variant="no-hover"
@@ -610,26 +985,45 @@ function NewEstablishment() {
         <TabPanel>
           <Card>
             <CardHeader mb="22px">
-              <Text color={textColor} fontSize="xl" fontWeight="bold" mb="3px">
-                {intl.formatMessage({ id: 'app.media' })}
-              </Text>
+              <Flex flexDirection="column">
+                <Text color={textColor} fontSize="xl" fontWeight="bold">
+                  {intl.formatMessage({ id: 'app.media', defaultMessage: 'Multimedia' })}
+                </Text>
+                <Text color="gray.500" fontSize="sm" mt={2}>
+                  {intl.formatMessage({
+                    id: 'app.mediaInstructions',
+                    defaultMessage:
+                      'Sube imágenes de tu establecimiento. Formato recomendado: JPG o PNG, tamaño máximo 5MB por imagen. Estas imágenes serán visibles públicamente.'
+                  })}
+                </Text>
+              </Flex>
             </CardHeader>
             <CardBody>
               <FormProvider {...mediaFormMethods}>
                 <Flex direction="column" w="100%">
                   <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
-                    {intl.formatMessage({ id: 'app.establishmentImages' })}
+                    {intl.formatMessage({
+                      id: 'app.establishmentImages',
+                      defaultMessage: 'Imágenes del establecimiento'
+                    })}
                   </Text>
                   <Flex
                     align="center"
                     justify="center"
-                    border="1px dashed #E2E8F0"
+                    border="2px dashed #CBD5E0"
                     borderRadius="15px"
                     w="100%"
                     maxWidth={'980px'}
                     cursor="pointer"
                     overflowY={'auto'}
                     minH={'175px'}
+                    bg="gray.50"
+                    _hover={{ bg: 'gray.100' }}
+                    tabIndex={0}
+                    aria-label={intl.formatMessage({
+                      id: 'app.dropFilesHereToUpload',
+                      defaultMessage: 'Arrastra archivos aquí para subir'
+                    })}
                     {...getRootProps({ className: 'dropzone' })}>
                     <Input {...getInputProps()} />
                     <Button variant="no-hover">
@@ -638,7 +1032,7 @@ function NewEstablishment() {
                           {acceptedFiles.map((file, index) => (
                             <Box key={index}>
                               <img
-                                src={URL.createObjectURL(file)} // Create a preview URL for the image
+                                src={URL.createObjectURL(file)}
                                 alt={file.name}
                                 style={{
                                   width: '150px',
@@ -660,11 +1054,21 @@ function NewEstablishment() {
                         </Flex>
                       ) : (
                         <Text color="gray.400" fontWeight="normal">
-                          {intl.formatMessage({ id: 'app.dropFilesHereToUpload' })}
+                          {intl.formatMessage({
+                            id: 'app.dropFilesHereToUpload',
+                            defaultMessage: 'Arrastra archivos aquí para subir'
+                          })}
                         </Text>
                       )}
                     </Button>
                   </Flex>
+                  <Text color="gray.500" fontSize="xs" mt={2}>
+                    {intl.formatMessage({
+                      id: 'app.mediaHelper',
+                      defaultMessage:
+                        'Puedes subir hasta 5 imágenes. Imágenes de alta calidad ayudan a generar confianza.'
+                    })}
+                  </Text>
                   <Flex justify="space-between">
                     <Button
                       variant="no-hover"
@@ -687,9 +1091,12 @@ function NewEstablishment() {
                       h="35px"
                       onClick={handleFileUpload}
                       isLoading={isUploading}
-                      loadingText={intl.formatMessage({ id: 'app.uploading' })}>
+                      loadingText={intl.formatMessage({
+                        id: 'app.uploading',
+                        defaultMessage: 'Subiendo...'
+                      })}>
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
-                        {intl.formatMessage({ id: 'app.upload' })}
+                        {intl.formatMessage({ id: 'app.upload', defaultMessage: 'Subir' })}
                       </Text>
                     </Button>
                   </Flex>
@@ -701,9 +1108,18 @@ function NewEstablishment() {
         <TabPanel maxW="800px">
           <Card>
             <CardHeader mb="32px">
-              <Text fontSize="lg" color={textColor} fontWeight="bold">
-                {intl.formatMessage({ id: 'app.socials' })}
-              </Text>
+              <Flex flexDirection="column">
+                <Text fontSize="lg" color={textColor} fontWeight="bold">
+                  {intl.formatMessage({ id: 'app.socials', defaultMessage: 'Redes sociales' })}
+                </Text>
+                <Text color="gray.500" fontSize="sm" mt={2}>
+                  {intl.formatMessage({
+                    id: 'app.socialsInstructions',
+                    defaultMessage:
+                      'Agrega los enlaces a las redes sociales de tu establecimiento. Estos enlaces serán visibles públicamente en el perfil del establecimiento.'
+                  })}
+                </Text>
+              </Flex>
             </CardHeader>
             <CardBody>
               <FormProvider {...socialsMethods}>
@@ -714,16 +1130,30 @@ function NewEstablishment() {
                         <FormInput
                           name="facebook"
                           label={intl.formatMessage({ id: 'app.facebookAccount' })}
-                          placeholder="https://"
+                          placeholder="https://facebook.com/empresa"
                           fontSize="xs"
+                          type="url"
+                          autoComplete="url"
+                          pattern="https?://(www\.)?facebook.com/.*"
+                          helperText={intl.formatMessage({
+                            id: 'app.socialsHelper',
+                            defaultMessage: 'Ejemplo: https://facebook.com/empresa'
+                          })}
                         />
                       </FormControl>
                       <FormControl>
                         <FormInput
                           name="instagram"
                           label={intl.formatMessage({ id: 'app.instagramAccount' })}
-                          placeholder="https://"
+                          placeholder="https://instagram.com/empresa"
                           fontSize="xs"
+                          type="url"
+                          autoComplete="url"
+                          pattern="https?://(www\.)?instagram.com/.*"
+                          helperText={intl.formatMessage({
+                            id: 'app.socialsHelper',
+                            defaultMessage: 'Ejemplo: https://instagram.com/empresa'
+                          })}
                         />
                       </FormControl>
                     </Stack>
@@ -740,7 +1170,6 @@ function NewEstablishment() {
                           {intl.formatMessage({ id: 'app.prev' })}
                         </Text>
                       </Button>
-
                       <Button
                         variant="no-hover"
                         bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
@@ -750,7 +1179,7 @@ function NewEstablishment() {
                         h="35px"
                         type="submit">
                         <Text fontSize="xs" color="#fff" fontWeight="bold">
-                          {intl.formatMessage({ id: 'app.send' })}
+                          {intl.formatMessage({ id: 'app.send', defaultMessage: 'Enviar' })}
                         </Text>
                       </Button>
                     </Flex>
@@ -762,6 +1191,137 @@ function NewEstablishment() {
         </TabPanel>
       </FormLayout>
     </>
+  );
+}
+
+// Live preview component
+function LiveEstablishmentPreview({ control, intl, infoValues }) {
+  const values = useWatch({ control });
+  return (
+    <Box>
+      {/* Step 1 info */}
+      {infoValues?.name && (
+        <Box mb={4}>
+          <Text fontWeight="bold" fontSize="md" mb={1}>
+            {intl.formatMessage({ id: 'app.name', defaultMessage: 'Nombre del establecimiento' })}
+          </Text>
+          <Text>{infoValues.name}</Text>
+        </Box>
+      )}
+      {infoValues?.type && (
+        <Box mb={4}>
+          <Text fontWeight="bold" fontSize="md" mb={1}>
+            {intl.formatMessage({ id: 'app.type', defaultMessage: 'Tipo' })}
+          </Text>
+          <Text>{infoValues.type}</Text>
+        </Box>
+      )}
+      {infoValues?.address && (
+        <Box mb={4}>
+          <Text fontWeight="bold" fontSize="md" mb={1}>
+            {intl.formatMessage({ id: 'app.address', defaultMessage: 'Dirección' })}
+          </Text>
+          <Text>{infoValues.address}</Text>
+        </Box>
+      )}
+      {infoValues?.country && (
+        <Box mb={4}>
+          <Text fontWeight="bold" fontSize="md" mb={1}>
+            {intl.formatMessage({ id: 'app.country', defaultMessage: 'País' })}
+          </Text>
+          <Text>{infoValues.country}</Text>
+        </Box>
+      )}
+      {infoValues?.state && (
+        <Box mb={4}>
+          <Text fontWeight="bold" fontSize="md" mb={1}>
+            {intl.formatMessage({ id: 'app.state', defaultMessage: 'Estado' })}
+          </Text>
+          <Text>{infoValues.state}</Text>
+        </Box>
+      )}
+      {infoValues?.city && (
+        <Box mb={4}>
+          <Text fontWeight="bold" fontSize="md" mb={1}>
+            {intl.formatMessage({ id: 'app.city', defaultMessage: 'Ciudad' })}
+          </Text>
+          <Text>{infoValues.city}</Text>
+        </Box>
+      )}
+      {infoValues?.zone && (
+        <Box mb={4}>
+          <Text fontWeight="bold" fontSize="md" mb={1}>
+            {intl.formatMessage({ id: 'app.zone', defaultMessage: 'Zona' })}
+          </Text>
+          <Text>{infoValues.zone}</Text>
+        </Box>
+      )}
+      {/* Step 2 public fields */}
+      {values?.about && (
+        <Box mb={4}>
+          <Text fontWeight="bold" fontSize="md" mb={1}>
+            {intl.formatMessage({
+              id: 'app.aboutEstablishment',
+              defaultMessage: 'Sobre el establecimiento'
+            })}
+          </Text>
+          <Text>{values.about}</Text>
+        </Box>
+      )}
+      {values?.main_activities && (
+        <Box mb={4}>
+          <Text fontWeight="bold" fontSize="md" mb={1}>
+            {intl.formatMessage({
+              id: 'app.mainActivities',
+              defaultMessage: 'Actividades principales / Servicios'
+            })}
+          </Text>
+          <Text whiteSpace="pre-line">{values.main_activities}</Text>
+        </Box>
+      )}
+      {values?.location_highlights && (
+        <Box mb={4}>
+          <Text fontWeight="bold" fontSize="md" mb={1}>
+            {intl.formatMessage({
+              id: 'app.locationHighlights',
+              defaultMessage: 'Características de la ubicación'
+            })}
+          </Text>
+          <Text whiteSpace="pre-line">{values.location_highlights}</Text>
+        </Box>
+      )}
+      {values?.custom_message && (
+        <Box mb={4}>
+          <Text fontWeight="bold" fontSize="md" mb={1}>
+            {intl.formatMessage({
+              id: 'app.customMessage',
+              defaultMessage: 'Mensaje o historia personalizada'
+            })}
+          </Text>
+          <Text whiteSpace="pre-line">{values.custom_message}</Text>
+        </Box>
+      )}
+      {!(
+        infoValues?.name ||
+        infoValues?.type ||
+        infoValues?.address ||
+        infoValues?.country ||
+        infoValues?.state ||
+        infoValues?.city ||
+        infoValues?.zone ||
+        values?.about ||
+        values?.main_activities ||
+        values?.location_highlights ||
+        values?.custom_message
+      ) && (
+        <Text color="gray.400">
+          {intl.formatMessage({
+            id: 'app.publicProfilePreviewEmpty',
+            defaultMessage: 'Llena los campos para ver la vista previa.'
+          })}
+        </Text>
+      )}
+    </Box>
   );
 }
 
