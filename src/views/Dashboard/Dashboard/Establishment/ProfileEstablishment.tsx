@@ -40,6 +40,7 @@ import { useGetEstablishmentQuery } from 'store/api/companyApi';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
+import CarbonSummaryCard from '../components/establishment/CarbonSummaryCard';
 
 // Add type for Redux state
 interface RootState {
@@ -190,6 +191,12 @@ function ProfileEstablishment() {
                     </Flex>
                   )}
               </Stack>
+              {/* Carbon summary card here */}
+              {establishmentData?.id && (
+                <Box mb={6}>
+                  <CarbonSummaryCard establishmentId={establishmentData.id} />
+                </Box>
+              )}
               <Box mt={4}>
                 <Text fontWeight="bold" mb={2}>
                   {intl.formatMessage({ id: 'app.socialMedia', defaultMessage: 'Redes sociales' })}:

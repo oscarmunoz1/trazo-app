@@ -35,7 +35,7 @@ import Card from 'components/Card/Card';
 import CardWithBackground from './components/CardWithBackground';
 import CardWithImage from 'components/Card/CardWithImage';
 import CarouselHorizontal from 'components/Carousel/CarouselHorizontal';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaLeaf } from 'react-icons/fa';
 import LineChart from 'components/Charts/LineChart';
 import MiniStatistics from './components/MiniStatistics';
 import SalesOverview from './components/SalesOverview';
@@ -44,6 +44,7 @@ import defaultEstablishmentImage from 'assets/img/basic-auth.png';
 // assets
 import imageFarm from 'assets/img/imageFarm.png';
 import { useSelector } from 'react-redux';
+import CarbonSummaryCard from './components/establishment/CarbonSummaryCard';
 
 export default function DashboardView() {
   const intl = useIntl();
@@ -198,18 +199,45 @@ export default function DashboardView() {
               </Text>
               <Text color="gray.700">
                 {intl.formatMessage(
-                  { id: 'app.trialEndsOn' },
-                  { date: new Date(subscription.trial_end).toLocaleDateString() }
+                  { id: 'app.trialDaysLeft' },
+                  { days: subscription.trial_end_days }
                 )}
               </Text>
             </Box>
-            <Button
-              colorScheme="green"
-              size="md"
-              onClick={() => navigate('/admin/dashboard/account/billing')}>
-              {intl.formatMessage({ id: 'app.manageTrial' })}
-            </Button>
           </Flex>
+        </Box>
+      )}
+
+      {/* Carbon Dashboard Link */}
+      {establishment && (
+        <Box mb={4}>
+          <Link
+            as={NavLink}
+            to={`/admin/dashboard/establishment/${establishmentId}/carbon`}
+            _hover={{ textDecoration: 'none' }}>
+            <Flex
+              align="center"
+              p={4}
+              bg={cardBg}
+              borderRadius="lg"
+              boxShadow="md"
+              _hover={{
+                transform: 'translateY(-2px)',
+                boxShadow: shadowHover,
+                bg: hoverBg
+              }}
+              transition="all 0.3s ease">
+              <Icon as={FaLeaf} w={8} h={8} color="green.500" mr={4} />
+              <Box>
+                <Text fontSize="lg" fontWeight="bold" color={textColor}>
+                  Carbon Dashboard
+                </Text>
+                <Text fontSize="sm" color="gray.500">
+                  View and manage your carbon footprint
+                </Text>
+              </Box>
+            </Flex>
+          </Link>
         </Box>
       )}
 
@@ -226,91 +254,98 @@ export default function DashboardView() {
           </Text>
         </Flex>
 
-        <Grid
-          templateColumns={{
-            base: 'repeat(auto-fill, minmax(200px, 1fr))',
-            sm: 'repeat(auto-fill, minmax(220px, 1fr))',
-            md: 'repeat(auto-fill, minmax(240px, 1fr))'
-          }}
-          gap={{ base: 3, md: 4 }}
+        <Flex
+          direction={{ base: 'column', md: 'row' }}
+          gap={6}
+          align="flex-start"
           px={{ base: 2, md: 2 }}>
-          {establishments ? (
-            <>
-              {establishments.map((prop) => (
-                <NavLink
-                  key={prop.id}
-                  to={`/admin/dashboard/establishment/${prop.id}`}
-                  style={{ textDecoration: 'none' }}>
-                  <Card
-                    p={{ base: 3, md: 4 }}
-                    cursor="pointer"
-                    bg={prop.id === establishment?.id ? 'green.500' : cardBg}
+          <Box flex="2">
+            <Grid
+              templateColumns={{
+                base: 'repeat(auto-fill, minmax(200px, 1fr))',
+                sm: 'repeat(auto-fill, minmax(220px, 1fr))',
+                md: 'repeat(auto-fill, minmax(240px, 1fr))'
+              }}
+              gap={{ base: 3, md: 4 }}>
+              {establishments ? (
+                <>
+                  {establishments.map((prop) => (
+                    <NavLink
+                      key={prop.id}
+                      to={`/admin/dashboard/establishment/${prop.id}`}
+                      style={{ textDecoration: 'none' }}>
+                      <Card
+                        p={{ base: 3, md: 4 }}
+                        cursor="pointer"
+                        bg={prop.id === establishment?.id ? 'green.500' : cardBg}
+                        _hover={{
+                          transform: 'translateY(-2px)',
+                          boxShadow: 'lg',
+                          transition: 'all 0.2s'
+                        }}>
+                        <Flex align="center" gap={{ base: 2, md: 3 }}>
+                          <Box
+                            bg={prop.id === establishment?.id ? 'white' : 'green.500'}
+                            p={{ base: 1.5, md: 2 }}
+                            borderRadius="md">
+                            <HomeIcon
+                              h={{ base: '20px', md: '24px' }}
+                              w={{ base: '20px', md: '24px' }}
+                              color={prop.id === establishment?.id ? 'green.500' : 'white'}
+                            />
+                          </Box>
+                          <Box>
+                            <Text
+                              fontWeight="bold"
+                              fontSize={{ base: 'sm', md: 'md' }}
+                              color={prop.id === establishment?.id ? 'white' : textColor}>
+                              {prop.name}
+                            </Text>
+                            <Text
+                              fontSize={{ base: 'xs', md: 'sm' }}
+                              color={prop.id === establishment?.id ? 'white' : 'gray.500'}>
+                              {`${prop.city || prop.zone || ''}, ${prop.state}`}
+                            </Text>
+                          </Box>
+                        </Flex>
+                      </Card>
+                    </NavLink>
+                  ))}
+                  <Button
+                    p="0px"
+                    w={{ base: '64px', md: '77px' }}
+                    h={{ base: '64px', md: '77px' }}
+                    bg="transparent"
+                    color="green.500"
+                    borderRadius="15px"
+                    border="2px dashed"
+                    borderColor="green.200"
                     _hover={{
+                      bg: 'green.50',
+                      borderColor: 'green.500',
                       transform: 'translateY(-2px)',
-                      boxShadow: 'lg',
-                      transition: 'all 0.2s'
-                    }}>
-                    <Flex align="center" gap={{ base: 2, md: 3 }}>
-                      <Box
-                        bg={prop.id === establishment?.id ? 'white' : 'green.500'}
-                        p={{ base: 1.5, md: 2 }}
-                        borderRadius="md">
-                        <HomeIcon
-                          h={{ base: '20px', md: '24px' }}
-                          w={{ base: '20px', md: '24px' }}
-                          color={prop.id === establishment?.id ? 'green.500' : 'white'}
-                        />
-                      </Box>
-                      <Box>
-                        <Text
-                          fontWeight="bold"
-                          fontSize={{ base: 'sm', md: 'md' }}
-                          color={prop.id === establishment?.id ? 'white' : textColor}>
-                          {prop.name}
-                        </Text>
-                        <Text
-                          fontSize={{ base: 'xs', md: 'sm' }}
-                          color={prop.id === establishment?.id ? 'white' : 'gray.500'}>
-                          {`${prop.city || prop.zone || ''}, ${prop.state}`}
-                        </Text>
-                      </Box>
+                      boxShadow: shadowHover
+                    }}
+                    onClick={toggleAddEstablishment}>
+                    <Flex direction="column" justifyContent="center" alignItems="center">
+                      <Icon
+                        as={FaPlus}
+                        w={{ base: '10px', md: '12px' }}
+                        h={{ base: '10px', md: '12px' }}
+                        mb={{ base: '6px', md: '8px' }}
+                      />
+                      <Text fontSize={{ base: 'xs', md: 'sm' }} fontWeight="bold">
+                        {intl.formatMessage({ id: 'app.new' })}
+                      </Text>
                     </Flex>
-                  </Card>
-                </NavLink>
-              ))}
-              <Button
-                p="0px"
-                w={{ base: '64px', md: '77px' }}
-                h={{ base: '64px', md: '77px' }}
-                bg="transparent"
-                color="green.500"
-                borderRadius="15px"
-                border="2px dashed"
-                borderColor="green.200"
-                _hover={{
-                  bg: 'green.50',
-                  borderColor: 'green.500',
-                  transform: 'translateY(-2px)',
-                  boxShadow: shadowHover
-                }}
-                onClick={toggleAddEstablishment}>
-                <Flex direction="column" justifyContent="center" align="center">
-                  <Icon
-                    as={FaPlus}
-                    w={{ base: '10px', md: '12px' }}
-                    h={{ base: '10px', md: '12px' }}
-                    mb={{ base: '6px', md: '8px' }}
-                  />
-                  <Text fontSize={{ base: 'xs', md: 'sm' }} fontWeight="bold">
-                    {intl.formatMessage({ id: 'app.new' })}
-                  </Text>
-                </Flex>
-              </Button>
-            </>
-          ) : (
-            <Card minH="115px" bg={cardBg} />
-          )}
-        </Grid>
+                  </Button>
+                </>
+              ) : (
+                <Card minH="115px" bg={cardBg} />
+              )}
+            </Grid>
+          </Box>
+        </Flex>
       </Box>
 
       <Grid
@@ -360,6 +395,12 @@ export default function DashboardView() {
           <Card minH="290px" bg={cardBg} />
         )}
       </Grid>
+      {/* Carbon Summary Card for selected establishment */}
+      {establishment?.id && (
+        <Box flex="1" width="100%" pb="24px">
+          <CarbonSummaryCard establishmentId={establishment.id} />
+        </Box>
+      )}
       <CarouselHorizontal
         title={intl.formatMessage({ id: 'app.parcels' })}
         description={intl.formatMessage({ id: 'app.establishmentParcels' })}

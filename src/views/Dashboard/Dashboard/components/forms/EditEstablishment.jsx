@@ -73,6 +73,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useIntl } from 'react-intl';
 import { InfoOutlineIcon, CloseIcon } from '@chakra-ui/icons';
 import { useFileUpload } from '../../../../../services/uploadService';
+import CarbonFootprintTab from './CarbonFootprintTab';
 
 const formSchemaInfo = object({
   name: string().min(1, 'Name is required'),
@@ -314,7 +315,8 @@ function EditEstablishment() {
     mainInfo: true,
     description: false,
     media: false,
-    socials: false
+    socials: false,
+    carbon: false
   });
 
   const mainInfoTab = useRef();
@@ -489,7 +491,8 @@ function EditEstablishment() {
           mainInfo: true,
           description: false,
           media: false,
-          socials: false
+          socials: false,
+          carbon: false
         })
     },
     {
@@ -502,7 +505,8 @@ function EditEstablishment() {
           mainInfo: true,
           description: true,
           media: false,
-          socials: false
+          socials: false,
+          carbon: false
         })
     },
     {
@@ -515,19 +519,34 @@ function EditEstablishment() {
           mainInfo: true,
           description: true,
           media: true,
-          socials: false
+          socials: false,
+          carbon: false
         })
     },
     {
       ref: socialsTab,
       name: 'socials',
       label: intl.formatMessage({ id: 'app.socials' }),
+      nextTab: 'carbon',
       onClick: () =>
         setActiveBullets({
           mainInfo: true,
           description: true,
           media: true,
-          socials: true
+          socials: true,
+          carbon: false
+        })
+    },
+    {
+      name: 'carbon',
+      label: 'Huella de Carbono',
+      onClick: () =>
+        setActiveBullets({
+          mainInfo: true,
+          description: true,
+          media: true,
+          socials: true,
+          carbon: true
         })
     }
   ];
@@ -1316,6 +1335,9 @@ function EditEstablishment() {
             </FormProvider>
           </CardBody>
         </Card>
+      </TabPanel>
+      <TabPanel>
+        <CarbonFootprintTab establishmentId={parseInt(establishmentId)} />
       </TabPanel>
     </FormLayout>
   );

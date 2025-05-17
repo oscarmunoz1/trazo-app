@@ -155,6 +155,15 @@ export const historyApi = baseApi.injectEndpoints({
       }),
       providesTags: (result, error, establishmentId) =>
         result ? [{ type: 'History', establishmentId }] : []
+    }),
+    getProductionsByEstablishment: build.query({
+      query: ({ establishmentId }) => ({
+        url: `/history/productions/?establishment=${establishmentId}`,
+        method: 'GET',
+        credentials: 'include'
+      }),
+      providesTags: (result, error, establishmentId) =>
+        result ? [{ type: 'Productions', id: establishmentId }] : []
     })
   }),
   overrideExisting: false
@@ -172,5 +181,6 @@ export const {
   useCommentHistoryMutation,
   useGetScansByEstablishmentQuery,
   useGetUserProductionScansQuery,
-  useGetUserReviewsQuery
+  useGetUserReviewsQuery,
+  useGetProductionsByEstablishmentQuery
 } = historyApi;

@@ -98,6 +98,172 @@ const companyApi = baseApi.injectEndpoints({
         credentials: 'include'
       }),
       providesTags: ['Company']
+    }),
+    getCarbonEmissionSources: build.query<any[], void>({
+      query: () => ({
+        url: '/carbon/sources/',
+        method: 'GET',
+        credentials: 'include'
+      })
+    }),
+    getCarbonOffsetActions: build.query<any[], void>({
+      query: () => ({
+        url: '/carbon/offset-actions/',
+        method: 'GET',
+        credentials: 'include'
+      })
+    }),
+    getEstablishmentCarbonFootprints: build.query<
+      any[],
+      { establishmentId: number; productionId?: number; year?: number }
+    >({
+      query: ({ establishmentId, productionId, year }) => {
+        let url,
+          params = '';
+        if (productionId) {
+          url = `/carbon/productions/${productionId}/summary/`;
+          if (year) params = `?year=${year}`;
+        } else {
+          url = `/carbon/establishments/${establishmentId}/emissions-breakdown/`;
+          if (year) params = `?year=${year}`;
+        }
+        return {
+          url: url + params,
+          method: 'GET',
+          credentials: 'include'
+        };
+      }
+    }),
+    getCarbonFootprintSummary: build.query<
+      any,
+      { establishmentId?: number; productionId?: number; year?: number }
+    >({
+      query: ({ establishmentId, productionId, year }) => {
+        let url,
+          params = '';
+        if (productionId) {
+          url = `/carbon/productions/${productionId}/summary/`;
+          if (year) params = `?year=${year}`;
+        } else if (establishmentId) {
+          url = `/carbon/entries/summary/`;
+          params = `?establishment=${establishmentId}`;
+          if (year) params += `&year=${year}`;
+        } else {
+          url = '/carbon/entries/summary/';
+        }
+        return {
+          url: url + params,
+          method: 'GET',
+          credentials: 'include'
+        };
+      }
+    }),
+    addEstablishmentCarbonFootprint: build.mutation<any, any>({
+      query: (data) => ({
+        url: '/establishment-footprints/',
+        method: 'POST',
+        body: data,
+        credentials: 'include'
+      })
+    }),
+    updateEstablishmentCarbonFootprint: build.mutation<any, { id: number; data: any }>({
+      query: ({ id, data }) => ({
+        url: `/establishment-footprints/${id}/`,
+        method: 'PUT',
+        body: data,
+        credentials: 'include'
+      })
+    }),
+    deleteEstablishmentCarbonFootprint: build.mutation<any, { id: number }>({
+      query: ({ id }) => ({
+        url: `/establishment-footprints/${id}/`,
+        method: 'DELETE',
+        credentials: 'include'
+      })
+    }),
+    getCarbonCertifications: build.query<any[], { establishmentId: number }>({
+      query: ({ establishmentId }) => ({
+        url: `/carbon/certifications/?establishment=${establishmentId}`,
+        method: 'GET',
+        credentials: 'include'
+      })
+    }),
+    addCarbonCertification: build.mutation<any, any>({
+      query: (data) => ({
+        url: '/certifications/',
+        method: 'POST',
+        body: data,
+        credentials: 'include'
+      })
+    }),
+    updateCarbonCertification: build.mutation<any, { id: number; data: any }>({
+      query: ({ id, data }) => ({
+        url: `/certifications/${id}/`,
+        method: 'PUT',
+        body: data,
+        credentials: 'include'
+      })
+    }),
+    deleteCarbonCertification: build.mutation<any, { id: number }>({
+      query: ({ id }) => ({
+        url: `/certifications/${id}/`,
+        method: 'DELETE',
+        credentials: 'include'
+      })
+    }),
+    getCarbonBenchmarks: build.query<any[], { industry?: string; year?: number }>({
+      query: ({ industry, year }) => {
+        let url = '/carbon/benchmarks/';
+        const params = new URLSearchParams();
+        if (industry) params.append('industry', industry);
+        if (year) params.append('year', year.toString());
+        return {
+          url: `${url}?${params.toString()}`,
+          method: 'GET',
+          credentials: 'include'
+        };
+      }
+    }),
+    getCarbonReports: build.query<
+      any[],
+      { establishmentId: number; year?: number; reportType?: string }
+    >({
+      query: ({ establishmentId, year, reportType }) => {
+        let url = `/carbon/reports/?establishment=${establishmentId}`;
+        if (year) url += `&year=${year}`;
+        if (reportType) url += `&report_type=${reportType}`;
+        return {
+          url: url,
+          method: 'GET',
+          credentials: 'include'
+        };
+      }
+    }),
+    generateCarbonReport: build.mutation<
+      any,
+      {
+        establishment: number;
+        year: number;
+        reportType: 'annual' | 'quarterly' | 'custom';
+        quarter?: number;
+        startDate?: string;
+        endDate?: string;
+        document?: File;
+      }
+    >({
+      query: (data) => ({
+        url: '/reports/generate_report/',
+        method: 'POST',
+        body: data,
+        credentials: 'include'
+      })
+    }),
+    getProductionsByEstablishment: build.query({
+      query: ({ establishmentId }) => ({
+        url: `/carbon/productions-flat/?establishment=${establishmentId}`,
+        method: 'GET',
+        credentials: 'include'
+      })
     })
   }),
   overrideExisting: false
@@ -109,5 +275,20 @@ export const {
   useCreateEstablishmentMutation,
   useEditEstablishmentMutation,
   useGetEstablishmentQuery,
-  useGetCompanyMembersQuery
+  useGetCompanyMembersQuery,
+  useGetCarbonEmissionSourcesQuery,
+  useGetCarbonOffsetActionsQuery,
+  useGetEstablishmentCarbonFootprintsQuery,
+  useGetCarbonFootprintSummaryQuery,
+  useAddEstablishmentCarbonFootprintMutation,
+  useUpdateEstablishmentCarbonFootprintMutation,
+  useDeleteEstablishmentCarbonFootprintMutation,
+  useGetCarbonCertificationsQuery,
+  useAddCarbonCertificationMutation,
+  useUpdateCarbonCertificationMutation,
+  useDeleteCarbonCertificationMutation,
+  useGetCarbonBenchmarksQuery,
+  useGetCarbonReportsQuery,
+  useGenerateCarbonReportMutation,
+  useGetProductionsByEstablishmentQuery
 } = companyApi;

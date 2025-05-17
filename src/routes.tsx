@@ -20,6 +20,7 @@ import { HomeIcon } from 'components/Icons/Icons';
 import { Route } from 'types/common';
 import { useIntl } from 'react-intl';
 import { FaChartBar, FaCreditCard } from 'react-icons/fa';
+import { FaLeaf } from 'react-icons/fa';
 
 // const intl = useIntl();
 
@@ -35,6 +36,17 @@ const dashRoutes: Route[] = [
     isHome: true,
     isDashboard: true,
     regex: /^\/admin\/dashboard\/establishment\/[0-9]+(\/parcel\/[0-9]+)?$/
+  },
+  {
+    id: 'carbonDashboard',
+    name: 'Carbon Dashboard',
+    path: '/dashboard/establishment/:establishmentId/carbon',
+    icon: <FaLeaf color="inherit" />,
+    authIcon: <FaLeaf color="inherit" />,
+    layout: '/admin',
+    collapse: true,
+    isDashboard: true,
+    regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/carbon$/
   },
   {
     id: 'commercialInfo',

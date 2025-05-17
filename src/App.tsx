@@ -52,6 +52,7 @@ import PlanUsage from 'views/Dashboard/PlanUsage';
 import Billing from 'views/Pages/Account/Billing';
 import NoSubscriptionRedirect from './utils/protections/NoSubscriptionRedirect';
 import NewProduction from 'views/Dashboard/Dashboard/components/forms/NewProduction';
+import CarbonDashboard from 'views/Dashboard/Dashboard/Establishment/CarbonDashboard';
 
 const App = () => {
   const location = useLocation();
@@ -221,6 +222,15 @@ const App = () => {
                 <Route path="settings" exact element={<SettingsView />} />
                 <Route path="subscription/success" element={<SubscriptionSuccess />} />
                 <Route path="plan-usage" element={<PlanUsage />} />
+                <Route
+                  path="establishment/:establishmentId/carbon"
+                  exact
+                  element={
+                    <NoSubscriptionRedirect>
+                      <CarbonDashboard />
+                    </NoSubscriptionRedirect>
+                  }
+                />
               </Route>
             </Route>
           </Route>

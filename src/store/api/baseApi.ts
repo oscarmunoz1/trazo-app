@@ -15,7 +15,10 @@ export const baseApi = createApi({
     'Subscription',
     'Addon',
     'PaymentMethod',
-    'Invoice'
+    'Invoice',
+    'CarbonSummary',
+    'CarbonBenchmarks',
+    'CarbonRecommendations'
   ]
 });
 
