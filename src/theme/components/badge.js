@@ -20,13 +20,13 @@ export const badgeStyles = {
     Badge: {
       sizes: {
         md: {
-          width: "65px",
-          height: "25px",
-        },
+          width: '65px',
+          height: '25px'
+        }
       },
       baseStyle: {
-        textTransform: "capitalize",
-      },
-    },
-  },
+        textTransform: 'capitalize'
+      }
+    }
+  }
 };

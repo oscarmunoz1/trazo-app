@@ -53,7 +53,8 @@ export default function ReviewsListView() {
         w={{ sm: '100%', md: '80%', lg: '100%' }}
         mx="auto"
         p={{ sm: '16px', md: '32px', lg: '48px' }}
-        boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px">
+        boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px"
+      >
         <CardHeader p="12px 5px" mb="12px">
           <HSeparator my="16px" />
         </CardHeader>
@@ -74,7 +75,8 @@ export default function ReviewsListView() {
                       shadow: 'lg',
                       transform: 'translateY(-2px)',
                       borderColor: 'green.300'
-                    }}>
+                    }}
+                  >
                     <Flex direction={{ base: 'column', md: 'row' }} gap={6}>
                       {review.history.images?.length > 0 && (
                         <Image

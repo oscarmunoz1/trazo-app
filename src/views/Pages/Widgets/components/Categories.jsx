@@ -16,35 +16,27 @@
 */
 
 // Chakra imports
-import {
-  Button,
-  Flex,
-  Icon,
-  Spacer,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { DocumentIcon, RocketIcon, SettingsIcon } from "components/Icons/Icons";
-import React, { useState } from "react";
+import { Button, Flex, Icon, Spacer, Stack, Text, useColorModeValue } from '@chakra-ui/react';
+import { DocumentIcon, RocketIcon, SettingsIcon } from 'components/Icons/Icons';
+import React, { useState } from 'react';
 
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import { FaUser } from "react-icons/fa";
-import IconBox from "components/Icons/IconBox";
-import { RiArrowDropRightLine } from "react-icons/ri";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import { FaUser } from 'react-icons/fa';
+import IconBox from 'components/Icons/IconBox';
+import { RiArrowDropRightLine } from 'react-icons/ri';
 
 const Categories = () => {
   const [toggleSwitch, setToggleSwitch] = useState(false);
 
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
   const bgButton = useColorModeValue(
-    "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
-    "gray.800"
+    'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)',
+    'gray.800'
   );
-  const iconTeal = useColorModeValue("green.400", "green.400");
-  const iconBoxInside = useColorModeValue("white", "white");
+  const iconTeal = useColorModeValue('green.400', 'green.400');
+  const iconBoxInside = useColorModeValue('white', 'white');
   return (
     <Card>
       <CardHeader>
@@ -56,15 +48,15 @@ const Categories = () => {
         <Stack direction="column" spacing="24px" w="100%">
           <Flex align="center" w="100%">
             <Flex align="center">
-              <IconBox as="box" h={"40px"} w={"40px"} bg={bgButton} me="18px">
-                <RocketIcon h={"20px"} w={"20px"} color={iconBoxInside} />
+              <IconBox as="box" h={'40px'} w={'40px'} bg={bgButton} me="18px">
+                <RocketIcon h={'20px'} w={'20px'} color={iconBoxInside} />
               </IconBox>
               <Flex direction="column">
                 <Text fontSize="sm" fontWeight="bold" color={textColor}>
                   Devices
                 </Text>
                 <Text color="gray.400" fontSize="xs">
-                  250 in stock,{" "}
+                  250 in stock,{' '}
                   <Text as="span" fontWeight="bold">
                     346+ sold
                   </Text>
@@ -80,21 +72,21 @@ const Categories = () => {
                 h="30px"
                 cursor="pointer"
                 transition="all .25s ease"
-                _hover={{ transform: "translateX(25%)" }}
+                _hover={{ transform: 'translateX(25%)' }}
               />
             </Button>
           </Flex>
           <Flex align="center" w="100%">
             <Flex align="center">
-              <IconBox as="box" h={"40px"} w={"40px"} bg={bgButton} me="18px">
-                <SettingsIcon h={"20px"} w={"20px"} color={iconBoxInside} />
+              <IconBox as="box" h={'40px'} w={'40px'} bg={bgButton} me="18px">
+                <SettingsIcon h={'20px'} w={'20px'} color={iconBoxInside} />
               </IconBox>
               <Flex direction="column">
                 <Text fontSize="sm" fontWeight="bold" color={textColor}>
                   Tickets
                 </Text>
                 <Text color="gray.400" fontSize="xs">
-                  123 closed,{" "}
+                  123 closed,{' '}
                   <Text as="span" fontWeight="bold">
                     15 open
                   </Text>
@@ -110,21 +102,21 @@ const Categories = () => {
                 h="30px"
                 cursor="pointer"
                 transition="all .25s ease"
-                _hover={{ transform: "translateX(25%)" }}
+                _hover={{ transform: 'translateX(25%)' }}
               />
             </Button>
           </Flex>
           <Flex align="center" w="100%">
             <Flex align="center">
-              <IconBox as="box" h={"40px"} w={"40px"} bg={bgButton} me="18px">
-                <DocumentIcon h={"20px"} w={"20px"} color={iconBoxInside} />
+              <IconBox as="box" h={'40px'} w={'40px'} bg={bgButton} me="18px">
+                <DocumentIcon h={'20px'} w={'20px'} color={iconBoxInside} />
               </IconBox>
               <Flex direction="column">
                 <Text fontSize="sm" fontWeight="bold" color={textColor}>
                   Error logs
                 </Text>
                 <Text color="gray.400" fontSize="xs">
-                  1 is active,{" "}
+                  1 is active,{' '}
                   <Text as="span" fontWeight="bold">
                     40 closed
                   </Text>
@@ -140,14 +132,14 @@ const Categories = () => {
                 h="30px"
                 cursor="pointer"
                 transition="all .25s ease"
-                _hover={{ transform: "translateX(25%)" }}
+                _hover={{ transform: 'translateX(25%)' }}
               />
             </Button>
           </Flex>
           <Flex align="center" w="100%">
             <Flex align="center">
-              <IconBox as="box" h={"40px"} w={"40px"} bg={bgButton} me="18px">
-                <Icon as={FaUser} h={"20px"} w={"20px"} color={iconBoxInside} />
+              <IconBox as="box" h={'40px'} w={'40px'} bg={bgButton} me="18px">
+                <Icon as={FaUser} h={'20px'} w={'20px'} color={iconBoxInside} />
               </IconBox>
               <Flex direction="column">
                 <Text fontSize="sm" fontWeight="bold" color={textColor}>
@@ -169,7 +161,7 @@ const Categories = () => {
                 h="30px"
                 cursor="pointer"
                 transition="all .25s ease"
-                _hover={{ transform: "translateX(25%)" }}
+                _hover={{ transform: 'translateX(25%)' }}
               />
             </Button>
           </Flex>

@@ -54,7 +54,8 @@ function DashboardTableRow(props: DashboardTableRowProps) {
         }
       }}
       cursor="pointer"
-      onClick={onClick}>
+      onClick={onClick}
+    >
       <Td minWidth={{ sm: '250px' }} pl="0px">
         <Flex align="center" py=".8rem" minWidth="100%" flexWrap="nowrap" pl="20px">
           <Icon as={logo} h={'24px'} w={'24px'} pe="5px" color={color} />
@@ -90,7 +91,8 @@ function DashboardTableRow(props: DashboardTableRowProps) {
             fontSize="md"
             color="green.300"
             fontWeight="bold"
-            pb=".2rem">{`${progression}%`}</Text>
+            pb=".2rem"
+          >{`${progression}%`}</Text>
           <Progress
             colorScheme={progression === 100 ? 'green' : 'cyan'}
             size="xs"

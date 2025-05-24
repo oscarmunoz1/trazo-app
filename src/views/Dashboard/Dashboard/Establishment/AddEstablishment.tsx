@@ -35,7 +35,8 @@ function AddEstablishment({ isEdit = false }: Props) {
         isEdit
           ? intl.formatMessage({ id: 'app.editEstablishmentSubtitle' })
           : intl.formatMessage({ id: 'app.addEstablishmentSubtitle' })
-      }>
+      }
+    >
       {isEdit ? <EditEstablishment /> : <NewEstablishment />}
     </BoxBackground>
   );

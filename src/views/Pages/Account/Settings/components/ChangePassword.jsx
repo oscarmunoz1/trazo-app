@@ -25,28 +25,24 @@ import {
   Input,
   Stack,
   Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+  useColorModeValue
+} from '@chakra-ui/react';
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import React from "react";
-import { BsCircleFill } from "react-icons/bs";
-import { Element } from "react-scroll";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import React from 'react';
+import { BsCircleFill } from 'react-icons/bs';
+import { Element } from 'react-scroll';
 
 const ChangePassword = () => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
   const bgButton = useColorModeValue(
-    "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
-    "gray.800"
+    'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)',
+    'gray.800'
   );
   return (
-    <Card
-      w={{ sm: "100%", lg: "70%" }}
-      alignSelf="flex-end"
-      justifySelf="flex-end"
-    >
+    <Card w={{ sm: '100%', lg: '70%' }} alignSelf="flex-end" justifySelf="flex-end">
       <Element id="change-password" name="change-password">
         <CardHeader mb="40px">
           <Text color={textColor} fontSize="lg" fontWeight="semibold">
@@ -59,112 +55,56 @@ const ChangePassword = () => {
               <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                 Current Password
               </FormLabel>
-              <Input
-                borderRadius="15px"
-                placeholder="Current Password"
-                fontSize="xs"
-              />
+              <Input borderRadius="15px" placeholder="Current Password" fontSize="xs" />
             </FormControl>
             <FormControl>
               <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                 New Password
               </FormLabel>
-              <Input
-                borderRadius="15px"
-                placeholder="New Password"
-                fontSize="xs"
-              />
+              <Input borderRadius="15px" placeholder="New Password" fontSize="xs" />
             </FormControl>
             <FormControl>
               <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                 Confirm New Password
               </FormLabel>
-              <Input
-                borderRadius="15px"
-                placeholder="Confirm New Password"
-                fontSize="xs"
-              />
+              <Input borderRadius="15px" placeholder="Confirm New Password" fontSize="xs" />
             </FormControl>
             <Flex direction="column">
-              <Text
-                color={textColor}
-                fontWeight="bold"
-                fontSize="lg"
-                mb="4px"
-                mt="40px"
-              >
+              <Text color={textColor} fontWeight="bold" fontSize="lg" mb="4px" mt="40px">
                 Password Requirements
               </Text>
               <Text color="gray.400" fontWeight="normal" fontSize="sm">
                 Please follow this guide for a strong password.
               </Text>
             </Flex>
-            <Flex
-              direction={{ sm: "column", lg: "row" }}
-              justify="space-between"
-              w="100%"
-            >
-              <Stack
-                direction="column"
-                spacing="6px"
-                mb={{ sm: "12px", lg: "0px" }}
-              >
+            <Flex direction={{ sm: 'column', lg: 'row' }} justify="space-between" w="100%">
+              <Stack direction="column" spacing="6px" mb={{ sm: '12px', lg: '0px' }}>
                 <Flex align="center">
-                  <Icon
-                    as={BsCircleFill}
-                    w="6px"
-                    h="6px"
-                    color="gray.500"
-                    me="6px"
-                  />
+                  <Icon as={BsCircleFill} w="6px" h="6px" color="gray.500" me="6px" />
                   <Text color="gray.500" fontWeight="normal" fontSize="xs">
                     One special characters
                   </Text>
                 </Flex>
                 <Flex align="center">
-                  <Icon
-                    as={BsCircleFill}
-                    w="6px"
-                    h="6px"
-                    color="gray.500"
-                    me="6px"
-                  />
+                  <Icon as={BsCircleFill} w="6px" h="6px" color="gray.500" me="6px" />
                   <Text color="gray.500" fontWeight="normal" fontSize="xs">
                     Min 6 characters
                   </Text>
                 </Flex>
                 <Flex align="center">
-                  <Icon
-                    as={BsCircleFill}
-                    w="6px"
-                    h="6px"
-                    color="gray.500"
-                    me="6px"
-                  />
+                  <Icon as={BsCircleFill} w="6px" h="6px" color="gray.500" me="6px" />
                   <Text color="gray.500" fontWeight="normal" fontSize="xs">
                     One number (2 are recommended)
                   </Text>
                 </Flex>
                 <Flex align="center">
-                  <Icon
-                    as={BsCircleFill}
-                    w="6px"
-                    h="6px"
-                    color="gray.500"
-                    me="6px"
-                  />
+                  <Icon as={BsCircleFill} w="6px" h="6px" color="gray.500" me="6px" />
                   <Text color="gray.500" fontWeight="normal" fontSize="xs">
                     Change it often
                   </Text>
                 </Flex>
               </Stack>
-              <Button
-                variant="no-hover"
-                bg={bgButton}
-                w="150px"
-                h="35px"
-                alignSelf="flex-end"
-              >
+              <Button variant="no-hover" bg={bgButton} w="150px" h="35px" alignSelf="flex-end">
                 <Text fontSize="xs" color="#fff" fontWeight="bold">
                   UPDATE PASSWORD
                 </Text>

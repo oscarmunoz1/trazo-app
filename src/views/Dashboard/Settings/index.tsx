@@ -179,7 +179,8 @@ export default function SettingsView() {
         bg="inherit"
         borderRadius="inherit"
         fontWeight="300"
-        padding="4px">
+        padding="4px"
+      >
         {intl.formatMessage({ id: 'app.companySettingsDescription' })}
       </Text>
       <Card p="16px">
@@ -244,7 +245,8 @@ export default function SettingsView() {
                     h="40px"
                     fontSize="xs"
                     px="1.5rem"
-                    onClick={() => {}}>
+                    onClick={() => {}}
+                  >
                     {intl.formatMessage({ id: 'app.discardChanges' })}
                   </Button>
                   <Button
@@ -253,7 +255,8 @@ export default function SettingsView() {
                     h="40px"
                     fontSize="xs"
                     variant="no-hover"
-                    onClick={() => {}}>
+                    onClick={() => {}}
+                  >
                     {intl.formatMessage({ id: 'app.sendInvite' })}
                   </Button>
                 </Flex>
@@ -281,7 +284,8 @@ export default function SettingsView() {
             }}
             _active={{
               borderColor: { mainTeal }
-            }}>
+            }}
+          >
             <InputLeftElement
               children={
                 <IconButton
@@ -296,7 +300,8 @@ export default function SettingsView() {
                   _focus={{
                     boxShadow: 'none'
                   }}
-                  icon={<SearchIcon color={searchIcon} w="15px" h="15px" />}></IconButton>
+                  icon={<SearchIcon color={searchIcon} w="15px" h="15px" />}
+                ></IconButton>
               }
             />
             <Input
@@ -324,7 +329,8 @@ export default function SettingsView() {
                         fontSize="xs"
                         key={label}
                         paddingInlineStart={'25px'}
-                        paddingInlineEnd={'25px'}>
+                        paddingInlineEnd={'25px'}
+                      >
                         {label}
                       </Th>
                     );

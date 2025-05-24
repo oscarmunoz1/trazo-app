@@ -80,7 +80,8 @@ function ProfileEstablishment() {
   return (
     <BoxBackground
       title={intl.formatMessage({ id: 'app.establishmentProfile' })}
-      subtitle={intl.formatMessage({ id: 'app.establishmentSubtitle' })}>
+      subtitle={intl.formatMessage({ id: 'app.establishmentSubtitle' })}
+    >
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px" width={'100%'}>
         <Card
           p={{ base: 4, md: 8 }}
@@ -88,7 +89,8 @@ function ProfileEstablishment() {
           boxShadow="xl"
           bg="white"
           w="100%"
-          maxW="1100px">
+          maxW="1100px"
+        >
           <Flex direction={{ base: 'column', md: 'row' }} gap={12} align="flex-start">
             {/* Left: Main Image and Thumbnails */}
             <Box flex="1" minW={{ base: '100%', md: '400px' }} maxW="340px">
@@ -111,7 +113,8 @@ function ProfileEstablishment() {
                     <MenuItem
                       onClick={() =>
                         navigate(`/admin/dashboard/establishment/${establishmentId}/change`)
-                      }>
+                      }
+                    >
                       <Flex color={textColor} cursor="pointer" align="center" p="4px">
                         <Text fontSize="sm" fontWeight="500">
                           {intl.formatMessage({ id: 'app.edit' }).toUpperCase()}
@@ -209,7 +212,8 @@ function ProfileEstablishment() {
                       fontSize="2xl"
                       isExternal
                       _hover={{ color: 'green.600', textDecoration: 'none' }}
-                      aria-label="Facebook">
+                      aria-label="Facebook"
+                    >
                       <Icon as={FaFacebook} />
                     </Link>
                   )}
@@ -220,7 +224,8 @@ function ProfileEstablishment() {
                       fontSize="2xl"
                       isExternal
                       _hover={{ color: 'green.600', textDecoration: 'none' }}
-                      aria-label="Instagram">
+                      aria-label="Instagram"
+                    >
                       <Icon as={FaInstagram} />
                     </Link>
                   )}
@@ -231,7 +236,8 @@ function ProfileEstablishment() {
                       fontSize="2xl"
                       isExternal
                       _hover={{ color: 'green.600', textDecoration: 'none' }}
-                      aria-label="Twitter">
+                      aria-label="Twitter"
+                    >
                       <Icon as={FaTwitter} />
                     </Link>
                   )}

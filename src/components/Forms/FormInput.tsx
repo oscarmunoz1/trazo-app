@@ -36,7 +36,8 @@ const FormInput = ({ name, label, placeholder, disabled, ...otherProps }: FormIn
               fontSize="xs"
               fontWeight="bold"
               color={disabled ? 'gray.300' : textColor}
-              pl="12px">
+              pl="12px"
+            >
               {label}
             </FormLabel>
           )}

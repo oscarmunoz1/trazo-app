@@ -11,63 +11,58 @@ import {
   Link,
   Switch,
   Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
-import { FormProvider, useForm } from "react-hook-form";
-import React, { useEffect } from "react";
-import { object, string } from "zod";
+  useColorModeValue
+} from '@chakra-ui/react';
+import { FaApple, FaFacebook, FaGoogle } from 'react-icons/fa';
+import { FormProvider, useForm } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { object, string } from 'zod';
 
-import BgSignUp from "assets/img/backgroundImage.png";
-import CameraCard from "./components/CameraCard";
-import FormInput from "components/Forms/FormInput";
-import { useNavigate } from "react-router-dom";
-import { useSignUpMutation } from "store/api/authApi";
-import { zodResolver } from "@hookform/resolvers/zod";
+import BgSignUp from 'assets/img/backgroundImage.png';
+import CameraCard from './components/CameraCard';
+import FormInput from 'components/Forms/FormInput';
+import { useNavigate } from 'react-router-dom';
+import { useSignUpMutation } from 'store/api/authApi';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 // Assets
 
 const registerSchema = object({
-  first_name: string().min(1, "Full name is required").max(100),
-  last_name: string().min(1, "Full name is required").max(100),
-  email: string()
-    .min(1, "Email address is required")
-    .email("Email Address is invalid"),
+  first_name: string().min(1, 'Full name is required').max(100),
+  last_name: string().min(1, 'Full name is required').max(100),
+  email: string().min(1, 'Email address is required').email('Email Address is invalid'),
   password: string()
-    .min(1, "Password is required")
-    .min(8, "Password must be more than 8 characters")
-    .max(32, "Password must be less than 32 characters"),
-  password2: string().min(1, "Please confirm your password"),
+    .min(1, 'Password is required')
+    .min(8, 'Password must be more than 8 characters')
+    .max(32, 'Password must be less than 32 characters'),
+  password2: string().min(1, 'Please confirm your password')
 }).refine((data) => data.password === data.password2, {
-  path: ["password2"],
-  message: "Passwords do not match",
+  path: ['password2'],
+  message: 'Passwords do not match'
 });
 
 function Capture() {
-  const titleColor = useColorModeValue("green.300", "green.200");
-  const textColor = useColorModeValue("gray.700", "white");
-  const bgColor = useColorModeValue("white", "gray.700");
-  const bgIcons = useColorModeValue("green.200", "rgba(255, 255, 255, 0.5)");
+  const titleColor = useColorModeValue('green.300', 'green.200');
+  const textColor = useColorModeValue('gray.700', 'white');
+  const bgColor = useColorModeValue('white', 'gray.700');
+  const bgIcons = useColorModeValue('green.200', 'rgba(255, 255, 255, 0.5)');
   const navigate = useNavigate();
 
   const methods = useForm({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(registerSchema)
   });
 
   const {
     reset,
     handleSubmit,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors, isSubmitSuccessful }
   } = methods;
 
-  const [
-    registerUser,
-    { isLoading, isSuccess, error, isError },
-  ] = useSignUpMutation();
+  const [registerUser, { isLoading, isSuccess, error, isError }] = useSignUpMutation();
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/auth/verifyemail");
+      navigate('/auth/verifyemail');
     }
   }, [isLoading]);
 
@@ -82,17 +77,12 @@ function Capture() {
   };
 
   return (
-    <Flex
-      direction="column"
-      alignSelf="center"
-      justifySelf="center"
-      overflow="hidden"
-    >
+    <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden">
       <Box
         position="absolute"
-        minH={{ base: "70vh", md: "50vh" }}
-        w={{ md: "calc(100vw - 50px)" }}
-        borderRadius={{ md: "15px" }}
+        minH={{ base: '70vh', md: '50vh' }}
+        w={{ md: 'calc(100vw - 50px)' }}
+        borderRadius={{ md: '15px' }}
         left="0"
         right="0"
         bgRepeat="no-repeat"
@@ -113,8 +103,8 @@ function Capture() {
         }}
         bgImage={BgSignUp}
         bgSize="cover"
-        mx={{ md: "auto" }}
-        mt={{ md: "14px" }}
+        mx={{ md: 'auto' }}
+        mt={{ md: '14px' }}
       ></Box>
       <Flex
         direction="column"
@@ -122,7 +112,7 @@ function Capture() {
         justifyContent="center"
         align="center"
         mt="6.5rem"
-        pt={"55px"}
+        pt={'55px'}
       >
         <Text fontSize="4xl" color="white" fontWeight="bold">
           Welcome!
@@ -133,7 +123,7 @@ function Capture() {
           fontWeight="normal"
           mt="10px"
           mb="26px"
-          w={{ base: "90%", sm: "60%", lg: "40%", xl: "25%" }}
+          w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}
         >
           You can scan the QR code to view the product details.
         </Text>
@@ -145,16 +135,11 @@ function Capture() {
           background="transparent"
           borderRadius="15px"
           p="40px"
-          mx={{ base: "100px" }}
+          mx={{ base: '100px' }}
           bg={bgColor}
           boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
         >
-          <Text
-            fontSize="xl"
-            color={textColor}
-            fontWeight="bold"
-            textAlign="center"
-          >
+          <Text fontSize="xl" color={textColor} fontWeight="bold" textAlign="center">
             Scan QR Code
           </Text>
 
@@ -170,13 +155,7 @@ function Capture() {
           >
             <Text color={textColor} fontWeight="medium">
               Already have an account?
-              <Link
-                color={titleColor}
-                as="span"
-                ms="5px"
-                href="#"
-                fontWeight="bold"
-              >
+              <Link color={titleColor} as="span" ms="5px" href="#" fontWeight="bold">
                 Sign In
               </Link>
             </Text>

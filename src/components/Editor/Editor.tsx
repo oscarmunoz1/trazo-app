@@ -87,6 +87,9 @@ const Editor = () => {
             placeholder={''}
             modules={Editor.modules}
             value={field.value}
+            style={{
+              height: '250px'
+            }}
           />
         )}
       />

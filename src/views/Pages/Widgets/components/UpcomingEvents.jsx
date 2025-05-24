@@ -15,20 +15,20 @@
 
 */
 
-import { ClockIcon, WalletIcon } from "components/Icons/Icons";
+import { ClockIcon, WalletIcon } from 'components/Icons/Icons';
 // Chakra imports
-import { Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Flex, Icon, Text, useColorModeValue } from '@chakra-ui/react';
+import React, { useState } from 'react';
 
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import IconBox from "components/Icons/IconBox";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import IconBox from 'components/Icons/IconBox';
 
 const UpcomingEvents = () => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
-  const iconTeal = useColorModeValue("green.400", "green.400");
+  const iconTeal = useColorModeValue('green.400', 'green.400');
   return (
     <Card>
       <CardHeader mb="16px">
@@ -44,8 +44,8 @@ const UpcomingEvents = () => {
       <CardBody>
         <Flex direction="column">
           <Flex align="center" mb="22px">
-            <IconBox as="box" h={"45px"} w={"45px"} bg="gray.100" me="16px">
-              <Icon as={WalletIcon} h={"24px"} w={"24px"} color={iconTeal} />
+            <IconBox as="box" h={'45px'} w={'45px'} bg="gray.100" me="16px">
+              <Icon as={WalletIcon} h={'24px'} w={'24px'} color={iconTeal} />
             </IconBox>
             <Flex direction="column">
               <Text color={textColor} fontSize="sm" fontWeight="bold">
@@ -57,8 +57,8 @@ const UpcomingEvents = () => {
             </Flex>
           </Flex>
           <Flex align="center">
-            <IconBox as="box" h={"45px"} w={"45px"} bg="gray.100" me="16px">
-              <Icon as={ClockIcon} h={"24px"} w={"24px"} color={iconTeal} />
+            <IconBox as="box" h={'45px'} w={'45px'} bg="gray.100" me="16px">
+              <Icon as={ClockIcon} h={'24px'} w={'24px'} color={iconTeal} />
             </IconBox>
             <Flex direction="column">
               <Text color={textColor} fontSize="sm" fontWeight="bold">

@@ -138,7 +138,8 @@ export const DashboardLogo = createIcon({
           y1="0"
           x2="128.5"
           y2="257"
-          gradientUnits="userSpaceOnUse">
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stop-color="#7BCBD4" />
           <stop offset="1" stop-color="#29C6B7" />
         </linearGradient>

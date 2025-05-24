@@ -154,7 +154,8 @@ function FinishProduction() {
       direction="column"
       bg={bgColor}
       boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
-      borderRadius="15px">
+      borderRadius="15px"
+    >
       <Tabs variant="unstyled" mt="24px" alignSelf="center">
         <TabPanels mt="24px" maxW={{ md: '90%', lg: '100%' }} mx="auto">
           <TabPanel maxW="800px" width={'600px'}>
@@ -233,7 +234,8 @@ function FinishProduction() {
                       cursor="pointer"
                       overflowY={'auto'}
                       minH={'175px'}
-                      {...getRootProps({ className: 'dropzone' })}>
+                      {...getRootProps({ className: 'dropzone' })}
+                    >
                       <Input {...getInputProps()} />
                       <Button variant="no-hover">
                         {acceptedFiles.length > 0 ? (
@@ -255,7 +257,8 @@ function FinishProduction() {
                                   fontWeight="normal"
                                   maxWidth="150px"
                                   textOverflow={'ellipsis'}
-                                  overflow={'hidden'}>
+                                  overflow={'hidden'}
+                                >
                                   {file.name}
                                 </Text>
                               </Box>
@@ -276,7 +279,8 @@ function FinishProduction() {
                         mt="24px"
                         w={{ sm: '75px', lg: '100px' }}
                         h="35px"
-                        type="submit">
+                        type="submit"
+                      >
                         {isLoading ? (
                           <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
                         ) : (

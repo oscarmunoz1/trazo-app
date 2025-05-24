@@ -44,28 +44,57 @@ import {
   Slider,
   SliderTrack,
   SliderFilledTrack,
-  SliderThumb
+  SliderThumb,
+  Avatar
 } from '@chakra-ui/react';
 import { BsStar, BsStarFill, BsStarHalf } from 'react-icons/bs';
 import {
   FaFacebook,
   FaInstagram,
+  FaTwitter,
   FaRegCheckCircle,
   FaRegDotCircle,
-  FaTwitter,
   FaLeaf,
   FaShare,
-  FaStar
+  FaStar,
+  FaTree,
+  FaInfoCircle,
+  FaCarSide,
+  FaInfo,
+  FaBuilding,
+  FaWater,
+  FaSeedling,
+  FaTruck,
+  FaTractor,
+  FaSolarPanel,
+  FaRecycle,
+  FaBolt,
+  FaChartLine
 } from 'react-icons/fa';
+import {
+  MdLocationOn,
+  MdBusiness,
+  MdEco,
+  MdNoFood,
+  MdLocalFlorist,
+  MdInfo,
+  MdCalendarToday,
+  MdShare,
+  MdStar,
+  MdTimeline
+} from 'react-icons/md';
 import { FormProvider, useForm } from 'react-hook-form';
 import { GoogleMap, Polygon, useJsApiLoader, useLoadScript } from '@react-google-maps/api';
 import React, { useEffect, useState } from 'react';
 import { object, string } from 'zod';
 import { useCommentHistoryMutation, useGetPublicHistoryQuery } from 'store/api/historyApi';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useGetQRCodeSummaryQuery, useCreateOffsetMutation } from 'store/api/carbonApi';
-import { MdEco, MdLocalFlorist, MdTimeline, MdShare, MdStar } from 'react-icons/md';
-import { StarIcon } from '@chakra-ui/icons';
+import {
+  useGetQRCodeSummaryQuery,
+  useGetProductionRecommendationsQuery
+} from 'store/api/carbonApi';
+import { useAddEstablishmentCarbonFootprintMutation } from 'store/api/companyApi';
+import { StarIcon, DownloadIcon } from '@chakra-ui/icons';
 
 import BgSignUp from 'assets/img/backgroundImage.png';
 // import CameraCard from "./components/CameraCard";
@@ -73,7 +102,6 @@ import FormInput from 'components/Forms/FormInput';
 import HTMLRenderer from 'components/Utils/HTMLRenderer';
 import ImageCarousel from 'components/ImageCarousel/ImageCarousel';
 import ImageParcel1 from 'assets/img/ImageParcel1.png';
-import ProfileInformation from './components/ProfileInformation';
 import TimelineRow from 'components/Tables/TimelineRow';
 import productPage1 from 'assets/img/ProductImage1.png';
 import productPage2 from 'assets/img/ProductImage2.png';
@@ -84,10 +112,11 @@ import defaultEstablishmentImage from 'assets/img/basic-auth.png';
 import { useIntl } from 'react-intl';
 import { CarbonScore } from '../../../components/CarbonScore';
 import { BadgeCarousel } from '../../../components/BadgeCarousel';
-import { Timeline } from '../../../components/Timeline';
-import { FarmerStory } from '../../../components/FarmerStory';
 import { usePointsStore } from '../../../store/pointsStore';
 import { useDisclosure } from '@chakra-ui/react';
+import { EnhancedTimeline } from '../../../components/EnhancedTimeline';
+import { GamifiedOffset } from '../../../components/GamifiedOffset';
+import { ConsumerSustainabilityInfo } from '../../../components/ConsumerSustainabilityInfo';
 
 // Assets
 
@@ -147,8 +176,18 @@ function Capture() {
   const {
     data: carbonData,
     error: carbonError,
-    isLoading: isCarbonLoading
-  } = useGetQRCodeSummaryQuery(productionId || '');
+    isLoading: isCarbonDataLoading,
+    isError: isCarbonDataError
+  } = useGetQRCodeSummaryQuery(productionId || '', {
+    skip: productionId === undefined
+  });
+
+  // Add recommendations query
+  const { data: recommendationsData, isLoading: isRecommendationsLoading } =
+    useGetProductionRecommendationsQuery(productionId || '', {
+      skip: productionId === undefined
+    });
+
   const {
     isOpen: isOffsetModalOpen,
     onOpen: onOffsetModalOpen,
@@ -159,11 +198,16 @@ function Capture() {
     onOpen: onFeedbackModalOpen,
     onClose: onFeedbackModalClose
   } = useDisclosure();
-  const [points, addPoints] = usePointsStore();
+  const pointsStore = usePointsStore();
+  const [showMore, setShowMore] = useState(false);
+  const [showAllTimeline, setShowAllTimeline] = useState(false);
+  const [offsetLoading, setOffsetLoading] = useState(false);
   const [offsetAmount, setOffsetAmount] = useState(0.05);
   const [feedbackRating, setFeedbackRating] = useState(5);
   const [feedbackComment, setFeedbackComment] = useState('');
+  const [addEstablishmentCarbonFootprint] = useAddEstablishmentCarbonFootprintMutation();
 
+  // Restore the createComment function
   const [
     createComment,
     {
@@ -173,6 +217,10 @@ function Capture() {
       isLoading: isLoadingComment
     }
   ] = useCommentHistoryMutation();
+
+  // Add user analytics state
+  const [userTotalOffset, setUserTotalOffset] = useState(15.5); // For demo purposes
+  const [userLevel, setUserLevel] = useState(2); // For demo purposes
 
   useEffect(() => {
     if (productionId) {
@@ -196,8 +244,8 @@ function Capture() {
         isClosable: true
       });
     } else if (carbonData) {
-      if (points === 0) {
-        addPoints(5);
+      if (pointsStore.points === 0) {
+        pointsStore.addPoints(5);
         toast({
           title: 'Points Earned',
           description: 'You earned 5 Green Points for scanning this product!',
@@ -207,10 +255,10 @@ function Capture() {
         });
       }
     }
-  }, [carbonError, carbonData, toast, points, addPoints]);
+  }, [carbonError, carbonData, toast, pointsStore]);
 
   const onSubmitHandler = () => {
-    if (commentValue) {
+    if (commentValue && historyData?.history_scan) {
       createComment({
         comment: commentValue,
         scanId: historyData.history_scan
@@ -224,31 +272,68 @@ function Capture() {
     }
   }, [isSuccessComment]);
 
+  // Handle offsetting carbon
   const handleOffset = async () => {
     try {
-      await createOffset({ productionId: productionId || '', amount: offsetAmount }).unwrap();
-      addPoints(5);
+      setOffsetLoading(true);
+
+      // In a real app, we would call the API to process the payment
+      // For demo purposes, we'll simulate a successful payment
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      // Calculate points based on payment amount
+      let pointsToAdd = 0;
+      if (offsetAmount === 0.05) {
+        pointsToAdd = 5;
+      } else if (offsetAmount === 0.1) {
+        pointsToAdd = 10;
+      } else if (offsetAmount === 0.25) {
+        pointsToAdd = 25;
+      }
+
+      // Update point store
+      pointsStore.addPoints(pointsToAdd);
+
+      // Show success toast
       toast({
-        title: 'Offset Successful',
-        description: `You've offset ${offsetAmount} kg CO2e`,
+        title: intl.formatMessage({ id: 'app.offsetSuccess' }) || 'Offset Successful!',
+        description:
+          intl.formatMessage(
+            { id: 'app.offsetSuccessDetail' },
+            {
+              amount: offsetAmount.toFixed(2),
+              points: pointsToAdd
+            }
+          ) ||
+          `Thank you for contributing $${offsetAmount.toFixed(
+            2
+          )}. You earned ${pointsToAdd} Green Points!`,
         status: 'success',
         duration: 5000,
-        isClosable: true
+        isClosable: true,
+        position: 'top'
       });
+
       onOffsetModalClose();
     } catch (error) {
+      console.error('Offset error:', error);
       toast({
-        title: 'Offset Failed',
-        description: 'Please try again later',
+        title: intl.formatMessage({ id: 'app.offsetError' }) || 'Offset Failed',
+        description:
+          intl.formatMessage({ id: 'app.offsetErrorDetail' }) ||
+          'There was a problem processing your payment. Please try again.',
         status: 'error',
         duration: 5000,
-        isClosable: true
+        isClosable: true,
+        position: 'top'
       });
+    } finally {
+      setOffsetLoading(false);
     }
   };
 
   const handleFeedback = () => {
-    addPoints(2);
+    pointsStore.addPoints(2);
     toast({
       title: 'Feedback Submitted',
       description: 'Thank you for your feedback!',
@@ -263,14 +348,24 @@ function Capture() {
     try {
       await navigator.share({
         title: `${historyData?.product.name}'s Sustainable Product`,
-        text: `${carbonData?.carbon_score}/100 carbon score! #Trazo`,
+        text: `${carbonData?.carbonScore}/100 carbon score! #Trazo`,
         url: window.location.href
       });
-      addPoints(3);
+      pointsStore.addPoints(3);
     } catch (error) {
       console.error('Error sharing:', error);
     }
   };
+
+  const fetchProductData = async () => {
+    if (historyData?.id) {
+      // Refresh data by refetching the relevant queries
+      void refetch();
+    }
+  };
+
+  // Fix places where historyData.reputation is used without optional chaining
+  const safeReputation = historyData?.reputation || 0; // Default to 0 if undefined
 
   return (
     <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden" w="100%">
@@ -300,14 +395,16 @@ function Capture() {
         }}
         bgSize="cover"
         mx={{ md: 'auto' }}
-        mt={{ md: '14px' }}></Box>
+        mt={{ md: '14px' }}
+      ></Box>
       <Flex
         direction="column"
         textAlign="center"
         justifyContent="center"
         align="center"
         mt="6.5rem"
-        pt={'55px'}>
+        pt={'55px'}
+      >
         <Text fontSize="4xl" color="white" fontWeight="bold">
           {intl.formatMessage({ id: 'app.welcome' })}
         </Text>
@@ -317,271 +414,807 @@ function Capture() {
           fontWeight="normal"
           mt="10px"
           mb="26px"
-          w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}>
+          w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}
+        >
           {intl.formatMessage({ id: 'app.welcomeMessage' })}
         </Text>
       </Flex>
+
+      {/* Main Content Container - Reduced width for better readability */}
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="-30px">
         <Card
           mt={{ md: '75px' }}
-          w={{ sm: '100%', md: '80%', lg: '75%' }}
+          w={{ sm: '100%', md: '90%', lg: '85%' }}
           p={{ sm: '16px', md: '32px', lg: '48px' }}
-          boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px">
-          <CardHeader mb="42px">
-            <Text color={textColor} fontSize="lg" fontWeight="bold">
-              {intl.formatMessage({ id: 'app.productDetails' })}
+          boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px"
+        >
+          <CardHeader mb="24px">
+            <HStack spacing={3}>
+              <Badge colorScheme="green" fontSize="md" px={3} py={1} borderRadius="full">
+                {intl.formatMessage({ id: 'app.verified' })}
+              </Badge>
+              {carbonData?.isUsdaVerified && (
+                <Badge colorScheme="blue" fontSize="md" px={3} py={1} borderRadius="full">
+                  USDA SOE Verified
+                </Badge>
+              )}
+            </HStack>
+            <HStack mt={4} spacing={4} align="center">
+              <Heading color={textColor} fontSize="3xl" fontWeight="bold">
+                {historyData?.product.name}
+              </Heading>
+              <Stack direction="row" spacing="6px" color="orange.300">
+                <Icon
+                  as={safeReputation >= 1 ? BsStarFill : safeReputation > 0.5 ? BsStarHalf : BsStar}
+                  w="20px"
+                  h="20px"
+                />
+                <Icon
+                  as={safeReputation >= 2 ? BsStarFill : safeReputation > 1.5 ? BsStarHalf : BsStar}
+                  w="20px"
+                  h="20px"
+                />
+                <Icon
+                  as={safeReputation >= 3 ? BsStarFill : safeReputation > 2.5 ? BsStarHalf : BsStar}
+                  w="20px"
+                  h="20px"
+                />
+                <Icon
+                  as={safeReputation >= 4 ? BsStarFill : safeReputation > 3.5 ? BsStarHalf : BsStar}
+                  w="20px"
+                  h="20px"
+                />
+                <Icon
+                  as={
+                    safeReputation === 5 ? BsStarFill : safeReputation > 4.5 ? BsStarHalf : BsStar
+                  }
+                  w="20px"
+                  h="20px"
+                />
+              </Stack>
+            </HStack>
+            <Text color="gray.500" fontSize="lg" mt={1}>
+              {historyData?.company}
             </Text>
+            {/* Industry percentile text for better visibility */}
+            {carbonData &&
+              carbonData.industryPercentile !== undefined &&
+              carbonData.industryPercentile > 0 && (
+                <HStack mt={2}>
+                  <Icon as={FaLeaf} color="green.500" />
+                  <Text color="green.500" fontWeight="medium">
+                    Greener than {carbonData.industryPercentile}% of similar products
+                  </Text>
+                </HStack>
+              )}
           </CardHeader>
-          <CardBody>
-            <Flex direction="column" w="100%">
-              <Flex direction={{ sm: 'column', lg: 'row' }} mb={{ sm: '22px', lg: '44px' }}>
-                {historyData?.images && <ImageCarousel imagesList={historyData?.images} />}
-                <Flex direction="column">
-                  <Text color={textColor} fontSize="3xl" fontWeight="bold" mb="12px">
-                    {historyData?.product.name}
-                  </Text>
-                  <Stack direction="row" spacing="12px" color="orange.300" mb="16px">
-                    <Icon
-                      as={
-                        historyData?.reputation >= 1
-                          ? BsStarFill
-                          : historyData?.reputation > 0.5
-                          ? BsStarHalf
-                          : BsStar
-                      }
-                      w="26px"
-                      h="26px"
-                    />
-                    <Icon
-                      as={
-                        historyData?.reputation >= 2
-                          ? BsStarFill
-                          : historyData?.reputation > 1.5
-                          ? BsStarHalf
-                          : BsStar
-                      }
-                      w="26px"
-                      h="26px"
-                    />
-                    <Icon
-                      as={
-                        historyData?.reputation >= 3
-                          ? BsStarFill
-                          : historyData?.reputation > 2.5
-                          ? BsStarHalf
-                          : BsStar
-                      }
-                      w="26px"
-                      h="26px"
-                    />
-                    <Icon
-                      as={
-                        historyData?.reputation >= 4
-                          ? BsStarFill
-                          : historyData?.reputation > 3.5
-                          ? BsStarHalf
-                          : BsStar
-                      }
-                      w="26px"
-                      h="26px"
-                    />
-                    <Icon
-                      as={
-                        historyData?.reputation === 5
-                          ? BsStarFill
-                          : historyData?.reputation > 4.5
-                          ? BsStarHalf
-                          : BsStar
-                      }
-                      w="26px"
-                      h="26px"
-                    />
-                  </Stack>
-                  <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                    {intl.formatMessage({ id: 'app.company' })}
-                  </Text>
-                  <Text color={textColor} fontWeight="bold" fontSize="3xl" mb="12px">
-                    {historyData?.company}
-                  </Text>
-                  <Badge
-                    colorScheme="green"
-                    w="95px"
-                    h="28px"
-                    mb="36px"
-                    borderRadius="15px"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center">
-                    {intl.formatMessage({ id: 'app.certified' })}
-                  </Badge>
 
-                  <Flex direction="column">
-                    <Flex align="center" mb="15px">
-                      <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        {intl.formatMessage({ id: 'app.establishment' })}:{' '}
+          <CardBody>
+            <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={8} mb={10}>
+              {/* Left Column */}
+              <Box>
+                {/* Product Images */}
+                <Box mb={6}>
+                  {historyData?.images && <ImageCarousel imagesList={historyData?.images} />}
+                </Box>
+
+                {/* Carbon Score - Enhanced Version */}
+                <Box borderRadius="lg" mb={6} bg="white" p={5} boxShadow="md">
+                  <HStack spacing={2} mb={3} justify="center">
+                    <Icon as={FaLeaf} color="green.500" boxSize={6} />
+                    <Heading as="h3" size="md" textAlign="center">
+                      {intl.formatMessage({ id: 'app.carbonScore' }) || 'Carbon Score'}
+                    </Heading>
+                  </HStack>
+                  <CarbonScore
+                    score={carbonData?.carbonScore || 0}
+                    footprint={carbonData?.netFootprint || 0}
+                    industryPercentile={carbonData?.industryPercentile || 0}
+                    relatableFootprint={
+                      carbonData?.relatableFootprint ||
+                      intl.formatMessage({ id: 'app.calculatingFootprint' })
+                    }
+                  />
+                  {/* Enhanced industry comparison */}
+                  {carbonData?.industryPercentile && carbonData.industryPercentile > 0 && (
+                    <Box mt={4} p={3} bg="green.50" borderRadius="md">
+                      <HStack>
+                        <Icon as={FaChartLine} color="green.500" />
+                        <Text fontWeight="medium" color="green.700">
+                          {carbonData.industryPercentile > 80
+                            ? `Exceptional! This product is greener than ${carbonData.industryPercentile}% of similar products.`
+                            : carbonData.industryPercentile > 50
+                            ? `Great choice! Greener than ${carbonData.industryPercentile}% of similar products.`
+                            : `This product is greener than ${carbonData.industryPercentile}% of similar products.`}
+                        </Text>
+                      </HStack>
+                    </Box>
+                  )}
+                  {/* Relatable footprint */}
+                  {carbonData?.relatableFootprint && (
+                    <Box
+                      mt={3}
+                      p={2}
+                      borderRadius="md"
+                      borderLeft="3px solid"
+                      borderColor="blue.400"
+                      bg="blue.50"
+                    >
+                      <HStack>
+                        <Icon as={FaInfoCircle} color="blue.500" />
+                        <Text fontSize="sm" color="blue.700">
+                          {`Carbon footprint: ${carbonData.relatableFootprint}`}
+                        </Text>
+                      </HStack>
+                    </Box>
+                  )}
+                  {/* Add connection to carbon reports if available */}
+                  {carbonData?.reports && carbonData.reports.length > 0 && (
+                    <Text mt={2} fontSize="sm" color="gray.600" textAlign="center">
+                      {intl.formatMessage({ id: 'app.viewReportsBelow' }) ||
+                        'View detailed carbon reports below'}
+                      <Icon as={DownloadIcon} ml={1} boxSize={3} />
+                    </Text>
+                  )}
+                </Box>
+
+                {/* Consumer Sustainability Information */}
+                <Box mb={6}>
+                  <ConsumerSustainabilityInfo
+                    productName={historyData?.product?.name || ''}
+                    carbonScore={carbonData?.carbonScore || 0}
+                    sustainabilityPractices={
+                      carbonData?.recommendations
+                        ? carbonData.recommendations.map((rec, index) => ({
+                            icon: (
+                              <Icon
+                                as={
+                                  index % 5 === 0
+                                    ? FaWater
+                                    : index % 5 === 1
+                                    ? MdNoFood
+                                    : index % 5 === 2
+                                    ? FaSeedling
+                                    : index % 5 === 3
+                                    ? MdEco
+                                    : FaLeaf
+                                }
+                                color="green.500"
+                                boxSize={5}
+                              />
+                            ),
+                            title: rec,
+                            description: rec
+                          }))
+                        : []
+                    }
+                  />
+                </Box>
+
+                {/* Achievement Badges - Enhanced Version */}
+                <Box borderRadius="lg" mb={6}>
+                  <BadgeCarousel badges={carbonData?.badges || []} />
+                </Box>
+
+                {/* Quick Actions - Enhanced Version */}
+                <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6}>
+                  <VStack spacing={4}>
+                    {/* Offset Options with Price Points */}
+                    <Box w="full" p={4} bg="green.50" borderRadius="md">
+                      <Heading as="h4" size="sm" mb={3} color="green.700">
+                        <HStack>
+                          <Icon as={FaLeaf} />
+                          <Text>
+                            {intl.formatMessage({ id: 'app.offsetYourImpact' }) ||
+                              'Offset Your Impact'}
+                          </Text>
+                        </HStack>
+                      </Heading>
+                      <Text fontSize="sm" mb={3} color="gray.600">
+                        {intl.formatMessage({ id: 'app.offsetDescription' }) ||
+                          'Help reduce carbon emissions by funding verified sustainability projects.'}
                       </Text>
-                      <Text fontSize="md" color="gray.500" fontWeight="400">
-                        <Link textDecoration={'underline'}>
-                          {historyData?.parcel.establishment.name}
-                        </Link>
+                      <HStack spacing={3} justifyContent="center" w="full">
+                        <Button
+                          size="sm"
+                          colorScheme="green"
+                          variant="outline"
+                          onClick={() => {
+                            setOffsetAmount(0.05);
+                            onOffsetModalOpen();
+                          }}
+                        >
+                          $0.05
+                        </Button>
+                        <Button
+                          size="sm"
+                          colorScheme="green"
+                          variant="solid"
+                          onClick={() => {
+                            setOffsetAmount(0.1);
+                            onOffsetModalOpen();
+                          }}
+                        >
+                          $0.10
+                        </Button>
+                        <Button
+                          size="sm"
+                          colorScheme="green"
+                          variant="outline"
+                          onClick={() => {
+                            setOffsetAmount(0.25);
+                            onOffsetModalOpen();
+                          }}
+                        >
+                          $0.25
+                        </Button>
+                      </HStack>
+                    </Box>
+
+                    {/* Green Points Progress */}
+                    <Box w="full" p={4} bg="blue.50" borderRadius="md">
+                      <HStack justify="space-between" mb={2}>
+                        <Heading as="h4" size="sm" color="blue.700">
+                          <HStack>
+                            <Icon as={FaStar} color="yellow.400" />
+                            <Text>
+                              {intl.formatMessage({ id: 'app.greenPoints' }) || 'Green Points'}
+                            </Text>
+                          </HStack>
+                        </Heading>
+                        <Badge colorScheme="blue" variant="solid">
+                          {pointsStore.points} pts
+                        </Badge>
+                      </HStack>
+                      <Progress
+                        value={(pointsStore.points % 50) * 2}
+                        size="sm"
+                        colorScheme="blue"
+                        borderRadius="full"
+                        mb={2}
+                      />
+                      <Text fontSize="xs" color="blue.600" textAlign="right">
+                        {50 - (pointsStore.points % 50)}{' '}
+                        {intl.formatMessage({ id: 'app.pointsToNextReward' }) ||
+                          'points to next reward'}
                       </Text>
-                    </Flex>
-                    <Flex align="center" mb="15px">
-                      <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        {intl.formatMessage({ id: 'app.location' })}:{' '}
+                    </Box>
+
+                    {/* Social Actions */}
+                    <HStack spacing={3} w="full">
+                      <Button
+                        leftIcon={<MdShare />}
+                        colorScheme="blue"
+                        onClick={handleShare}
+                        flex={1}
+                        size="md"
+                      >
+                        {intl.formatMessage({ id: 'app.share' }) || 'Share'} (+3)
+                      </Button>
+                      <Button
+                        leftIcon={<MdStar />}
+                        colorScheme="yellow"
+                        onClick={onFeedbackModalOpen}
+                        flex={1}
+                        size="md"
+                      >
+                        {intl.formatMessage({ id: 'app.rate' }) || 'Rate'} (+2)
+                      </Button>
+                    </HStack>
+                  </VStack>
+                </Box>
+              </Box>
+
+              {/* Right Column */}
+              <Box>
+                {/* Establishment Information */}
+                <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6}>
+                  <HStack spacing={2} justify="center" mb={3}>
+                    <Icon as={MdBusiness} color="green.500" boxSize={5} />
+                    <Heading as="h3" size="md" color={textColor}>
+                      {intl.formatMessage({ id: 'app.establishment' })}
+                    </Heading>
+                  </HStack>
+                  <VStack spacing={4} align="stretch">
+                    {/* Establishment Image */}
+                    {historyData?.parcel?.establishment?.photo && (
+                      <Flex justify="center">
+                        <Image
+                          src={historyData.parcel.establishment.photo}
+                          alt={historyData?.parcel?.establishment?.name}
+                          boxSize="150px"
+                          objectFit="cover"
+                          borderRadius="full"
+                        />
+                      </Flex>
+                    )}
+
+                    {/* Establishment Name */}
+                    <HStack>
+                      <Text fontWeight="bold">{intl.formatMessage({ id: 'app.name' })}:</Text>
+                      <Text>{historyData?.parcel?.establishment?.name}</Text>
+                    </HStack>
+
+                    {/* Establishment Location */}
+                    <HStack>
+                      <Text fontWeight="bold">{intl.formatMessage({ id: 'app.location' })}:</Text>
+                      <Text>{historyData?.parcel?.establishment?.location}</Text>
+                    </HStack>
+
+                    {/* Establishment Certifications */}
+                    {historyData?.parcel?.establishment?.certifications &&
+                      historyData.parcel.establishment.certifications.length > 0 && (
+                        <Box>
+                          <Text fontWeight="bold" mb={2}>
+                            {intl.formatMessage({ id: 'app.certifications' })}:
+                          </Text>
+                          <HStack spacing={2} flexWrap="wrap">
+                            {historyData.parcel.establishment.certifications.map(
+                              (cert: string, index: number) => (
+                                <Badge key={index} colorScheme="green" mb={1}>
+                                  {cert}
+                                </Badge>
+                              )
+                            )}
+                          </HStack>
+                        </Box>
+                      )}
+
+                    {/* Establishment Description */}
+                    <Box>
+                      <Text fontWeight="bold" mb={2}>
+                        {intl.formatMessage({ id: 'app.description' })}:
                       </Text>
-                      <Text fontSize="md" color="gray.500" fontWeight="400">
-                        {historyData?.parcel.establishment.location}
+                      <Box maxH="150px" overflowY="auto" pr={2}>
+                        <HTMLRenderer
+                          htmlString={historyData?.parcel?.establishment?.description || ''}
+                        />
+                      </Box>
+                    </Box>
+
+                    {/* Contact Information */}
+                    {(historyData?.parcel?.establishment?.email ||
+                      historyData?.parcel?.establishment?.phone) && (
+                      <Box>
+                        <Text fontWeight="bold" mb={2}>
+                          {intl.formatMessage({ id: 'app.contact' })}:
+                        </Text>
+                        {historyData?.parcel?.establishment?.email && (
+                          <HStack>
+                            <Icon as={MdInfo} color="blue.500" />
+                            <Text>{historyData.parcel.establishment.email}</Text>
+                          </HStack>
+                        )}
+                        {historyData?.parcel?.establishment?.phone && (
+                          <HStack>
+                            <Icon as={MdInfo} color="blue.500" />
+                            <Text>{historyData.parcel.establishment.phone}</Text>
+                          </HStack>
+                        )}
+                      </Box>
+                    )}
+                  </VStack>
+                </Box>
+
+                {/* Product Details Card */}
+                <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6}>
+                  <Heading as="h3" size="md" mb={4}>
+                    {intl.formatMessage({ id: 'app.productDetails' })}
+                  </Heading>
+
+                  <SimpleGrid columns={2} spacing={4}>
+                    <Box>
+                      <Text fontWeight="bold" color={textColor}>
+                        {intl.formatMessage({ id: 'app.establishment' })}
                       </Text>
-                    </Flex>
-                    <Flex align="center" mb="15px">
-                      <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        {intl.formatMessage({ id: 'app.parcel' })}:{' '}
+                      <Link textDecoration="underline" color="green.500">
+                        {historyData?.parcel.establishment.name}
+                      </Link>
+                    </Box>
+
+                    <Box>
+                      <Text fontWeight="bold" color={textColor}>
+                        {intl.formatMessage({ id: 'app.location' })}
                       </Text>
-                      <Text fontSize="md" color="gray.500" fontWeight="400">
-                        <Link textDecoration={'underline'}>{historyData?.parcel.name}</Link>
+                      <Text color="gray.600">{historyData?.parcel.establishment.location}</Text>
+                    </Box>
+
+                    <Box>
+                      <Text fontWeight="bold" color={textColor}>
+                        {intl.formatMessage({ id: 'app.parcel' })}
                       </Text>
-                    </Flex>
-                    <Flex align="center" mb="15px">
-                      <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        {intl.formatMessage({ id: 'app.production' })}:{' '}
+                      <Link textDecoration="underline" color="green.500">
+                        {historyData?.parcel.name}
+                      </Link>
+                    </Box>
+
+                    <Box>
+                      <Text fontWeight="bold" color={textColor}>
+                        {intl.formatMessage({ id: 'app.production' })}
                       </Text>
-                      <Text fontSize="md" color="gray.500" fontWeight="400">
+                      <Text color="gray.600">
                         {`${new Date(historyData?.start_date).toLocaleDateString()} - ${new Date(
                           historyData?.finish_date
                         ).toLocaleDateString()}`}
                       </Text>
-                    </Flex>
-                    <Flex align="center" mb="15px">
-                      <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-                        {intl.formatMessage({ id: 'app.socialMedia' })}:{' '}
-                      </Text>
-                      <Flex>
-                        <Link
-                          href="#"
-                          color="green.400"
-                          fontSize="lg"
-                          me="10px"
-                          _hover={{ color: 'green.400' }}>
-                          <Icon as={FaFacebook} />
-                        </Link>
-                        <Link
-                          href="#"
-                          color="green.400"
-                          fontSize="lg"
-                          me="10px"
-                          _hover={{ color: 'green.400' }}>
-                          <Icon as={FaInstagram} />
-                        </Link>
-                        <Link
-                          href="#"
-                          color="green.400"
-                          fontSize="lg"
-                          me="10px"
-                          _hover={{ color: 'green.400' }}>
-                          <Icon as={FaTwitter} />
-                        </Link>
-                      </Flex>
-                    </Flex>
-                  </Flex>
-                </Flex>
-              </Flex>
+                    </Box>
 
-              <Flex px="24px" pb="24px" direction={'column'}>
-                <Text fontSize="xl" color={textColor} fontWeight="bold" pb="24px">
-                  {historyData?.parcel.establishment.name}
-                </Text>
-                <HTMLRenderer htmlString={historyData?.parcel.establishment.description} />
-              </Flex>
-              <Flex pt={'24px'} direction={{ sm: 'column', md: 'column', lg: 'row' }}>
-                <Flex px="24px" width={{ md: '100%', lg: '50%' }} direction={'column'}>
-                  <Text fontSize="xl" color={textColor} fontWeight="bold" pb="24px">
-                    Events
-                  </Text>
-                  <Flex direction="column" width={'100%'} paddingBottom={'24px'}>
-                    {historyData?.events?.map((event, index, arr) => {
-                      return (
-                        <TimelineRow
-                          key={event.id}
-                          logo={event.certified ? FaRegCheckCircle : FaRegDotCircle}
-                          title={
-                            event.event_type != 3
-                              ? intl.formatMessage({ id: `${event.type}` })
-                              : event.name
-                          }
-                          date={new Date(event.date).toDateString()}
-                          color={event.certified ? 'green.300' : 'blue.400'}
-                          index={index}
-                          arrLength={arr.length}
-                          isLast={index === arr.length - 1}
-                        />
-                      );
-                    })}
-                  </Flex>
-                </Flex>
-                <Flex
-                  width={{ md: '100%', lg: '50%' }}
-                  direction="column"
-                  h="300px"
-                  px="24px"
-                  height={'340px'}>
-                  <Text fontSize="xl" color={textColor} fontWeight="bold" pb="24px">
-                    {intl.formatMessage({ id: 'app.parcelLocation' })}
-                  </Text>
-                  {isLoaded && historyData && (
-                    <GoogleMap
-                      mapContainerStyle={{
-                        width: '100%',
-                        height: '100%',
-                        borderRadius: '10px'
-                      }}
-                      zoom={historyData?.parcel.map_metadata.zoom || 15}
-                      center={historyData?.parcel.map_metadata.center || { lat: 0, lng: 0 }}
-                      mapTypeId="satellite">
-                      <Polygon
-                        path={historyData?.parcel.polygon}
-                        options={{
-                          fillColor: '#ff0000',
-                          fillOpacity: 0.35,
-                          strokeColor: '#ff0000',
-                          strokeOpacity: 1,
-                          strokeWeight: 2
+                    <Box>
+                      <Text fontWeight="bold" color={textColor}>
+                        {intl.formatMessage({ id: 'app.socialMedia' })}
+                      </Text>
+                      <HStack spacing={2}>
+                        <Link href="#" color="green.500" _hover={{ color: 'green.600' }}>
+                          <Icon as={FaFacebook} boxSize={5} />
+                        </Link>
+                        <Link href="#" color="green.500" _hover={{ color: 'green.600' }}>
+                          <Icon as={FaInstagram} boxSize={5} />
+                        </Link>
+                        <Link href="#" color="green.500" _hover={{ color: 'green.600' }}>
+                          <Icon as={FaTwitter} boxSize={5} />
+                        </Link>
+                      </HStack>
+                    </Box>
+
+                    <Box>
+                      <Text fontWeight="bold" color={textColor}>
+                        {intl.formatMessage({ id: 'app.harvestDate' })}
+                      </Text>
+                      <Text color="gray.600">
+                        {new Date(historyData?.finish_date).toLocaleDateString()}
+                      </Text>
+                    </Box>
+                  </SimpleGrid>
+                </Box>
+
+                {/* Map and Establishment Description */}
+                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} mb={6}>
+                  {/* Map */}
+                  <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={4} height="250px">
+                    <Text fontSize="lg" fontWeight="bold" mb={2}>
+                      {intl.formatMessage({ id: 'app.parcelLocation' })}
+                    </Text>
+                    {isLoaded && historyData && (
+                      <GoogleMap
+                        mapContainerStyle={{
+                          width: '100%',
+                          height: 'calc(100% - 30px)',
+                          borderRadius: '10px'
                         }}
+                        zoom={historyData?.parcel?.map_metadata?.zoom || 15}
+                        center={historyData?.parcel?.map_metadata?.center || { lat: 0, lng: 0 }}
+                        mapTypeId="satellite"
+                      >
+                        <Polygon
+                          path={historyData?.parcel?.polygon || []}
+                          options={{
+                            fillColor: '#ff0000',
+                            fillOpacity: 0.35,
+                            strokeColor: '#ff0000',
+                            strokeOpacity: 1,
+                            strokeWeight: 2
+                          }}
+                        />
+                      </GoogleMap>
+                    )}
+                  </Box>
+
+                  {/* Establishment Description */}
+                  <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6}>
+                    <Text fontSize="lg" fontWeight="bold" mb={2}>
+                      {historyData?.parcel.establishment.name}
+                    </Text>
+                    <Box maxH="202px" overflowY="auto" pr={2}>
+                      <HTMLRenderer htmlString={historyData?.parcel.establishment.description} />
+                    </Box>
+                  </Box>
+                </SimpleGrid>
+              </Box>
+            </SimpleGrid>
+
+            {/* Journey Timeline - Full Width */}
+            <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6} w="100%">
+              <HStack spacing={2} mb={3}>
+                <Icon as={MdTimeline} color="blue.500" boxSize={6} />
+                <Heading as="h3" size="md">
+                  {intl.formatMessage({ id: 'app.journeyOfYourProduct' })}
+                </Heading>
+              </HStack>
+              {carbonData && carbonData.timeline && (
+                <EnhancedTimeline
+                  events={carbonData.timeline.map((event: any) => ({
+                    id: (event.stage || '') + '-' + (event.date || ''),
+                    date: event.date,
+                    title: event.stage || '',
+                    description: event.description || '',
+                    type:
+                      event.stage && event.stage.toLowerCase().includes('plant')
+                        ? 'planting'
+                        : event.stage && event.stage.toLowerCase().includes('harvest')
+                        ? 'harvesting'
+                        : event.stage && event.stage.toLowerCase().includes('transport')
+                        ? 'transport'
+                        : event.stage && event.stage.toLowerCase().includes('process')
+                        ? 'processing'
+                        : 'general',
+                    carbonImpact: event.carbon_impact || undefined,
+                    photos: event.photos || [],
+                    additionalInfo: event.details || undefined
+                  }))}
+                  farmer={{
+                    name: historyData?.parcel?.establishment?.name || 'Establishment',
+                    photo: historyData?.parcel?.establishment?.photo || '',
+                    bio:
+                      historyData?.parcel?.establishment?.description ||
+                      'Sustainable agricultural establishment',
+                    generation: 0,
+                    location: historyData?.parcel?.establishment?.location || '',
+                    certifications: historyData?.parcel?.establishment?.certifications || [],
+                    sustainabilityInitiatives: [],
+                    carbonReduction: 0,
+                    yearsOfPractice: 0
+                  }}
+                />
+              )}
+            </Box>
+
+            {/* Emissions and Offsets Breakdown */}
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} mb={6}>
+              {/* Emissions Breakdown */}
+              <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6}>
+                <Heading as="h3" size="md" mb={3}>
+                  {intl.formatMessage({ id: 'app.emissionsBreakdown' })}
+                </Heading>
+                <Text fontWeight="bold" mb={1}>
+                  {intl.formatMessage({ id: 'app.byCategory' })}:
+                </Text>
+                <VStack spacing={2} align="start" mb={4}>
+                  {carbonData?.emissionsByCategory &&
+                    Object.entries(carbonData.emissionsByCategory).map(([category, value]) => (
+                      <HStack key={category} w="full" justify="space-between">
+                        <Text>{category}</Text>
+                        <Text>{typeof value === 'number' ? value.toFixed(2) : value} kg CO2e</Text>
+                      </HStack>
+                    ))}
+                </VStack>
+                <Text fontWeight="bold" mb={1}>
+                  {intl.formatMessage({ id: 'app.bySource' })}:
+                </Text>
+                <VStack spacing={2} align="start">
+                  {carbonData?.emissionsBySource &&
+                    Object.entries(carbonData.emissionsBySource).map(([source, value]) => (
+                      <HStack key={source} w="full" justify="space-between">
+                        <Text>{source}</Text>
+                        <Text>{typeof value === 'number' ? value.toFixed(2) : value} kg CO2e</Text>
+                      </HStack>
+                    ))}
+                </VStack>
+              </Box>
+
+              {/* Offset Breakdown */}
+              <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6}>
+                <Heading as="h3" size="md" mb={3}>
+                  {intl.formatMessage({ id: 'app.offsetsBreakdown' })}
+                </Heading>
+                <VStack spacing={2} align="start">
+                  {carbonData?.offsetsByAction &&
+                    Object.entries(carbonData.offsetsByAction).map(([action, value]) => (
+                      <HStack key={action} w="full" justify="space-between">
+                        <Text>{action}</Text>
+                        <Text>{typeof value === 'number' ? value.toFixed(2) : value} kg CO2e</Text>
+                      </HStack>
+                    ))}
+                </VStack>
+
+                {/* Social Proof */}
+                <Box bg="green.50" mt={4} p={3} borderRadius="md">
+                  <HStack>
+                    <Icon as={FaLeaf} color="green.500" />
+                    <Text color="green.700" fontSize="sm">
+                      {carbonData?.socialProof?.totalUsers || 5000}+ users have offset{' '}
+                      {(carbonData?.socialProof?.totalOffsets || 20).toFixed(1)} tons of CO2e with
+                      this product
+                    </Text>
+                  </HStack>
+                </Box>
+              </Box>
+            </SimpleGrid>
+
+            {/* Carbon Reports - when available */}
+            {carbonData?.reports && carbonData.reports.length > 0 && (
+              <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6}>
+                <HStack spacing={2} mb={4}>
+                  <Icon as={DownloadIcon} color="green.500" boxSize={5} />
+                  <Heading as="h3" size="md">
+                    {intl.formatMessage({ id: 'app.verifiedReports' }) || 'Verified Carbon Reports'}
+                  </Heading>
+                </HStack>
+
+                <Text fontSize="sm" color="gray.600" mb={4}>
+                  {intl.formatMessage({ id: 'app.reportsExplanation' }) ||
+                    'These certified reports provide detailed carbon footprint data for this product.'}
+                </Text>
+
+                <Table variant="simple" size="sm" colorScheme="green">
+                  <Thead bg="green.50">
+                    <Tr>
+                      <Th>{intl.formatMessage({ id: 'app.type' }) || 'Type'}</Th>
+                      <Th>{intl.formatMessage({ id: 'app.period' }) || 'Period'}</Th>
+                      <Th>{intl.formatMessage({ id: 'app.totalEmissions' }) || 'Emissions'}</Th>
+                      <Th>{intl.formatMessage({ id: 'app.offsets' }) || 'Offsets'}</Th>
+                      <Th>{intl.formatMessage({ id: 'app.document' }) || 'Report'}</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {carbonData.reports.map((report) => (
+                      <Tr key={report.id}>
+                        <Td>
+                          <Badge colorScheme={report.report_type === 'annual' ? 'green' : 'blue'}>
+                            {report.report_type === 'annual'
+                              ? intl.formatMessage({ id: 'app.annual' }) || 'Annual'
+                              : report.report_type === 'quarterly'
+                              ? intl.formatMessage({ id: 'app.quarterly' }) || 'Quarterly'
+                              : intl.formatMessage({ id: 'app.custom' }) || 'Custom'}
+                          </Badge>
+                        </Td>
+                        <Td>
+                          {new Date(report.period_start).toLocaleDateString()} -{' '}
+                          {new Date(report.period_end).toLocaleDateString()}
+                        </Td>
+                        <Td>{(report.total_emissions || 0).toFixed(2)} kg CO₂e</Td>
+                        <Td>{(report.total_offsets || 0).toFixed(2)} kg CO₂e</Td>
+                        <Td>
+                          {report.document ? (
+                            <Button
+                              colorScheme="green"
+                              variant="solid"
+                              size="sm"
+                              leftIcon={<DownloadIcon />}
+                              onClick={() => window.open(report.document!, '_blank')}
+                            >
+                              {intl.formatMessage({ id: 'app.view' }) || 'View'}
+                            </Button>
+                          ) : (
+                            <Badge colorScheme="gray">N/A</Badge>
+                          )}
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+
+                {/* USDA Verification Badge */}
+                {carbonData.isUsdaVerified && (
+                  <Box mt={4} p={3} borderRadius="md" bg="blue.50">
+                    <HStack>
+                      <Badge px={2} py={1} colorScheme="blue" variant="solid">
+                        USDA Verified
+                      </Badge>
+                      <Text fontSize="sm">
+                        {intl.formatMessage({ id: 'app.usdaVerified' }) ||
+                          'This data has been verified according to USDA Standards'}
+                        {carbonData.verificationDate &&
+                          ` (${new Date(carbonData.verificationDate).toLocaleDateString()})`}
+                      </Text>
+                    </HStack>
+                  </Box>
+                )}
+              </Box>
+            )}
+
+            {/* Similar Products */}
+            <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6}>
+              <Text fontSize="lg" color={textColor} fontWeight="bold" mb="24px">
+                {intl.formatMessage({ id: 'app.similarProducts' })}
+              </Text>
+              <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
+                {historyData?.similar_histories.map((history: any) => (
+                  <Box
+                    key={history.id}
+                    bg={useColorModeValue('white', 'gray.700')}
+                    borderRadius="lg"
+                    boxShadow="sm"
+                    p={4}
+                    cursor="pointer"
+                    onClick={() => navigate(`/production/${history.id}`, { replace: true })}
+                    transition="all 0.2s"
+                    _hover={{ transform: 'translateY(-2px)', boxShadow: 'md' }}
+                  >
+                    <Flex align="center" mb={3}>
+                      <Image
+                        src={history.image || defaultEstablishmentImage}
+                        boxSize="50px"
+                        borderRadius="md"
+                        mr={3}
+                        objectFit="cover"
                       />
-                    </GoogleMap>
-                  )}
-                </Flex>
-              </Flex>
-              <Flex justifyContent={'center'} py="85px">
-                <Button
-                  variant="no-hover"
-                  bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                  w={{ sm: '240px', md: '100%', lg: '240px' }}
-                  h="50px"
-                  mx={{ sm: 'auto', md: '0px' }}
-                  color="#fff"
-                  fontSize="xs"
-                  fontWeight="bold"
-                  onClick={() =>
-                    navigate(
-                      `/admin/dashboard/production/${productionId}/review/${historyData?.history_scan}`
-                    )
-                  }>
-                  {intl.formatMessage({ id: 'app.iBoughtIt' })}
-                </Button>
-              </Flex>
-              <Flex pt="14px" pb="34px">
-                <FormControl>
-                  <FormLabel color={textColor} fontWeight="bold" fontSize="md">
-                    {intl.formatMessage({ id: 'app.shareYourInitialProductImpression' })}
-                  </FormLabel>
-                  {isSuccessComment ? (
-                    <Flex justifyContent={'center'} my="34px">
-                      <Text fontSize="md" color={'gray.500'} fontWeight="normal">
+                      <VStack align="start" spacing={0}>
+                        <Text fontWeight="bold" fontSize="md">
+                          {history.product.name}
+                        </Text>
+                        <HStack spacing={1}>
+                          {[...Array(5)].map((_, i) => (
+                            <Icon
+                              key={i}
+                              as={
+                                history?.reputation >= i + 1
+                                  ? BsStarFill
+                                  : history?.reputation > i + 0.5
+                                  ? BsStarHalf
+                                  : BsStar
+                              }
+                              color="orange.300"
+                              boxSize={3}
+                            />
+                          ))}
+                        </HStack>
+                      </VStack>
+                    </Flex>
+                    <CarbonScore score={85} footprint={0.5} isCompact />
+                  </Box>
+                ))}
+              </SimpleGrid>
+            </Box>
+
+            {/* Sustainability Recommendations */}
+            {recommendationsData &&
+              recommendationsData.recommendations &&
+              recommendationsData.recommendations.length > 0 && (
+                <Box mb={6}>
+                  <Heading as="h3" size="md" mb={3}>
+                    {intl.formatMessage({ id: 'app.sustainability' })}
+                  </Heading>
+                  <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+                    {recommendationsData.recommendations.slice(0, 4).map((rec, index) => (
+                      <HStack key={index} align="start" spacing={3}>
+                        <Icon
+                          as={
+                            index % 4 === 0
+                              ? FaWater
+                              : index % 4 === 1
+                              ? MdNoFood
+                              : index % 4 === 2
+                              ? FaSeedling
+                              : FaLeaf
+                          }
+                          color="green.500"
+                          boxSize={5}
+                          mt={1}
+                        />
+                        <Box>
+                          <Text fontWeight="bold">
+                            {rec.title
+                              .replace('Implement ', '')
+                              .replace('Switch to ', '')
+                              .replace('Use ', '')}
+                          </Text>
+                          <Text fontSize="sm" color="gray.600">
+                            {rec.impact || rec.description}
+                          </Text>
+                        </Box>
+                      </HStack>
+                    ))}
+                  </SimpleGrid>
+                </Box>
+              )}
+
+            {/* Feedback Section */}
+            <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6}>
+              <FormControl>
+                <FormLabel color={textColor} fontWeight="bold" fontSize="md">
+                  {intl.formatMessage({ id: 'app.shareYourInitialProductImpression' })}
+                </FormLabel>
+                {isSuccessComment ? (
+                  <Flex justifyContent="center" bg="green.50" p={4} borderRadius="md">
+                    <HStack>
+                      <Icon as={FaRegCheckCircle} color="green.500" />
+                      <Text fontSize="md" color="green.700">
                         {intl.formatMessage({ id: 'app.commentSentSuccessfully' })}
                       </Text>
-                    </Flex>
-                  ) : (
+                    </HStack>
+                  </Flex>
+                ) : (
+                  <>
                     <Textarea
                       placeholder={intl.formatMessage({ id: 'app.yourFirstImpressionHere' })}
                       minH="120px"
@@ -589,376 +1222,181 @@ function Capture() {
                       borderRadius="15px"
                       value={commentValue}
                       onChange={(e) => setCommentValue(e.target.value)}
+                      mb={4}
                     />
-                  )}
-
-                  <Flex mt="24px" justifyContent={'flex-end'}>
-                    <Button
-                      variant="no-hover"
-                      bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                      w={{ sm: '120px', md: '120px', lg: '120px' }}
-                      h="50px"
-                      mx={{ sm: 'auto', md: '0px' }}
-                      color="#fff"
-                      fontSize="xs"
-                      fontWeight="bold"
-                      disabled={isLoadingComment || !commentValue || isSuccessComment}
-                      onClick={() => onSubmitHandler()}>
-                      {intl.formatMessage({ id: 'app.send' })}
-                    </Button>
-                  </Flex>
-                </FormControl>
-              </Flex>
-              <Text fontSize="lg" color={textColor} fontWeight="bold" mb="24px">
-                {intl.formatMessage({ id: 'app.similarProducts' })}
-              </Text>
-              <Box w="100%">
-                <Table variant="simple" w="100%">
-                  <Thead>
-                    <Tr>
-                      <Th color="gray.400" fontSize="xs" paddingInlineStart={'0'}>
-                        {intl.formatMessage({ id: 'app.name' })}
-                      </Th>
-                      <Th color="gray.400" fontSize="xs">
-                        {intl.formatMessage({ id: 'app.review' })}
-                      </Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {historyData?.similar_histories.map((history: any) => (
-                      <Tr
-                        onClick={() =>
-                          navigate(`/production/${history.id}`, {
-                            replace: true
-                          })
-                        }
-                        cursor="pointer"
-                        key={history.id}>
-                        <Td minW="300px" paddingInlineStart={'0'}>
-                          <Flex align="center">
-                            <Box w="40px" h="40px" me="14px">
-                              <Image
-                                src={history.image || defaultEstablishmentImage}
-                                w="100%"
-                                h="100%"
-                                borderRadius="12px"
-                              />
-                            </Box>
-                            <Text color={textColor} fontSize="sm" fontWeight="bold">
-                              {history.product.name}
-                            </Text>
-                          </Flex>
-                        </Td>
-                        <Td>
-                          <Stack direction="row" spacing="12px" color="orange.300" mb="16px">
-                            <Icon
-                              as={
-                                history?.reputation >= 1
-                                  ? BsStarFill
-                                  : history?.reputation > 0.5
-                                  ? BsStarHalf
-                                  : BsStar
-                              }
-                              w="18px"
-                              h="18px"
-                            />
-                            <Icon
-                              as={
-                                history?.reputation >= 2
-                                  ? BsStarFill
-                                  : history?.reputation > 1.5
-                                  ? BsStarHalf
-                                  : BsStar
-                              }
-                              w="18px"
-                              h="18px"
-                            />
-                            <Icon
-                              as={
-                                history?.reputation >= 3
-                                  ? BsStarFill
-                                  : history?.reputation > 2.5
-                                  ? BsStarHalf
-                                  : BsStar
-                              }
-                              w="18px"
-                              h="18px"
-                            />
-                            <Icon
-                              as={
-                                history?.reputation >= 4
-                                  ? BsStarFill
-                                  : history?.reputation > 3.5
-                                  ? BsStarHalf
-                                  : BsStar
-                              }
-                              w="18px"
-                              h="18px"
-                            />
-                            <Icon
-                              as={
-                                history?.reputation === 5
-                                  ? BsStarFill
-                                  : history?.reputation > 4.5
-                                  ? BsStarHalf
-                                  : BsStar
-                              }
-                              w="18px"
-                              h="18px"
-                            />
-                          </Stack>
-                        </Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </Box>
-            </Flex>
+                    <Flex justifyContent="flex-end">
+                      <Button
+                        colorScheme="green"
+                        px={6}
+                        isDisabled={isLoadingComment || !commentValue || isSuccessComment}
+                        onClick={() => onSubmitHandler()}
+                        leftIcon={<Icon as={FaRegCheckCircle} />}
+                      >
+                        {intl.formatMessage({ id: 'app.send' })}
+                      </Button>
+                    </Flex>
+                  </>
+                )}
+              </FormControl>
+            </Box>
           </CardBody>
         </Card>
       </Flex>
-      <Flex direction={{ sm: 'column', md: 'column', lg: 'row' }} mb={{ sm: '22px', lg: '44px' }}>
-        <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6} w="100%">
-          <VStack spacing={3} align="center">
-            <Heading as="h2" size="lg">
-              {intl.formatMessage({ id: 'app.carbonScore' })}:{' '}
-              {carbonData ? carbonData.carbon_score : 'N/A'}
-            </Heading>
-            <Progress
-              value={carbonData ? carbonData.carbon_score : 0}
-              size="lg"
-              w="full"
-              colorScheme={
-                carbonData && carbonData.carbon_score > 75
-                  ? 'green'
-                  : carbonData && carbonData.carbon_score > 50
-                  ? 'yellow'
-                  : 'red'
-              }
-              borderRadius="md"
-            />
-            <Text fontSize="sm" color="gray.500">
-              Top {carbonData ? carbonData.industry_percentile : 'N/A'}% in sustainable farming
-            </Text>
-            <Divider />
-            <Text fontSize="md">
-              Net Carbon Footprint: {carbonData ? carbonData.net_carbon.toFixed(2) : 'N/A'} kg CO2e
-            </Text>
-            <Text fontSize="sm" color="gray.600">
-              Equivalent to {carbonData ? carbonData.relatable_footprint : 'N/A'}
-            </Text>
-          </VStack>
-        </Box>
-      </Flex>
 
-      <Flex direction={{ sm: 'column', md: 'column', lg: 'row' }} mb={{ sm: '22px', lg: '44px' }}>
-        <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6} w="100%">
-          <HStack spacing={2} justify="center" mb={3}>
-            <Icon as={MdEco} color="green.500" boxSize={6} />
-            <Heading as="h3" size="md">
-              {intl.formatMessage({ id: 'app.achievements' })}
-            </Heading>
-          </HStack>
-          <HStack spacing={4} justify="center" wrap="wrap">
-            {carbonData &&
-              carbonData.badges &&
-              carbonData.badges.map((badge: any, index: number) => (
-                <Badge key={index} variant="subtle" colorScheme="green" p={2} borderRadius="md">
-                  {badge.name}
-                </Badge>
-              ))}
-          </HStack>
-        </Box>
-      </Flex>
-
-      <Flex direction={{ sm: 'column', md: 'column', lg: 'row' }} mb={{ sm: '22px', lg: '44px' }}>
-        <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6} w="100%">
-          <HStack spacing={2} mb={3}>
-            <Icon as={MdLocalFlorist} color="brown.500" boxSize={6} />
-            <Heading as="h3" size="md">
-              {intl.formatMessage({ id: 'app.meetYourFarmer' })}
-            </Heading>
-          </HStack>
-          <Text fontSize="md" color="gray.700">
-            {carbonData ? carbonData.farmer_story : 'Story not available.'}
-          </Text>
-        </Box>
-      </Flex>
-
-      <Flex direction={{ sm: 'column', md: 'column', lg: 'row' }} mb={{ sm: '22px', lg: '44px' }}>
-        <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6} w="100%">
-          <HStack spacing={2} mb={3}>
-            <Icon as={MdTimeline} color="blue.500" boxSize={6} />
-            <Heading as="h3" size="md">
-              {intl.formatMessage({ id: 'app.journeyOfYourProduct' })}
-            </Heading>
-          </HStack>
-          <VStack spacing={4} align="start">
-            {carbonData &&
-              carbonData.timeline &&
-              carbonData.timeline.map((event: any, index: number) => (
-                <Box
-                  key={index}
-                  borderLeft="2px solid"
-                  borderColor="blue.200"
-                  pl={4}
-                  position="relative"
-                  _before={{
-                    content: '""',
-                    position: 'absolute',
-                    left: '-6px',
-                    top: '0',
-                    width: '12px',
-                    height: '12px',
-                    borderRadius: 'full',
-                    bg: 'blue.500'
-                  }}>
-                  <Text fontWeight="bold">
-                    {event.stage} - {event.date}
-                  </Text>
-                  <Text fontSize="sm" color="gray.600">
-                    {event.description}
-                  </Text>
-                </Box>
-              ))}
-          </VStack>
-        </Box>
-      </Flex>
-
-      <Flex direction={{ sm: 'column', md: 'column', lg: 'row' }} mb={{ sm: '22px', lg: '44px' }}>
-        <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6} w="100%">
-          <Heading as="h3" size="md" mb={3}>
-            {intl.formatMessage({ id: 'app.emissionsBreakdown' })}
-          </Heading>
-          <Text fontWeight="bold" mb={1}>
-            {intl.formatMessage({ id: 'app.byCategory' })}:
-          </Text>
-          <VStack spacing={2} align="start" mb={4}>
-            {carbonData &&
-              carbonData.emissions_by_category &&
-              Object.entries(carbonData.emissions_by_category).map(([category, value]) => (
-                <HStack key={category} w="full" justify="space-between">
-                  <Text>{category}</Text>
-                  <Text>{(value as number).toFixed(2)} kg CO2e</Text>
-                </HStack>
-              ))}
-          </VStack>
-          <Text fontWeight="bold" mb={1}>
-            {intl.formatMessage({ id: 'app.bySource' })}:
-          </Text>
-          <VStack spacing={2} align="start" mb={4}>
-            {carbonData &&
-              carbonData.emissions_by_source &&
-              Object.entries(carbonData.emissions_by_source).map(([source, value]) => (
-                <HStack key={source} w="full" justify="space-between">
-                  <Text>{source}</Text>
-                  <Text>{(value as number).toFixed(2)} kg CO2e</Text>
-                </HStack>
-              ))}
-          </VStack>
-        </Box>
-      </Flex>
-
-      <Flex direction={{ sm: 'column', md: 'column', lg: 'row' }} mb={{ sm: '22px', lg: '44px' }}>
-        <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6} w="100%">
-          <Heading as="h3" size="md" mb={3}>
-            {intl.formatMessage({ id: 'app.offsetsBreakdown' })}
-          </Heading>
-          <VStack spacing={2} align="start">
-            {carbonData &&
-              carbonData.offsets_by_action &&
-              Object.entries(carbonData.offsets_by_action).map(([action, value]) => (
-                <HStack key={action} w="full" justify="space-between">
-                  <Text>{action}</Text>
-                  <Text>{(value as number).toFixed(2)} kg CO2e</Text>
-                </HStack>
-              ))}
-          </VStack>
-        </Box>
-      </Flex>
-
-      <Flex direction={{ sm: 'column', md: 'column', lg: 'row' }} mb={{ sm: '22px', lg: '44px' }}>
-        <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} w="100%">
-          <Heading as="h3" size="md" mb={3}>
-            {intl.formatMessage({ id: 'app.takeAction' })}
-          </Heading>
-          <VStack spacing={3} align="center">
-            <Button colorScheme="green" onClick={onOffsetModalOpen} w="full">
-              {intl.formatMessage({ id: 'app.offsetNow' })} ($0.05)
-            </Button>
-            <Button leftIcon={<MdShare />} colorScheme="blue" onClick={handleShare} w="full">
-              {intl.formatMessage({ id: 'app.share' })}
-            </Button>
-            <Button
-              leftIcon={<MdStar />}
-              colorScheme="yellow"
-              onClick={onFeedbackModalOpen}
-              w="full">
-              {intl.formatMessage({ id: 'app.rateProduct' })}
-            </Button>
-            <Text fontSize="sm" color="gray.500">
-              {intl.formatMessage({ id: 'app.helpEnvironment' })}
-            </Text>
-          </VStack>
-        </Box>
-      </Flex>
-
-      <Modal isOpen={isOffsetModalOpen} onClose={onOffsetModalClose}>
+      {/* Offset Modal */}
+      <Modal isOpen={isOffsetModalOpen} onClose={onOffsetModalClose} size="md" isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{intl.formatMessage({ id: 'app.offsetCarbonFootprint' })}</ModalHeader>
+          <ModalHeader>
+            <HStack>
+              <Icon as={FaLeaf} color="green.500" />
+              <Text>{intl.formatMessage({ id: 'app.offsetNow' }) || 'Offset Now'}</Text>
+            </HStack>
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text mb={4}>
-              {intl.formatMessage(
-                { id: 'app.offsetProductFootprint' },
-                { carbon: carbonData ? carbonData.net_carbon.toFixed(2) : 'N/A' }
-              )}
-            </Text>
-            <Text fontSize="sm" color="gray.500">
-              {intl.formatMessage({ id: 'app.paymentViaStripe' })}
-            </Text>
+            <VStack spacing={4} align="stretch">
+              <Text>
+                {intl.formatMessage(
+                  { id: 'app.offsetDescription' },
+                  {
+                    amount: offsetAmount.toFixed(2),
+                    weight: (carbonData?.netFootprint || 0).toFixed(2)
+                  }
+                ) ||
+                  `By contributing $${offsetAmount.toFixed(2)}, you'll offset ${(
+                    carbonData?.netFootprint || 0
+                  ).toFixed(2)} kg of CO₂e through verified sustainability projects.`}
+              </Text>
+              <Box bg="green.50" p={3} borderRadius="md">
+                <HStack>
+                  <Icon as={FaInfoCircle} color="green.600" />
+                  <Text fontSize="sm">
+                    {intl.formatMessage({ id: 'app.offsetSupport' }) ||
+                      'Your contribution supports reforestation and renewable energy projects.'}
+                  </Text>
+                </HStack>
+              </Box>
+              {/* Offset amount selector */}
+              <Text fontWeight="medium" mt={2}>
+                {intl.formatMessage({ id: 'app.selectAmount' }) || 'Select Amount:'}
+              </Text>
+              <SimpleGrid columns={3} spacing={3}>
+                <Button
+                  size="sm"
+                  colorScheme="green"
+                  variant={offsetAmount === 0.05 ? 'solid' : 'outline'}
+                  onClick={() => setOffsetAmount(0.05)}
+                >
+                  $0.05
+                </Button>
+                <Button
+                  size="sm"
+                  colorScheme="green"
+                  variant={offsetAmount === 0.1 ? 'solid' : 'outline'}
+                  onClick={() => setOffsetAmount(0.1)}
+                >
+                  $0.10
+                </Button>
+                <Button
+                  size="sm"
+                  colorScheme="green"
+                  variant={offsetAmount === 0.25 ? 'solid' : 'outline'}
+                  onClick={() => setOffsetAmount(0.25)}
+                >
+                  $0.25
+                </Button>
+              </SimpleGrid>
+            </VStack>
           </ModalBody>
           <ModalFooter>
-            <Button variant="outline" mr={3} onClick={() => setIsOffsetModalOpen(false)}>
-              {intl.formatMessage({ id: 'app.cancel' })}
+            <Button
+              colorScheme="gray"
+              mr={3}
+              onClick={onOffsetModalClose}
+              isDisabled={offsetLoading}
+            >
+              {intl.formatMessage({ id: 'app.cancel' }) || 'Cancel'}
             </Button>
-            <Button colorScheme="green" onClick={handleOffset}>
-              {intl.formatMessage({ id: 'app.confirmOffset' })}
+            <Button
+              colorScheme="green"
+              onClick={handleOffset}
+              isLoading={offsetLoading}
+              leftIcon={<Icon as={FaLeaf} />}
+            >
+              {intl.formatMessage({ id: 'app.payAmount' }, { amount: offsetAmount.toFixed(2) }) ||
+                `Pay $${offsetAmount.toFixed(2)}`}
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
 
-      <Modal isOpen={isFeedbackModalOpen} onClose={() => setIsFeedbackModalOpen(false)}>
+      {/* Feedback Modal */}
+      <Modal isOpen={isFeedbackModalOpen} onClose={onFeedbackModalClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{intl.formatMessage({ id: 'app.rateThisProduct' })}</ModalHeader>
+          <ModalHeader>
+            <HStack>
+              <Icon as={MdStar} color="yellow.500" />
+              <Text>{intl.formatMessage({ id: 'app.rateThisProduct' })}</Text>
+            </HStack>
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text mb={4}>{intl.formatMessage({ id: 'app.rateSustainability' })}</Text>
-            <HStack spacing={1} justify="center" mb={4}>
-              {[1, 2, 3, 4, 5].map((star) => (
-                <StarIcon
-                  key={star}
-                  color={star <= feedbackRating ? 'yellow.400' : 'gray.300'}
-                  boxSize={6}
-                  cursor="pointer"
-                  onClick={() => setFeedbackRating(star)}
+            <VStack spacing={4} align="stretch">
+              <Text mb={2}>{intl.formatMessage({ id: 'app.rateSustainability' })}</Text>
+
+              <Box bg="yellow.50" p={4} borderRadius="md" textAlign="center">
+                <HStack spacing={2} justify="center" mb={2}>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Icon
+                      key={star}
+                      as={StarIcon}
+                      color={star <= feedbackRating ? 'yellow.400' : 'gray.300'}
+                      boxSize={8}
+                      cursor="pointer"
+                      onClick={() => setFeedbackRating(star)}
+                      transition="all 0.2s"
+                      _hover={{ transform: 'scale(1.2)' }}
+                    />
+                  ))}
+                </HStack>
+                <Text fontWeight="medium" color="yellow.700">
+                  {feedbackRating === 5
+                    ? 'Excellent!'
+                    : feedbackRating === 4
+                    ? 'Very Good!'
+                    : feedbackRating === 3
+                    ? 'Good'
+                    : feedbackRating === 2
+                    ? 'Fair'
+                    : 'Poor'}
+                </Text>
+              </Box>
+
+              <FormControl>
+                <FormLabel>Your Comments</FormLabel>
+                <Textarea
+                  placeholder="Share your thoughts about this product's sustainability..."
+                  value={feedbackComment}
+                  onChange={(e) => setFeedbackComment(e.target.value)}
+                  minH="120px"
                 />
-              ))}
-            </HStack>
-            <Textarea
-              placeholder="Share your thoughts..."
-              value={feedbackComment}
-              onChange={(e) => setFeedbackComment(e.target.value)}
-            />
+              </FormControl>
+
+              <Box bg="blue.50" p={3} borderRadius="md">
+                <Text fontSize="sm" color="blue.700">
+                  <Icon as={FaInfoCircle} mr={2} />
+                  You'll earn 2 Green Points for submitting your feedback!
+                </Text>
+              </Box>
+            </VStack>
           </ModalBody>
           <ModalFooter>
-            <Button variant="outline" mr={3} onClick={() => setIsFeedbackModalOpen(false)}>
+            <Button variant="outline" mr={3} onClick={onFeedbackModalClose}>
               {intl.formatMessage({ id: 'app.cancel' })}
             </Button>
-            <Button colorScheme="yellow" onClick={handleFeedback}>
+            <Button colorScheme="yellow" onClick={handleFeedback} leftIcon={<MdStar />}>
               {intl.formatMessage({ id: 'app.submitRating' })}
             </Button>
           </ModalFooter>

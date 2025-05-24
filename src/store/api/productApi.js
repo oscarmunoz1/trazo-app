@@ -2,16 +2,12 @@ import {
   ESTABLISHMENT_CHART_SCANS_VS_SALES_INFO_URL,
   ESTABLISHMENT_HISTORIES_URL,
   ESTABLISHMENT_PRODUCTS_URL,
-  LOGIN_URL,
-  PARCEL_UPDATE_URL,
   PARCEL_URL,
   PRODUCT_URL
 } from '../../config';
 
 //   import { EmployeeType } from "../../types/employees";
 import baseApi from './baseApi';
-import { logout as logoutUser } from 'store/features/authSlice';
-import { setCompany } from 'store/features/companySlice';
 
 export const productApi = baseApi.injectEndpoints({
   endpoints: (build) => ({

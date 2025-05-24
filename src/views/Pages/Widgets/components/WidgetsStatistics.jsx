@@ -16,15 +16,15 @@
 */
 
 // Chakra imports
-import { Flex, Text, useColorModeValue } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import React, { useState } from 'react';
 
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import IconBox from "components/Icons/IconBox";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import IconBox from 'components/Icons/IconBox';
 
 const WidgetsStatistics = ({ title, percentage, icon }) => {
-  const iconBoxInside = useColorModeValue("white", "white");
+  const iconBoxInside = useColorModeValue('white', 'white');
   return (
     <Card bg="green.400">
       <CardBody>
@@ -37,7 +37,7 @@ const WidgetsStatistics = ({ title, percentage, icon }) => {
               {`${percentage}%`}
             </Text>
           </Flex>
-          <IconBox as="box" h={"45px"} w={"45px"} bg={iconBoxInside}>
+          <IconBox as="box" h={'45px'} w={'45px'} bg={iconBoxInside}>
             {icon}
           </IconBox>
         </Flex>

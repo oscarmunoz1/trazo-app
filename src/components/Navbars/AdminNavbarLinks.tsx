@@ -164,7 +164,8 @@ export default function HeaderLinks(props: HeaderLinksProps) {
       pe={{ sm: '0px', md: '16px' }}
       w={{ sm: '100%', md: 'auto' }}
       alignItems="center"
-      justifyContent={{ sm: 'flex-end', md: 'flex-start' }}>
+      justifyContent={{ sm: 'flex-end', md: 'flex-start' }}
+    >
       {subdomain === 'producer' && isHome && (
         <InputGroup
           cursor="pointer"
@@ -180,7 +181,8 @@ export default function HeaderLinks(props: HeaderLinksProps) {
           }}
           _active={{
             borderColor: { mainTeal }
-          }}>
+          }}
+        >
           <InputLeftElement
             children={
               <IconButton
@@ -195,7 +197,8 @@ export default function HeaderLinks(props: HeaderLinksProps) {
                 _focus={{
                   boxShadow: 'none'
                 }}
-                icon={<SearchIcon color={searchIcon} w="15px" h="15px" />}></IconButton>
+                icon={<SearchIcon color={searchIcon} w="15px" h="15px" />}
+              ></IconButton>
             }
           />
 
@@ -216,7 +219,8 @@ export default function HeaderLinks(props: HeaderLinksProps) {
         color={navbarIcon}
         variant="transparent-with-icon"
         leftIcon={<RiLogoutBoxRLine color={navbarIcon} size="22px" me="0px" />}
-        onClick={handleLogout}>
+        onClick={handleLogout}
+      >
         <Text display={{ sm: 'none', md: 'flex' }}>
           {intl.formatMessage({ id: 'app.signOut' })}
         </Text>

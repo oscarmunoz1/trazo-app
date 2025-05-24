@@ -123,13 +123,15 @@ function ProfileUser() {
   return (
     <BoxBackground
       title={intl.formatMessage({ id: 'app.userProfile' })}
-      subtitle={intl.formatMessage({ id: 'app.modifyFormToEditProfile' })}>
+      subtitle={intl.formatMessage({ id: 'app.modifyFormToEditProfile' })}
+    >
       <Flex
         direction="column"
         bg={bgColor}
         w={{ base: '100%', md: '768px' }}
         boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
-        borderRadius="15px">
+        borderRadius="15px"
+      >
         <Tabs variant="unstyled" mt="24px" alignSelf="center" w="100%">
           <TabPanels maxW={{ md: '90%', lg: '100%' }} mx="auto">
             <TabPanel>
@@ -151,11 +153,13 @@ function ProfileUser() {
                             w="80px"
                             h="80px"
                             me="22px"
-                            borderRadius="15px">
+                            borderRadius="15px"
+                          >
                             <AvatarBadge
                               boxSize="1.75em"
                               bg="gray.100"
-                              {...getRootProps({ className: 'dropzone' })}>
+                              {...getRootProps({ className: 'dropzone' })}
+                            >
                               <FiCamera color="black" />
                               <Input
                                 id="imageInput"
@@ -178,7 +182,8 @@ function ProfileUser() {
                         <Stack
                           direction={{ sm: 'column', md: 'row' }}
                           spacing="30px"
-                          paddingTop="20px">
+                          paddingTop="20px"
+                        >
                           <FormInput
                             fontSize="xs"
                             ms="4px"
@@ -228,7 +233,8 @@ function ProfileUser() {
                           mt="24px"
                           w="100px"
                           h="35px"
-                          type="submit">
+                          type="submit"
+                        >
                           {isLoading ? (
                             <CircularProgress
                               isIndeterminate

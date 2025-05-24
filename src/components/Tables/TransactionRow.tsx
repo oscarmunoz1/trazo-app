@@ -35,7 +35,8 @@ function TransactionRow(props) {
           alignItems="center"
           justifyContent="center"
           w="35px"
-          h="35px">
+          h="35px"
+        >
           <Icon as={logo} />
         </Box>
         <Flex direction="column">

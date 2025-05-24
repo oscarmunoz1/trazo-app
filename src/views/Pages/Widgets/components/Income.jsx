@@ -23,20 +23,17 @@ import {
   StatHelpText,
   StatLabel,
   StatNumber,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import LineChart from "components/Charts/LineChart";
-import React from "react";
-import {
-  lineChartDataWidgets1,
-  lineChartOptionsWidgets1,
-} from "variables/charts";
+  useColorModeValue
+} from '@chakra-ui/react';
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import LineChart from 'components/Charts/LineChart';
+import React from 'react';
+import { lineChartDataWidgets1, lineChartOptionsWidgets1 } from 'variables/charts';
 
 const Income = () => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
   return (
     <Card px="0px" maxH="230px" pb="0px">
       <CardHeader px="22px">
@@ -64,10 +61,7 @@ const Income = () => {
       </CardHeader>
       <CardBody>
         <Box w="100%">
-          <LineChart
-            chartData={lineChartDataWidgets1}
-            chartOptions={lineChartOptionsWidgets1}
-          />
+          <LineChart chartData={lineChartDataWidgets1} chartOptions={lineChartOptionsWidgets1} />
         </Box>
       </CardBody>
     </Card>

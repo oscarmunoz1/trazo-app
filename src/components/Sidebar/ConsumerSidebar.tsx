@@ -116,7 +116,8 @@ function ConsumerSidebar(props: SidebarProps) {
                 xl: '16px'
               }}
               py="12px"
-              key={index}>
+              key={index}
+            >
               {Object.keys(intl?.messages).includes(`app.${prop.id}`)
                 ? intl.formatMessage({ id: `app.${prop.id}` })
                 : prop.name}
@@ -144,7 +145,8 @@ function ConsumerSidebar(props: SidebarProps) {
                 w={sidebarWidth === 275 ? '100%' : '77%'}
                 px={prop.icon ? null : '0px'}
                 py={prop.icon ? '12px' : null}
-                bg={activeRoute(prop.regex) && prop.icon ? activeAccordionBg : 'transparent'}>
+                bg={activeRoute(prop.regex) && prop.icon ? activeAccordionBg : 'transparent'}
+              >
                 {activeRoute(prop.regex) ? (
                   <Button
                     boxSize="initial"
@@ -169,7 +171,8 @@ function ConsumerSidebar(props: SidebarProps) {
                       transform: 'none',
                       borderColor: 'transparent',
                       border: 'none'
-                    }}>
+                    }}
+                  >
                     {prop.icon ? (
                       <Flex>
                         <IconBox
@@ -178,14 +181,16 @@ function ConsumerSidebar(props: SidebarProps) {
                           h="30px"
                           w="30px"
                           me="12px"
-                          transition={variantChange}>
+                          transition={variantChange}
+                        >
                           {prop.icon}
                         </IconBox>
                         <Text
                           color={activeColor}
                           my="auto"
                           fontSize="sm"
-                          display={sidebarWidth === 275 ? 'block' : 'none'}>
+                          display={sidebarWidth === 275 ? 'block' : 'none'}
+                        >
                           {Object.keys(intl?.messages).includes(`app.${prop.id}`)
                             ? intl.formatMessage({ id: `app.${prop.id}` })
                             : prop.name}
@@ -195,7 +200,8 @@ function ConsumerSidebar(props: SidebarProps) {
                       <HStack
                         spacing={sidebarWidth === 275 ? '22px' : '0px'}
                         ps={sidebarWidth === 275 ? '10px' : '0px'}
-                        ms={sidebarWidth === 275 ? '0px' : '8px'}>
+                        ms={sidebarWidth === 275 ? '0px' : '8px'}
+                      >
                         <Icon
                           as={FaCircle}
                           w="10px"
@@ -237,7 +243,8 @@ function ConsumerSidebar(props: SidebarProps) {
                     _focus={{
                       borderColor: 'transparent',
                       boxShadow: 'none'
-                    }}>
+                    }}
+                  >
                     {prop.icon ? (
                       <NavLink to={prop.isCompanySettings ? prop.layout + prop.path : null}>
                         <Flex>
@@ -249,14 +256,16 @@ function ConsumerSidebar(props: SidebarProps) {
                             me="12px"
                             transition={variantChange}
                             boxShadow={sidebarActiveShadow}
-                            _hover={{ boxShadow: sidebarActiveShadow }}>
+                            _hover={{ boxShadow: sidebarActiveShadow }}
+                          >
                             {prop.icon}
                           </IconBox>
                           <Text
                             color={inactiveColor}
                             my="auto"
                             fontSize="sm"
-                            display={sidebarWidth === 275 ? 'block' : 'none'}>
+                            display={sidebarWidth === 275 ? 'block' : 'none'}
+                          >
                             {Object.keys(intl?.messages).includes(`app.${prop.id}`)
                               ? intl.formatMessage({ id: `app.${prop.id}` })
                               : prop.name}
@@ -267,7 +276,8 @@ function ConsumerSidebar(props: SidebarProps) {
                       <HStack
                         spacing={sidebarWidth === 275 ? '26px' : '0px'}
                         ps={sidebarWidth === 275 ? '10px' : '0px'}
-                        ms={sidebarWidth === 275 ? '0px' : '8px'}>
+                        ms={sidebarWidth === 275 ? '0px' : '8px'}
+                      >
                         <Icon
                           as={FaCircle}
                           w="6px"
@@ -304,7 +314,8 @@ function ConsumerSidebar(props: SidebarProps) {
               <AccordionPanel
                 pe={prop.icon ? null : '0px'}
                 display={prop.isCompanySettings ? 'none' : 'block'}
-                pb="8px"></AccordionPanel>
+                pb="8px"
+              ></AccordionPanel>
             </AccordionItem>
           </Accordion>
         );
@@ -319,7 +330,8 @@ function ConsumerSidebar(props: SidebarProps) {
                 <Text
                   color={activeRoute(prop.regex) ? activeColor : inactiveColor}
                   fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}
-                  fontSize="sm">
+                  fontSize="sm"
+                >
                   {prop.name}
                 </Text>
               </HStack>
@@ -353,7 +365,8 @@ function ConsumerSidebar(props: SidebarProps) {
         fontWeight="bold"
         justifyContent="center"
         alignItems="center"
-        fontSize="11px">
+        fontSize="11px"
+      >
         <Image src={logo} alt="trazo logo" height="40px" paddingRight="10px" href="" />
       </Link>
       <HSeparator />
@@ -377,7 +390,8 @@ function ConsumerSidebar(props: SidebarProps) {
     <Box
       ref={mainPanel}
       onMouseEnter={toggleSidebar ? () => setSidebarWidth(sidebarWidth === 120 ? 275 : 120) : null}
-      onMouseLeave={toggleSidebar ? () => setSidebarWidth(sidebarWidth === 275 ? 120 : 275) : null}>
+      onMouseLeave={toggleSidebar ? () => setSidebarWidth(sidebarWidth === 275 ? 120 : 275) : null}
+    >
       <Box display={{ sm: 'none', xl: 'block' }} position="fixed">
         <Box
           bg={sidebarBg}
@@ -393,13 +407,15 @@ function ConsumerSidebar(props: SidebarProps) {
           ps="20px"
           pe="20px"
           m={sidebarMargins}
-          borderRadius={sidebarRadius}>
+          borderRadius={sidebarRadius}
+        >
           {isWindows ? (
             <Scrollbars
               autoHide
               renderTrackVertical={renderTrack}
               renderThumbVertical={useColorModeValue(renderThumbLight, renderThumbDark)}
-              renderView={renderView}>
+              renderView={renderView}
+            >
               {sidebarContent}
             </Scrollbars>
           ) : (

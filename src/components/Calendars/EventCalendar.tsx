@@ -21,8 +21,8 @@ import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
 import interactionPlugin from '@fullcalendar/interaction'; // needed for dayClick
 
 type EventCalendarProps = {
-  calendarData: Array<any>,
-  initialDate: string
+  calendarData: Array<any>;
+  initialDate: string;
 };
 
 function EventCalendar(props: EventCalendarProps) {

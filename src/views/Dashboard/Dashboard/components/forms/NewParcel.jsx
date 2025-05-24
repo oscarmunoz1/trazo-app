@@ -510,7 +510,8 @@ function NewParcel() {
                       mt="24px"
                       w="100px"
                       h="35px"
-                      type="submit">
+                      type="submit"
+                    >
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
                         {intl.formatMessage({ id: 'app.next' })}
                       </Text>
@@ -547,7 +548,8 @@ function NewParcel() {
                         mt="24px"
                         w="100px"
                         h="35px"
-                        onClick={() => mainInfoTab.current.click()}>
+                        onClick={() => mainInfoTab.current.click()}
+                      >
                         <Text fontSize="xs" color="gray.700" fontWeight="bold">
                           {intl.formatMessage({ id: 'app.prev' })}
                         </Text>
@@ -559,7 +561,8 @@ function NewParcel() {
                         mt="24px"
                         w="100px"
                         h="35px"
-                        type="submit">
+                        type="submit"
+                      >
                         <Text fontSize="xs" color="#fff" fontWeight="bold">
                           {intl.formatMessage({ id: 'app.next' })}
                         </Text>
@@ -593,7 +596,8 @@ function NewParcel() {
                   cursor="pointer"
                   overflowY={'auto'}
                   minH={'175px'}
-                  {...getRootProps({ className: 'dropzone' })}>
+                  {...getRootProps({ className: 'dropzone' })}
+                >
                   <Input {...getInputProps()} />
                   <Button variant="no-hover">
                     {acceptedFiles.length > 0 ? (
@@ -615,7 +619,8 @@ function NewParcel() {
                               fontWeight="normal"
                               maxWidth="150px"
                               textOverflow={'ellipsis'}
-                              overflow={'hidden'}>
+                              overflow={'hidden'}
+                            >
                               {file.name}
                             </Text>
                           </Box>
@@ -636,7 +641,8 @@ function NewParcel() {
                     mt="24px"
                     w="100px"
                     h="35px"
-                    onClick={() => descriptionTab.current.click()}>
+                    onClick={() => descriptionTab.current.click()}
+                  >
                     <Text fontSize="xs" color="gray.700" fontWeight="bold">
                       {intl.formatMessage({ id: 'app.prev' })}
                     </Text>
@@ -649,7 +655,8 @@ function NewParcel() {
                     w="100px"
                     h="35px"
                     isLoading={isUploading}
-                    onClick={handleFileUpload}>
+                    onClick={handleFileUpload}
+                  >
                     <Text fontSize="xs" color="#fff" fontWeight="bold">
                       {intl.formatMessage({ id: 'app.upload' })}
                     </Text>
@@ -668,7 +675,8 @@ function NewParcel() {
                 justify="center"
                 textAlign="center"
                 w="80%"
-                mx="auto">
+                mx="auto"
+              >
                 <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
                   {intl.formatMessage({ id: 'app.doYouWantToCertificateThisParcel' })}
                 </Text>
@@ -686,7 +694,8 @@ function NewParcel() {
                   <FormProvider {...methodsCertificate}>
                     <form
                       onSubmit={handleSubmitCertificate(onSubmitCertificate)}
-                      style={{ width: '100%' }}>
+                      style={{ width: '100%' }}
+                    >
                       <FormControl display="flex" alignItems="center" mb="25px">
                         <Switch
                           id="certificate"
@@ -726,7 +735,8 @@ function NewParcel() {
                           mt="24px"
                           w={{ sm: '75px', lg: '100px' }}
                           h="35px"
-                          onClick={() => prevTab.current.click()}>
+                          onClick={() => prevTab.current.click()}
+                        >
                           <Text fontSize="xs" color="gray.700" fontWeight="bold">
                             {intl.formatMessage({ id: 'app.prev' })}
                           </Text>
@@ -740,7 +750,8 @@ function NewParcel() {
                           mt="24px"
                           w={{ sm: '75px', lg: '100px' }}
                           h="35px"
-                          type="submit">
+                          type="submit"
+                        >
                           {isLoading ? (
                             <CircularProgress
                               isIndeterminate

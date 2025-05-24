@@ -83,7 +83,8 @@ const Reviews = () => {
                   colorScheme="teal"
                   size="sm"
                   value={reviewsPercentage?.positive}
-                  borderRadius="15px"></Progress>
+                  borderRadius="15px"
+                ></Progress>
               </Flex>
               <Flex direction="column">
                 <Flex justify="space-between" mb="8px">
@@ -98,7 +99,8 @@ const Reviews = () => {
                   colorScheme="gray"
                   size="sm"
                   value={reviewsPercentage?.neutral}
-                  borderRadius="15px"></Progress>
+                  borderRadius="15px"
+                ></Progress>
               </Flex>
               <Flex direction="column">
                 <Flex justify="space-between" mb="8px">
@@ -113,7 +115,8 @@ const Reviews = () => {
                   colorScheme="red"
                   size="sm"
                   value={reviewsPercentage?.negative}
-                  borderRadius="15px"></Progress>
+                  borderRadius="15px"
+                ></Progress>
               </Flex>
             </Stack>
           </Flex>
@@ -126,7 +129,8 @@ const Reviews = () => {
               borderRadius="12px"
               bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
               p="12px 24px"
-              alignSelf="flex-end">
+              alignSelf="flex-end"
+            >
               <Text color="#fff" fontSize="xs">
                 {intl.formatMessage({ id: 'app.viewAllReviews' }).toUpperCase()}
               </Text>

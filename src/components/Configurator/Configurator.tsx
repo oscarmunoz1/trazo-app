@@ -63,7 +63,8 @@ function Configurator(props: ConfiguratorProps) {
       onClose={onClose}
       placement={'right'}
       finalFocusRef={settingsRef}
-      blockScrollOnMount={false}>
+      blockScrollOnMount={false}
+    >
       <DrawerContent>
         <DrawerHeader pt="24px" px="24px">
           <DrawerCloseButton />
@@ -100,7 +101,8 @@ function Configurator(props: ConfiguratorProps) {
                   color="gray.600"
                   fontSize="xs"
                   onChange={(e) => setLocale(e.target.value)}
-                  value={locale}>
+                  value={locale}
+                >
                   {Object.keys(locales).map((loc) => {
                     return (
                       <option value={loc} key={loc}>

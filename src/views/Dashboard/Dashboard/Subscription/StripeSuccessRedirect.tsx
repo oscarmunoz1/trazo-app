@@ -99,7 +99,8 @@ const StripeSuccessRedirect: React.FC = () => {
       alignItems="center"
       justifyContent="center"
       flexDirection="column"
-      bg={bgColor}>
+      bg={bgColor}
+    >
       <Spinner size="xl" color="green.500" thickness="4px" speed="0.65s" />
       <Text mt={4} fontSize="lg" fontWeight="medium" color={textColor}>
         Processing your subscription...

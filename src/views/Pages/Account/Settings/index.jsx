@@ -155,7 +155,8 @@ function Settings() {
             transition="all .5s ease"
             w={{ sm: '100%', md: '135px' }}
             h="35px"
-            onClick={() => setActiveTab('account')}>
+            onClick={() => setActiveTab('account')}
+          >
             <Text color={textColor} fontSize="xs" fontWeight="bold">
               {intl.formatMessage({ id: 'app.account' }) || 'ACCOUNT'}
             </Text>
@@ -167,7 +168,8 @@ function Settings() {
             transition="all .5s ease"
             w={{ sm: '100%', md: '135px' }}
             h="35px"
-            onClick={() => setActiveTab('billing')}>
+            onClick={() => setActiveTab('billing')}
+          >
             <Text color={textColor} fontSize="xs" fontWeight="bold">
               {intl.formatMessage({ id: 'app.billing' }) || 'BILLING'}
             </Text>
@@ -179,7 +181,8 @@ function Settings() {
             transition="all .5s ease"
             w={{ sm: '100%', md: '135px' }}
             h="35px"
-            onClick={() => setActiveTab('security')}>
+            onClick={() => setActiveTab('security')}
+          >
             <Text color={textColor} fontSize="xs" fontWeight="bold">
               {intl.formatMessage({ id: 'app.security' }) || 'SECURITY'}
             </Text>
@@ -209,13 +212,15 @@ function Settings() {
                   borderRadius="lg"
                   position="relative"
                   h="200px"
-                  overflow="hidden">
+                  overflow="hidden"
+                >
                   <Flex
                     position="absolute"
                     top="20px"
                     right="20px"
                     alignItems="center"
-                    color="white">
+                    color="white"
+                  >
                     <Box w="30px" h="30px" bg="rgba(255,255,255,0.2)" borderRadius="full" mr={1} />
                     <Box
                       w="30px"
@@ -316,7 +321,8 @@ function Settings() {
                         align="center"
                         pb={3}
                         borderBottomWidth={invoice.id !== invoices.length ? '1px' : '0'}
-                        borderColor="gray.100">
+                        borderColor="gray.100"
+                      >
                         <Box>
                           <Text fontWeight="medium">{formatDate(invoice.invoice_date)}</Text>
                           <Text fontSize="sm" color="gray.500">
@@ -330,7 +336,8 @@ function Settings() {
                           <Button
                             size="sm"
                             leftIcon={<Icon as={FaFileInvoiceDollar} />}
-                            variant="outline">
+                            variant="outline"
+                          >
                             PDF
                           </Button>
                         </Flex>
@@ -370,7 +377,8 @@ function Settings() {
                       bg={cardBg}
                       justify="space-between"
                       align="center"
-                      _hover={{ boxShadow: 'sm' }}>
+                      _hover={{ boxShadow: 'sm' }}
+                    >
                       <Flex align="center">
                         <Box
                           w="40px"
@@ -380,7 +388,8 @@ function Settings() {
                           display="flex"
                           alignItems="center"
                           justifyContent="center"
-                          mr={3}>
+                          mr={3}
+                        >
                           <Icon
                             as={method.card_brand === 'visa' ? FaCreditCard : FaCreditCard}
                             color={method.card_brand === 'visa' ? 'blue.500' : 'red.500'}

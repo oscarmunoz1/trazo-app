@@ -15,22 +15,22 @@
 
 */
 
-import React, { Component } from "react";
-import Chart from "react-apexcharts";
+import React, { Component } from 'react';
+import Chart from 'react-apexcharts';
 
 class BubbleChart extends Component {
   constructor(props) {
     super(props);
     this.state = {
       chartData: [],
-      chartOptions: {},
+      chartOptions: {}
     };
   }
 
   componentDidMount() {
     this.setState({
       chartData: this.props.chartData,
-      chartOptions: this.props.chartOptions,
+      chartOptions: this.props.chartOptions
     });
   }
 

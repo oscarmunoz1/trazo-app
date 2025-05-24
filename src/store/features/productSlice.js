@@ -1,17 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  currentParcel: null,
+  currentParcel: null
 };
 
 export const productSlice = createSlice({
   initialState,
-  name: "productSlice",
+  name: 'productSlice',
   reducers: {
     setParcel: (state, action) => {
       state.currentParcel = action.payload;
-    },
-  },
+    }
+  }
 });
 
 export default productSlice.reducer;

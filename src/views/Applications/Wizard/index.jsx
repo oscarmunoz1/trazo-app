@@ -77,7 +77,8 @@ function Wizard() {
           color={textColor}
           fontSize={{ sm: '2xl', md: '3xl', lg: '4xl' }}
           fontWeight="bold"
-          mb="8px">
+          mb="8px"
+        >
           Build your profile
         </Text>
         <Text color="gray.400" fontWeight="normal" fontSize={{ sm: 'sm', md: 'lg' }}>
@@ -96,7 +97,8 @@ function Wizard() {
                 account: false,
                 address: false
               })
-            }>
+            }
+          >
             <Flex
               direction="column"
               justify="center"
@@ -113,7 +115,8 @@ function Wizard() {
                 bottom: activeBullets.about ? '40px' : '38px',
                 zIndex: -1,
                 transition: 'all .3s ease'
-              }}>
+              }}
+            >
               <Icon
                 as={BsCircleFill}
                 color={activeBullets.about ? textColor : 'gray.300'}
@@ -125,7 +128,8 @@ function Wizard() {
                 color={activeBullets.about ? { textColor } : 'gray.300'}
                 fontWeight={activeBullets.about ? 'bold' : 'normal'}
                 display={{ sm: 'none', md: 'block' }}
-                fontSize="sm">
+                fontSize="sm"
+              >
                 About
               </Text>
             </Flex>
@@ -140,7 +144,8 @@ function Wizard() {
                 account: true,
                 address: false
               })
-            }>
+            }
+          >
             <Flex
               direction="column"
               justify="center"
@@ -157,7 +162,8 @@ function Wizard() {
                 bottom: activeBullets.account ? '40px' : '38px',
                 zIndex: -1,
                 transition: 'all .3s ease'
-              }}>
+              }}
+            >
               <Icon
                 as={BsCircleFill}
                 color={activeBullets.account ? textColor : 'gray.300'}
@@ -171,7 +177,8 @@ function Wizard() {
                 transition="all .3s ease"
                 fontSize="sm"
                 _hover={{ color: textColor }}
-                display={{ sm: 'none', md: 'block' }}>
+                display={{ sm: 'none', md: 'block' }}
+              >
                 Account
               </Text>
             </Flex>
@@ -186,7 +193,8 @@ function Wizard() {
                 account: true,
                 address: true
               })
-            }>
+            }
+          >
             <Flex
               direction="column"
               justify="center"
@@ -203,7 +211,8 @@ function Wizard() {
                 bottom: activeBullets.address ? '40px' : '38px',
                 zIndex: -1,
                 transition: 'all .3s ease'
-              }}>
+              }}
+            >
               <Icon
                 as={BsCircleFill}
                 color={activeBullets.address ? textColor : 'gray.300'}
@@ -217,7 +226,8 @@ function Wizard() {
                 transition="all .3s ease"
                 fontSize="sm"
                 _hover={{ color: textColor }}
-                display={{ sm: 'none', md: 'block' }}>
+                display={{ sm: 'none', md: 'block' }}
+              >
                 Address
               </Text>
             </Flex>
@@ -233,7 +243,8 @@ function Wizard() {
                   justify="center"
                   textAlign="center"
                   w="80%"
-                  mx="auto">
+                  mx="auto"
+                >
                   <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
                     Let's start with the basic information
                   </Text>
@@ -251,7 +262,8 @@ function Wizard() {
                       minW={{ sm: '110px', xl: '150px' }}
                       h={{ sm: '110px', xl: '150px' }}
                       mx={{ sm: 'auto', md: '40px', xl: '85px' }}
-                      mb={{ sm: '25px' }}>
+                      mb={{ sm: '25px' }}
+                    >
                       <Avatar src={avatar4} w="100%" h="100%" borderRadius="12px" />
                       <IconBox
                         bg="#fff"
@@ -261,7 +273,8 @@ function Wizard() {
                         position="absolute"
                         right="-10px"
                         bottom="-10px"
-                        cursor="pointer">
+                        cursor="pointer"
+                      >
                         <Icon as={MdModeEdit} w="15px" h="15px" color="#333" />
                       </IconBox>
                     </Box>
@@ -297,7 +310,8 @@ function Wizard() {
                     mt="24px"
                     w={{ sm: '75px', lg: '100px' }}
                     h="35px"
-                    onClick={() => accountTab.current.click()}>
+                    onClick={() => accountTab.current.click()}
+                  >
                     <Text fontSize="xs" color="#fff" fontWeight="bold">
                       NEXT
                     </Text>
@@ -315,7 +329,8 @@ function Wizard() {
                   justify="center"
                   textAlign="center"
                   w="80%"
-                  mx="auto">
+                  mx="auto"
+                >
                   <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
                     What kind of event are you going to record?
                   </Text>
@@ -332,7 +347,8 @@ function Wizard() {
                     spacing={{ sm: '20px', lg: '35px' }}
                     alignSelf="center"
                     justifySelf="center"
-                    mb="24px">
+                    mb="24px"
+                  >
                     <Flex direction="column" align="center">
                       <FormLabel w="150px" h="150px" cursor="pointer" mb="16px">
                         <Flex
@@ -344,7 +360,8 @@ function Wizard() {
                           border="1px solid lightgray"
                           align="center"
                           bg={checkboxes.design ? 'green.400' : '#fff'}
-                          _hover={{ opacity: '0.8' }}>
+                          _hover={{ opacity: '0.8' }}
+                        >
                           <Checkbox
                             onChange={() =>
                               setCheckboxes((prevCheckboxes) => {
@@ -379,7 +396,8 @@ function Wizard() {
                           border="1px solid lightgray"
                           align="center"
                           bg={checkboxes.code ? 'green.400' : '#fff'}
-                          _hover={{ opacity: '0.8' }}>
+                          _hover={{ opacity: '0.8' }}
+                        >
                           <Checkbox
                             onChange={() =>
                               setCheckboxes((prevCheckboxes) => {
@@ -414,7 +432,8 @@ function Wizard() {
                           border="1px solid lightgray"
                           align="center"
                           bg={checkboxes.develop ? 'green.400' : '#fff'}
-                          _hover={{ opacity: '0.8' }}>
+                          _hover={{ opacity: '0.8' }}
+                        >
                           <Checkbox
                             onChange={() =>
                               setCheckboxes((prevCheckboxes) => {
@@ -448,7 +467,8 @@ function Wizard() {
                       mt="24px"
                       w={{ sm: '75px', lg: '100px' }}
                       h="35px"
-                      onClick={() => aboutTab.current.click()}>
+                      onClick={() => aboutTab.current.click()}
+                    >
                       <Text fontSize="xs" color="gray.700" fontWeight="bold">
                         PREV
                       </Text>
@@ -460,7 +480,8 @@ function Wizard() {
                       mt="24px"
                       w={{ sm: '75px', lg: '100px' }}
                       h="35px"
-                      onClick={() => addressTab.current.click()}>
+                      onClick={() => addressTab.current.click()}
+                    >
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
                         NEXT
                       </Text>
@@ -479,7 +500,8 @@ function Wizard() {
                   justify="center"
                   textAlign="center"
                   w="80%"
-                  mx="auto">
+                  mx="auto"
+                >
                   <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
                     Are you living in a nice area?
                   </Text>
@@ -533,7 +555,8 @@ function Wizard() {
                       mt="24px"
                       w={{ sm: '75px', lg: '100px' }}
                       h="35px"
-                      onClick={() => accountTab.current.click()}>
+                      onClick={() => accountTab.current.click()}
+                    >
                       <Text fontSize="xs" color="gray.700" fontWeight="bold">
                         PREV
                       </Text>
@@ -544,7 +567,8 @@ function Wizard() {
                       alignSelf="flex-end"
                       mt="24px"
                       w={{ sm: '75px', lg: '100px' }}
-                      h="35px">
+                      h="35px"
+                    >
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
                         SEND
                       </Text>

@@ -100,7 +100,8 @@ function FeatureUsagePanel() {
             borderRadius="md"
             borderColor={isTrial ? 'green.200' : 'gray.200'}
             bg={isTrial ? 'green.50' : 'white'}
-            _hover={{ boxShadow: 'sm' }}>
+            _hover={{ boxShadow: 'sm' }}
+          >
             <Flex justify="space-between" align="center" mb={2}>
               <Flex align="center">
                 <Icon as={metric.icon} mr={2} color={`${metric.colorScheme}.500`} />

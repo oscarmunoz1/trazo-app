@@ -44,7 +44,7 @@
 // };
 
 const Card = {
-  baseStyle: (props: {colorMode: string}) => ({
+  baseStyle: (props: { colorMode: string }) => ({
     p: '22px',
     display: 'flex',
     flexDirection: 'column',

@@ -34,7 +34,8 @@ const Tabs = () => {
       <Stack
         direction={{ sm: 'column', lg: 'row' }}
         spacing={{ sm: '8px', lg: '38px' }}
-        w={{ sm: '100%', lg: null }}>
+        w={{ sm: '100%', lg: null }}
+      >
         <Button
           borderRadius="12px"
           boxShadow={activeButtons?.messages ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'}
@@ -54,7 +55,8 @@ const Tabs = () => {
               notifications: false,
               backup: false
             })
-          }>
+          }
+        >
           <Text color={textColor} fontSize="xs" fontWeight="bold" fontSize="xs">
             MESSAGES
           </Text>
@@ -78,7 +80,8 @@ const Tabs = () => {
               notifications: false,
               backup: false
             })
-          }>
+          }
+        >
           <Text color={textColor} fontSize="xs" fontWeight="bold" fontSize="xs">
             SOCIAL
           </Text>
@@ -102,7 +105,8 @@ const Tabs = () => {
               notifications: true,
               backup: false
             })
-          }>
+          }
+        >
           <Text color={textColor} fontSize="xs" fontWeight="bold" fontSize="xs">
             NOTIFICATIONS
           </Text>
@@ -126,7 +130,8 @@ const Tabs = () => {
               notifications: false,
               backup: true
             })
-          }>
+          }
+        >
           <Text color={textColor} fontSize="xs" fontWeight="bold" fontSize="xs">
             BACKUP
           </Text>

@@ -174,7 +174,8 @@ export default function AdminNavbar(props: AdminNavbarProps) {
       w={{
         sm: 'calc(100vw - 30px)',
         xl: `calc(100vw - 75px - ${sidebarWidth}px)`
-      }}>
+      }}
+    >
       <Flex
         w="100%"
         h="100%"
@@ -182,7 +183,8 @@ export default function AdminNavbar(props: AdminNavbarProps) {
           sm: 'column-reverse',
           md: 'row'
         }}
-        alignItems={{ xl: 'center' }}>
+        alignItems={{ xl: 'center' }}
+      >
         <Box mb={{ sm: '8px', md: '0px' }} h="100%" pt={{ sm: '16px', md: '0px' }}>
           <Breadcrumb>
             <BreadcrumbItem color={mainText}>
@@ -195,7 +197,8 @@ export default function AdminNavbar(props: AdminNavbarProps) {
               <BreadcrumbItem color={mainText}>
                 <BreadcrumbLink
                   href={parcelId && `/admin/dashboard/establishments/${establishmentId}`}
-                  color={mainText}>
+                  color={mainText}
+                >
                   {currentEstablishment.name}
                 </BreadcrumbLink>
               </BreadcrumbItem>
@@ -211,7 +214,8 @@ export default function AdminNavbar(props: AdminNavbarProps) {
         <Box
           ms="auto"
           w={{ sm: '100%', md: 'unset' }}
-          justifyContent={{ sm: 'flex-end', md: 'flex-start' }}>
+          justifyContent={{ sm: 'flex-end', md: 'flex-start' }}
+        >
           <AdminNavbarLinks
             onOpen={props.onOpen}
             logoText={props.logoText}

@@ -28,32 +28,32 @@ import {
   Select,
   Stack,
   Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
+  useColorModeValue
+} from '@chakra-ui/react';
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
 // Custom components
-import Editor from "components/Editor/Editor";
-import React, { useState } from "react";
+import Editor from 'components/Editor/Editor';
+import React, { useState } from 'react';
 
 const ProductInformation = () => {
   const [skills, setSkills] = useState([
     {
-      name: "chakra-ui",
-      id: 1,
+      name: 'chakra-ui',
+      id: 1
     },
     {
-      name: "react",
-      id: 2,
+      name: 'react',
+      id: 2
     },
     {
-      name: "javascript",
-      id: 3,
-    },
+      name: 'javascript',
+      id: 3
+    }
   ]);
 
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
     <Card>
@@ -64,7 +64,7 @@ const ProductInformation = () => {
       </CardHeader>
       <CardBody>
         <Stack direction="column" spacing="20px" w="100%">
-          <Stack direction={{ sm: "column", md: "row" }} spacing="30px">
+          <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
             <FormControl>
               <FormLabel fontSize="xs" fontWeight="bold" mb="10px">
                 Product Name
@@ -78,7 +78,7 @@ const ProductInformation = () => {
               <Input placeholder="eg. 42" fontSize="xs" />
             </FormControl>
           </Stack>
-          <Stack direction={{ sm: "column", lg: "row" }} spacing="30px">
+          <Stack direction={{ sm: 'column', lg: 'row' }} spacing="30px">
             <FormControl>
               <FormLabel fontSize="xs" fontWeight="bold" mb="10px">
                 Description
@@ -112,7 +112,7 @@ const ProductInformation = () => {
               </FormControl>
             </Stack>
           </Stack>
-          <Stack direction={{ sm: "column", md: "row" }} spacing="30px">
+          <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
             <FormControl>
               <FormLabel fontSize="xs" fontWeight="bold" mb="10px">
                 Collection
@@ -123,13 +123,7 @@ const ProductInformation = () => {
               <FormLabel fontSize="xs" fontWeight="bold" mb="10px">
                 Quantity
               </FormLabel>
-              <NumberInput
-                defaultValue={1}
-                min={1}
-                max={20}
-                color="gray.400"
-                fontSize="xs"
-              >
+              <NumberInput defaultValue={1} min={1} max={20} color="gray.400" fontSize="xs">
                 <NumberInputField />
                 <NumberInputStepper>
                   <NumberIncrementStepper />

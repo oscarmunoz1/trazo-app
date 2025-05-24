@@ -56,7 +56,8 @@ const FullPageError: React.FC<FullPageErrorProps> = ({
       minH="50vh"
       p={8}
       bg={bgColor}
-      borderRadius="lg">
+      borderRadius="lg"
+    >
       <Icon as={FaExclamationTriangle} w={16} h={16} color="red.500" mb={6} />
 
       <Heading color={headingColor} mb={4} size="lg">
@@ -72,7 +73,8 @@ const FullPageError: React.FC<FullPageErrorProps> = ({
           <Button
             leftIcon={<Icon as={FaExclamationTriangle} />}
             colorScheme="blue"
-            onClick={handleRetry}>
+            onClick={handleRetry}
+          >
             {intl.formatMessage({ id: 'app.retry' }) || 'Retry'}
           </Button>
         )}
@@ -82,7 +84,8 @@ const FullPageError: React.FC<FullPageErrorProps> = ({
             leftIcon={<Icon as={FaHome} />}
             variant={showRetryButton ? 'outline' : 'solid'}
             colorScheme={showRetryButton ? 'gray' : 'blue'}
-            onClick={handleGoHome}>
+            onClick={handleGoHome}
+          >
             {intl.formatMessage({ id: 'app.backToDashboard' }) || 'Back to Dashboard'}
           </Button>
         )}

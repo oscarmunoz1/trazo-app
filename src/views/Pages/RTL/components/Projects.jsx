@@ -1,45 +1,29 @@
 // Chakra imports
-import {
-  Flex,
-  Icon,
-  Table,
-  Tbody,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Flex, Icon, Table, Tbody, Text, Th, Thead, Tr, useColorModeValue } from '@chakra-ui/react';
 
 // Custom components
-import Card from "components/Card/Card";
-import CardHeader from "components/Card/CardHeader.tsx";
-import DashboardTableRow from "components/Tables/DashboardTableRow";
-import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
-import React from "react";
+import Card from 'components/Card/Card';
+import CardHeader from 'components/Card/CardHeader.tsx';
+import DashboardTableRow from 'components/Tables/DashboardTableRow';
+import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
+import React from 'react';
 
 const Projects = ({ title, amount, captions, data }) => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
-    <Card p="16px" overflowX={{ sm: "scroll", xl: "hidden" }}>
+    <Card p="16px" overflowX={{ sm: 'scroll', xl: 'hidden' }}>
       <CardHeader p="12px 0px 28px 0px">
         <Flex direction="column">
           <Text fontSize="lg" color={textColor} fontWeight="bold" pb=".5rem">
             {title}
           </Text>
           <Flex align="center">
-            <Icon
-              as={IoCheckmarkDoneCircleSharp}
-              color="green.400"
-              w={4}
-              h={4}
-              pe="3px"
-            />
+            <Icon as={IoCheckmarkDoneCircleSharp} color="green.400" w={4} h={4} pe="3px" />
             <Text fontSize="sm" color="gray.400" fontWeight="normal">
               <Text fontWeight="bold" as="span">
                 {amount} done
-              </Text>{" "}
+              </Text>{' '}
               this month.
             </Text>
           </Flex>
@@ -50,7 +34,7 @@ const Projects = ({ title, amount, captions, data }) => {
           <Tr my=".8rem" ps="0px">
             {captions.map((caption, idx) => {
               return (
-                <Th color="gray.400" key={idx} ps={idx === 0 ? "0px" : null}>
+                <Th color="gray.400" key={idx} ps={idx === 0 ? '0px' : null}>
                   {caption}
                 </Th>
               );

@@ -96,21 +96,24 @@ export const CarbonDashboard: React.FC = () => {
               colorScheme="green"
               variant="outline"
               onClick={() => setTimeRange('week')}
-              isActive={timeRange === 'week'}>
+              isActive={timeRange === 'week'}
+            >
               Week
             </Button>
             <Button
               colorScheme="green"
               variant="outline"
               onClick={() => setTimeRange('month')}
-              isActive={timeRange === 'month'}>
+              isActive={timeRange === 'month'}
+            >
               Month
             </Button>
             <Button
               colorScheme="green"
               variant="outline"
               onClick={() => setTimeRange('year')}
-              isActive={timeRange === 'year'}>
+              isActive={timeRange === 'year'}
+            >
               Year
             </Button>
             <Button colorScheme="green" onClick={onOpen}>
@@ -295,7 +298,8 @@ export const CarbonDashboard: React.FC = () => {
                             p={4}
                             borderWidth="1px"
                             borderColor={borderColor}
-                            borderRadius="md">
+                            borderRadius="md"
+                          >
                             <Text fontWeight="medium">{benchmark.cropType}</Text>
                             <Text fontSize="sm" color="gray.500">
                               {benchmark.benchmarkValue} kg CO2e/kg
@@ -315,7 +319,8 @@ export const CarbonDashboard: React.FC = () => {
                             p={4}
                             borderWidth="1px"
                             borderColor={borderColor}
-                            borderRadius="md">
+                            borderRadius="md"
+                          >
                             <HStack spacing={2} mb={2}>
                               <Icon
                                 as={

@@ -16,20 +16,14 @@
 */
 
 // Chakra imports
-import {
-  Stat,
-  StatHelpText,
-  StatNumber,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import React from "react";
+import { Stat, StatHelpText, StatNumber, Text, useColorModeValue } from '@chakra-ui/react';
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import React from 'react';
 
 const Steps = () => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
     <Card>
@@ -40,12 +34,7 @@ const Steps = () => {
       </CardHeader>
       <CardBody>
         <Stat>
-          <StatNumber
-            color={textColor}
-            fontWeight="bold"
-            fontSize="2xl"
-            mb="6px"
-          >
+          <StatNumber color={textColor} fontWeight="bold" fontSize="2xl" mb="6px">
             11.4K
           </StatNumber>
           <StatHelpText

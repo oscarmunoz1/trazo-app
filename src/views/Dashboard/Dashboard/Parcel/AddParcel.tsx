@@ -16,7 +16,8 @@ function AddParcel({ isEdit = false }) {
           ? intl.formatMessage({ id: 'app.editParcelSubtitle' })
           : intl.formatMessage({ id: 'app.addParcelSubtitle' })
       }
-      hideBanner={true}>
+      hideBanner={true}
+    >
       {isEdit ? <EditParcel /> : <NewParcel />}
     </BoxBackground>
   );

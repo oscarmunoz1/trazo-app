@@ -16,53 +16,53 @@
 */
 
 // Chakra imports
-import { Flex, Grid, Icon } from "@chakra-ui/react";
-import bgCardReports from "assets/img/background-card-reports.png";
-import { CartIcon, RocketIcon } from "components/Icons/Icons";
-import React from "react";
-import { AiFillLike } from "react-icons/ai";
-import { FaUser } from "react-icons/fa";
-import { tablesReportsData } from "variables/general";
-import ReportsCard from "./components/ReportsCard";
-import ReportsTable from "./components/ReportsTable";
-import Reviews from "./components/Reviews";
+import { Flex, Grid, Icon } from '@chakra-ui/react';
+import bgCardReports from 'assets/img/background-card-reports.png';
+import { CartIcon, RocketIcon } from 'components/Icons/Icons';
+import React from 'react';
+import { AiFillLike } from 'react-icons/ai';
+import { FaUser } from 'react-icons/fa';
+import { tablesReportsData } from 'variables/general';
+import ReportsCard from './components/ReportsCard';
+import ReportsTable from './components/ReportsTable';
+import Reviews from './components/Reviews';
 
 function Reports() {
   return (
-    <Flex direction="column" pt={{ base: "150px", lg: "75px" }}>
-      <Grid templateColumns={{ md: "repeat(2, 1fr)" }} gap="24px" mb="24px">
+    <Flex direction="column" pt={{ base: '150px', lg: '75px' }}>
+      <Grid templateColumns={{ md: 'repeat(2, 1fr)' }} gap="24px" mb="24px">
         <Grid
-          templateColumns={{ md: "repeat(2, 1fr)" }}
-          templateRows={{ md: "repeat(2, 1fr)" }}
+          templateColumns={{ md: 'repeat(2, 1fr)' }}
+          templateRows={{ md: 'repeat(2, 1fr)' }}
           gap="24px"
         >
           <ReportsCard
             backgroundImage={bgCardReports}
-            title={"Users Active"}
+            title={'Users Active'}
             number={1600}
             icon={<Icon as={FaUser} w="25px" h="25px" color="blue.900" />}
-            percentage={"+55%"}
+            percentage={'+55%'}
           />
           <ReportsCard
             backgroundImage={bgCardReports}
-            title={"Click Events"}
+            title={'Click Events'}
             number={357}
             icon={<Icon as={RocketIcon} w="25px" h="25px" color="blue.900" />}
-            percentage={"+124%"}
+            percentage={'+124%'}
           />
           <ReportsCard
             backgroundImage={bgCardReports}
-            title={"Purchases"}
+            title={'Purchases'}
             icon={<Icon as={CartIcon} w="25px" h="25px" color="blue.900" />}
             number={2340}
-            percentage={"+14%"}
+            percentage={'+14%'}
           />
           <ReportsCard
             backgroundImage={bgCardReports}
-            title={"Likes"}
+            title={'Likes'}
             icon={<Icon as={AiFillLike} w="25px" h="25px" color="blue.900" />}
             number={940}
-            percentage={"+90%"}
+            percentage={'+90%'}
           />
         </Grid>
         <Reviews />

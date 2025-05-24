@@ -41,16 +41,41 @@ const CarbonDashboard = () => {
   const { data: productions, isLoading: isProductionsLoading } =
     useGetProductionsByEstablishmentQuery({ establishmentId });
 
-  // Determine status
+  // Determine status with improved logic
   let status = 'On Track';
   let statusColor = 'green';
-  if (summaryData && summaryData.net_footprint > 0) {
-    status = 'Needs Attention';
-    statusColor = 'yellow';
-  }
-  if (summaryData && summaryData.net_footprint > (summaryData?.industry_average || 0)) {
-    status = 'Above Industry';
-    statusColor = 'red';
+  let offsetPercentage = 0;
+
+  if (summaryData) {
+    const totalEmissions = summaryData.total_emissions || 0;
+    const totalOffsets = summaryData.total_offsets || 0;
+    const netCarbon = summaryData.net_carbon || totalEmissions - totalOffsets;
+
+    // Calculate offset percentage
+    if (totalEmissions > 0) {
+      offsetPercentage = Math.min(100, Math.max(0, (totalOffsets / totalEmissions) * 100));
+    } else if (totalOffsets > 0) {
+      offsetPercentage = 100;
+    }
+
+    // Determine status based on net carbon and industry average
+    if (netCarbon > 0) {
+      status = 'Needs Attention';
+      statusColor = 'yellow';
+    }
+
+    if (netCarbon > (summaryData.industry_average || 0) && summaryData.industry_average > 0) {
+      status = 'Above Industry';
+      statusColor = 'red';
+    }
+
+    // Log data for debugging
+    console.log('Carbon Dashboard Summary:', {
+      summaryData,
+      netCarbon,
+      offsetPercentage,
+      status
+    });
   }
 
   const handleViewModeChange = (event) => {
@@ -96,7 +121,8 @@ const CarbonDashboard = () => {
               onChange={handleProductionChange}
               width="200px"
               placeholder="Seleccionar Producción"
-              isDisabled={isProductionsLoading}>
+              isDisabled={isProductionsLoading}
+            >
               {productions &&
                 productions.map((prod) => (
                   <option key={prod.id} value={prod.id}>
@@ -119,7 +145,8 @@ const CarbonDashboard = () => {
         px={{ base: 3, md: 6 }}
         py={{ base: 3, md: 4 }}
         w="100%"
-        maxW="100%">
+        maxW="100%"
+      >
         <Flex align="center" justify="space-between" wrap="wrap" gap={4}>
           <Flex align="center" gap={3}>
             <Heading size="md" color="green.700">
@@ -129,7 +156,8 @@ const CarbonDashboard = () => {
               label={`La huella de carbono mide el total de emisiones y compensaciones de CO₂e de este ${
                 viewMode === 'establishment' ? 'establecimiento' : 'producción'
               }. Haz clic en las pestañas para ver más detalles.`}
-              fontSize="sm">
+              fontSize="sm"
+            >
               <span>
                 <Icon as={InfoOutlineIcon} color="gray.400" boxSize={5} />
               </span>
@@ -148,7 +176,10 @@ const CarbonDashboard = () => {
                     Huella Neta
                   </Text>
                   <Text fontWeight="bold" fontSize="lg">
-                    {summaryData?.net_footprint?.toFixed(2) || 0} kg CO₂e
+                    {summaryData?.net_carbon?.toFixed(2) ||
+                      summaryData?.net_footprint?.toFixed(2) ||
+                      0}{' '}
+                    kg CO₂e
                   </Text>
                 </Box>
                 <Box textAlign="center">
@@ -156,7 +187,10 @@ const CarbonDashboard = () => {
                     Emisiones
                   </Text>
                   <Text fontWeight="bold" fontSize="lg">
-                    {summaryData?.total_emissions?.toFixed(2) || 0} kg
+                    {summaryData?.total_emissions?.toFixed(2) ||
+                      summaryData?.totalEmissions?.toFixed(2) ||
+                      0}{' '}
+                    kg
                   </Text>
                 </Box>
                 <Box textAlign="center">
@@ -164,7 +198,28 @@ const CarbonDashboard = () => {
                     Compensaciones
                   </Text>
                   <Text fontWeight="bold" fontSize="lg">
-                    {summaryData?.total_offsets?.toFixed(2) || 0} kg
+                    {summaryData?.total_offsets?.toFixed(2) ||
+                      summaryData?.totalOffsets?.toFixed(2) ||
+                      0}{' '}
+                    kg
+                  </Text>
+                </Box>
+                <Box textAlign="center">
+                  <Text fontSize="xs" color="gray.500">
+                    Progreso
+                  </Text>
+                  <Text
+                    fontWeight="bold"
+                    fontSize="lg"
+                    color={
+                      offsetPercentage >= 100
+                        ? 'green.500'
+                        : offsetPercentage >= 50
+                        ? 'blue.500'
+                        : 'yellow.500'
+                    }
+                  >
+                    {offsetPercentage.toFixed(0)}%
                   </Text>
                 </Box>
                 <Box textAlign="center">
@@ -175,6 +230,16 @@ const CarbonDashboard = () => {
                     {summaryData?.industry_average?.toFixed(2) || 'N/A'} kg
                   </Text>
                 </Box>
+                {summaryData?.carbon_score && (
+                  <Box textAlign="center">
+                    <Text fontSize="xs" color="gray.500">
+                      Carbon Score
+                    </Text>
+                    <Text fontWeight="bold" fontSize="lg">
+                      {summaryData.carbon_score}/100
+                    </Text>
+                  </Box>
+                )}
               </>
             )}
           </Flex>

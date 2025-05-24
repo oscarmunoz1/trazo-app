@@ -26,43 +26,33 @@ import {
   Th,
   Thead,
   Tr,
-  useColorModeValue,
-} from "@chakra-ui/react";
+  useColorModeValue
+} from '@chakra-ui/react';
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import React, { useState } from "react";
-import { Element } from "react-scroll";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import React, { useState } from 'react';
+import { Element } from 'react-scroll';
 
 const Notifications = () => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
-    <Card
-      pb="0px"
-      w={{ sm: "100%", lg: "70%" }}
-      alignSelf="flex-end"
-      justifySelf="flex-end"
-    >
+    <Card pb="0px" w={{ sm: '100%', lg: '70%' }} alignSelf="flex-end" justifySelf="flex-end">
       <Element to="notifications" name="notifications">
         <CardHeader mb="40px">
           <Flex direction="column">
-            <Text
-              color={textColor}
-              fontSize="lg"
-              fontWeight="semibold"
-              mb="4px"
-            >
+            <Text color={textColor} fontSize="lg" fontWeight="semibold" mb="4px">
               Notifications
             </Text>
             <Text color="gray.400" fontWeight="normal" fontSize="sm">
-              Choose how you receive notifications. These notification settings
-              apply to the things you’re watching.
+              Choose how you receive notifications. These notification settings apply to the things
+              you’re watching.
             </Text>
           </Flex>
         </CardHeader>
-        <CardBody overflowX={{ sm: "scroll", lg: "hidden" }}>
+        <CardBody overflowX={{ sm: 'scroll', lg: 'hidden' }}>
           <Table>
             <Thead>
               <Tr>
@@ -75,42 +65,22 @@ const Notifications = () => {
                 >
                   Activity
                 </Th>
-                <Th
-                  color="gray.400"
-                  fontSize="md"
-                  fontWeight="normal"
-                  textTransform="capitalise"
-                >
+                <Th color="gray.400" fontSize="md" fontWeight="normal" textTransform="capitalise">
                   Email
                 </Th>
-                <Th
-                  color="gray.400"
-                  fontSize="md"
-                  fontWeight="normal"
-                  textTransform="capitalise"
-                >
+                <Th color="gray.400" fontSize="md" fontWeight="normal" textTransform="capitalise">
                   Push
                 </Th>
-                <Th
-                  color="gray.400"
-                  fontSize="md"
-                  fontWeight="normal"
-                  textTransform="capitalise"
-                >
+                <Th color="gray.400" fontSize="md" fontWeight="normal" textTransform="capitalise">
                   SMS
                 </Th>
               </Tr>
             </Thead>
             <Tbody>
               <Tr>
-                <Td ps="0px" minW={{ sm: "300px" }}>
+                <Td ps="0px" minW={{ sm: '300px' }}>
                   <Flex direction="column">
-                    <Text
-                      color={textColor}
-                      fontWeight="normal"
-                      fontSize="sm"
-                      mb="4px"
-                    >
+                    <Text color={textColor} fontWeight="normal" fontSize="sm" mb="4px">
                       Mentions
                     </Text>
                     <Text color="gray.400" fontSize="xs" fontWeight="normal">
@@ -129,14 +99,9 @@ const Notifications = () => {
                 </Td>
               </Tr>
               <Tr>
-                <Td ps="0px" minW={{ sm: "300px" }}>
+                <Td ps="0px" minW={{ sm: '300px' }}>
                   <Flex direction="column">
-                    <Text
-                      color={textColor}
-                      fontWeight="normal"
-                      fontSize="sm"
-                      mb="4px"
-                    >
+                    <Text color={textColor} fontWeight="normal" fontSize="sm" mb="4px">
                       Comments
                     </Text>
                     <Text color="gray.400" fontSize="xs" fontWeight="normal">
@@ -155,14 +120,9 @@ const Notifications = () => {
                 </Td>
               </Tr>
               <Tr>
-                <Td ps="0px" minW={{ sm: "300px" }}>
+                <Td ps="0px" minW={{ sm: '300px' }}>
                   <Flex direction="column">
-                    <Text
-                      color={textColor}
-                      fontWeight="normal"
-                      fontSize="sm"
-                      mb="4px"
-                    >
+                    <Text color={textColor} fontWeight="normal" fontSize="sm" mb="4px">
                       Follows
                     </Text>
                     <Text color="gray.400" fontSize="xs" fontWeight="normal">
@@ -181,14 +141,9 @@ const Notifications = () => {
                 </Td>
               </Tr>
               <Tr>
-                <Td border="none" ps="0px" py="24px" minW={{ sm: "300px" }}>
+                <Td border="none" ps="0px" py="24px" minW={{ sm: '300px' }}>
                   <Flex direction="column">
-                    <Text
-                      color={textColor}
-                      fontWeight="normal"
-                      fontSize="xs"
-                      mb="4px"
-                    >
+                    <Text color={textColor} fontWeight="normal" fontSize="xs" mb="4px">
                       Log in from a new device
                     </Text>
                   </Flex>

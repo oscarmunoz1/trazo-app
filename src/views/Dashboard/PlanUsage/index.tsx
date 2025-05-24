@@ -226,7 +226,8 @@ function PlanUsage() {
           borderRadius="lg"
           borderLeftWidth="4px"
           borderLeftColor="green.500"
-          boxShadow="md">
+          boxShadow="md"
+        >
           <Flex direction={{ base: 'column', md: 'row' }} justify="space-between" align="center">
             <Box mb={{ base: 3, md: 0 }}>
               <Text fontSize="lg" fontWeight="bold" color="green.700">
@@ -247,7 +248,8 @@ function PlanUsage() {
               colorScheme="green"
               size="md"
               onClick={handleManagePlan}
-              rightIcon={<Icon as={FaChartBar} />}>
+              rightIcon={<Icon as={FaChartBar} />}
+            >
               {intl.formatMessage({ id: 'app.manageTrial' })}
             </Button>
           </Flex>
@@ -271,7 +273,8 @@ function PlanUsage() {
               colorScheme="blue"
               size="md"
               onClick={handleManagePlan}
-              rightIcon={<Icon as={FaCreditCard} />}>
+              rightIcon={<Icon as={FaCreditCard} />}
+            >
               {intl.formatMessage({ id: 'app.manageBilling' })}
             </Button>
           </Flex>
@@ -297,7 +300,8 @@ function PlanUsage() {
                 colorScheme="blue"
                 leftIcon={<FaSync />}
                 isLoading={isRefreshing}
-                onClick={handleRefreshData}>
+                onClick={handleRefreshData}
+              >
                 {intl.formatMessage({ id: 'app.refresh' })}
               </Button>
             </Flex>
@@ -315,7 +319,8 @@ function PlanUsage() {
             key={metric.name}
             borderColor={isTrial ? 'green.200' : 'gray.200'}
             bg={cardBg}
-            _hover={{ boxShadow: 'md' }}>
+            _hover={{ boxShadow: 'md' }}
+          >
             <CardHeader>
               <Flex align="center">
                 <Icon as={metric.icon} mr={3} boxSize={6} color={`${metric.colorScheme}.500`} />
@@ -373,7 +378,8 @@ function PlanUsage() {
               p={6}
               justifyContent="flex-start"
               alignItems="flex-start"
-              flexDirection="column">
+              flexDirection="column"
+            >
               <Text fontWeight="bold" mb={1} textAlign="left">
                 {intl.formatMessage({ id: 'app.upgradePlan' })}
               </Text>
@@ -391,7 +397,8 @@ function PlanUsage() {
               p={6}
               justifyContent="flex-start"
               alignItems="flex-start"
-              flexDirection="column">
+              flexDirection="column"
+            >
               <Text fontWeight="bold" mb={1} textAlign="left">
                 {intl.formatMessage({ id: 'app.addons' })}
               </Text>
@@ -409,7 +416,8 @@ function PlanUsage() {
               p={6}
               justifyContent="flex-start"
               alignItems="flex-start"
-              flexDirection="column">
+              flexDirection="column"
+            >
               <Text fontWeight="bold" mb={1} textAlign="left">
                 {intl.formatMessage({ id: 'app.billingManagement' })}
               </Text>

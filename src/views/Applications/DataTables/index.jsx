@@ -16,21 +16,21 @@
 */
 
 // Chakra imports
-import { Flex, Text, useColorModeValue } from "@chakra-ui/react";
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import BasicTable from "components/Tables/BasicTable";
-import SearchTable1 from "components/Tables/SearchTable1";
-import React from "react";
-import { columnsData1 } from "variables/columnsData";
-import tableData1 from "variables/tableData1.json";
+import { Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import BasicTable from 'components/Tables/BasicTable';
+import SearchTable1 from 'components/Tables/SearchTable1';
+import React from 'react';
+import { columnsData1 } from 'variables/columnsData';
+import tableData1 from 'variables/tableData1.json';
 
 function DataTables() {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
-    <Flex direction="column" pt={{ sm: "125px", lg: "75px" }}>
+    <Flex direction="column" pt={{ sm: '125px', lg: '75px' }}>
       <Card px="0px" mb="24px">
         <CardHeader px="22px" mb="24px">
           <Flex direction="column">
@@ -38,8 +38,7 @@ function DataTables() {
               Datatable Simple
             </Text>
             <Text color="gray.400" fontSize="sm" fontWeight="normal">
-              A lightweight, extendable, dependency-free javascript HTML table
-              plugin.
+              A lightweight, extendable, dependency-free javascript HTML table plugin.
             </Text>
           </Flex>
         </CardHeader>
@@ -54,8 +53,7 @@ function DataTables() {
               Datatable Search
             </Text>
             <Text color="gray.400" fontSize="sm" fontWeight="normal">
-              A lightweight, extendable, dependency-free javascript HTML table
-              plugin.
+              A lightweight, extendable, dependency-free javascript HTML table plugin.
             </Text>
           </Flex>
         </CardHeader>

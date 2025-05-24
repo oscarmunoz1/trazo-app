@@ -1,25 +1,18 @@
 // Chakra imports
-import { Flex, Icon, Link, Text, useColorModeValue } from "@chakra-ui/react";
+import { Flex, Icon, Link, Text, useColorModeValue } from '@chakra-ui/react';
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import React from "react";
-import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import React from 'react';
+import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
 
-const ProfileInformation = ({
-  title,
-  description,
-  name,
-  mobile,
-  email,
-  location,
-}) => {
+const ProfileInformation = ({ title, description, name, mobile, email, location }) => {
   // Chakra color mode
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
-    <Card p="0" my={{ sm: "24px", xl: "0px" }}>
+    <Card p="0" my={{ sm: '24px', xl: '0px' }}>
       <CardHeader p="12px 5px" mb="12px">
         <Text fontSize="lg" color={textColor} fontWeight="bold">
           {title}
@@ -32,7 +25,7 @@ const ProfileInformation = ({
           </Text>
           <Flex align="center" mb="18px">
             <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-              Full Name:{" "}
+              Full Name:{' '}
             </Text>
             <Text fontSize="md" color="gray.500" fontWeight="400">
               {name}
@@ -40,7 +33,7 @@ const ProfileInformation = ({
           </Flex>
           <Flex align="center" mb="18px">
             <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-              Mobile:{" "}
+              Mobile:{' '}
             </Text>
             <Text fontSize="md" color="gray.500" fontWeight="400">
               {mobile}
@@ -48,7 +41,7 @@ const ProfileInformation = ({
           </Flex>
           <Flex align="center" mb="18px">
             <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-              Email:{" "}
+              Email:{' '}
             </Text>
             <Text fontSize="md" color="gray.500" fontWeight="400">
               {email}
@@ -56,7 +49,7 @@ const ProfileInformation = ({
           </Flex>
           <Flex align="center" mb="18px">
             <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-              Location:{" "}
+              Location:{' '}
             </Text>
             <Text fontSize="md" color="gray.500" fontWeight="400">
               {location}
@@ -64,7 +57,7 @@ const ProfileInformation = ({
           </Flex>
           <Flex align="center" mb="18px">
             <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-              Social Media:{" "}
+              Social Media:{' '}
             </Text>
             <Flex>
               <Link
@@ -72,7 +65,7 @@ const ProfileInformation = ({
                 color="green.300"
                 fontSize="lg"
                 me="10px"
-                _hover={{ color: "green.300" }}
+                _hover={{ color: 'green.300' }}
               >
                 <Icon as={FaFacebook} />
               </Link>
@@ -81,7 +74,7 @@ const ProfileInformation = ({
                 color="green.300"
                 fontSize="lg"
                 me="10px"
-                _hover={{ color: "green.300" }}
+                _hover={{ color: 'green.300' }}
               >
                 <Icon as={FaInstagram} />
               </Link>
@@ -90,7 +83,7 @@ const ProfileInformation = ({
                 color="green.300"
                 fontSize="lg"
                 me="10px"
-                _hover={{ color: "green.300" }}
+                _hover={{ color: 'green.300' }}
               >
                 <Icon as={FaTwitter} />
               </Link>

@@ -15,51 +15,37 @@
 
 */
 
-import {
-  Avatar,
-  Flex,
-  Grid,
-  Icon,
-  Link,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Avatar, Flex, Grid, Icon, Link, Text, useColorModeValue } from '@chakra-ui/react';
 
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody.tsx";
-import { FaPlus } from "react-icons/fa";
-import React from "react";
-import avatar1 from "assets/img/avatars/avatar1.png";
-import avatar10 from "assets/img/avatars/avatar10.png";
-import avatar2 from "assets/img/avatars/avatar2.png";
-import avatar3 from "assets/img/avatars/avatar3.png";
-import avatar4 from "assets/img/avatars/avatar4.png";
-import avatar5 from "assets/img/avatars/avatar5.png";
-import avatar7 from "assets/img/avatars/avatar7.png";
-import avatar8 from "assets/img/avatars/avatar8.png";
-import avatar9 from "assets/img/avatars/avatar9.png";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody.tsx';
+import { FaPlus } from 'react-icons/fa';
+import React from 'react';
+import avatar1 from 'assets/img/avatars/avatar1.png';
+import avatar10 from 'assets/img/avatars/avatar10.png';
+import avatar2 from 'assets/img/avatars/avatar2.png';
+import avatar3 from 'assets/img/avatars/avatar3.png';
+import avatar4 from 'assets/img/avatars/avatar4.png';
+import avatar5 from 'assets/img/avatars/avatar5.png';
+import avatar7 from 'assets/img/avatars/avatar7.png';
+import avatar8 from 'assets/img/avatars/avatar8.png';
+import avatar9 from 'assets/img/avatars/avatar9.png';
 
 const Stories = () => {
   // Chakra color mode
   const bgButton = useColorModeValue(
-    "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
-    "gray.800"
+    'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)',
+    'gray.800'
   );
 
   return (
     <Card px="0px">
-      <CardBody overflowX={{ sm: "scroll", "2xl": "hidden" }}>
+      <CardBody overflowX={{ sm: 'scroll', '2xl': 'hidden' }}>
         <Grid
-          gap={{ sm: "50px", "2xl": "70px" }}
-          templateColumns={{ sm: "repeat(12, 1fr)", lg: "repeat(12, 1fr)" }}
+          gap={{ sm: '50px', '2xl': '70px' }}
+          templateColumns={{ sm: 'repeat(12, 1fr)', lg: 'repeat(12, 1fr)' }}
         >
-          <Flex
-            direction="column"
-            mx="auto"
-            align="center"
-            justify="center"
-            ms="20px"
-          >
+          <Flex direction="column" mx="auto" align="center" justify="center" ms="20px">
             <Link href="#">
               <Flex
                 justify="center"

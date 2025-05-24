@@ -224,7 +224,8 @@ export default function AuthNavbar(props: AuthNavbarProps) {
                 ps="36px"
                 py="0px"
                 _hover={{ boxShadow: 'none', bg: 'none' }}
-                borderRadius="12px">
+                borderRadius="12px"
+              >
                 <Text color="gray.400" fontSize="sm" fontWeight="normal">
                   {link.name}
                 </Text>
@@ -246,7 +247,8 @@ export default function AuthNavbar(props: AuthNavbarProps) {
             ps="36px"
             py="0px"
             _hover={{ boxShadow: 'none', bg: 'none' }}
-            borderRadius="12px">
+            borderRadius="12px"
+          >
             <Text color="gray.400" fontSize="sm" fontWeight="normal">
               {link.name}
             </Text>
@@ -279,7 +281,8 @@ export default function AuthNavbar(props: AuthNavbarProps) {
               ps="36px"
               py="0px"
               _hover={{ boxShadow: 'none', bg: 'none' }}
-              borderRadius="12px">
+              borderRadius="12px"
+            >
               <Text color="gray.400" fontSize="sm" fontWeight="normal">
                 {link.name}
               </Text>
@@ -331,7 +334,8 @@ export default function AuthNavbar(props: AuthNavbarProps) {
                 ps="36px"
                 py="0px"
                 _hover={{ boxShadow: 'none', bg: 'none' }}
-                borderRadius="12px">
+                borderRadius="12px"
+              >
                 <Text color="gray.400" fontSize="sm" fontWeight="normal">
                   {link.name}
                 </Text>
@@ -354,7 +358,8 @@ export default function AuthNavbar(props: AuthNavbarProps) {
       fontWeight="bold"
       justifyContent="center"
       alignItems="center"
-      color={mainText}>
+      color={mainText}
+    >
       <Image src={logoTrazo} alt="trazo logo" height="45px" paddingRight="10px" href="" />
     </Link>
   );
@@ -376,7 +381,8 @@ export default function AuthNavbar(props: AuthNavbarProps) {
       mx="auto"
       width="1044px"
       maxW="90%"
-      alignItems="center">
+      alignItems="center"
+    >
       <Flex w="100%" justifyContent={{ sm: 'start', lg: 'space-between' }}>
         {brand}
         <Box ms={{ base: 'auto', lg: '0px' }} display={{ lg: 'none' }}>
@@ -391,49 +397,51 @@ export default function AuthNavbar(props: AuthNavbarProps) {
           )}
         </Box>
         {/* {linksAuth} */}
-        {subdomain &&
-        isLoadingAuth === false &&
-        isAuthenticated &&
-        window.location.pathname != '/pricing' ? (
-          <>
-            <Button
-              ms="0px"
-              px="0px"
-              me={{ sm: '2px', md: '16px' }}
-              color={navbarIcon}
-              variant="transparent-with-icon"
-              leftIcon={<RiLogoutBoxRLine color={navbarIcon} w="22px" h="22px" me="0px" />}
-              onClick={handleLogout}>
-              <Text display={{ sm: 'none', md: 'flex' }}>
-                {intl.formatMessage({ id: 'app.signOut' })}
-              </Text>
-            </Button>
-            <Button
-              ms="0px"
-              px="0px"
-              me={{ sm: '2px', md: '16px' }}
-              color={navbarIcon}
-              variant="transparent-with-icon"
-              leftIcon={<ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />}
-              onClick={() => navigate(`/admin/dashboard/profile`)}
-            />
-          </>
-        ) : null
-        // <Link to="pricing">
-        //   <Button
-        //     bg={bgButton}
-        //     color={colorButton}
-        //     fontSize="xs"
-        //     variant="no-hover"
-        //     borderRadius="35px"
-        //     px="30px"
-        //     display={{
-        //       sm: 'none',
-        //       lg: 'flex'
-        //     }}>
-        //     {intl.formatMessage({ id: 'app.buyNow' })}
-        //   </Button>
-        // </Link>
+        {
+          subdomain &&
+          isLoadingAuth === false &&
+          isAuthenticated &&
+          window.location.pathname != '/pricing' ? (
+            <>
+              <Button
+                ms="0px"
+                px="0px"
+                me={{ sm: '2px', md: '16px' }}
+                color={navbarIcon}
+                variant="transparent-with-icon"
+                leftIcon={<RiLogoutBoxRLine color={navbarIcon} w="22px" h="22px" me="0px" />}
+                onClick={handleLogout}
+              >
+                <Text display={{ sm: 'none', md: 'flex' }}>
+                  {intl.formatMessage({ id: 'app.signOut' })}
+                </Text>
+              </Button>
+              <Button
+                ms="0px"
+                px="0px"
+                me={{ sm: '2px', md: '16px' }}
+                color={navbarIcon}
+                variant="transparent-with-icon"
+                leftIcon={<ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />}
+                onClick={() => navigate(`/admin/dashboard/profile`)}
+              />
+            </>
+          ) : null
+          // <Link to="pricing">
+          //   <Button
+          //     bg={bgButton}
+          //     color={colorButton}
+          //     fontSize="xs"
+          //     variant="no-hover"
+          //     borderRadius="35px"
+          //     px="30px"
+          //     display={{
+          //       sm: 'none',
+          //       lg: 'flex'
+          //     }}>
+          //     {intl.formatMessage({ id: 'app.buyNow' })}
+          //   </Button>
+          // </Link>
         }
       </Flex>
     </Flex>

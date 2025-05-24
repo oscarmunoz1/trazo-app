@@ -50,7 +50,8 @@ function FixedPlugin(props: FixedPluginTypes) {
         right={'35px'}
         bottom="30px"
         borderRadius="50px"
-        boxShadow="0 2px 12px 0 rgb(0 0 0 / 16%)">
+        boxShadow="0 2px 12px 0 rgb(0 0 0 / 16%)"
+      >
         <SettingsIcon cursor="pointer" ref={settingsRef} color={navbarIcon} w="20px" h="20px" />
       </Button>
     </>

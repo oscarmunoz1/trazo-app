@@ -29,16 +29,16 @@ import {
   Th,
   Thead,
   Tr,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import React, { useRef } from "react";
+  useColorModeValue
+} from '@chakra-ui/react';
+import React, { useRef } from 'react';
 
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import logo from "assets/svg/logo.svg";
-import { useReactToPrint } from "react-to-print";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import logo from 'assets/svg/logo.svg';
+import { useReactToPrint } from 'react-to-print';
 
 class ComponentToPrint extends React.Component {
   // for react-to-print to work, it must be called from a class based component
@@ -47,31 +47,22 @@ class ComponentToPrint extends React.Component {
 
     return (
       <Card
-        w={{ sm: "330px", md: "500px", lg: "900px" }}
+        w={{ sm: '330px', md: '500px', lg: '900px' }}
         justifySelf="center"
         alignSelf="center"
         mt="50px"
-        p={{ sm: "24px", md: "44px" }}
+        p={{ sm: '24px', md: '44px' }}
       >
-        <CardHeader mb={{ sm: "60px", md: "95px" }}>
+        <CardHeader mb={{ sm: '60px', md: '95px' }}>
           <Flex direction="column" w="100%">
             <Image src={logo} w="115px" h="30px" mb="28px" />
-            <Flex
-              direction={{ sm: "column", md: "row" }}
-              justify="space-between"
-              w="100%"
-            >
+            <Flex direction={{ sm: 'column', md: 'row' }} justify="space-between" w="100%">
               <Flex
                 direction="column"
-                maxW={{ sm: "100%", md: "150px", lg: "300px" }}
-                mb={{ sm: "48px", md: "0px" }}
+                maxW={{ sm: '100%', md: '150px', lg: '300px' }}
+                mb={{ sm: '48px', md: '0px' }}
               >
-                <Text
-                  color="gray.500"
-                  fontWeight="bold"
-                  fontSize="lg"
-                  mb="12px"
-                >
+                <Text color="gray.500" fontWeight="bold" fontSize="lg" mb="12px">
                   St. Independence Embankment, 050105 Bucharest, Romania
                 </Text>
                 <Text color="gray.400" fontWeight="normal" fontSize="md">
@@ -80,15 +71,10 @@ class ComponentToPrint extends React.Component {
               </Flex>
               <Flex
                 direction="column"
-                textAlign={{ sm: "start", md: "end" }}
-                maxW={{ sm: "100%", md: "170px" }}
+                textAlign={{ sm: 'start', md: 'end' }}
+                maxW={{ sm: '100%', md: '170px' }}
               >
-                <Text
-                  color="gray.500"
-                  fontWeight="bold"
-                  fontSize="lg"
-                  mb="12px"
-                >
+                <Text color="gray.500" fontWeight="bold" fontSize="lg" mb="12px">
                   Billed to: John Doe
                 </Text>
                 <Text color="gray.400" fontWeight="normal" fontSize="md">
@@ -101,18 +87,13 @@ class ComponentToPrint extends React.Component {
         <CardBody>
           <Flex direction="column" w="100%">
             <Flex
-              direction={{ sm: "column", md: "row" }}
+              direction={{ sm: 'column', md: 'row' }}
               justify="space-between"
               w="100%"
               mb="60px"
             >
-              <Flex direction="column" mb={{ sm: "16px", md: "0px" }}>
-                <Text
-                  color="gray.400"
-                  fontWeight="normal"
-                  fontSize="md"
-                  mb="8px"
-                >
+              <Flex direction="column" mb={{ sm: '16px', md: '0px' }}>
+                <Text color="gray.400" fontWeight="normal" fontSize="md" mb="8px">
                   Invoice no
                 </Text>
                 <Text color="gray.500" fontWeight="bold" fontSize="lg">
@@ -120,17 +101,17 @@ class ComponentToPrint extends React.Component {
                 </Text>
               </Flex>
               <Flex direction="column">
-                <Stack direction="row" mb="8px" justify={{ md: "end" }}>
+                <Stack direction="row" mb="8px" justify={{ md: 'end' }}>
                   <Text color="gray.400" fontWeight="normal" fontSize="md">
-                    Invoice date:{" "}
+                    Invoice date:{' '}
                   </Text>
                   <Text color="gray.500" fontWeight="bold" fontSize="lg">
                     06/03/2021
                   </Text>
                 </Stack>
-                <Stack direction="row" justify={{ md: "end" }}>
+                <Stack direction="row" justify={{ md: 'end' }}>
                   <Text color="gray.400" fontWeight="normal" fontSize="md">
-                    Due date:{" "}
+                    Due date:{' '}
                   </Text>
                   <Text color="gray.500" fontWeight="bold" fontSize="lg">
                     29/07/2021
@@ -138,16 +119,11 @@ class ComponentToPrint extends React.Component {
                 </Stack>
               </Flex>
             </Flex>
-            <Box overflowX={{ sm: "scroll", lg: "hidden" }}>
-              <Table mb="85px" overflowX={{ sm: "scroll", lg: "hidden" }}>
+            <Box overflowX={{ sm: 'scroll', lg: 'hidden' }}>
+              <Table mb="85px" overflowX={{ sm: 'scroll', lg: 'hidden' }}>
                 <Thead>
                   <Tr>
-                    <Th
-                      color="gray.400"
-                      fontSize="sm"
-                      fontWeight="normal"
-                      ps="0px"
-                    >
+                    <Th color="gray.400" fontSize="sm" fontWeight="normal" ps="0px">
                       Item
                     </Th>
                     <Th color="gray.400" fontSize="sm" fontWeight="normal">
@@ -163,7 +139,7 @@ class ComponentToPrint extends React.Component {
                 </Thead>
                 <Tbody>
                   <Tr>
-                    <Td ps="0px" minW={{ sm: "300px" }}>
+                    <Td ps="0px" minW={{ sm: '300px' }}>
                       <Text color="gray.500" fontWeight="normal" fontSize="md">
                         Premium Support
                       </Text>
@@ -185,7 +161,7 @@ class ComponentToPrint extends React.Component {
                     </Td>
                   </Tr>
                   <Tr>
-                    <Td ps="0px" minW={{ sm: "300px" }}>
+                    <Td ps="0px" minW={{ sm: '300px' }}>
                       <Text color="gray.500" fontWeight="normal" fontSize="md">
                         Chakra UI - Dashboard PRO
                       </Text>
@@ -207,7 +183,7 @@ class ComponentToPrint extends React.Component {
                     </Td>
                   </Tr>
                   <Tr>
-                    <Td ps="0px" minW={{ sm: "300px" }} border="none">
+                    <Td ps="0px" minW={{ sm: '300px' }} border="none">
                       <Text color="gray.500" fontWeight="normal" fontSize="md">
                         Parts for Service
                       </Text>
@@ -229,7 +205,7 @@ class ComponentToPrint extends React.Component {
                     </Td>
                   </Tr>
                   <Tr>
-                    <Td ps="0px" minW={{ sm: "300px" }}></Td>
+                    <Td ps="0px" minW={{ sm: '300px' }}></Td>
                     <Td></Td>
                     <Td>
                       <Text color={textColor} fontWeight="bold" fontSize="xl">
@@ -245,26 +221,16 @@ class ComponentToPrint extends React.Component {
                 </Tbody>
               </Table>
             </Box>
-            <Flex
-              direction={{ sm: "column", md: "row" }}
-              justify="space-between"
-            >
+            <Flex direction={{ sm: 'column', md: 'row' }} justify="space-between">
               <Flex direction="column" maxW="270px">
                 <Text color="gray.500" fontWeight="bold" fontSize="xl">
                   Thank You!
                 </Text>
-                <Text
-                  color="gray.400"
-                  fontWeight="normal"
-                  fontSize="md"
-                  mt="6px"
-                  mb="30px"
-                >
-                  If you encounter any issues related to the invoice you can
-                  contact us at:
+                <Text color="gray.400" fontWeight="normal" fontSize="md" mt="6px" mb="30px">
+                  If you encounter any issues related to the invoice you can contact us at:
                 </Text>
                 <Text color="gray.400" fontWeight="normal" fontSize="md">
-                  email:{" "}
+                  email:{' '}
                   <Text as="span" color="gray.500" fontWeight="bold">
                     support@creative-tim.com
                   </Text>
@@ -279,8 +245,8 @@ class ComponentToPrint extends React.Component {
                 fontSize="xs"
                 color="#fff"
                 fontWeight="bold"
-                alignSelf={{ sm: "flex-start", md: "flex-end" }}
-                mt={{ sm: "16px", md: "0px" }}
+                alignSelf={{ sm: 'flex-start', md: 'flex-end' }}
+                mt={{ sm: '16px', md: '0px' }}
               >
                 PRINT
               </Button>
@@ -293,21 +259,17 @@ class ComponentToPrint extends React.Component {
 }
 
 function Invoice() {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   const componentRef = useRef();
 
   const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
+    content: () => componentRef.current
   });
 
   return (
-    <Flex direction="column" pt={{ sm: "100px", lg: "50px" }}>
-      <ComponentToPrint
-        ref={componentRef}
-        handlePrint={handlePrint}
-        textColor={textColor}
-      />
+    <Flex direction="column" pt={{ sm: '100px', lg: '50px' }}>
+      <ComponentToPrint ref={componentRef} handlePrint={handlePrint} textColor={textColor} />
     </Flex>
   );
 }

@@ -69,14 +69,16 @@ function ProfileEstablishment() {
   return (
     <BoxBackground
       title={intl.formatMessage({ id: 'app.parcelProfile' })}
-      subtitle={intl.formatMessage({ id: 'app.hereYouCanSeeTheInformationOfYourParcel' })}>
+      subtitle={intl.formatMessage({ id: 'app.hereYouCanSeeTheInformationOfYourParcel' })}
+    >
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px" w={'100%'}>
         <Card
           mt={{ md: '24px' }}
           maxWidth={{ sm: '100%', md: '100%', lg: '80%' }}
           px="0px"
           pt={{ sm: '16px', md: '32px', lg: '0px' }}
-          boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px">
+          boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px"
+        >
           <CardHeader justifyContent="end">
             <Flex p="24px" align="center" justify="center">
               <Menu isOpen={isOpen1} onClose={onClose1}>
@@ -89,7 +91,8 @@ function ProfileEstablishment() {
                       navigate(
                         `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/change`
                       )
-                    }>
+                    }
+                  >
                     <Flex color={textColor} cursor="pointer" align="center" p="4px">
                       <Text fontSize="sm" fontWeight="500">
                         {intl.formatMessage({ id: 'app.edit' })}

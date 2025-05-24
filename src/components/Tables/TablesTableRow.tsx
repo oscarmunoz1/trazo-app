@@ -58,7 +58,8 @@ function TablesTableRow(props) {
           color={status === 'Online' ? 'white' : colorStatus}
           fontSize="16px"
           p="3px 10px"
-          borderRadius="8px">
+          borderRadius="8px"
+        >
           {status}
         </Badge>
       </Td>

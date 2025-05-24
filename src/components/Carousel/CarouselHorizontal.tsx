@@ -53,9 +53,8 @@ const CarouselHorizontal = ({ title, description, data }: CarouselHorizontalProp
               bg: 'green.50',
               borderColor: 'green.500'
             }}
-            onClick={() =>
-              navigate(`/admin/dashboard/establishment/${establishmentId}/parcel/add`)
-            }>
+            onClick={() => navigate(`/admin/dashboard/establishment/${establishmentId}/parcel/add`)}
+          >
             <Flex direction="column" justifyContent="center" align="center" h="120px">
               <Icon as={FaPlus} w="15px" h="15px" mb="10px" />
               <Text fontSize="md" fontWeight="bold">
@@ -76,7 +75,8 @@ const CarouselHorizontal = ({ title, description, data }: CarouselHorizontalProp
               '2xl': 'repeat(4, 1fr)'
             }}
             templateRows={{ sm: '1fr', md: '1fr', xl: '1fr' }}
-            gap="24px">
+            gap="24px"
+          >
             {data.map((parcel) => (
               <CarouselCard
                 id={parcel.id}
@@ -96,7 +96,8 @@ const CarouselHorizontal = ({ title, description, data }: CarouselHorizontalProp
               fontWeight={'300'}
               justifyContent={'center'}
               alignItems={'center'}
-              textAlign={'center'}>
+              textAlign={'center'}
+            >
               {intl.formatMessage({ id: 'app.noParcelsYet' })}
             </Text>
           </Flex>

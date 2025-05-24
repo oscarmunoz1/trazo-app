@@ -191,7 +191,8 @@ export default function DashboardView() {
           mb={4}
           borderLeftWidth="4px"
           borderLeftColor="green.500"
-          boxShadow="md">
+          boxShadow="md"
+        >
           <Flex align="center" justify="space-between">
             <Box>
               <Text fontSize="lg" fontWeight="bold" color="green.700">
@@ -214,7 +215,8 @@ export default function DashboardView() {
           <Link
             as={NavLink}
             to={`/admin/dashboard/establishment/${establishmentId}/carbon`}
-            _hover={{ textDecoration: 'none' }}>
+            _hover={{ textDecoration: 'none' }}
+          >
             <Flex
               align="center"
               p={4}
@@ -226,7 +228,8 @@ export default function DashboardView() {
                 boxShadow: shadowHover,
                 bg: hoverBg
               }}
-              transition="all 0.3s ease">
+              transition="all 0.3s ease"
+            >
               <Icon as={FaLeaf} w={8} h={8} color="green.500" mr={4} />
               <Box>
                 <Text fontSize="lg" fontWeight="bold" color={textColor}>
@@ -249,7 +252,8 @@ export default function DashboardView() {
             borderRadius="inherit"
             fontWeight="bold"
             fontSize={{ base: 'lg', md: 'xl' }}
-            padding={{ base: '8px', md: '10px' }}>
+            padding={{ base: '8px', md: '10px' }}
+          >
             {intl.formatMessage({ id: 'app.establishments' })}
           </Text>
         </Flex>
@@ -258,7 +262,8 @@ export default function DashboardView() {
           direction={{ base: 'column', md: 'row' }}
           gap={6}
           align="flex-start"
-          px={{ base: 2, md: 2 }}>
+          px={{ base: 2, md: 2 }}
+        >
           <Box flex="2">
             <Grid
               templateColumns={{
@@ -266,14 +271,16 @@ export default function DashboardView() {
                 sm: 'repeat(auto-fill, minmax(220px, 1fr))',
                 md: 'repeat(auto-fill, minmax(240px, 1fr))'
               }}
-              gap={{ base: 3, md: 4 }}>
+              gap={{ base: 3, md: 4 }}
+            >
               {establishments ? (
                 <>
                   {establishments.map((prop) => (
                     <NavLink
                       key={prop.id}
                       to={`/admin/dashboard/establishment/${prop.id}`}
-                      style={{ textDecoration: 'none' }}>
+                      style={{ textDecoration: 'none' }}
+                    >
                       <Card
                         p={{ base: 3, md: 4 }}
                         cursor="pointer"
@@ -282,12 +289,14 @@ export default function DashboardView() {
                           transform: 'translateY(-2px)',
                           boxShadow: 'lg',
                           transition: 'all 0.2s'
-                        }}>
+                        }}
+                      >
                         <Flex align="center" gap={{ base: 2, md: 3 }}>
                           <Box
                             bg={prop.id === establishment?.id ? 'white' : 'green.500'}
                             p={{ base: 1.5, md: 2 }}
-                            borderRadius="md">
+                            borderRadius="md"
+                          >
                             <HomeIcon
                               h={{ base: '20px', md: '24px' }}
                               w={{ base: '20px', md: '24px' }}
@@ -298,12 +307,14 @@ export default function DashboardView() {
                             <Text
                               fontWeight="bold"
                               fontSize={{ base: 'sm', md: 'md' }}
-                              color={prop.id === establishment?.id ? 'white' : textColor}>
+                              color={prop.id === establishment?.id ? 'white' : textColor}
+                            >
                               {prop.name}
                             </Text>
                             <Text
                               fontSize={{ base: 'xs', md: 'sm' }}
-                              color={prop.id === establishment?.id ? 'white' : 'gray.500'}>
+                              color={prop.id === establishment?.id ? 'white' : 'gray.500'}
+                            >
                               {`${prop.city || prop.zone || ''}, ${prop.state}`}
                             </Text>
                           </Box>
@@ -326,7 +337,8 @@ export default function DashboardView() {
                       transform: 'translateY(-2px)',
                       boxShadow: shadowHover
                     }}
-                    onClick={toggleAddEstablishment}>
+                    onClick={toggleAddEstablishment}
+                  >
                     <Flex direction="column" justifyContent="center" alignItems="center">
                       <Icon
                         as={FaPlus}
@@ -352,7 +364,8 @@ export default function DashboardView() {
         templateColumns={{ md: '1fr', lg: '1.8fr 1.2fr' }}
         templateRows={{ md: '1fr auto', lg: '1fr' }}
         my="26px"
-        gap="24px">
+        gap="24px"
+      >
         {establishment ? (
           <CardWithImage
             title={intl.formatMessage({ id: 'app.establishmentProfile' })}

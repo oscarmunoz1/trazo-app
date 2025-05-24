@@ -16,69 +16,42 @@
 */
 
 // Chakra imports
-import {
-  Badge,
-  Button,
-  Flex,
-  Icon,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Badge, Button, Flex, Icon, Stack, Text, useColorModeValue } from '@chakra-ui/react';
 
-import { BsArrowRight } from "react-icons/bs";
+import { BsArrowRight } from 'react-icons/bs';
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import { Element } from "react-scroll";
-import { GiSmartphone } from "react-icons/gi";
-import { HSeparator } from "components/Separator/Separator";
-import React from "react";
-import { RiComputerLine } from "react-icons/ri";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import { Element } from 'react-scroll';
+import { GiSmartphone } from 'react-icons/gi';
+import { HSeparator } from 'components/Separator/Separator';
+import React from 'react';
+import { RiComputerLine } from 'react-icons/ri';
 
 const Sessions = () => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
-    <Card
-      w={{ sm: "100%", lg: "70%" }}
-      alignSelf="flex-end"
-      justifySelf="flex-end"
-    >
+    <Card w={{ sm: '100%', lg: '70%' }} alignSelf="flex-end" justifySelf="flex-end">
       <Element id="sessions" name="sessions">
         <CardHeader mb="40px">
           <Flex direction="column">
-            <Text
-              color={textColor}
-              fontSize="lg"
-              fontWeight="semibold"
-              mb="4px"
-            >
+            <Text color={textColor} fontSize="lg" fontWeight="semibold" mb="4px">
               Sessions
             </Text>
             <Text color="gray.400" fontWeight="normal" fontSize="sm">
-              This is a list of devices that have logged into your account.
-              Remove those that you do not recognize.
+              This is a list of devices that have logged into your account. Remove those that you do
+              not recognize.
             </Text>
           </Flex>
         </CardHeader>
         <CardBody>
           <Stack direction="column" spacing="18px" w="100%">
-            <Flex
-              direction={{ sm: "column", md: "row" }}
-              justify="space-between"
-              w="100%"
-            >
+            <Flex direction={{ sm: 'column', md: 'row' }} justify="space-between" w="100%">
               <Flex align="center">
-                <Icon
-                  as={RiComputerLine}
-                  me="30px"
-                  w="28px"
-                  h="28px"
-                  color="gray.400"
-                />
-                <Flex direction="column" mb={{ sm: "8px", lg: null }}>
+                <Icon as={RiComputerLine} me="30px" w="28px" h="28px" color="gray.400" />
+                <Flex direction="column" mb={{ sm: '8px', lg: null }}>
                   <Text color={textColor} fontWeight="normal" fontSize="sm">
                     Bucharest 68.133.163.201
                   </Text>
@@ -91,8 +64,8 @@ const Sessions = () => {
                 direction="row"
                 spacing="24px"
                 align="center"
-                alignSelf={{ sm: "flex-end", lg: null }}
-                minW={{ lg: "280px" }}
+                alignSelf={{ sm: 'flex-end', lg: null }}
+                minW={{ lg: '280px' }}
               >
                 <Badge colorScheme="green" borderRadius="12px" p="12px">
                   ACTIVE
@@ -102,12 +75,7 @@ const Sessions = () => {
                 </Text>
                 <Button variant="transparent-with-icon" color="green.400">
                   <Flex align="center" color="green.400" w="100%" fontSize="sm">
-                    <Text
-                      me="6px"
-                      transition="all .3s ease"
-                      _hover={{ me: "14px" }}
-                      fontSize="sm"
-                    >
+                    <Text me="6px" transition="all .3s ease" _hover={{ me: '14px' }} fontSize="sm">
                       See more
                     </Text>
                     <Icon
@@ -115,26 +83,16 @@ const Sessions = () => {
                       w="20px"
                       h="20px"
                       transition="all .3s ease"
-                      _hover={{ transform: "translateX(50%)" }}
+                      _hover={{ transform: 'translateX(50%)' }}
                     />
                   </Flex>
                 </Button>
               </Stack>
             </Flex>
             <HSeparator />
-            <Flex
-              direction={{ sm: "column", md: "row" }}
-              justify="space-between"
-              w="100%"
-            >
+            <Flex direction={{ sm: 'column', md: 'row' }} justify="space-between" w="100%">
               <Flex align="center">
-                <Icon
-                  as={RiComputerLine}
-                  me="30px"
-                  w="28px"
-                  h="28px"
-                  color="gray.400"
-                />
+                <Icon as={RiComputerLine} me="30px" w="28px" h="28px" color="gray.400" />
                 <Flex direction="column">
                   <Text color={textColor} fontWeight="normal" fontSize="sm">
                     Chrome on macOS
@@ -145,20 +103,15 @@ const Sessions = () => {
                 direction="row"
                 spacing="24px"
                 align="center"
-                alignSelf={{ sm: "flex-end", lg: null }}
-                minW={{ lg: "185px" }}
+                alignSelf={{ sm: 'flex-end', lg: null }}
+                minW={{ lg: '185px' }}
               >
                 <Text color="gray.400" fontSize="md" fontWeight="normal">
                   US
                 </Text>
                 <Button variant="transparent-with-icon" color="green.400">
                   <Flex align="center" color="green.400" w="100%" fontSize="sm">
-                    <Text
-                      me="6px"
-                      transition="all .3s ease"
-                      _hover={{ me: "14px" }}
-                      fontSize="sm"
-                    >
+                    <Text me="6px" transition="all .3s ease" _hover={{ me: '14px' }} fontSize="sm">
                       See more
                     </Text>
                     <Icon
@@ -166,26 +119,16 @@ const Sessions = () => {
                       w="20px"
                       h="20px"
                       transition="all .3s ease"
-                      _hover={{ transform: "translateX(50%)" }}
+                      _hover={{ transform: 'translateX(50%)' }}
                     />
                   </Flex>
                 </Button>
               </Stack>
             </Flex>
             <HSeparator />
-            <Flex
-              direction={{ sm: "column", md: "row" }}
-              justify="space-between"
-              w="100%"
-            >
+            <Flex direction={{ sm: 'column', md: 'row' }} justify="space-between" w="100%">
               <Flex align="center">
-                <Icon
-                  as={GiSmartphone}
-                  me="30px"
-                  w="28px"
-                  h="28px"
-                  color="gray.400"
-                />
+                <Icon as={GiSmartphone} me="30px" w="28px" h="28px" color="gray.400" />
                 <Flex direction="column">
                   <Text color={textColor} fontWeight="normal" fontSize="sm">
                     Safari on iPhone
@@ -196,21 +139,16 @@ const Sessions = () => {
                 direction="row"
                 spacing="24px"
                 align="center"
-                alignSelf={{ sm: "flex-end", lg: null }}
+                alignSelf={{ sm: 'flex-end', lg: null }}
                 justifySelf="flex-end"
-                minW={{ lg: "185px" }}
+                minW={{ lg: '185px' }}
               >
                 <Text color="gray.400" fontSize="md" fontWeight="normal">
                   US
                 </Text>
                 <Button variant="transparent-with-icon" color="green.400">
                   <Flex align="center" color="green.400" w="100%" fontSize="sm">
-                    <Text
-                      me="6px"
-                      transition="all .3s ease"
-                      _hover={{ me: "14px" }}
-                      fontSize="sm"
-                    >
+                    <Text me="6px" transition="all .3s ease" _hover={{ me: '14px' }} fontSize="sm">
                       See more
                     </Text>
                     <Icon
@@ -218,7 +156,7 @@ const Sessions = () => {
                       w="20px"
                       h="20px"
                       transition="all .3s ease"
-                      _hover={{ transform: "translateX(50%)" }}
+                      _hover={{ transform: 'translateX(50%)' }}
                     />
                   </Flex>
                 </Button>

@@ -16,25 +16,25 @@
 */
 
 // Chakra imports
-import { Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Flex, Icon, Text, useColorModeValue } from '@chakra-ui/react';
+import React, { useState } from 'react';
 
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import { FaShare } from "react-icons/fa";
-import IconBox from "components/Icons/IconBox";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import { FaShare } from 'react-icons/fa';
+import IconBox from 'components/Icons/IconBox';
 
 const City = () => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
-  const iconTeal = useColorModeValue("green.400", "green.400");
-  const iconBoxInside = useColorModeValue("white", "white");
+  const iconTeal = useColorModeValue('green.400', 'green.400');
+  const iconBoxInside = useColorModeValue('white', 'white');
   return (
     <Card>
       <CardBody>
         <Flex direction="column">
-          <IconBox as="box" h={"45px"} w={"45px"} bg={iconTeal} mb="24px">
-            <Icon as={FaShare} h={"24px"} w={"24px"} color={iconBoxInside} />
+          <IconBox as="box" h={'45px'} w={'45px'} bg={iconTeal} mb="24px">
+            <Icon as={FaShare} h={'24px'} w={'24px'} color={iconBoxInside} />
           </IconBox>
           <Flex direction="column">
             <Text color={textColor} fontSize="2xl" fontWeight="bold">

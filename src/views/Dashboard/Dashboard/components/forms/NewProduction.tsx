@@ -215,7 +215,8 @@ function NewProduction() {
       bg={bgColor}
       w={{ base: '100%', md: '768px' }}
       boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
-      borderRadius="15px">
+      borderRadius="15px"
+    >
       <Tabs variant="unstyled" mt="24px" alignSelf="center" w="100%">
         <TabPanels maxW={{ md: '90%', lg: '100%' }} mx="auto">
           <TabPanel>
@@ -246,7 +247,8 @@ function NewProduction() {
                               activeButton === 0 ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'
                             }
                             bg={activeButton === 0 ? bgActiveButton : 'transparent'}
-                            onClick={() => setActiveButton(0)}>
+                            onClick={() => setActiveButton(0)}
+                          >
                             {intl.formatMessage({ id: 'app.orchard' })}
                           </Button>
                           <Button
@@ -258,7 +260,8 @@ function NewProduction() {
                               activeButton === 1 ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'
                             }
                             bg={activeButton === 1 ? bgActiveButton : 'transparent'}
-                            onClick={() => setActiveButton(1)}>
+                            onClick={() => setActiveButton(1)}
+                          >
                             {intl.formatMessage({ id: 'app.garden' })}
                           </Button>
                         </Flex>
@@ -345,7 +348,8 @@ function NewProduction() {
                             fontSize="xs"
                             boxShadow={isOutdoor ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'}
                             bg={isOutdoor ? bgActiveButton : 'transparent'}
-                            onClick={() => setIsOutdoor(true)}>
+                            onClick={() => setIsOutdoor(true)}
+                          >
                             {intl.formatMessage({ id: 'app.outdoor' })}
                           </Button>
                           <Button
@@ -355,7 +359,8 @@ function NewProduction() {
                             fontSize="xs"
                             boxShadow={!isOutdoor ? '0px 2px 5.5px rgba(0, 0, 0, 0.06)' : 'none'}
                             bg={!isOutdoor ? bgActiveButton : 'transparent'}
-                            onClick={() => setIsOutdoor(false)}>
+                            onClick={() => setIsOutdoor(false)}
+                          >
                             {intl.formatMessage({ id: 'app.indoor' })}
                           </Button>
                         </Flex>
@@ -368,7 +373,8 @@ function NewProduction() {
                           mt="24px"
                           w="fit-content"
                           h="35px"
-                          type="submit">
+                          type="submit"
+                        >
                           <Text fontSize="xs" color="#fff" fontWeight="bold">
                             {intl.formatMessage({ id: 'app.saveAndAddANewEvent' })}
                           </Text>
@@ -380,7 +386,8 @@ function NewProduction() {
                           mt="24px"
                           w="100px"
                           h="35px"
-                          type="submit">
+                          type="submit"
+                        >
                           <Text fontSize="xs" color="#fff" fontWeight="bold">
                             {intl.formatMessage({ id: 'app.save' })}
                           </Text>

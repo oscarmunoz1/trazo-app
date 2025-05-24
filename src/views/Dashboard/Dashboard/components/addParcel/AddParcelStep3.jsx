@@ -117,7 +117,8 @@ const AddEventStep3 = ({ onClose }) => {
           justify="center"
           textAlign="center"
           w="80%"
-          mx="auto">
+          mx="auto"
+        >
           <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
             Do you want to certificate this parcel?
           </Text>
@@ -171,7 +172,8 @@ const AddEventStep3 = ({ onClose }) => {
                     mt="24px"
                     w={{ sm: '75px', lg: '100px' }}
                     h="35px"
-                    onClick={() => prevTab.current.click()}>
+                    onClick={() => prevTab.current.click()}
+                  >
                     <Text fontSize="xs" color="gray.700" fontWeight="bold">
                       PREV
                     </Text>
@@ -185,7 +187,8 @@ const AddEventStep3 = ({ onClose }) => {
                     mt="24px"
                     w={{ sm: '75px', lg: '100px' }}
                     h="35px"
-                    type="submit">
+                    type="submit"
+                  >
                     {isLoading ? (
                       <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
                     ) : (

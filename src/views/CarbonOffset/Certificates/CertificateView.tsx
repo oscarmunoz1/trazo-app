@@ -128,7 +128,8 @@ export const CertificateView: React.FC = () => {
               borderRadius="lg"
               borderWidth="1px"
               borderColor={borderColor}
-              mb={4}>
+              mb={4}
+            >
               <HStack justify="space-between" align="center">
                 <VStack align="start" spacing={2}>
                   <HStack>
@@ -147,7 +148,8 @@ export const CertificateView: React.FC = () => {
                     <Button
                       leftIcon={<FaDownload />}
                       colorScheme="blue"
-                      onClick={() => window.open(certificate.certificate_url, '_blank')}>
+                      onClick={() => window.open(certificate.certificate_url, '_blank')}
+                    >
                       Download Certificate
                     </Button>
                   ) : (
@@ -155,7 +157,8 @@ export const CertificateView: React.FC = () => {
                       leftIcon={<FaCheckCircle />}
                       colorScheme="green"
                       onClick={() => handleGenerateCertificate(certificate)}
-                      isDisabled={certificate.verification_status !== 'verified'}>
+                      isDisabled={certificate.verification_status !== 'verified'}
+                    >
                       Generate Certificate
                     </Button>
                   )}
@@ -182,7 +185,8 @@ export const CertificateView: React.FC = () => {
                 <Button
                   colorScheme="green"
                   onClick={confirmGenerate}
-                  isLoading={generateMutation.isPending}>
+                  isLoading={generateMutation.isPending}
+                >
                   Generate
                 </Button>
               </HStack>

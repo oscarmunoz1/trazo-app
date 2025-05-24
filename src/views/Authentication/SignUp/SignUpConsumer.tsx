@@ -57,7 +57,7 @@ export default function SignUpConsumer() {
 
   const onSubmitHandler = async (values) => {
     try {
-      await signUp({ 
+      await signUp({
         ...values,
         user_type: 3
       }).unwrap();
@@ -103,12 +103,9 @@ export default function SignUpConsumer() {
         justifyContent="center"
         align="center"
         pt={{ base: '155px', md: '155px' }}
-        pb="0px">
-        <Text
-          fontSize={{ base: '24px', md: '34px' }}
-          color="white"
-          mb="14px"
-          fontWeight="bold">
+        pb="0px"
+      >
+        <Text fontSize={{ base: '24px', md: '34px' }} color="white" mb="14px" fontWeight="bold">
           Welcome to Trazo!
         </Text>
         <Text
@@ -117,7 +114,8 @@ export default function SignUpConsumer() {
           fontWeight="normal"
           px="20px"
           mb="84px"
-          maxW="550px">
+          maxW="550px"
+        >
           Create your account to start reviewing products
         </Text>
       </Flex>
@@ -130,13 +128,9 @@ export default function SignUpConsumer() {
           p="40px"
           mx={{ base: '100px' }}
           bg={bgColor}
-          boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)">
-          <Text
-            fontSize="xl"
-            color={textColor}
-            fontWeight="bold"
-            textAlign="center"
-            mb="22px">
+          boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
+        >
+          <Text fontSize="xl" color={textColor} fontWeight="bold" textAlign="center" mb="22px">
             Register With
           </Text>
           <FormProvider {...methods}>
@@ -172,7 +166,8 @@ export default function SignUpConsumer() {
                   }}
                   _active={{
                     bg: 'green.500'
-                  }}>
+                  }}
+                >
                   {isLoading ? (
                     <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
                   ) : (
@@ -187,7 +182,8 @@ export default function SignUpConsumer() {
             justifyContent="center"
             alignItems="center"
             maxW="100%"
-            mt="0px">
+            mt="0px"
+          >
             <Text color={textColor} fontWeight="medium">
               Already have an account?
               <Link
@@ -195,7 +191,8 @@ export default function SignUpConsumer() {
                 as="span"
                 ms="5px"
                 fontWeight="bold"
-                onClick={() => navigate('/auth/signin')}>
+                onClick={() => navigate('/auth/signin')}
+              >
                 Sign In
               </Link>
             </Text>
@@ -204,4 +201,4 @@ export default function SignUpConsumer() {
       </Flex>
     </Flex>
   );
-} 
+}

@@ -36,37 +36,37 @@ import {
   TagCloseButton,
   TagLabel,
   Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import productImage1 from "assets/img/product-page-1.png";
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
+  useColorModeValue
+} from '@chakra-ui/react';
+import productImage1 from 'assets/img/product-page-1.png';
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
 // Custom components
-import Editor from "components/Editor/Editor";
-import React, { useState } from "react";
-import Pricing from "./components/Pricing";
-import ProductImage from "./components/ProductImage";
-import ProductInformation from "./components/ProductInformation";
-import Socials from "./components/Socials";
+import Editor from 'components/Editor/Editor';
+import React, { useState } from 'react';
+import Pricing from './components/Pricing';
+import ProductImage from './components/ProductImage';
+import ProductInformation from './components/ProductInformation';
+import Socials from './components/Socials';
 
 function EditProduct() {
   const [skills, setSkills] = useState([
     {
-      name: "chakra-ui",
-      id: 1,
+      name: 'chakra-ui',
+      id: 1
     },
     {
-      name: "react",
-      id: 2,
+      name: 'react',
+      id: 2
     },
     {
-      name: "javascript",
-      id: 3,
-    },
+      name: 'javascript',
+      id: 3
+    }
   ]);
 
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   const keyPress = (e) => {
     if (e.keyCode === 13) {
@@ -74,55 +74,45 @@ function EditProduct() {
         ...skills,
         {
           name: e.target.value,
-          id: skills.length === 0 ? 1 : skills[skills.length - 1].id + 1,
-        },
+          id: skills.length === 0 ? 1 : skills[skills.length - 1].id + 1
+        }
       ]);
-      e.target.value = "";
+      e.target.value = '';
     }
   };
 
   return (
-    <Flex direction="column" pt={{ sm: "125px", lg: "75px" }}>
+    <Flex direction="column" pt={{ sm: '125px', lg: '75px' }}>
       <Flex
-        direction={{ sm: "column", lg: "row" }}
+        direction={{ sm: 'column', lg: 'row' }}
         justify="space-between"
-        align={{ lg: "center" }}
+        align={{ lg: 'center' }}
         w="100%"
-        mb={{ sm: "24px", lg: "55px" }}
+        mb={{ sm: '24px', lg: '55px' }}
       >
         <Flex direction="column">
-          <Text
-            color={textColor}
-            fontSize={{ sm: "xl", md: "2xl" }}
-            fontWeight="bold"
-            mb="10px"
-          >
+          <Text color={textColor} fontSize={{ sm: 'xl', md: '2xl' }} fontWeight="bold" mb="10px">
             Make the changes below
           </Text>
-          <Text
-            fontSize="sm"
-            color="gray.500"
-            fontWeight="normal"
-            mb={{ sm: "16px", lg: "0px" }}
-          >
-            We’re constantly trying to express ourselves and actualize our
-            dreams. If you have the opportunity to play.
+          <Text fontSize="sm" color="gray.500" fontWeight="normal" mb={{ sm: '16px', lg: '0px' }}>
+            We’re constantly trying to express ourselves and actualize our dreams. If you have the
+            opportunity to play.
           </Text>
         </Flex>
         <Button
           variant="no-hover"
           bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-          w={{ sm: "75px", lg: "100px" }}
+          w={{ sm: '75px', lg: '100px' }}
           h="35px"
           me="12px"
-          alignSelf={{ sm: "flex-start", lg: "auto" }}
+          alignSelf={{ sm: 'flex-start', lg: 'auto' }}
         >
           <Text fontSize="xs" color="#fff" fontWeight="bold">
             SAVE
           </Text>
         </Button>
       </Flex>
-      <Grid templateColumns={{ sm: "1fr", lg: "1fr 1.7fr" }} gap="24px">
+      <Grid templateColumns={{ sm: '1fr', lg: '1fr 1.7fr' }} gap="24px">
         <Stack direction="column" spacing="24px">
           <ProductImage />
           <Socials />

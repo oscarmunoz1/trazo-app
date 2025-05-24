@@ -48,7 +48,8 @@ import {
   useGetCarbonCertificationsQuery,
   useAddCarbonCertificationMutation,
   useUpdateCarbonCertificationMutation,
-  useDeleteCarbonCertificationMutation
+  useDeleteCarbonCertificationMutation,
+  useGetCarbonEntriesQuery
 } from 'store/api/companyApi';
 import CarbonReportTab from './CarbonReportTab';
 import CarbonBenchmarkTab from './CarbonBenchmarkTab';
@@ -76,43 +77,81 @@ const CarbonFootprintTab = ({ establishmentId, productionId }) => {
     year: selectedYear
   });
 
+  // Use RTK Query to fetch carbon entries
+  const {
+    data: entriesData = [],
+    isLoading: loadingEntries,
+    refetch: refetchEntries
+  } = useGetCarbonEntriesQuery(
+    {
+      establishmentId: establishmentId,
+      year: selectedYear
+    },
+    {
+      skip: !establishmentId
+    }
+  );
+
   // Handle both array and object responses
-  let footprints = [];
+  let footprints = entriesData || []; // Use the entries data directly
   let totalEmissions = 0;
   let totalOffsets = 0;
+  let netCarbon = 0;
 
-  if (Array.isArray(footprintsData)) {
-    footprints = footprintsData;
-    totalEmissions = footprints
-      .filter((f) => f.type === 'emission')
-      .reduce((sum, f) => sum + f.amount, 0);
-    totalOffsets = footprints
-      .filter((f) => f.type === 'offset')
-      .reduce((sum, f) => sum + f.amount, 0);
-  } else if (footprintsData && typeof footprintsData === 'object') {
-    // For emissions-breakdown endpoint which returns an object
-    if (footprintsData.direct && footprintsData.indirect) {
-      const directTotal = Object.values(footprintsData.direct).reduce(
-        (sum, val) => sum + (val || 0),
-        0
-      );
-      const indirectTotal = Object.values(footprintsData.indirect).reduce(
-        (sum, val) => sum + (val || 0),
-        0
-      );
-      totalEmissions = directTotal + indirectTotal;
-    } else if (
-      footprintsData.totalEmissions !== undefined &&
-      footprintsData.totalOffsets !== undefined
-    ) {
-      // Handle summary format
-      totalEmissions = footprintsData.totalEmissions || 0;
-      totalOffsets = footprintsData.totalOffsets || 0;
+  if (
+    footprintsData &&
+    !Array.isArray(footprintsData) &&
+    footprintsData.total_emissions !== undefined
+  ) {
+    // Handle object form of response with snake_case properties
+    totalEmissions = footprintsData.total_emissions || 0;
+    totalOffsets = footprintsData.total_offsets || 0;
+    netCarbon =
+      footprintsData.net_carbon !== undefined
+        ? footprintsData.net_carbon
+        : totalEmissions - totalOffsets;
+  } else if (
+    footprintsData &&
+    !Array.isArray(footprintsData) &&
+    footprintsData.totalEmissions !== undefined
+  ) {
+    // Handle object form of response with camelCase properties
+    totalEmissions = footprintsData.totalEmissions || 0;
+    totalOffsets = footprintsData.totalOffsets || 0;
+    netCarbon =
+      footprintsData.netFootprint !== undefined
+        ? footprintsData.netFootprint
+        : totalEmissions - totalOffsets;
+  } else {
+    // Calculate from entry data
+    if (Array.isArray(footprints)) {
+      totalEmissions = footprints
+        .filter((f) => f.type === 'emission')
+        .reduce((sum, f) => sum + parseFloat(f.amount || 0), 0);
+      totalOffsets = footprints
+        .filter((f) => f.type === 'offset')
+        .reduce((sum, f) => sum + parseFloat(f.amount || 0), 0);
+      netCarbon = totalEmissions - totalOffsets;
     }
   }
 
-  const netCarbon = totalEmissions - totalOffsets;
-  const offsetPercentage = totalEmissions > 0 ? (totalOffsets / totalEmissions) * 100 : 0;
+  // Calculate offset percentage with improved logic
+  let offsetPercentage = 0;
+  if (totalEmissions > 0) {
+    offsetPercentage = Math.min(100, Math.max(0, (totalOffsets / totalEmissions) * 100));
+  } else if (totalOffsets > 0) {
+    // If there are offsets but no emissions, we're at 100%
+    offsetPercentage = 100;
+  }
+
+  // Add some debugging to console
+  console.log('Carbon Data:', {
+    totalEmissions,
+    totalOffsets,
+    netCarbon,
+    offsetPercentage,
+    footprintsData
+  });
 
   const {
     data: certifications = [],
@@ -157,21 +196,86 @@ const CarbonFootprintTab = ({ establishmentId, productionId }) => {
   // Handle form submission
   const onSubmit = async (data) => {
     try {
-      await addFootprint({
+      // Prepare API data
+      const apiData = {
         establishment: establishmentId,
-        production: productionId || undefined,
-        ...data
-      }).unwrap();
-      toast({ title: 'Huella de carbono registrada', status: 'success' });
-      reset();
+        production: productionId,
+        year: data.year || new Date().getFullYear(),
+        type: data.type,
+        source_id: data.type === 'emission' ? data.emission_source : data.offset_action,
+        amount: data.amount,
+        description: data.description
+      };
+
+      // Submit data
+      await addFootprint(apiData).unwrap();
+
+      // Show success message
+      toast({
+        title: 'Éxito',
+        description: `Se ha registrado la ${
+          data.type === 'emission' ? 'emisión' : 'compensación'
+        } correctamente.`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+
+      // Reset form
+      reset({
+        year: new Date().getFullYear(),
+        type: 'emission',
+        emission_source: '',
+        offset_action: '',
+        amount: 0,
+        description: ''
+      });
+
+      // Refresh data
       refetchFootprints();
-    } catch (e) {
+      refetchEntries(); // Also refresh the entries data
+
+      // Extra step to ensure everything is in sync
+      setTimeout(() => {
+        refetchFootprints();
+        refetchEntries();
+      }, 500);
+    } catch (error) {
+      console.error('Error adding footprint:', error);
       toast({
         title: 'Error',
-        description: e?.data?.detail || 'Error al registrar la huella de carbono',
-        status: 'error'
+        description: 'No se pudo registrar el dato. Intente nuevamente.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true
       });
     }
+  };
+
+  // Add helper function to find source name
+  const getSourceName = (entry) => {
+    if (!entry) return 'N/A';
+
+    // Determine source ID from various possible formats
+    let sourceId = null;
+    if (entry.source_id) {
+      sourceId = entry.source_id;
+    } else if (entry.source && typeof entry.source === 'number') {
+      sourceId = entry.source;
+    } else if (entry.source && entry.source.id) {
+      sourceId = entry.source.id;
+    } else if (entry.emission_source) {
+      sourceId = entry.emission_source;
+    } else if (entry.offset_action) {
+      sourceId = entry.offset_action;
+    }
+
+    if (!sourceId) return 'N/A';
+
+    // Find source name based on type
+    const sources = entry.type === 'emission' ? emissionSources : offsetActions;
+    const source = sources.find((s) => s.id === sourceId);
+    return source ? source.name : `ID: ${sourceId}`;
   };
 
   return (
@@ -227,15 +331,67 @@ const CarbonFootprintTab = ({ establishmentId, productionId }) => {
             </Heading>
             <Progress
               value={offsetPercentage}
-              colorScheme={offsetPercentage >= 100 ? 'green' : 'yellow'}
+              colorScheme={
+                offsetPercentage >= 100 ? 'green' : offsetPercentage >= 50 ? 'blue' : 'yellow'
+              }
               size="lg"
               borderRadius="md"
               mb={2}
+              height="20px"
+              sx={{
+                '& > div': {
+                  transitionProperty: 'width',
+                  transitionDuration: '0.5s'
+                }
+              }}
             />
             <Text textAlign="center" fontSize="sm" color="gray.600">
               {offsetPercentage.toFixed(1)}% de las emisiones compensadas
+              {offsetPercentage >= 100 && ' - ¡Carbono Neutral!'}
             </Text>
           </Box>
+
+          {/* Carbon Score Section - if available from API */}
+          {footprintsData && footprintsData.carbon_score !== undefined && (
+            <Box mb={4}>
+              <Heading size="sm" mb={2} color="green.700">
+                Carbon Score
+              </Heading>
+              <Flex align="center" justify="center">
+                <Box
+                  bg={
+                    footprintsData.carbon_score >= 80
+                      ? 'green.500'
+                      : footprintsData.carbon_score >= 50
+                      ? 'blue.500'
+                      : footprintsData.carbon_score >= 30
+                      ? 'yellow.500'
+                      : 'red.500'
+                  }
+                  color="white"
+                  borderRadius="full"
+                  width="100px"
+                  height="100px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  fontWeight="bold"
+                  fontSize="2xl"
+                >
+                  {footprintsData.carbon_score}/100
+                </Box>
+              </Flex>
+              <Text textAlign="center" fontSize="sm" mt={2} color="gray.600">
+                {footprintsData.carbon_score >= 80
+                  ? 'Excelente - Líder en sostenibilidad'
+                  : footprintsData.carbon_score >= 50
+                  ? 'Bueno - Carbono neutral o mejor'
+                  : footprintsData.carbon_score >= 30
+                  ? 'Regular - En progreso'
+                  : 'Necesita mejorar'}
+              </Text>
+            </Box>
+          )}
           {/* Divider */}
           <Divider my={4} />
           {/* Certifications Section */}
@@ -311,7 +467,8 @@ const CarbonFootprintTab = ({ establishmentId, productionId }) => {
                   {watch('type') === 'emission' ? 'Fuente de Emisión' : 'Acción de Compensación'}
                 </FormLabel>
                 <Select
-                  {...register(watch('type') === 'emission' ? 'emission_source' : 'offset_action')}>
+                  {...register(watch('type') === 'emission' ? 'emission_source' : 'offset_action')}
+                >
                   <option value="">Seleccionar...</option>
                   {(watch('type') === 'emission' ? emissionSources : offsetActions).map((item) => (
                     <option key={item.id} value={item.id}>
@@ -332,7 +489,8 @@ const CarbonFootprintTab = ({ establishmentId, productionId }) => {
                 type="submit"
                 colorScheme="blue"
                 isLoading={addingFootprint}
-                loadingText="Registrando...">
+                loadingText="Registrando..."
+              >
                 Registrar
               </Button>
             </Stack>
@@ -356,14 +514,12 @@ const CarbonFootprintTab = ({ establishmentId, productionId }) => {
                 {Array.isArray(footprints) && footprints.length > 0 ? (
                   footprints.map((footprint) => (
                     <Tr key={footprint.id}>
-                      <Td>{new Date(footprint.date).toLocaleDateString()}</Td>
-                      <Td>{footprint.type === 'emission' ? 'Emisión' : 'Compensación'}</Td>
                       <Td>
-                        {footprint.type === 'emission'
-                          ? emissionSources.find((s) => s.id === footprint.emission_source)?.name
-                          : offsetActions.find((a) => a.id === footprint.offset_action)?.name}
+                        {new Date(footprint.created_at || footprint.date).toLocaleDateString()}
                       </Td>
-                      <Td>{footprint.amount.toFixed(2)} kg CO₂e</Td>
+                      <Td>{footprint.type === 'emission' ? 'Emisión' : 'Compensación'}</Td>
+                      <Td>{getSourceName(footprint)}</Td>
+                      <Td>{parseFloat(footprint.amount).toFixed(2)} kg CO₂e</Td>
                       <Td>{footprint.description}</Td>
                     </Tr>
                   ))

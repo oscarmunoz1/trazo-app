@@ -1,15 +1,15 @@
 // Chakra imports
-import { Flex, Text, useColorModeValue } from "@chakra-ui/react";
+import { Flex, Text, useColorModeValue } from '@chakra-ui/react';
 
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody.tsx";
-import CardHeader from "components/Card/CardHeader.tsx";
-import React from "react";
-import TimelineRow from "components/Tables/TimelineRow";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody.tsx';
+import CardHeader from 'components/Card/CardHeader.tsx';
+import React from 'react';
+import TimelineRow from 'components/Tables/TimelineRow';
 
 const OrdersOverview = ({ title, amount, data }) => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
     <Card maxH="100%">
@@ -21,7 +21,7 @@ const OrdersOverview = ({ title, amount, data }) => {
           <Text fontSize="sm" color="gray.400" fontWeight="normal">
             <Text fontWeight="bold" as="span" color="green.400">
               {`${amount}%`}
-            </Text>{" "}
+            </Text>{' '}
             this month.
           </Text>
         </Flex>

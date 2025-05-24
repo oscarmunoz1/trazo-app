@@ -1,8 +1,5 @@
 import { USER_URL } from '../../config';
 import baseApi from './baseApi';
-import { createApi } from '@reduxjs/toolkit/query/react';
-import customFetchBase from './customFetchBase';
-import { setUser } from '../features/userSlice';
 
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

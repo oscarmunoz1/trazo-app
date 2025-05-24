@@ -24,21 +24,21 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
-  Stack,
-} from "@chakra-ui/react";
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import SearchTable2 from "components/Tables/SearchTable2";
-import React from "react";
-import { IoIosArrowDown } from "react-icons/io";
-import { columnsData2 } from "variables/columnsData";
-import tableData2 from "variables/tableData2.json";
+  Stack
+} from '@chakra-ui/react';
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import SearchTable2 from 'components/Tables/SearchTable2';
+import React from 'react';
+import { IoIosArrowDown } from 'react-icons/io';
+import { columnsData2 } from 'variables/columnsData';
+import tableData2 from 'variables/tableData2.json';
 
 function OrderList() {
   return (
-    <Flex direction="column" pt={{ sm: "125px", md: "75px" }}>
+    <Flex direction="column" pt={{ sm: '125px', md: '75px' }}>
       <Flex
-        direction={{ sm: "column", md: "row" }}
+        direction={{ sm: 'column', md: 'row' }}
         justify="space-between"
         align="center"
         w="100%"
@@ -52,16 +52,12 @@ function OrderList() {
           color="#fff"
           fontSize="xs"
           fontWeight="bold"
-          alignSelf={{ sm: "flex-start", lg: null }}
-          mb={{ sm: "12px", md: "0px" }}
+          alignSelf={{ sm: 'flex-start', lg: null }}
+          mb={{ sm: '12px', md: '0px' }}
         >
           NEW ORDER
         </Button>
-        <Stack
-          direction="row"
-          spacing="10px"
-          alignSelf={{ sm: "flex-start", lg: "auto" }}
-        >
+        <Stack direction="row" spacing="10px" alignSelf={{ sm: 'flex-start', lg: 'auto' }}>
           <Menu>
             <MenuButton
               as={Button}

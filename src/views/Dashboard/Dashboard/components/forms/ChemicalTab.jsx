@@ -11,8 +11,11 @@ import {
   Select,
   Text,
   Textarea,
-  useColorModeValue
+  useColorModeValue,
+  HStack,
+  Box
 } from '@chakra-ui/react';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { FormProvider, useForm } from 'react-hook-form';
 import React, { useState } from 'react';
 import { number, object, string } from 'zod';
@@ -159,33 +162,37 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
             name="observations"
             {...register('observations')}
           />
-          <Flex justify="space-between">
-            <Button
-              variant="no-hover"
-              bg={bgPrevButton}
-              alignSelf="flex-end"
-              mt="24px"
-              w={{ sm: '75px', lg: '100px' }}
-              h="35px"
-              onClick={onPrev}>
-              <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                {intl.formatMessage({ id: 'app.prev' })}
-              </Text>
-            </Button>
-
-            <Button
-              variant="no-hover"
-              bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-              alignSelf="flex-end"
-              mt="24px"
-              w="100px"
-              h="35px"
-              type="submit">
-              <Text fontSize="xs" color="#fff" fontWeight="bold">
-                {intl.formatMessage({ id: 'app.next' })}
-              </Text>
-            </Button>
-          </Flex>
+          <Box pt={6} mt={4} borderTop="1px" borderColor="gray.200">
+            <HStack justify="space-between">
+              <Button
+                variant="outline"
+                onClick={onPrev}
+                leftIcon={<FaChevronLeft />}
+                size="md"
+                px={6}
+                h="42px"
+                borderRadius="lg"
+                fontWeight="600"
+                _hover={{ transform: 'translateY(-1px)' }}
+                transition="all 0.3s ease">
+                {intl.formatMessage({ id: 'app.previous' }) || 'Previous'}
+              </Button>
+              <Button
+                colorScheme="green"
+                type="submit"
+                rightIcon={<FaChevronRight />}
+                size="md"
+                px={6}
+                h="42px"
+                borderRadius="lg"
+                fontWeight="600"
+                boxShadow="lg"
+                _hover={{ boxShadow: 'xl', transform: 'translateY(-1px)' }}
+                transition="all 0.3s ease">
+                {intl.formatMessage({ id: 'app.continue' }) || 'Continue'}
+              </Button>
+            </HStack>
+          </Box>
         </Flex>
       </form>
     </FormProvider>

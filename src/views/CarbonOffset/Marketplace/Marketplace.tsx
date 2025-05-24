@@ -140,7 +140,8 @@ export const Marketplace: React.FC = () => {
                   md: 'repeat(2, 1fr)',
                   lg: 'repeat(3, 1fr)'
                 }}
-                gap={6}>
+                gap={6}
+              >
                 {projects?.map((project: Project) => (
                   <ProjectCard
                     key={project.id}

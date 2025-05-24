@@ -16,7 +16,8 @@ function AddCompany({ isEdit = false }) {
         isEdit
           ? intl.formatMessage({ id: 'app.modifyForm' })
           : intl.formatMessage({ id: 'app.completeForm' })
-      }>
+      }
+    >
       <NewCompany />
     </BoxBackground>
   );

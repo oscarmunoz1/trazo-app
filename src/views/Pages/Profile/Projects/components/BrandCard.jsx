@@ -27,27 +27,19 @@ import {
   MenuList,
   Text,
   useColorModeValue,
-  useDisclosure,
-} from "@chakra-ui/react";
+  useDisclosure
+} from '@chakra-ui/react';
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import IconBox from "components/Icons/IconBox";
-import { HSeparator } from "components/Separator/Separator";
-import React from "react";
-import { IoEllipsisVerticalSharp } from "react-icons/io5";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import IconBox from 'components/Icons/IconBox';
+import { HSeparator } from 'components/Separator/Separator';
+import React from 'react';
+import { IoEllipsisVerticalSharp } from 'react-icons/io5';
 
-const BrandCard = ({
-  icon,
-  title,
-  avatars,
-  description,
-  participants,
-  date,
-}) => {
-
-  const textColor = useColorModeValue("gray.700", "white");
+const BrandCard = ({ icon, title, avatars, description, participants, date }) => {
+  const textColor = useColorModeValue('gray.700', 'white');
   const { isOpen: isOpen1, onOpen: onOpen1, onClose: onClose1 } = useDisclosure();
 
   return (
@@ -76,12 +68,7 @@ const BrandCard = ({
           </Flex>
           <Menu isOpen={isOpen1} onClose={onClose1}>
             <MenuButton onClick={onOpen1} alignSelf="flex-start">
-              <Icon
-                as={IoEllipsisVerticalSharp}
-                color="gray.400"
-                w="20px"
-                h="20px"
-              />
+              <Icon as={IoEllipsisVerticalSharp} color="gray.400" w="20px" h="20px" />
             </MenuButton>
             <MenuList>
               <MenuItem>Action</MenuItem>

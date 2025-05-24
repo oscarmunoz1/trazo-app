@@ -159,7 +159,8 @@ const PlanSelector: React.FC<PlanSelectorProps> = ({ plans, companyId }) => {
               borderWidth={plan.is_active ? '2px' : '1px'}
               borderColor={plan.is_active ? 'blue.500' : 'transparent'}
               position="relative"
-              overflow="hidden">
+              overflow="hidden"
+            >
               {plan.is_active && (
                 <Box
                   position="absolute"
@@ -169,7 +170,8 @@ const PlanSelector: React.FC<PlanSelectorProps> = ({ plans, companyId }) => {
                   color="white"
                   px={3}
                   py={1}
-                  borderBottomLeftRadius="md">
+                  borderBottomLeftRadius="md"
+                >
                   {t('app.mostPopular')}
                 </Box>
               )}
@@ -205,7 +207,8 @@ const PlanSelector: React.FC<PlanSelectorProps> = ({ plans, companyId }) => {
                     mt={4}
                     onClick={() => handleSubscribe(plan.id.toString())}
                     isLoading={checkoutLoading[plan.id.toString()]}
-                    loadingText={t('app.redirectingToCheckout')}>
+                    loadingText={t('app.redirectingToCheckout')}
+                  >
                     {t('app.subscribe')}
                   </Button>
                 </Stack>

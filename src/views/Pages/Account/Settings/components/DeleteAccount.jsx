@@ -16,29 +16,19 @@
 */
 
 // Chakra imports
-import {
-  Button,
-  Flex,
-  Switch,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Button, Flex, Switch, Text, useColorModeValue } from '@chakra-ui/react';
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import React from "react";
-import { Element } from "react-scroll";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import React from 'react';
+import { Element } from 'react-scroll';
 
 const DeleteAccount = () => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
-    <Card
-      w={{ sm: "100%", lg: "70%" }}
-      alignSelf="flex-end"
-      justifySelf="flex-end"
-    >
+    <Card w={{ sm: '100%', lg: '70%' }} alignSelf="flex-end" justifySelf="flex-end">
       <Element id="delete-account" name="delete-account">
         <CardHeader mb="40px">
           <Flex direction="column">
@@ -46,27 +36,21 @@ const DeleteAccount = () => {
               Delete Account
             </Text>
             <Text color="gray.400" fontWeight="normal" fontSize="sm">
-              Once you delete your account, there is no going back. Please be
-              certain.
+              Once you delete your account, there is no going back. Please be certain.
             </Text>
           </Flex>
         </CardHeader>
         <CardBody>
           <Flex
-            direction={{ sm: "column", md: "row" }}
+            direction={{ sm: 'column', md: 'row' }}
             justify="space-between"
             align="start"
             w="100%"
           >
-            <Flex align="center" mb={{ sm: "16px", lg: null }}>
+            <Flex align="center" mb={{ sm: '16px', lg: null }}>
               <Switch colorScheme="teal" me="22px" />
               <Flex direction="column">
-                <Text
-                  fontSize="sm"
-                  color={textColor}
-                  mb="4px"
-                  fontWeight="semibold"
-                >
+                <Text fontSize="sm" color={textColor} mb="4px" fontWeight="semibold">
                   Confirm
                 </Text>
                 <Text color="gray.400" fontWeight="normal" fonSize="xs">
@@ -85,13 +69,7 @@ const DeleteAccount = () => {
               >
                 DEACTIVATE
               </Button>
-              <Button
-                variant="solid"
-                colorScheme="red"
-                w="150px"
-                h="35px"
-                fontSize="xs"
-              >
+              <Button variant="solid" colorScheme="red" w="150px" h="35px" fontSize="xs">
                 DELETE ACCOUNT
               </Button>
             </Flex>

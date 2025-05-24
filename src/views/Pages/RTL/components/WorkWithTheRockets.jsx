@@ -1,20 +1,12 @@
 // Chakra imports
-import {
-  Box,
-  Button,
-  Flex,
-  Icon,
-  Portal,
-  Spacer,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Icon, Portal, Spacer, Text } from '@chakra-ui/react';
 
 // react icons
-import { BsArrowRight } from "react-icons/bs";
+import { BsArrowRight } from 'react-icons/bs';
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody.tsx";
-import React from "react";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody.tsx';
+import React from 'react';
 
 const WorkWithTheRockets = ({ title, description, backgroundImage }) => {
   const overlayRef = React.useRef();
@@ -26,7 +18,7 @@ const WorkWithTheRockets = ({ title, description, backgroundImage }) => {
         bgPosition="center"
         bgRepeat="no-repeat"
         w="100%"
-        h={{ sm: "200px", lg: "100%" }}
+        h={{ sm: '200px', lg: '100%' }}
         bgSize="cover"
         position="relative"
         borderRadius="15px"
@@ -49,16 +41,16 @@ const WorkWithTheRockets = ({ title, description, backgroundImage }) => {
             <Text fontSize="xl" fontWeight="bold" pb=".3rem">
               {title}
             </Text>
-            <Text fontSize="sm" fontWeight="normal" w={{ lg: "92%" }}>
+            <Text fontSize="sm" fontWeight="normal" w={{ lg: '92%' }}>
               {description}
             </Text>
             <Spacer />
-            <Flex align="center" mt={{ sm: "20px", lg: "40px", xl: "90px" }}>
+            <Flex align="center" mt={{ sm: '20px', lg: '40px', xl: '90px' }}>
               <Button p="0px" variant="no-hover" bg="transparent" mt="12px">
                 <Text
                   fontSize="sm"
                   fontWeight="bold"
-                  _hover={{ me: "4px" }}
+                  _hover={{ me: '4px' }}
                   transition="all .5s ease"
                 >
                   Read more
@@ -71,7 +63,7 @@ const WorkWithTheRockets = ({ title, description, backgroundImage }) => {
                   transition="all .5s ease"
                   mx=".3rem"
                   cursor="pointer"
-                  _hover={{ transform: "translateX(20%)" }}
+                  _hover={{ transform: 'translateX(20%)' }}
                   pt="4px"
                 />
               </Button>

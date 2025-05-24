@@ -94,7 +94,8 @@ const PlanSelection = ({ plans, activeCompanyId }) => {
             boxShadow={isPopular ? 'md' : 'sm'}
             transform={isPopular ? 'scale(1.03)' : 'scale(1)'}
             transition="transform 0.2s"
-            _hover={{ boxShadow: 'lg', transform: isPopular ? 'scale(1.05)' : 'scale(1.03)' }}>
+            _hover={{ boxShadow: 'lg', transform: isPopular ? 'scale(1.05)' : 'scale(1.03)' }}
+          >
             {isPopular && (
               <Badge
                 position="absolute"
@@ -105,7 +106,8 @@ const PlanSelection = ({ plans, activeCompanyId }) => {
                 colorScheme="blue"
                 borderRadius="full"
                 px={3}
-                py={1}>
+                py={1}
+              >
                 Popular
               </Badge>
             )}
@@ -134,7 +136,8 @@ const PlanSelection = ({ plans, activeCompanyId }) => {
                 colorScheme={isPopular ? 'blue' : 'gray'}
                 variant={isPopular ? 'solid' : 'outline'}
                 onClick={() => handleSubscribe(plan.id, plan.interval)}
-                isLoading={isLoading}>
+                isLoading={isLoading}
+              >
                 {intl.formatMessage({ id: 'app.buyNow' })}
               </Button>
             </Box>

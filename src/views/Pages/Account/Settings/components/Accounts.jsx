@@ -15,12 +15,7 @@
 
 */
 
-import {
-  AtlassianLogo,
-  InvisionLogo,
-  SlackLogo,
-  SpotifyLogo,
-} from "components/Icons/Icons";
+import { AtlassianLogo, InvisionLogo, SlackLogo, SpotifyLogo } from 'components/Icons/Icons';
 // Chakra imports
 import {
   Button,
@@ -31,37 +26,28 @@ import {
   Switch,
   Text,
   Tooltip,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import React, { useState } from "react";
+  useColorModeValue
+} from '@chakra-ui/react';
+import React, { useState } from 'react';
 
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import { Element } from "react-scroll";
-import { HSeparator } from "components/Separator/Separator";
-import { IoIosArrowUp } from "react-icons/io";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import { Element } from 'react-scroll';
+import { HSeparator } from 'components/Separator/Separator';
+import { IoIosArrowUp } from 'react-icons/io';
 
 const Accounts = () => {
-  const bgVerificationCard = useColorModeValue("gray.100", "gray.600");
-  const textColor = useColorModeValue("gray.700", "white");
+  const bgVerificationCard = useColorModeValue('gray.100', 'gray.600');
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
-    <Card
-      w={{ sm: "100%", lg: "70%" }}
-      alignSelf="flex-end"
-      justifySelf="flex-end"
-    >
+    <Card w={{ sm: '100%', lg: '70%' }} alignSelf="flex-end" justifySelf="flex-end">
       <Element to="accounts" name="accounts">
         <CardHeader mb="40px">
           <Flex direction="column">
-            <Text
-              color={textColor}
-              fontSize="lg"
-              fontWeight="semibold"
-              mb="4px"
-            >
+            <Text color={textColor} fontSize="lg" fontWeight="semibold" mb="4px">
               Accounts
             </Text>
             <Text color="gray.400" fontWeight="normal" fontSize="sm">
@@ -80,12 +66,7 @@ const Accounts = () => {
                       Slack
                     </Text>
                     <Flex align="center">
-                      <Text
-                        color="gray.400"
-                        fontWeight="normal"
-                        fontSize="xs"
-                        me="6px"
-                      >
+                      <Text color="gray.400" fontWeight="normal" fontSize="xs" me="6px">
                         Show Less
                       </Text>
                       <Icon as={IoIosArrowUp} color="gray.400" />
@@ -93,12 +74,7 @@ const Accounts = () => {
                   </Flex>
                 </Flex>
                 <Flex align="center">
-                  <Text
-                    color="gray.500"
-                    fontWeight="normal"
-                    me="17px"
-                    fontSize="xs"
-                  >
+                  <Text color="gray.500" fontWeight="normal" me="17px" fontSize="xs">
                     Enabled
                   </Text>
                   <Switch colorScheme="teal" defaultIsChecked />
@@ -106,13 +82,12 @@ const Accounts = () => {
               </Flex>
               <Stack direction="column" w="100%" spacing="18px" ps="50px">
                 <Text color="gray.400" fontWeight="normal" fontSize="sm">
-                  You haven't added your Slack yet or you aren't authorized.
-                  Please add our Slack Bot to your account by clicking on here.
-                  When you've added the bot, send your verification code that
-                  you have received.
+                  You haven't added your Slack yet or you aren't authorized. Please add our Slack
+                  Bot to your account by clicking on here. When you've added the bot, send your
+                  verification code that you have received.
                 </Text>
                 <Flex
-                  direction={{ sm: "column", md: "row" }}
+                  direction={{ sm: 'column', md: 'row' }}
                   justify="space-between"
                   bg={bgVerificationCard}
                   borderRadius="12px"
@@ -124,16 +99,11 @@ const Accounts = () => {
                     color="gray.500"
                     fontWeight="bold"
                     fontSize="sm"
-                    mb={{ sm: "8px", lg: null }}
+                    mb={{ sm: '8px', lg: null }}
                   >
                     Verification Code
                   </Text>
-                  <Tooltip
-                    hasArrow
-                    label="Copy!"
-                    bg="green.400"
-                    placement="top"
-                  >
+                  <Tooltip hasArrow label="Copy!" bg="green.400" placement="top">
                     <Input
                       borderRadius="15px"
                       value="1172913"
@@ -145,7 +115,7 @@ const Accounts = () => {
                   </Tooltip>
                 </Flex>
                 <Flex
-                  direction={{ sm: "column", md: "row" }}
+                  direction={{ sm: 'column', md: 'row' }}
                   align="flex-start"
                   justify="space-between"
                   bg={bgVerificationCard}
@@ -159,24 +129,13 @@ const Accounts = () => {
                   </Text>
                   <Flex
                     align="center"
-                    direction={{ sm: "column", md: "row" }}
-                    justify={{ sm: "center", lg: null }}
+                    direction={{ sm: 'column', md: 'row' }}
+                    justify={{ sm: 'center', lg: null }}
                   >
-                    <Text
-                      color="gray.500"
-                      fontSize="sm"
-                      me="18px"
-                      my={{ sm: "6px", lg: null }}
-                    >
+                    <Text color="gray.500" fontSize="sm" me="18px" my={{ sm: '6px', lg: null }}>
                       hello@microsoft-ui.com
                     </Text>
-                    <Button
-                      variant="solid"
-                      colorScheme="red"
-                      w="100px"
-                      h="35px"
-                      fontSize="xs"
-                    >
+                    <Button variant="solid" colorScheme="red" w="100px" h="35px" fontSize="xs">
                       DELETE
                     </Button>
                   </Flex>
@@ -197,12 +156,7 @@ const Accounts = () => {
                 </Flex>
               </Flex>
               <Flex align="center">
-                <Text
-                  color="gray.500"
-                  fontWeight="normal"
-                  me="17px"
-                  fontSize="xs"
-                >
+                <Text color="gray.500" fontWeight="normal" me="17px" fontSize="xs">
                   Enabled
                 </Text>
                 <Switch colorScheme="teal" defaultIsChecked />
@@ -222,12 +176,7 @@ const Accounts = () => {
                 </Flex>
               </Flex>
               <Flex align="center">
-                <Text
-                  color="gray.500"
-                  fontWeight="normal"
-                  me="17px"
-                  fontSize="xs"
-                >
+                <Text color="gray.500" fontWeight="normal" me="17px" fontSize="xs">
                   Enabled
                 </Text>
                 <Switch colorScheme="teal" defaultIsChecked />

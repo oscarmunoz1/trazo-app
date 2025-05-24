@@ -11,7 +11,8 @@ function FinishProduction() {
       title={intl.formatMessage({ id: 'app.finishProduction' })}
       subtitle={intl.formatMessage({
         id: 'app.completeTheFormBelowToFinishTheCurrentProductionOnYourParcel'
-      })}>
+      })}
+    >
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
         <FinishProductionForm />
       </Flex>

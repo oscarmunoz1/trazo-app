@@ -546,7 +546,8 @@ function NewEstablishment() {
                               id: 'app.typeHelp',
                               defaultMessage:
                                 'Tipo de establecimiento (ej: planta, bodega, campo, oficina)'
-                            })}>
+                            })}
+                          >
                             <InfoOutlineIcon ml={1} color="gray.400" cursor="pointer" />
                           </Tooltip>
                         </FormLabel>
@@ -611,7 +612,8 @@ function NewEstablishment() {
                             label={intl.formatMessage({
                               id: 'app.zoneHelp',
                               defaultMessage: 'Zona o sector dentro de la ciudad o región'
-                            })}>
+                            })}
+                          >
                             <InfoOutlineIcon ml={1} color="gray.400" cursor="pointer" />
                           </Tooltip>
                         </FormLabel>
@@ -645,7 +647,8 @@ function NewEstablishment() {
                             label={intl.formatMessage({
                               id: 'app.contactPersonHelp',
                               defaultMessage: 'Nombre de la persona responsable del establecimiento'
-                            })}>
+                            })}
+                          >
                             <InfoOutlineIcon ml={1} color="gray.400" cursor="pointer" />
                           </Tooltip>
                         </FormLabel>
@@ -696,7 +699,8 @@ function NewEstablishment() {
                           id: 'app.coordinatesHelp',
                           defaultMessage:
                             'Latitud y longitud del establecimiento (puedes usar el mapa)'
-                        })}>
+                        })}
+                      >
                         <InfoOutlineIcon ml={1} color="gray.400" cursor="pointer" />
                       </Tooltip>
                     </Text>
@@ -767,7 +771,8 @@ function NewEstablishment() {
                       mt="24px"
                       w="100px"
                       h="35px"
-                      type="submit">
+                      type="submit"
+                    >
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
                         {intl.formatMessage({ id: 'app.next' })}
                       </Text>
@@ -804,7 +809,8 @@ function NewEstablishment() {
                   onSubmit={descriptionMethods.handleSubmit(onSubmitDescription, (errors) => {
                     console.error('Validation errors:', errors);
                   })}
-                  style={{ width: '100%' }}>
+                  style={{ width: '100%' }}
+                >
                   <Flex direction="column" w="100%">
                     <Box
                       mb={6}
@@ -812,7 +818,8 @@ function NewEstablishment() {
                       bg="yellow.50"
                       borderRadius="md"
                       border="1px solid"
-                      borderColor="yellow.200">
+                      borderColor="yellow.200"
+                    >
                       <Text fontWeight="bold" color="yellow.800">
                         {intl.formatMessage({
                           id: 'app.publicFieldsNotice',
@@ -881,7 +888,8 @@ function NewEstablishment() {
                               id: 'app.locationHighlightsHelp',
                               defaultMessage:
                                 'Características notables, accesibilidad, geografía (opcional).'
-                            })}>
+                            })}
+                          >
                             <InfoOutlineIcon ml={2} color="gray.400" cursor="pointer" />
                           </Tooltip>
                         </Flex>
@@ -927,7 +935,8 @@ function NewEstablishment() {
                       borderRadius="lg"
                       boxShadow="lg"
                       bg={bgColor}
-                      border="2px solid #E2E8F0">
+                      border="2px solid #E2E8F0"
+                    >
                       <Flex align="center" mb={4}>
                         <Text fontWeight="bold" fontSize="lg" mr={2}>
                           {intl.formatMessage({
@@ -940,7 +949,8 @@ function NewEstablishment() {
                             id: 'app.publicProfilePreviewHelp',
                             defaultMessage:
                               'Así se verá tu establecimiento cuando alguien escanee el QR.'
-                          })}>
+                          })}
+                        >
                           <InfoOutlineIcon color="gray.400" cursor="pointer" />
                         </Tooltip>
                       </Flex>
@@ -958,7 +968,8 @@ function NewEstablishment() {
                         mt="24px"
                         w="100px"
                         h="35px"
-                        onClick={() => mainInfoTab.current.click()}>
+                        onClick={() => mainInfoTab.current.click()}
+                      >
                         <Text fontSize="xs" color="gray.700" fontWeight="bold">
                           {intl.formatMessage({ id: 'app.prev' })}
                         </Text>
@@ -970,7 +981,8 @@ function NewEstablishment() {
                         mt="24px"
                         w="100px"
                         h="35px"
-                        type="submit">
+                        type="submit"
+                      >
                         <Text fontSize="xs" color="#fff" fontWeight="bold">
                           {intl.formatMessage({ id: 'app.next' })}
                         </Text>
@@ -1024,7 +1036,8 @@ function NewEstablishment() {
                       id: 'app.dropFilesHereToUpload',
                       defaultMessage: 'Arrastra archivos aquí para subir'
                     })}
-                    {...getRootProps({ className: 'dropzone' })}>
+                    {...getRootProps({ className: 'dropzone' })}
+                  >
                     <Input {...getInputProps()} />
                     <Button variant="no-hover">
                       {acceptedFiles.length > 0 ? (
@@ -1046,7 +1059,8 @@ function NewEstablishment() {
                                 fontWeight="normal"
                                 maxWidth="150px"
                                 textOverflow={'ellipsis'}
-                                overflow={'hidden'}>
+                                overflow={'hidden'}
+                              >
                                 {file.name}
                               </Text>
                             </Box>
@@ -1077,7 +1091,8 @@ function NewEstablishment() {
                       mt="24px"
                       w="100px"
                       h="35px"
-                      onClick={() => descriptionTab.current.click()}>
+                      onClick={() => descriptionTab.current.click()}
+                    >
                       <Text fontSize="xs" color="gray.700" fontWeight="bold">
                         {intl.formatMessage({ id: 'app.prev' })}
                       </Text>
@@ -1094,7 +1109,8 @@ function NewEstablishment() {
                       loadingText={intl.formatMessage({
                         id: 'app.uploading',
                         defaultMessage: 'Subiendo...'
-                      })}>
+                      })}
+                    >
                       <Text fontSize="xs" color="#fff" fontWeight="bold">
                         {intl.formatMessage({ id: 'app.upload', defaultMessage: 'Subir' })}
                       </Text>
@@ -1165,7 +1181,8 @@ function NewEstablishment() {
                         mt="24px"
                         w="100px"
                         h="35px"
-                        onClick={() => mediaTab.current.click()}>
+                        onClick={() => mediaTab.current.click()}
+                      >
                         <Text fontSize="xs" color="gray.700" fontWeight="bold">
                           {intl.formatMessage({ id: 'app.prev' })}
                         </Text>
@@ -1177,7 +1194,8 @@ function NewEstablishment() {
                         mt="24px"
                         w="100px"
                         h="35px"
-                        type="submit">
+                        type="submit"
+                      >
                         <Text fontSize="xs" color="#fff" fontWeight="bold">
                           {intl.formatMessage({ id: 'app.send', defaultMessage: 'Enviar' })}
                         </Text>

@@ -1,28 +1,21 @@
 // Chakra imports
-import {
-  Button,
-  Flex,
-  Icon,
-  Spacer,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Button, Flex, Icon, Spacer, Text, useColorModeValue } from '@chakra-ui/react';
 
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody.tsx";
-import CardHeader from "components/Card/CardHeader.tsx";
-import { FaPencilAlt } from "react-icons/fa";
-import IconBox from "components/Icons/IconBox";
-import React from "react";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody.tsx';
+import CardHeader from 'components/Card/CardHeader.tsx';
+import { FaPencilAlt } from 'react-icons/fa';
+import IconBox from 'components/Icons/IconBox';
+import React from 'react';
 
 const PaymentMethod = ({ title, mastercard, visa }) => {
-  const iconTeal = useColorModeValue("green.400", "green.400");
-  const textColor = useColorModeValue("gray.700", "white");
-  const borderColor = useColorModeValue("#dee2e6", "gray.500");
+  const iconTeal = useColorModeValue('green.400', 'green.400');
+  const textColor = useColorModeValue('gray.700', 'white');
+  const borderColor = useColorModeValue('#dee2e6', 'gray.500');
   const bgButton = useColorModeValue(
-    "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
-    "gray.800"
+    'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)',
+    'gray.800'
   );
 
   return (
@@ -39,7 +32,7 @@ const PaymentMethod = ({ title, mastercard, visa }) => {
       </CardHeader>
       <CardBody>
         <Flex
-          direction={{ sm: "column", md: "row" }}
+          direction={{ sm: 'column', md: 'row' }}
           align="center"
           w="100%"
           justify="center"
@@ -53,8 +46,8 @@ const PaymentMethod = ({ title, mastercard, visa }) => {
             border="1px solid"
             borderColor={borderColor}
             align="center"
-            mb={{ sm: "24px", md: "0px" }}
-            me={{ sm: "0px", md: "24px" }}
+            mb={{ sm: '24px', md: '0px' }}
+            me={{ sm: '0px', md: '24px' }}
           >
             <IconBox me="10px" w="25px" h="22px">
               {mastercard.icon}
@@ -63,13 +56,7 @@ const PaymentMethod = ({ title, mastercard, visa }) => {
               {mastercard.number}
             </Text>
             <Spacer />
-            <Button
-              p="0px"
-              bg="transparent"
-              w="16px"
-              h="16px"
-              variant="no-hover"
-            >
+            <Button p="0px" bg="transparent" w="16px" h="16px" variant="no-hover">
               <Icon as={FaPencilAlt} />
             </Button>
           </Flex>
@@ -89,13 +76,7 @@ const PaymentMethod = ({ title, mastercard, visa }) => {
               {visa.number}
             </Text>
             <Spacer />
-            <Button
-              p="0px"
-              bg="transparent"
-              w="16px"
-              h="16px"
-              variant="no-hover"
-            >
+            <Button p="0px" bg="transparent" w="16px" h="16px" variant="no-hover">
               <Icon as={FaPencilAlt} />
             </Button>
           </Flex>

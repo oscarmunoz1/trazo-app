@@ -101,7 +101,8 @@ function SearchTable2(props: SearchTable2Props) {
           justify={{ sm: 'flex-start', lg: 'flex-end' }}
           w="100%"
           px="22px"
-          mb="36px">
+          mb="36px"
+        >
           <Input
             type="text"
             placeholder="Search..."
@@ -120,12 +121,14 @@ function SearchTable2(props: SearchTable2Props) {
                   <Th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
                     pe="0px"
-                    key={index}>
+                    key={index}
+                  >
                     <Flex
                       justify="space-between"
                       align="center"
                       fontSize={{ sm: '10px', lg: '12px' }}
-                      color="gray.400">
+                      color="gray.400"
+                    >
                       {column.render('Header')}
                       <Icon
                         w={{ sm: '10px', md: '14px' }}
@@ -209,7 +212,8 @@ function SearchTable2(props: SearchTable2Props) {
                         {...cell.getCellProps()}
                         key={index}
                         fontSize={{ sm: '14px' }}
-                        minW={{ sm: '150px', md: '200px', lg: 'auto' }}>
+                        minW={{ sm: '150px', md: '200px', lg: 'auto' }}
+                      >
                         {data}
                       </Td>
                     );
@@ -225,7 +229,8 @@ function SearchTable2(props: SearchTable2Props) {
           align="center"
           px="22px"
           w="100%"
-          px={{ md: '22px' }}>
+          px={{ md: '22px' }}
+        >
           <Text fontSize="sm" color="gray.500" fontWeight="normal" mb={{ sm: '24px', md: '0px' }}>
             Showing {pageSize * pageIndex + 1} to{' '}
             {pageSize * (pageIndex + 1) <= tableData.length
@@ -248,7 +253,8 @@ function SearchTable2(props: SearchTable2Props) {
                 bg: 'gray.200',
                 opacity: '0.7',
                 borderColor: 'gray.500'
-              }}>
+              }}
+            >
               <Icon as={GrFormPrevious} w="16px" h="16px" color="gray.400" />
             </Button>
             {pageSize === 5 ? (
@@ -258,7 +264,8 @@ function SearchTable2(props: SearchTable2Props) {
                 w="75px"
                 mx="6px"
                 defaultValue="1"
-                onChange={(e) => gotoPage(e)}>
+                onChange={(e) => gotoPage(e)}
+              >
                 <NumberInputField />
                 <NumberInputStepper>
                   <NumberIncrementStepper onClick={() => nextPage()} />
@@ -282,7 +289,8 @@ function SearchTable2(props: SearchTable2Props) {
                       opacity: '0.7',
                       borderColor: 'gray.500'
                     }}
-                    key={index}>
+                    key={index}
+                  >
                     <Text fontSize="xs" color={pageNumber === pageIndex + 1 ? '#fff' : 'gray.600'}>
                       {pageNumber}
                     </Text>
@@ -304,7 +312,8 @@ function SearchTable2(props: SearchTable2Props) {
                 bg: 'gray.200',
                 opacity: '0.7',
                 borderColor: 'gray.500'
-              }}>
+              }}
+            >
               <Icon as={GrFormNext} w="16px" h="16px" color="gray.400" />
             </Button>
           </Stack>

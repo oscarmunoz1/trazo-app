@@ -12,7 +12,8 @@ const SubscriptionLoadingState = () => (
     alignItems="center"
     justifyContent="center"
     flexDirection="column"
-    bg="white">
+    bg="white"
+  >
     <Spinner size="xl" color="green.500" thickness="4px" speed="0.65s" />
     <Text mt={4} fontSize="lg" fontWeight="medium" color="gray.600">
       Verifying subscription...

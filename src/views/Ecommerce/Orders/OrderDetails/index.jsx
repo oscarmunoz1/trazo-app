@@ -27,31 +27,31 @@ import {
   Spacer,
   Stack,
   Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+  useColorModeValue
+} from '@chakra-ui/react';
 
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody.tsx";
-import CardHeader from "components/Card/CardHeader.tsx";
-import { CgShapeCircle } from "react-icons/cg";
-import { FaPencilAlt } from "react-icons/fa";
-import { HSeparator } from "components/Separator/Separator";
-import IconBox from "components/Icons/IconBox";
-import { MastercardIcon } from "components/Icons/Icons";
-import React from "react";
-import productImage1 from "assets/img/product-page-1.png";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody.tsx';
+import CardHeader from 'components/Card/CardHeader.tsx';
+import { CgShapeCircle } from 'react-icons/cg';
+import { FaPencilAlt } from 'react-icons/fa';
+import { HSeparator } from 'components/Separator/Separator';
+import IconBox from 'components/Icons/IconBox';
+import { MastercardIcon } from 'components/Icons/Icons';
+import React from 'react';
+import productImage1 from 'assets/img/product-page-1.png';
 
 function OrderDetails() {
   // Chakra color mode
-  const textColor = useColorModeValue("gray.700", "white");
-  const borderColor = useColorModeValue("#dee2e6", "gray.500");
-  const bgColor = useColorModeValue("#F8F9FA", "gray.800");
-  const nameColor = useColorModeValue("gray.500", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
+  const borderColor = useColorModeValue('#dee2e6', 'gray.500');
+  const bgColor = useColorModeValue('#F8F9FA', 'gray.800');
+  const nameColor = useColorModeValue('gray.500', 'white');
 
   return (
-    <Flex pt={{ sm: "125px", lg: "75px" }} justify="center" mx="auto">
-      <Card maxW={{ lg: "800px" }}>
+    <Flex pt={{ sm: '125px', lg: '75px' }} justify="center" mx="auto">
+      <Card maxW={{ lg: '800px' }}>
         <CardHeader>
           <Flex direction="column" w="100%">
             <Text color={textColor} fontSize="lg" fontWeight="bold" mb="22px">
@@ -60,17 +60,17 @@ function OrderDetails() {
             <Flex justify="space-between" w="100%">
               <Flex direction="column">
                 <Text fontSize="sm" color="gray.400" fontWeight="normal">
-                  Order no.{" "}
+                  Order no.{' '}
                   <Text as="span" color="green.400" fontWeight="bold">
                     241342
-                  </Text>{" "}
-                  from{" "}
+                  </Text>{' '}
+                  from{' '}
                   <Text as="span" color={textColor} fontWeight="bold">
                     23.02.2021
                   </Text>
                 </Text>
                 <Text fontSize="sm" color="gray.400" fontWeight="normal">
-                  Code:{" "}
+                  Code:{' '}
                   <Text as="span" color={textColor} fontWeight="bold">
                     KF332
                   </Text>
@@ -95,40 +95,20 @@ function OrderDetails() {
           <Flex direction="column" w="100%">
             <HSeparator my="22px" />
             <Flex
-              direction={{ sm: "column", md: "row" }}
+              direction={{ sm: 'column', md: 'row' }}
               justify="space-between"
               w="100%"
               align="center"
             >
               <Flex align="center">
-                <Box
-                  minW="110px"
-                  h="110px"
-                  me="30px"
-                  alignSelf={{ sm: "flex-start", md: "auto" }}
-                >
-                  <Image
-                    src={productImage1}
-                    w="100%"
-                    h="100%"
-                    borderRadius="12px"
-                  />
+                <Box minW="110px" h="110px" me="30px" alignSelf={{ sm: 'flex-start', md: 'auto' }}>
+                  <Image src={productImage1} w="100%" h="100%" borderRadius="12px" />
                 </Box>
                 <Flex direction="column">
-                  <Text
-                    color={textColor}
-                    fontSize="lg"
-                    fontWeight="bold"
-                    mb="6px"
-                  >
+                  <Text color={textColor} fontSize="lg" fontWeight="bold" mb="6px">
                     Modern Luxury Sofa
                   </Text>
-                  <Text
-                    color="gray.400"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    mb="16px"
-                  >
+                  <Text color="gray.400" fontSize="sm" fontWeight="normal" mb="16px">
                     Order was delivered 2 days ago.
                   </Text>
                   <Badge
@@ -138,9 +118,9 @@ function OrderDetails() {
                     borderRadius="15px"
                     display="flex"
                     alignItems="center"
-                    alignSelf={{ sm: "center", md: "auto" }}
+                    alignSelf={{ sm: 'center', md: 'auto' }}
                     justifyContent="center"
-                    mb={{ sm: "6px", md: "0px" }}
+                    mb={{ sm: '6px', md: '0px' }}
                   >
                     DELIVERED
                   </Badge>
@@ -155,7 +135,7 @@ function OrderDetails() {
                   color="#fff"
                   fontSize="xs"
                   fontWeight="bold"
-                  mb={{ sm: "12px", md: "36px" }}
+                  mb={{ sm: '12px', md: '36px' }}
                 >
                   CONTACT US
                 </Button>
@@ -167,11 +147,11 @@ function OrderDetails() {
             <HSeparator my="22px" />
             <Grid
               templateColumns={{
-                sm: "1fr",
-                md: "1fr 1fr",
-                lg: "1fr 1.7fr 1fr",
+                sm: '1fr',
+                md: '1fr 1fr',
+                lg: '1fr 1.7fr 1fr'
               }}
-              gap={{ sm: "24px", lg: "54px" }}
+              gap={{ sm: '24px', lg: '54px' }}
             >
               <Flex direction="column">
                 <Text color={textColor} fontWeight="bold" mb="22px">
@@ -187,8 +167,8 @@ function OrderDetails() {
                     <Icon
                       as={CgShapeCircle}
                       color="green.400"
-                      h={"30px"}
-                      w={"30px"}
+                      h={'30px'}
+                      w={'30px'}
                       zIndex="1"
                       position="relative"
                     />
@@ -198,12 +178,7 @@ function OrderDetails() {
                     <Text fontSize="sm" color={textColor} fontWeight="bold">
                       Order received
                     </Text>
-                    <Text
-                      fontSize="sm"
-                      color="gray.400"
-                      fontWeight="normal"
-                      mb="14px"
-                    >
+                    <Text fontSize="sm" color="gray.400" fontWeight="normal" mb="14px">
                       22 DEC 7:20 AM
                     </Text>
                   </Flex>
@@ -213,8 +188,8 @@ function OrderDetails() {
                     <Icon
                       as={CgShapeCircle}
                       color="green.400"
-                      h={"30px"}
-                      w={"30px"}
+                      h={'30px'}
+                      w={'30px'}
                       zIndex="1"
                       position="relative"
                     />
@@ -224,12 +199,7 @@ function OrderDetails() {
                     <Text fontSize="sm" color={textColor} fontWeight="bold">
                       Generate order id #1832412
                     </Text>
-                    <Text
-                      fontSize="sm"
-                      color="gray.400"
-                      fontWeight="normal"
-                      mb="14px"
-                    >
+                    <Text fontSize="sm" color="gray.400" fontWeight="normal" mb="14px">
                       22 DEC 7:21 AM
                     </Text>
                   </Flex>
@@ -239,8 +209,8 @@ function OrderDetails() {
                     <Icon
                       as={CgShapeCircle}
                       color="blue.400"
-                      h={"30px"}
-                      w={"30px"}
+                      h={'30px'}
+                      w={'30px'}
                       zIndex="1"
                       position="relative"
                     />
@@ -250,12 +220,7 @@ function OrderDetails() {
                     <Text fontSize="sm" color={textColor} fontWeight="bold">
                       Order transmited to courier
                     </Text>
-                    <Text
-                      fontSize="sm"
-                      color="gray.400"
-                      fontWeight="normal"
-                      mb="14px"
-                    >
+                    <Text fontSize="sm" color="gray.400" fontWeight="normal" mb="14px">
                       22 DEC 8:10 AM
                     </Text>
                   </Flex>
@@ -265,8 +230,8 @@ function OrderDetails() {
                     <Icon
                       as={CgShapeCircle}
                       color="blue.400"
-                      h={"30px"}
-                      w={"30px"}
+                      h={'30px'}
+                      w={'30px'}
                       zIndex="1"
                       position="relative"
                     />
@@ -276,12 +241,7 @@ function OrderDetails() {
                     <Text fontSize="sm" color={textColor} fontWeight="bold">
                       Order delivered
                     </Text>
-                    <Text
-                      fontSize="sm"
-                      color="gray.400"
-                      fontWeight="normal"
-                      mb="14px"
-                    >
+                    <Text fontSize="sm" color="gray.400" fontWeight="normal" mb="14px">
                       22 DEC 4:54 PM
                     </Text>
                   </Flex>
@@ -289,12 +249,7 @@ function OrderDetails() {
               </Flex>
               <Flex direction="column">
                 <Flex direction="column" mb="32px">
-                  <Text
-                    color={textColor}
-                    fontSize="md"
-                    fontWeight="bold"
-                    mb="22px"
-                  >
+                  <Text color={textColor} fontSize="md" fontWeight="bold" mb="22px">
                     Payment Details
                   </Text>
                   <Flex
@@ -313,63 +268,35 @@ function OrderDetails() {
                       7812 2139 0823 XXXX
                     </Text>
                     <Spacer />
-                    <Button
-                      p="0px"
-                      bg="transparent"
-                      w="16px"
-                      h="16px"
-                      variant="no-hover"
-                    >
+                    <Button p="0px" bg="transparent" w="16px" h="16px" variant="no-hover">
                       <Icon as={FaPencilAlt} />
                     </Button>
                   </Flex>
                 </Flex>
                 <Flex direction="column">
-                  <Text
-                    color={textColor}
-                    fontSize="md"
-                    fontWeight="bold"
-                    mb="22px"
-                  >
+                  <Text color={textColor} fontSize="md" fontWeight="bold" mb="22px">
                     Billing Information
                   </Text>
                   <Box p="24px" bg={bgColor} borderRadius="12px">
                     <Flex justify="space-between" w="100%">
                       <Flex direction="column">
-                        <Text
-                          color={nameColor}
-                          fontSize="md"
-                          fontWeight="bold"
-                          mb="10px"
-                        >
+                        <Text color={nameColor} fontSize="md" fontWeight="bold" mb="10px">
                           Oliver Liam
                         </Text>
-                        <Text
-                          color="gray.400"
-                          fontSize="sm"
-                          fontWeight="normal"
-                        >
-                          Company Name:{" "}
+                        <Text color="gray.400" fontSize="sm" fontWeight="normal">
+                          Company Name:{' '}
                           <Text as="span" color="gray.500" fontWeight="bold">
                             Viking Burrito
                           </Text>
                         </Text>
-                        <Text
-                          color="gray.400"
-                          fontSize="sm"
-                          fontWeight="normal"
-                        >
-                          Email Address:{" "}
+                        <Text color="gray.400" fontSize="sm" fontWeight="normal">
+                          Email Address:{' '}
                           <Text as="span" color="gray.500" fontWeight="bold">
                             oliver@burrito.com
                           </Text>
                         </Text>
-                        <Text
-                          color="gray.400"
-                          fontSize="sm"
-                          fontWeight="normal"
-                        >
-                          VAT Number:{" "}
+                        <Text color="gray.400" fontSize="sm" fontWeight="normal">
+                          VAT Number:{' '}
                           <Text as="span" color="gray.500" fontWeight="bold">
                             FRB1235476
                           </Text>
@@ -379,13 +306,8 @@ function OrderDetails() {
                   </Box>
                 </Flex>
               </Flex>
-              <Flex direction="column" gridColumn={{ md: "1 / 3", lg: "auto" }}>
-                <Text
-                  color={textColor}
-                  fontSize="md"
-                  fontWeight="bold"
-                  mb="22px"
-                >
+              <Flex direction="column" gridColumn={{ md: '1 / 3', lg: 'auto' }}>
+                <Text color={textColor} fontSize="md" fontWeight="bold" mb="22px">
                   Order Summary
                 </Text>
                 <Stack direction="column" spacing="12px">

@@ -52,7 +52,8 @@ const ScansRow = (props: ScansRowProps) => {
           cursor={comment ? 'pointer' : 'default'}
           fontWeight="bold"
           alignSelf={{ sm: 'flex-start', md: 'flex-end' }}
-          mt={{ sm: '16px', md: '0px' }}>
+          mt={{ sm: '16px', md: '0px' }}
+        >
           {comment
             ? intl.formatMessage({ id: isExpanded ? 'app.hide' : 'app.view' })
             : intl.formatMessage({ id: 'app.view' })}

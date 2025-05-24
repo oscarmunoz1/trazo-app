@@ -53,7 +53,8 @@ function BoxBackground(props: BoxBackgroundProps) {
           background: 'linear-gradient(180deg, rgba(0,128,0,0.85) 0%, rgba(0,128,0,0.6) 100%)',
           borderRadius: '15px',
           zIndex: 0
-        }}></Box>
+        }}
+      ></Box>
       <Flex
         direction="column"
         textAlign="center"
@@ -61,13 +62,15 @@ function BoxBackground(props: BoxBackgroundProps) {
         align="center"
         mt="6.5rem"
         width={'100%'}
-        pt={'55px'}>
+        pt={'55px'}
+      >
         <Text
           fontSize="4xl"
           color="white"
           marginInlineStart="25px"
           marginInlineEnd="25px"
-          fontWeight="bold">
+          fontWeight="bold"
+        >
           {title}
         </Text>
         <Text
@@ -76,7 +79,8 @@ function BoxBackground(props: BoxBackgroundProps) {
           fontWeight="normal"
           mt="10px"
           mb="26px"
-          w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}>
+          w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}
+        >
           {subtitle}
         </Text>
       </Flex>

@@ -36,14 +36,16 @@ const Header = () => {
     <Card
       w={{ sm: '100%', lg: '70%' }}
       alignSelf={{ lg: 'flex-end' }}
-      justifySelf={{ lg: 'flex-end' }}>
+      justifySelf={{ lg: 'flex-end' }}
+    >
       <Element id="profile" name="profile">
         <CardBody>
           <Flex
             direction={{ sm: 'column', md: 'row' }}
             justify="space-between"
             align="center"
-            w="100%">
+            w="100%"
+          >
             <Flex align="center">
               <Avatar src={avatar4} w="80px" h="80px" me="22px" borderRadius="15px" />
               <Flex direction="column">
@@ -59,7 +61,8 @@ const Header = () => {
               align="center"
               alignSelf={{ sm: 'flex-start', lg: null }}
               mt={{ sm: '16px', lg: null }}
-              ms={{ sm: '6px', lg: null }}>
+              ms={{ sm: '6px', lg: null }}
+            >
               <Text color={textColor} fontWeight="normal" me="14px" fontSize="sm">
                 Switch to {toggle ? 'invisible' : 'visible'}
               </Text>

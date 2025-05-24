@@ -16,73 +16,61 @@
 */
 
 // Chakra imports
-import { Flex, Grid, useColorModeValue } from "@chakra-ui/react";
-import {
-  CartIcon,
-  DocumentIcon,
-  GlobeIcon,
-  WalletIcon,
-} from "components/Icons/Icons";
-import React from "react";
-import Earnings from "./components/Earnings";
-import GeneralCard from "./components/GeneralCard";
-import MiniStatistics from "./components/MiniStatistics";
-import Projects from "./components/Projects";
-import Tasks from "./components/Tasks";
-import ToDoList from "./components/ToDoList";
+import { Flex, Grid, useColorModeValue } from '@chakra-ui/react';
+import { CartIcon, DocumentIcon, GlobeIcon, WalletIcon } from 'components/Icons/Icons';
+import React from 'react';
+import Earnings from './components/Earnings';
+import GeneralCard from './components/GeneralCard';
+import MiniStatistics from './components/MiniStatistics';
+import Projects from './components/Projects';
+import Tasks from './components/Tasks';
+import ToDoList from './components/ToDoList';
 
 function General() {
-  const iconBoxInside = useColorModeValue("white", "white");
+  const iconBoxInside = useColorModeValue('white', 'white');
 
   return (
-    <Flex direction="column" pt={{ sm: "125px", lg: "75px" }}>
-      <Grid
-        templateColumns={{ sm: "1fr", lg: "1fr 1.7fr 1.5fr" }}
-        gap="24px"
-        mb="24px"
-      >
+    <Flex direction="column" pt={{ sm: '125px', lg: '75px' }}>
+      <Grid templateColumns={{ sm: '1fr', lg: '1fr 1.7fr 1.5fr' }} gap="24px" mb="24px">
         <Earnings />
         <Grid
           templateColumns={{
-            sm: "1fr",
-            md: "repeat(2, 1fr)",
-            lg: "repeat(2, 1fr)",
-            xl: "repeat(2, 1fr)",
+            sm: '1fr',
+            md: 'repeat(2, 1fr)',
+            lg: 'repeat(2, 1fr)',
+            xl: 'repeat(2, 1fr)'
           }}
           templateRows="repeat(2, 90px)"
           gap="24px"
         >
           <MiniStatistics
             title={"Today's Moneys"}
-            amount={"$53,000"}
+            amount={'$53,000'}
             percentage={55}
-            icon={<WalletIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
+            icon={<WalletIcon h={'24px'} w={'24px'} color={iconBoxInside} />}
           />
           <MiniStatistics
             title={"Today's Users"}
-            amount={"2,300"}
+            amount={'2,300'}
             percentage={5}
-            icon={<GlobeIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
+            icon={<GlobeIcon h={'24px'} w={'24px'} color={iconBoxInside} />}
           />
           <MiniStatistics
-            title={"New Clients"}
-            amount={"+3,020"}
+            title={'New Clients'}
+            amount={'+3,020'}
             percentage={-14}
-            icon={<DocumentIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
+            icon={<DocumentIcon h={'24px'} w={'24px'} color={iconBoxInside} />}
           />
           <MiniStatistics
-            title={"Total Sales"}
-            amount={"$173,000"}
+            title={'Total Sales'}
+            amount={'$173,000'}
             percentage={8}
-            icon={<CartIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
+            icon={<CartIcon h={'24px'} w={'24px'} color={iconBoxInside} />}
           />
         </Grid>
         <GeneralCard />
       </Grid>
-      <Grid
-        templateColumns={{ sm: "1fr", lg: "1.85fr 1fr", xl: "70% 30%" }}
-        gap="24px"
-      >
+      <Grid templateColumns={{ sm: '1fr', lg: '1.85fr 1fr', xl: '70% 30%' }} gap="24px">
         <ToDoList />
         <Flex direction="column">
           <Tasks />

@@ -15,9 +15,9 @@
 
 */
 
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import Chart from "react-apexcharts";
+import Chart from 'react-apexcharts';
 
 class LineBarChart extends Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class LineBarChart extends Component {
     this.state = {
       chartData: [],
       chartOptions: {},
-      chartRef: null,
+      chartRef: null
     };
   }
 
@@ -33,7 +33,7 @@ class LineBarChart extends Component {
     this.setState({
       chartData: this.props.chartData,
       chartOptions: this.props.chartOptions,
-      chartRef: this.props.chartRef,
+      chartRef: this.props.chartRef
     });
   }
 

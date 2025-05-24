@@ -16,24 +16,17 @@
 */
 
 // Chakra imports
-import {
-  Table,
-  Tbody,
-  Th,
-  Thead,
-  Tr,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Table, Tbody, Th, Thead, Tr, useColorModeValue } from '@chakra-ui/react';
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import TablesReportsRow from "components/Tables/TablesReportsRow";
-import React from "react";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import TablesReportsRow from 'components/Tables/TablesReportsRow';
+import React from 'react';
 
 const ReportsTable = ({ data }) => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
   return (
-    <Card overflowX={{ sm: "scroll", lg: "hidden" }}>
+    <Card overflowX={{ sm: 'scroll', lg: 'hidden' }}>
       <CardBody>
         <Table variant="simple" color={textColor}>
           <Thead>

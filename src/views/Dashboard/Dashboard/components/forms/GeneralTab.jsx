@@ -12,29 +12,32 @@ import {
   Text,
   Textarea,
   useColorModeValue,
-} from "@chakra-ui/react";
-import { FormProvider, useForm } from "react-hook-form";
-import React, { useState } from "react";
-import { number, object, string } from "zod";
+  HStack,
+  Box
+} from '@chakra-ui/react';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FormProvider, useForm } from 'react-hook-form';
+import React, { useState } from 'react';
+import { number, object, string } from 'zod';
 
-import { FaPlus } from "react-icons/fa";
-import FormInput from "components/Forms/FormInput";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useIntl } from "react-intl";
+import { FaPlus } from 'react-icons/fa';
+import FormInput from 'components/Forms/FormInput';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useIntl } from 'react-intl';
 // Custom components
 
 const formSchemaMainInfo = object({
-  name: string().min(1, "Name is required"),
+  name: string().min(1, 'Name is required')
 });
 
 const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
   const intl = useIntl();
-  const bgPrevButton = useColorModeValue("gray.100", "gray.100");
-  const textColor = useColorModeValue("gray.700", "white");
-  const iconColor = useColorModeValue("gray.300", "gray.700");
+  const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
+  const textColor = useColorModeValue('gray.700', 'white');
+  const iconColor = useColorModeValue('gray.300', 'gray.700');
 
   const mainInfoMethods = useForm({
-    resolver: zodResolver(formSchemaMainInfo),
+    resolver: zodResolver(formSchemaMainInfo)
   });
 
   const {
@@ -42,15 +45,12 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
     handleSubmit: mainInfoSubmit,
     errors: mainInfoErrors,
     formState: { errors, isSubmitSuccessful },
-    register,
+    register
   } = mainInfoMethods;
 
   return (
     <FormProvider {...mainInfoMethods}>
-      <form
-        onSubmit={mainInfoSubmit(onSubmitHandler)}
-        style={{ width: "100%" }}
-      >
+      <form onSubmit={mainInfoSubmit(onSubmitHandler)} style={{ width: '100%' }}>
         <Flex direction="column" w="100%">
           <FormInput
             label={intl.formatMessage({ id: 'app.name' })}
@@ -74,37 +74,39 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
             mb="24px"
             size="lg"
             name="observations"
-            {...register("observations")}
+            {...register('observations')}
           />
-          <Flex justify="space-between">
-            <Button
-              variant="no-hover"
-              bg={bgPrevButton}
-              alignSelf="flex-end"
-              mt="24px"
-              w={{ sm: "75px", lg: "100px" }}
-              h="35px"
-              onClick={onPrev}
-            >
-              <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                {intl.formatMessage({ id: 'app.prev' })}
-              </Text>
-            </Button>
-
-            <Button
-              variant="no-hover"
-              bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-              alignSelf="flex-end"
-              mt="24px"
-              w="100px"
-              h="35px"
-              type="submit"
-            >
-              <Text fontSize="xs" color="#fff" fontWeight="bold">
-                {intl.formatMessage({ id: 'app.next' })}
-              </Text>
-            </Button>
-          </Flex>
+          <Box pt={6} mt={4} borderTop="1px" borderColor="gray.200">
+            <HStack justify="space-between">
+              <Button
+                variant="outline"
+                onClick={onPrev}
+                leftIcon={<FaChevronLeft />}
+                size="md"
+                px={6}
+                h="42px"
+                borderRadius="lg"
+                fontWeight="600"
+                _hover={{ transform: 'translateY(-1px)' }}
+                transition="all 0.3s ease">
+                {intl.formatMessage({ id: 'app.previous' }) || 'Previous'}
+              </Button>
+              <Button
+                colorScheme="green"
+                type="submit"
+                rightIcon={<FaChevronRight />}
+                size="md"
+                px={6}
+                h="42px"
+                borderRadius="lg"
+                fontWeight="600"
+                boxShadow="lg"
+                _hover={{ boxShadow: 'xl', transform: 'translateY(-1px)' }}
+                transition="all 0.3s ease">
+                {intl.formatMessage({ id: 'app.continue' }) || 'Continue'}
+              </Button>
+            </HStack>
+          </Box>
         </Flex>
       </form>
     </FormProvider>

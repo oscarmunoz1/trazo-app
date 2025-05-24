@@ -1,22 +1,17 @@
 // Custom icons
-import {
-  CartIcon,
-  RocketIcon,
-  StatsIcon,
-  WalletIcon,
-} from "components/Icons/Icons.tsx";
+import { CartIcon, RocketIcon, StatsIcon, WalletIcon } from 'components/Icons/Icons.tsx';
 // Chakra imports
-import { Flex, SimpleGrid, Text, useColorModeValue } from "@chakra-ui/react";
+import { Flex, SimpleGrid, Text, useColorModeValue } from '@chakra-ui/react';
 
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody.tsx";
-import ChartStatistics from "views/Dashboard/Default/components/ChartStatistics";
-import React from "react";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody.tsx';
+import ChartStatistics from 'views/Dashboard/Default/components/ChartStatistics';
+import React from 'react';
 
 const ActiveUsers = ({ title, percentage, chart }) => {
-  const iconBoxInside = useColorModeValue("white", "white");
-  const textColor = useColorModeValue("gray.700", "white");
+  const iconBoxInside = useColorModeValue('white', 'white');
+  const textColor = useColorModeValue('gray.700', 'white');
   return (
     <Card p="16px">
       <CardBody>
@@ -27,40 +22,36 @@ const ActiveUsers = ({ title, percentage, chart }) => {
               {title}
             </Text>
             <Text fontSize="md" fontWeight="medium" color="gray.400">
-              <Text
-                as="span"
-                color={percentage > 0 ? "green.400" : "red.400"}
-                fontWeight="bold"
-              >
+              <Text as="span" color={percentage > 0 ? 'green.400' : 'red.400'} fontWeight="bold">
                 {percentage > 0 ? `+${percentage}%` : `-${percentage}%`}
-              </Text>{" "}
+              </Text>{' '}
               than last week
             </Text>
           </Flex>
-          <SimpleGrid gap={{ sm: "12px" }} columns={4}>
+          <SimpleGrid gap={{ sm: '12px' }} columns={4}>
             <ChartStatistics
-              title={"Users"}
-              amount={"32,984"}
+              title={'Users'}
+              amount={'32,984'}
               percentage={20}
-              icon={<WalletIcon h={"15px"} w={"15px"} color={iconBoxInside} />}
+              icon={<WalletIcon h={'15px'} w={'15px'} color={iconBoxInside} />}
             />
             <ChartStatistics
-              title={"Clicks"}
-              amount={"2.42m"}
+              title={'Clicks'}
+              amount={'2.42m'}
               percentage={80}
-              icon={<RocketIcon h={"15px"} w={"15px"} color={iconBoxInside} />}
+              icon={<RocketIcon h={'15px'} w={'15px'} color={iconBoxInside} />}
             />
             <ChartStatistics
-              title={"Sales"}
-              amount={"2,400$"}
+              title={'Sales'}
+              amount={'2,400$'}
               percentage={30}
-              icon={<CartIcon h={"15px"} w={"15px"} color={iconBoxInside} />}
+              icon={<CartIcon h={'15px'} w={'15px'} color={iconBoxInside} />}
             />
             <ChartStatistics
-              title={"Items"}
-              amount={"320"}
+              title={'Items'}
+              amount={'320'}
               percentage={40}
-              icon={<StatsIcon h={"15px"} w={"15px"} color={iconBoxInside} />}
+              icon={<StatsIcon h={'15px'} w={'15px'} color={iconBoxInside} />}
             />
           </SimpleGrid>
         </Flex>

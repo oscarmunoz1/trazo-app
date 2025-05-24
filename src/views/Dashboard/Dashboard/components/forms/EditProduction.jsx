@@ -139,10 +139,8 @@ function NewProduction() {
 
   const currentCompany = useSelector((state) => state.company.currentCompany);
 
-  const [
-    createProduction,
-    { data, isSuccess: isSuccessProduction }
-  ] = useCreateProductionMutation();
+  const [createProduction, { data, isSuccess: isSuccessProduction }] =
+    useCreateProductionMutation();
 
   const basicMethods = useForm({
     resolver: zodResolver(formSchemaBasic)
@@ -215,7 +213,8 @@ function NewProduction() {
       direction="column"
       bg={bgColor}
       boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
-      borderRadius="15px">
+      borderRadius="15px"
+    >
       <Tabs variant="unstyled" mt="24px" alignSelf="center">
         <TabPanels mt="24px" maxW={{ md: '90%', lg: '100%' }} mx="auto">
           <TabPanel maxW="800px" width={'600px'}>
@@ -262,7 +261,8 @@ function NewProduction() {
                           mt="24px"
                           w="200px"
                           h="35px"
-                          type="submit">
+                          type="submit"
+                        >
                           <Text fontSize="xs" color="#fff" fontWeight="bold">
                             SAVE AND ADD A NEW EVENT
                           </Text>
@@ -274,7 +274,8 @@ function NewProduction() {
                           mt="24px"
                           w="100px"
                           h="35px"
-                          type="submit">
+                          type="submit"
+                        >
                           <Text fontSize="xs" color="#fff" fontWeight="bold">
                             SAVE
                           </Text>

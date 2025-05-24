@@ -448,7 +448,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
           py={4}
           mb={8}
           borderRadius="lg"
-          bg={useColorModeValue('blue.50', 'blue.900')}>
+          bg={useColorModeValue('blue.50', 'blue.900')}
+        >
           <AlertIcon boxSize="40px" mr={0} />
           <AlertTitle mt={4} mb={1} fontSize="lg">
             {t('app.chooseAPlanToUpgrade')}
@@ -472,7 +473,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
           color="blue.700"
           textAlign="center"
           maxW="3xl"
-          mx="auto">
+          mx="auto"
+        >
           <Text fontSize="lg" fontWeight="bold">
             {t('app.companyCreatedSuccessfully')}
           </Text>
@@ -486,7 +488,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
           position="relative"
           display="flex"
           flexDirection={{ base: 'column', md: 'row' }}
-          justifyContent="center">
+          justifyContent="center"
+        >
           <Text color={textColor} fontSize="5xl" fontWeight="bold" mb="16px" textAlign="center">
             {t('app.pricingPlans')}
           </Text>
@@ -514,7 +517,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                   top="-20px"
                   right="-20px"
                   borderRadius="full"
-                  px="2">
+                  px="2"
+                >
                   {t('app.save')} 20%
                 </Badge>
               )}
@@ -547,7 +551,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                   justifyContent="center"
                   textAlign="center"
                   py={6}
-                  borderRadius="lg">
+                  borderRadius="lg"
+                >
                   <AlertIcon boxSize="40px" mr={0} />
                   <AlertTitle mt={4} mb={1} fontSize="lg">
                     {t('app.alreadyOnHighestPlan')}
@@ -559,7 +564,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                     mt={6}
                     colorScheme="blue"
                     leftIcon={<Icon as={FaEnvelope} />}
-                    onClick={() => (window.location.href = 'mailto:sales@trazo.com')}>
+                    onClick={() => (window.location.href = 'mailto:sales@trazo.com')}
+                  >
                     {t('app.contactSales')}
                   </Button>
                 </Alert>
@@ -571,7 +577,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                   md: isUpgradeFlow && filteredPlans.length < 3 ? filteredPlans.length : 3
                 }}
                 spacing={10}
-                px={{ base: 4, md: 8 }}>
+                px={{ base: 4, md: 8 }}
+              >
                 {filteredPlans.map((plan) => (
                   <Card
                     key={plan.id}
@@ -583,7 +590,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                     }}
                     borderRadius="xl"
                     overflow="hidden"
-                    position="relative">
+                    position="relative"
+                  >
                     {/* Add trial badge */}
                     <Box
                       position="absolute"
@@ -595,7 +603,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                       py={1}
                       borderBottomLeftRadius="md"
                       fontWeight="bold"
-                      zIndex={1}>
+                      zIndex={1}
+                    >
                       {t('app.14DayTrial')}
                     </Box>
 
@@ -611,7 +620,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                         py={1}
                         borderBottomRightRadius="md"
                         fontWeight="bold"
-                        zIndex={1}>
+                        zIndex={1}
+                      >
                         {t('app.upgrade')}
                       </Box>
                     )}
@@ -620,7 +630,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                       borderTopRadius="20px"
                       bg={plan.name === 'Corporate' ? 'green.600' : 'blue.500'}
                       py={6}
-                      textAlign="center">
+                      textAlign="center"
+                    >
                       <Box>
                         <Tag size="sm" bg="whiteAlpha.200" color="white">
                           {plan.name.toUpperCase()}
@@ -732,7 +743,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                               !plan.features?.establishment_full_description
                                 ? 'line-through'
                                 : 'none'
-                            }>
+                            }
+                          >
                             {t('app.establishmentFullDescription')}
                           </Text>
                         </Flex>
@@ -800,7 +812,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                               : 'linear(to-r, blue.500, cyan.500)',
                           transform: 'translateY(-2px)',
                           boxShadow: 'lg'
-                        }}>
+                        }}
+                      >
                         {t('app.startFreeTrial')}
                       </Button>
                       <Text fontSize="xs" mt={2} textAlign="center" color="gray.500">
@@ -847,7 +860,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                         ...addonQuantities,
                         extraProduction: parseInt(valueString)
                       })
-                    }>
+                    }
+                  >
                     <NumberInputField />
                     <NumberInputStepper>
                       <NumberIncrementStepper />
@@ -862,7 +876,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                     onClick={() =>
                       handleAddAddon('extraProduction', addonQuantities.extraProduction)
                     }
-                    isDisabled={!activeCompany?.subscription}>
+                    isDisabled={!activeCompany?.subscription}
+                  >
                     {t('app.add')}
                   </Button>
 
@@ -901,7 +916,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                         ...addonQuantities,
                         extraParcel: parseInt(valueString)
                       })
-                    }>
+                    }
+                  >
                     <NumberInputField />
                     <NumberInputStepper>
                       <NumberIncrementStepper />
@@ -914,7 +930,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                     isFullWidth
                     isLoading={checkoutLoading}
                     onClick={() => handleAddAddon('extraParcel', addonQuantities.extraParcel)}
-                    isDisabled={!activeCompany?.subscription}>
+                    isDisabled={!activeCompany?.subscription}
+                  >
                     {t('app.add')}
                   </Button>
 
@@ -953,7 +970,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                         ...addonQuantities,
                         extraStorage: parseInt(valueString)
                       })
-                    }>
+                    }
+                  >
                     <NumberInputField />
                     <NumberInputStepper>
                       <NumberIncrementStepper />
@@ -966,7 +984,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                     isFullWidth
                     isLoading={checkoutLoading}
                     onClick={() => handleAddAddon('extraStorage', addonQuantities.extraStorage)}
-                    isDisabled={!activeCompany?.subscription}>
+                    isDisabled={!activeCompany?.subscription}
+                  >
                     {t('app.add')}
                   </Button>
 
@@ -987,7 +1006,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
           bg={useColorModeValue('gray.50', 'gray.900')}
           borderRadius="lg"
           p={8}
-          mx={{ base: 4, md: 8 }}>
+          mx={{ base: 4, md: 8 }}
+        >
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8}>
             <Box>
               <Text fontSize="2xl" fontWeight="bold" color={textColor} mb={4}>
@@ -1029,7 +1049,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                 colorScheme="purple"
                 size="lg"
                 mb={4}
-                onClick={() => (window.location.href = '/contact')}>
+                onClick={() => (window.location.href = '/contact')}
+              >
                 {t('app.contactUs')}
               </Button>
               <Text fontSize="sm" color="gray.500">
@@ -1069,7 +1090,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                   border="1px solid"
                   borderColor="gray.200"
                   borderRadius="md"
-                  mb={4}>
+                  mb={4}
+                >
                   <AccordionButton py={4}>
                     <Box flex="1" textAlign="left" fontWeight="bold">
                       {t(faq.question)}
@@ -1098,7 +1120,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                         }
                         isExternal
                         mt={2}
-                        display="inline-block">
+                        display="inline-block"
+                      >
                         {t(
                           faq.question === 'app.dataSecurityQuestion'
                             ? 'app.viewPrivacyPolicy'
@@ -1115,7 +1138,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                         variant="outline"
                         size="sm"
                         mt={3}
-                        onClick={() => window.open('/support', '_blank')}>
+                        onClick={() => window.open('/support', '_blank')}
+                      >
                         {t('app.contactSupport')}
                       </Button>
                     )}
@@ -1139,7 +1163,8 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
             bg={useColorModeValue('gray.50', 'gray.800')}
             p={8}
             borderRadius="xl"
-            boxShadow="sm">
+            boxShadow="sm"
+          >
             <Text fontSize="xl" fontWeight="bold" mb={4}>
               {t('app.stillHaveQuestions')}
             </Text>
@@ -1150,13 +1175,15 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
               <Button
                 leftIcon={<FaEnvelope />}
                 colorScheme="blue"
-                onClick={() => (window.location.href = 'mailto:support@trazo.com')}>
+                onClick={() => (window.location.href = 'mailto:support@trazo.com')}
+              >
                 {t('app.emailUs')}
               </Button>
               <Button
                 leftIcon={<FaComments />}
                 variant="outline"
-                onClick={() => setShowChatSupport(true)}>
+                onClick={() => setShowChatSupport(true)}
+              >
                 {t('app.liveChatSupport')}
               </Button>
             </ButtonGroup>

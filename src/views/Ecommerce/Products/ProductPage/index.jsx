@@ -37,25 +37,25 @@ import {
   Thead,
   Tr,
   UnorderedList,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import productPage1 from "assets/img/product-page-1.png";
-import productPage2 from "assets/img/product-page-2.png";
-import productPage3 from "assets/img/product-page-3.png";
-import productPage4 from "assets/img/product-page-4.png";
-import productPage5 from "assets/img/product-page-5.png";
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import React, { useState } from "react";
-import { BsStarFill, BsStarHalf } from "react-icons/bs";
+  useColorModeValue
+} from '@chakra-ui/react';
+import productPage1 from 'assets/img/product-page-1.png';
+import productPage2 from 'assets/img/product-page-2.png';
+import productPage3 from 'assets/img/product-page-3.png';
+import productPage4 from 'assets/img/product-page-4.png';
+import productPage5 from 'assets/img/product-page-5.png';
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import React, { useState } from 'react';
+import { BsStarFill, BsStarHalf } from 'react-icons/bs';
 
 function ProductPage() {
   const [currentImage, setCurrentImage] = useState(productPage1);
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
-    <Card mt={{ sm: "125px", md: "75px" }}>
+    <Card mt={{ sm: '125px', md: '75px' }}>
       <CardHeader mb="42px">
         <Text color={textColor} fontSize="lg" fontWeight="bold">
           Product Details
@@ -63,37 +63,29 @@ function ProductPage() {
       </CardHeader>
       <CardBody>
         <Flex direction="column" w="100%">
-          <Flex
-            direction={{ sm: "column", lg: "row" }}
-            mb={{ sm: "42px", lg: "84px" }}
-          >
+          <Flex direction={{ sm: 'column', lg: 'row' }} mb={{ sm: '42px', lg: '84px' }}>
             <Flex
               direction="column"
-              me={{ lg: "70px", xl: "120px" }}
-              mb={{ sm: "24px", lg: "0px" }}
+              me={{ lg: '70px', xl: '120px' }}
+              mb={{ sm: '24px', lg: '0px' }}
             >
               <Box
-                w={{ sm: "275px", md: "670px", lg: "450px", xl: "600px" }}
-                h={{ sm: "200px", md: "500px", lg: "330px", xl: "500px" }}
+                w={{ sm: '275px', md: '670px', lg: '450px', xl: '600px' }}
+                h={{ sm: '200px', md: '500px', lg: '330px', xl: '500px' }}
                 mb="26px"
-                mx={{ sm: "auto", lg: "0px" }}
+                mx={{ sm: 'auto', lg: '0px' }}
               >
-                <Image
-                  src={currentImage}
-                  w="100%"
-                  h="100%"
-                  borderRadius="15px"
-                />
+                <Image src={currentImage} w="100%" h="100%" borderRadius="15px" />
               </Box>
               <Stack
                 direction="row"
-                spacing={{ sm: "20px", md: "35px", lg: "20px" }}
+                spacing={{ sm: '20px', md: '35px', lg: '20px' }}
                 mx="auto"
-                mb={{ sm: "24px", lg: "0px" }}
+                mb={{ sm: '24px', lg: '0px' }}
               >
                 <Box
-                  w={{ sm: "36px", md: "90px", lg: "60px" }}
-                  h={{ sm: "36px", md: "90px", lg: "60px" }}
+                  w={{ sm: '36px', md: '90px', lg: '60px' }}
+                  h={{ sm: '36px', md: '90px', lg: '60px' }}
                 >
                   <Image
                     src={productPage1}
@@ -105,8 +97,8 @@ function ProductPage() {
                   />
                 </Box>
                 <Box
-                  w={{ sm: "36px", md: "90px", lg: "60px" }}
-                  h={{ sm: "36px", md: "90px", lg: "60px" }}
+                  w={{ sm: '36px', md: '90px', lg: '60px' }}
+                  h={{ sm: '36px', md: '90px', lg: '60px' }}
                 >
                   <Image
                     src={productPage2}
@@ -118,8 +110,8 @@ function ProductPage() {
                   />
                 </Box>
                 <Box
-                  w={{ sm: "36px", md: "90px", lg: "60px" }}
-                  h={{ sm: "36px", md: "90px", lg: "60px" }}
+                  w={{ sm: '36px', md: '90px', lg: '60px' }}
+                  h={{ sm: '36px', md: '90px', lg: '60px' }}
                 >
                   <Image
                     src={productPage3}
@@ -131,8 +123,8 @@ function ProductPage() {
                   />
                 </Box>
                 <Box
-                  w={{ sm: "36px", md: "90px", lg: "60px" }}
-                  h={{ sm: "36px", md: "90px", lg: "60px" }}
+                  w={{ sm: '36px', md: '90px', lg: '60px' }}
+                  h={{ sm: '36px', md: '90px', lg: '60px' }}
                 >
                   <Image
                     src={productPage4}
@@ -144,8 +136,8 @@ function ProductPage() {
                   />
                 </Box>
                 <Box
-                  w={{ sm: "36px", md: "90px", lg: "60px" }}
-                  h={{ sm: "36px", md: "90px", lg: "60px" }}
+                  w={{ sm: '36px', md: '90px', lg: '60px' }}
+                  h={{ sm: '36px', md: '90px', lg: '60px' }}
                 >
                   <Image
                     src={productPage5}
@@ -159,20 +151,10 @@ function ProductPage() {
               </Stack>
             </Flex>
             <Flex direction="column">
-              <Text
-                color={textColor}
-                fontSize="3xl"
-                fontWeight="bold"
-                mb="12px"
-              >
+              <Text color={textColor} fontSize="3xl" fontWeight="bold" mb="12px">
                 Modern Luxury Sofa
               </Text>
-              <Stack
-                direction="row"
-                spacing="12px"
-                color="orange.300"
-                mb="30px"
-              >
+              <Stack direction="row" spacing="12px" color="orange.300" mb="30px">
                 <Icon as={BsStarFill} w="26px" h="26px" />
                 <Icon as={BsStarFill} w="26px" h="26px" />
                 <Icon as={BsStarFill} w="26px" h="26px" />
@@ -182,12 +164,7 @@ function ProductPage() {
               <Text color="gray.400" fontWeight="normal" fontSize="sm">
                 Price
               </Text>
-              <Text
-                color={textColor}
-                fontWeight="bold"
-                fontSize="3xl"
-                mb="12px"
-              >
+              <Text color={textColor} fontWeight="bold" fontSize="3xl" mb="12px">
                 $2,599.00
               </Text>
               <Badge
@@ -207,8 +184,8 @@ function ProductPage() {
               </Text>
               <UnorderedList spacing="8px" mb="40px">
                 <ListItem fontSize="md" color={textColor} fontWeight="normal">
-                  The most beautiful curves of this swivel stool adds an elegant
-                  touch to any environment
+                  The most beautiful curves of this swivel stool adds an elegant touch to any
+                  environment
                 </ListItem>
                 <ListItem fontSize="md" color={textColor} fontWeight="normal">
                   Memory swivel seat returns to original seat position
@@ -220,21 +197,12 @@ function ProductPage() {
                   Fully assembled! No assembly required
                 </ListItem>
               </UnorderedList>
-              <Stack
-                direction={{ sm: "column", lg: "row" }}
-                spacing="24px"
-                mb="40px"
-              >
+              <Stack direction={{ sm: 'column', lg: 'row' }} spacing="24px" mb="40px">
                 <FormControl>
                   <FormLabel fontWeight="bold" fontSize="xs" color={textColor}>
                     Frame Material
                   </FormLabel>
-                  <Select
-                    placeholder="Wood"
-                    fontSize="xs"
-                    cursor="pointer"
-                    color="gray.400"
-                  >
+                  <Select placeholder="Wood" fontSize="xs" cursor="pointer" color="gray.400">
                     <option>Aluminium</option>
                     <option>Carbon</option>
                     <option>Steel</option>
@@ -245,12 +213,7 @@ function ProductPage() {
                   <FormLabel fontWeight="bold" fontSize="xs" color={textColor}>
                     Color
                   </FormLabel>
-                  <Select
-                    placeholder="White"
-                    fontSize="xs"
-                    cursor="pointer"
-                    color="gray.400"
-                  >
+                  <Select placeholder="White" fontSize="xs" cursor="pointer" color="gray.400">
                     <option>Blue</option>
                     <option>Gray</option>
                     <option>Pink</option>
@@ -268,7 +231,7 @@ function ProductPage() {
                     fontSize="xs"
                     cursor="pointer"
                     color="gray.400"
-                    maxW={{ lg: "75px" }}
+                    maxW={{ lg: '75px' }}
                   >
                     <option>2</option>
                     <option>3</option>
@@ -284,9 +247,9 @@ function ProductPage() {
               <Button
                 variant="no-hover"
                 bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                w={{ sm: "240px", md: "100%", lg: "240px" }}
+                w={{ sm: '240px', md: '100%', lg: '240px' }}
                 h="50px"
-                mx={{ sm: "auto", md: "0px" }}
+                mx={{ sm: 'auto', md: '0px' }}
                 color="#fff"
                 fontSize="xs"
                 fontWeight="bold"
@@ -295,7 +258,7 @@ function ProductPage() {
               </Button>
             </Flex>
           </Flex>
-          <Box w="100%" overflowX={{ sm: "scroll", lg: "hidden" }}>
+          <Box w="100%" overflowX={{ sm: 'scroll', lg: 'hidden' }}>
             <Table variant="simple" w="100%">
               <Thead>
                 <Tr>
@@ -321,12 +284,7 @@ function ProductPage() {
                   <Td minW="300px">
                     <Flex align="center">
                       <Box w="40px" h="40px" me="14px">
-                        <Image
-                          src={productPage2}
-                          w="100%"
-                          h="100%"
-                          borderRadius="12px"
-                        />
+                        <Image src={productPage2} w="100%" h="100%" borderRadius="12px" />
                       </Box>
                       <Text color={textColor} fontSize="sm" fontWeight="bold">
                         Christopher Knight Home
@@ -348,12 +306,7 @@ function ProductPage() {
                     </Stack>
                   </Td>
                   <Td>
-                    <Progress
-                      size="xs"
-                      colorScheme="teal"
-                      value={70}
-                      borderRadius="12px"
-                    />
+                    <Progress size="xs" colorScheme="teal" value={70} borderRadius="12px" />
                   </Td>
                   <Td>
                     <Text color="gray.500" fontSize="sm" fontWeight="normal">
@@ -365,12 +318,7 @@ function ProductPage() {
                   <Td>
                     <Flex align="center">
                       <Box w="40px" h="40px" me="14px">
-                        <Image
-                          src={productPage3}
-                          w="100%"
-                          h="100%"
-                          borderRadius="12px"
-                        />
+                        <Image src={productPage3} w="100%" h="100%" borderRadius="12px" />
                       </Box>
                       <Text color={textColor} fontSize="sm" fontWeight="bold">
                         Bar Height Swivel Barstool
@@ -392,12 +340,7 @@ function ProductPage() {
                     </Stack>
                   </Td>
                   <Td>
-                    <Progress
-                      size="xs"
-                      colorScheme="teal"
-                      value={90}
-                      borderRadius="12px"
-                    />
+                    <Progress size="xs" colorScheme="teal" value={90} borderRadius="12px" />
                   </Td>
                   <Td>
                     <Text color="gray.500" fontSize="sm" fontWeight="normal">
@@ -409,12 +352,7 @@ function ProductPage() {
                   <Td>
                     <Flex align="center">
                       <Box w="40px" h="40px" me="14px">
-                        <Image
-                          src={productPage4}
-                          w="100%"
-                          h="100%"
-                          borderRadius="12px"
-                        />
+                        <Image src={productPage4} w="100%" h="100%" borderRadius="12px" />
                       </Box>
                       <Text color={textColor} fontSize="sm" fontWeight="bold">
                         Signature Design by Ashley
@@ -436,12 +374,7 @@ function ProductPage() {
                     </Stack>
                   </Td>
                   <Td>
-                    <Progress
-                      size="xs"
-                      colorScheme="red"
-                      value={40}
-                      borderRadius="12px"
-                    />
+                    <Progress size="xs" colorScheme="red" value={40} borderRadius="12px" />
                   </Td>
                   <Td>
                     <Text color="gray.500" fontSize="sm" fontWeight="normal">
@@ -453,12 +386,7 @@ function ProductPage() {
                   <Td border="none">
                     <Flex align="center">
                       <Box w="40px" h="40px" me="14px">
-                        <Image
-                          src={productPage5}
-                          w="100%"
-                          h="100%"
-                          borderRadius="12px"
-                        />
+                        <Image src={productPage5} w="100%" h="100%" borderRadius="12px" />
                       </Box>
                       <Text color={textColor} fontSize="sm" fontWeight="bold">
                         Modern Square
@@ -480,12 +408,7 @@ function ProductPage() {
                     </Stack>
                   </Td>
                   <Td border="none">
-                    <Progress
-                      size="xs"
-                      colorScheme="red"
-                      value={15}
-                      borderRadius="12px"
-                    />
+                    <Progress size="xs" colorScheme="red" value={15} borderRadius="12px" />
                   </Td>
                   <Td border="none">
                     <Text color="gray.500" fontSize="sm" fontWeight="normal">

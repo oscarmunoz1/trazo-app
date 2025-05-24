@@ -60,7 +60,8 @@ const CarbonReportsCard = ({ establishmentId }) => {
       borderRadius="lg"
       px={{ base: 3, md: 6 }}
       py={{ base: 2, md: 3 }}
-      mt={4}>
+      mt={4}
+    >
       <CardBody w="100%" p={0}>
         <Heading size="md" mb={4}>
           Generar Reporte de Carbono
@@ -99,7 +100,8 @@ const CarbonReportsCard = ({ establishmentId }) => {
           colorScheme="green"
           onClick={handleGenerateReport}
           isLoading={isLoading}
-          loadingText="Generando...">
+          loadingText="Generando..."
+        >
           Generar Reporte
         </Button>
         <Text fontSize="sm" color="gray.500" mt={2}>

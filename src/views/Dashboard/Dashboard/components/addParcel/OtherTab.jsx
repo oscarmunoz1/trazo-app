@@ -7,13 +7,13 @@ import {
   Icon,
   Input,
   Text,
-  Textarea,
-} from "@chakra-ui/react";
+  Textarea
+} from '@chakra-ui/react';
 // Custom components
-import React, { useState } from "react";
-import { useIntl } from "react-intl";
-import { FaPlus } from "react-icons/fa";
-import Select from "react-select";
+import React, { useState } from 'react';
+import { useIntl } from 'react-intl';
+import { FaPlus } from 'react-icons/fa';
+import Select from 'react-select';
 
 const OtherTab = (props) => {
   const intl = useIntl();

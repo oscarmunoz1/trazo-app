@@ -49,7 +49,8 @@ const HistoryCard = ({ title, amount, captions }) => {
       overflow={'auto'}
       p="16px"
       h={{ sm: 'fit-content', xl: 'fit-content' }}
-      overflowX={{ sm: 'scroll', xl: 'hidden', height: 'fit-content' }}>
+      overflowX={{ sm: 'scroll', xl: 'hidden', height: 'fit-content' }}
+    >
       <CardHeader p="12px 0px 28px 0px">
         <Flex direction="column">
           <Text fontSize="lg" color={textColor} fontWeight="bold" pb=".5rem">
@@ -123,7 +124,8 @@ const HistoryCard = ({ title, amount, captions }) => {
                 fontWeight={'300'}
                 justifyContent={'center'}
                 alignItems={'center'}
-                textAlign={'center'}>
+                textAlign={'center'}
+              >
                 {intl.formatMessage({ id: 'app.noProductionsYet' })}
               </Text>
             </Flex>

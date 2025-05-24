@@ -29,29 +29,25 @@ import {
   Stack,
   Text,
   useColorModeValue,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { IoIosStar, IoMdStarHalf } from "react-icons/io";
+  useDisclosure
+} from '@chakra-ui/react';
+import { IoIosStar, IoMdStarHalf } from 'react-icons/io';
 
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody.tsx";
-import CardHeader from "components/Card/CardHeader.tsx";
-import { HSeparator } from "components/Separator/Separator";
-import { IoEllipsisVerticalSharp } from "react-icons/io5";
-import React from "react";
-import avatar1 from "assets/img/avatars/avatar1.png";
-import avatar2 from "assets/img/avatars/avatar2.png";
-import avatar5 from "assets/img/avatars/avatar5.png";
-import avatar8 from "assets/img/avatars/avatar8.png";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody.tsx';
+import CardHeader from 'components/Card/CardHeader.tsx';
+import { HSeparator } from 'components/Separator/Separator';
+import { IoEllipsisVerticalSharp } from 'react-icons/io5';
+import React from 'react';
+import avatar1 from 'assets/img/avatars/avatar1.png';
+import avatar2 from 'assets/img/avatars/avatar2.png';
+import avatar5 from 'assets/img/avatars/avatar5.png';
+import avatar8 from 'assets/img/avatars/avatar8.png';
 
 const ProfileStats = ({ title, description, team }) => {
   // Chakra color mode
-  const textColor = useColorModeValue("gray.700", "white");
-  const {
-    isOpen: isOpen1,
-    onOpen: onOpen1,
-    onClose: onClose1,
-  } = useDisclosure();
+  const textColor = useColorModeValue('gray.700', 'white');
+  const { isOpen: isOpen1, onOpen: onOpen1, onClose: onClose1 } = useDisclosure();
   return (
     <Card>
       <CardHeader>
@@ -62,12 +58,7 @@ const ProfileStats = ({ title, description, team }) => {
           <Button variant="no-hover" p="0px">
             <Menu isOpen={isOpen1} onClose={onClose1}>
               <MenuButton onClick={onOpen1} alignSelf="flex-start">
-                <Icon
-                  as={IoEllipsisVerticalSharp}
-                  color="gray.400"
-                  w="20px"
-                  h="20px"
-                />
+                <Icon as={IoEllipsisVerticalSharp} color="gray.400" w="20px" h="20px" />
               </MenuButton>
               <MenuList>
                 <MenuItem>Action</MenuItem>

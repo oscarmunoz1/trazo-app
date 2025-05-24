@@ -97,14 +97,16 @@ function SignUp() {
         }}
         bgSize="cover"
         mx={{ md: 'auto' }}
-        mt={{ md: '14px' }}></Box>
+        mt={{ md: '14px' }}
+      ></Box>
       <Flex
         direction="column"
         textAlign="center"
         justifyContent="center"
         align="center"
         mt="6.5rem"
-        pt={'55px'}>
+        pt={'55px'}
+      >
         <Text fontSize="4xl" color="white" fontWeight="bold">
           {intl.formatMessage({ id: 'app.welcome' })}
         </Text>
@@ -114,7 +116,8 @@ function SignUp() {
           fontWeight="normal"
           mt="10px"
           mb="26px"
-          w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}>
+          w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}
+        >
           {intl.formatMessage({ id: 'app.youCanLoginBy' })}
         </Text>
       </Flex>
@@ -127,7 +130,8 @@ function SignUp() {
           p="40px"
           mx={{ base: '100px' }}
           bg={bgColor}
-          boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)">
+          boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
+        >
           {isSuccess ? (
             <Text color="green.400" fontWeight="bold" textAlign="center" mb="22px">
               {intl.formatMessage({ id: 'app.registrationSuccessful' })}
@@ -147,7 +151,8 @@ function SignUp() {
                   border="1px solid lightgray"
                   cursor="pointer"
                   transition="all .25s ease"
-                  _hover={{ filter: 'brightness(120%)', bg: bgIcons }}>
+                  _hover={{ filter: 'brightness(120%)', bg: bgIcons }}
+                >
                   <Link href="#">
                     <Icon
                       as={FaFacebook}
@@ -166,7 +171,8 @@ function SignUp() {
                   border="1px solid lightgray"
                   cursor="pointer"
                   transition="all .25s ease"
-                  _hover={{ filter: 'brightness(120%)', bg: bgIcons }}>
+                  _hover={{ filter: 'brightness(120%)', bg: bgIcons }}
+                >
                   <Link href="#">
                     <Icon as={FaApple} w="30px" h="30px" _hover={{ filter: 'brightness(120%)' }} />
                   </Link>
@@ -180,7 +186,8 @@ function SignUp() {
                   border="1px solid lightgray"
                   cursor="pointer"
                   transition="all .25s ease"
-                  _hover={{ filter: 'brightness(120%)', bg: bgIcons }}>
+                  _hover={{ filter: 'brightness(120%)', bg: bgIcons }}
+                >
                   <Link href="#">
                     <Icon as={FaGoogle} w="30px" h="30px" _hover={{ filter: 'brightness(120%)' }} />
                   </Link>
@@ -244,7 +251,8 @@ function SignUp() {
                       }}
                       _active={{
                         bg: 'green.500'
-                      }}>
+                      }}
+                    >
                       {isLoading ? (
                         <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
                       ) : (
@@ -259,7 +267,8 @@ function SignUp() {
                 justifyContent="center"
                 alignItems="center"
                 maxW="100%"
-                mt="0px">
+                mt="0px"
+              >
                 <Text color={textColor} fontWeight="medium">
                   {intl.formatMessage({ id: 'app.alreadyHaveAnAccount' })}
                   <Link
@@ -268,7 +277,8 @@ function SignUp() {
                     ms="5px"
                     href="#"
                     fontWeight="bold"
-                    onClick={() => navigate('/auth/signin')}>
+                    onClick={() => navigate('/auth/signin')}
+                  >
                     {intl.formatMessage({ id: 'app.signIn' })}
                   </Link>
                 </Text>

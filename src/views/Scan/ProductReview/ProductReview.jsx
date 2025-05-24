@@ -130,13 +130,15 @@ function ProductReview() {
   return (
     <BoxBackground
       title={intl.formatMessage({ id: 'app.productReview' })}
-      subtitle={intl.formatMessage({ id: 'app.productReviewDescription' })}>
+      subtitle={intl.formatMessage({ id: 'app.productReviewDescription' })}
+    >
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="-30px" w="100%">
         <Card
           mt={{ md: '75px' }}
           w={{ sm: '100%', md: '80%', lg: '75%' }}
           p={{ sm: '16px', md: '32px', lg: '48px' }}
-          boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px">
+          boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px"
+        >
           <CardHeader mb="42px">
             <Text color={textColor} fontSize="lg" fontWeight="bold">
               {intl.formatMessage({ id: 'app.yourReview' })}
@@ -166,7 +168,8 @@ function ProductReview() {
                         fontWeight={'300'}
                         justifyContent={'center'}
                         alignItems={'center'}
-                        textAlign={'center'}>
+                        textAlign={'center'}
+                      >
                         Review sent successfully!
                       </Text>
                       <Text
@@ -180,7 +183,8 @@ function ProductReview() {
                         onClick={() => navigate(`/`)}
                         cursor={'pointer'}
                         textDecoration={'underline'}
-                        color={'gray.500'}>
+                        color={'gray.500'}
+                      >
                         {intl.formatMessage({ id: 'app.clickHereToGoBackToTheProductionPage' })}
                       </Text>
                     </>
@@ -194,7 +198,8 @@ function ProductReview() {
                           direction="row"
                           spacing="12px"
                           //   color="orange.300"
-                          mb="16px">
+                          mb="16px"
+                        >
                           <Icon
                             as={
                               rating == 1 ||
@@ -289,7 +294,8 @@ function ProductReview() {
                           w="100%"
                           minH="130px"
                           cursor="pointer"
-                          {...getRootProps({ className: 'dropzone' })}>
+                          {...getRootProps({ className: 'dropzone' })}
+                        >
                           <Input {...getInputProps()} />
                           <Button variant="no-hover">
                             <Text color="gray.400" fontWeight="normal">
@@ -331,7 +337,8 @@ function ProductReview() {
                         mt="24px"
                         w={{ sm: '75px', lg: '100px' }}
                         h="35px"
-                        type="submit">
+                        type="submit"
+                      >
                         {isLoading ? (
                           <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
                         ) : (

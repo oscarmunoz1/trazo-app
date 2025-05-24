@@ -53,7 +53,8 @@ export default function ScannedProductsView() {
         w={{ sm: '100%', md: '80%', lg: '100%' }}
         mx="auto"
         p={{ sm: '16px', md: '32px', lg: '48px' }}
-        boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px">
+        boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px"
+      >
         <CardHeader p="12px 5px" mb="12px">
           <HSeparator my="16px" />
         </CardHeader>
@@ -75,7 +76,8 @@ export default function ScannedProductsView() {
                       shadow: '2xl',
                       transform: 'translateY(-4px)',
                       borderColor: 'green.200'
-                    }}>
+                    }}
+                  >
                     <Flex direction={{ base: 'column', md: 'row' }} gap="25px">
                       {production.images?.length > 0 && (
                         <Image

@@ -25,21 +25,17 @@ import {
   MenuList,
   Text,
   useColorModeValue,
-  useDisclosure,
-} from "@chakra-ui/react";
+  useDisclosure
+} from '@chakra-ui/react';
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import IconBox from "components/Icons/IconBox";
-import React from "react";
-import { IoEllipsisHorizontalSharp } from "react-icons/io5";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import IconBox from 'components/Icons/IconBox';
+import React from 'react';
+import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 
 const ReportsCard = ({ backgroundImage, icon, title, number, percentage }) => {
-  const {
-    isOpen: isOpen1,
-    onOpen: onOpen1,
-    onClose: onClose1,
-  } = useDisclosure();
+  const { isOpen: isOpen1, onOpen: onOpen1, onClose: onClose1 } = useDisclosure();
   return (
     <Card backgroundImage={backgroundImage} minH="168px">
       <CardBody h="100%">
@@ -50,12 +46,7 @@ const ReportsCard = ({ backgroundImage, icon, title, number, percentage }) => {
             </IconBox>
             <Menu isOpen={isOpen1} onClose={onClose1}>
               <MenuButton onClick={onOpen1} alignSelf="flex-start">
-                <Icon
-                  as={IoEllipsisHorizontalSharp}
-                  color="gray.400"
-                  w="20px"
-                  h="20px"
-                />
+                <Icon as={IoEllipsisHorizontalSharp} color="gray.400" w="20px" h="20px" />
               </MenuButton>
               <MenuList>
                 <MenuItem>Action</MenuItem>
@@ -73,12 +64,7 @@ const ReportsCard = ({ backgroundImage, icon, title, number, percentage }) => {
                 {title}
               </Text>
             </Flex>
-            <Text
-              color="#fff"
-              fontWeight="bold"
-              fontSize="md"
-              alignSelf="flex-end"
-            >
+            <Text color="#fff" fontWeight="bold" fontSize="md" alignSelf="flex-end">
               {percentage}
             </Text>
           </Flex>

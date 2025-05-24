@@ -30,7 +30,8 @@ export function SearchBar(props: SearchBarProps) {
       }}
       _active={{
         borderColor: { mainTeal }
-      }}>
+      }}
+    >
       <InputLeftElement
         children={
           <IconButton
@@ -47,7 +48,8 @@ export function SearchBar(props: SearchBarProps) {
             _focus={{
               boxShadow: 'none'
             }}
-            icon={<SearchIcon color={searchIconColor} w="15px" h="15px" />}></IconButton>
+            icon={<SearchIcon color={searchIconColor} w="15px" h="15px" />}
+          ></IconButton>
         }
       />
       <Input fontSize="xs" py="11px" placeholder="Type here..." borderRadius="inherit" />

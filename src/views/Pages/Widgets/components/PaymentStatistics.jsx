@@ -1,22 +1,22 @@
 // Chakra imports
-import { Flex, Text, useColorModeValue } from "@chakra-ui/react";
+import { Flex, Text, useColorModeValue } from '@chakra-ui/react';
 
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody.tsx";
-import { HSeparator } from "components/Separator/Separator";
-import IconBox from "components/Icons/IconBox";
-import React from "react";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody.tsx';
+import { HSeparator } from 'components/Separator/Separator';
+import IconBox from 'components/Icons/IconBox';
+import React from 'react';
 
 const PaymentStatistics = ({ icon, title, description, amount }) => {
-  const iconTeal = useColorModeValue("green.400", "green.400");
-  const textColor = useColorModeValue("gray.700", "white");
+  const iconTeal = useColorModeValue('green.400', 'green.400');
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
     <Card p="16px" display="flex" align="center" justify="center">
       <CardBody>
         <Flex direction="column" align="center" w="100%" py="14px">
-          <IconBox as="box" h={"60px"} w={"60px"} bg={iconTeal}>
+          <IconBox as="box" h={'60px'} w={'60px'} bg={iconTeal}>
             {icon}
           </IconBox>
           <Flex
@@ -30,12 +30,7 @@ const PaymentStatistics = ({ icon, title, description, amount }) => {
             <Text fontSize="md" color={textColor} fontWeight="bold">
               {title}
             </Text>
-            <Text
-              mb="24px"
-              fontSize="xs"
-              color="gray.400"
-              fontWeight="semibold"
-            >
+            <Text mb="24px" fontSize="xs" color="gray.400" fontWeight="semibold">
               {description}
             </Text>
             <HSeparator />

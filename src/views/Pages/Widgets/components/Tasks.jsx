@@ -16,49 +16,29 @@
 */
 
 // Chakra imports
-import {
-  Box,
-  Flex,
-  Icon,
-  Progress,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import React, { useState } from "react";
-import {
-  lineChartDataWidgets2,
-  lineChartOptionsWidgets2,
-} from "variables/charts";
+import { Box, Flex, Icon, Progress, Text, useColorModeValue } from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { lineChartDataWidgets2, lineChartOptionsWidgets2 } from 'variables/charts';
 
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import { FaCheckCircle } from "react-icons/fa";
-import IconBox from "components/Icons/IconBox";
-import LineChart from "components/Charts/LineChart";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import { FaCheckCircle } from 'react-icons/fa';
+import IconBox from 'components/Icons/IconBox';
+import LineChart from 'components/Charts/LineChart';
 
 const Tasks = () => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
-  const iconTeal = useColorModeValue("green.400", "green.400");
-  const iconBoxInside = useColorModeValue("white", "white");
+  const iconTeal = useColorModeValue('green.400', 'green.400');
+  const iconBoxInside = useColorModeValue('white', 'white');
   return (
-    <Card
-      px="0px"
-      maxH="230px"
-      pb="0px"
-      gridColumn={{ md: "1 / 3", lg: "auto" }}
-    >
+    <Card px="0px" maxH="230px" pb="0px" gridColumn={{ md: '1 / 3', lg: 'auto' }}>
       <CardHeader px="22px">
         <Flex justify="space-between" w="100%">
           <Flex align="center">
-            <IconBox as="box" h={"45px"} w={"45px"} bg={iconTeal} me="16px">
-              <Icon
-                as={FaCheckCircle}
-                h={"24px"}
-                w={"24px"}
-                color={iconBoxInside}
-              />
+            <IconBox as="box" h={'45px'} w={'45px'} bg={iconTeal} me="16px">
+              <Icon as={FaCheckCircle} h={'24px'} w={'24px'} color={iconBoxInside} />
             </IconBox>
             <Flex direction="column">
               <Text color="gray.400" fontSize="xs" fontWeight="normal">
@@ -73,21 +53,13 @@ const Tasks = () => {
             <Text color="gray.400" fontWeight="normal" fontSize="xs">
               60%
             </Text>
-            <Progress
-              colorScheme="teal"
-              borderRadius="15px"
-              h="6px"
-              value={60}
-            />
+            <Progress colorScheme="teal" borderRadius="15px" h="6px" value={60} />
           </Flex>
         </Flex>
       </CardHeader>
       <CardBody>
         <Box w="100%">
-          <LineChart
-            chartData={lineChartDataWidgets2}
-            chartOptions={lineChartOptionsWidgets2}
-          />
+          <LineChart chartData={lineChartDataWidgets2} chartOptions={lineChartOptionsWidgets2} />
         </Box>
       </CardBody>
     </Card>

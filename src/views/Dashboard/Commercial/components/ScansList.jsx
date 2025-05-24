@@ -62,7 +62,8 @@ const ScansList = ({ title, labels, scansData }) => {
             fontSize="xs"
             w="100px"
             h="35px"
-            mt={{ sm: '16px', md: '0px' }}>
+            mt={{ sm: '16px', md: '0px' }}
+          >
             {intl.formatMessage({ id: 'app.viewAll' }).toUpperCase()}
           </Button>
         </Flex>
@@ -78,7 +79,8 @@ const ScansList = ({ title, labels, scansData }) => {
                     fontSize="xs"
                     key={label}
                     paddingInlineStart={'25px'}
-                    paddingInlineEnd={'25px'}>
+                    paddingInlineEnd={'25px'}
+                  >
                     {label}
                   </Th>
                 );

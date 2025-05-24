@@ -63,7 +63,8 @@ const CarbonBenchmarkTab = ({ establishmentId, industry }) => {
         <Select
           w="200px"
           value={selectedYear}
-          onChange={(e) => setSelectedYear(Number(e.target.value))}>
+          onChange={(e) => setSelectedYear(Number(e.target.value))}
+        >
           {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map((year) => (
             <option key={year} value={year}>
               {year}

@@ -1,12 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  currentHistory: null,
+  currentHistory: null
 };
 
 export const historySlice = createSlice({
   initialState,
-  name: "historySlice",
+  name: 'historySlice',
   reducers: {
     setCurrentHistory: (state, action) => {
       state.currentHistory = action.payload;
@@ -17,8 +17,8 @@ export const historySlice = createSlice({
       } else {
         state.currentHistory.events.push(action.payload);
       }
-    },
-  },
+    }
+  }
 });
 
 export default historySlice.reducer;

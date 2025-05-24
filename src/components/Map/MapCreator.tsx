@@ -79,7 +79,8 @@ const MapCreator = (props) => {
           justify="center"
           textAlign="center"
           w="80%"
-          mx="auto">
+          mx="auto"
+        >
           <Text color={textColor} fontSize="lg" fontWeight="bold" mb="4px">
             {intl.formatMessage({ id: 'app.whereIsTheParcelLocated' })}
           </Text>
@@ -109,7 +110,8 @@ const MapCreator = (props) => {
                 }
                 mapTypeId="satellite"
                 onLoad={handleOnLoad}
-                onClick={onMapClick}>
+                onClick={onMapClick}
+              >
                 <Polygon
                   path={polygon}
                   options={{
@@ -129,7 +131,8 @@ const MapCreator = (props) => {
                   color="white"
                   fontSize="xs"
                   variant="no-hover"
-                  onClick={() => setPolygon([])}>
+                  onClick={() => setPolygon([])}
+                >
                   {intl.formatMessage({ id: 'app.clear' })}
                 </Button>
                 <Button
@@ -137,7 +140,8 @@ const MapCreator = (props) => {
                   colorScheme="green"
                   minW="110px"
                   fontSize="xs"
-                  onClick={() => setDrawingMode((prevState) => !prevState)}>
+                  onClick={() => setDrawingMode((prevState) => !prevState)}
+                >
                   {drawingMode
                     ? intl.formatMessage({ id: 'app.stopEditing' })
                     : intl.formatMessage({ id: 'app.editMode' })}
@@ -156,7 +160,8 @@ const MapCreator = (props) => {
             mt="24px"
             w={{ sm: '75px', lg: '100px' }}
             h="35px"
-            onClick={() => prevTab.current.click()}>
+            onClick={() => prevTab.current.click()}
+          >
             <Text fontSize="xs" color="gray.700" fontWeight="bold">
               {intl.formatMessage({ id: 'app.prev' })}
             </Text>
@@ -170,7 +175,8 @@ const MapCreator = (props) => {
             mt="24px"
             w={{ sm: '75px', lg: '100px' }}
             h="35px"
-            onClick={handleOnFinish}>
+            onClick={handleOnFinish}
+          >
             <Text fontSize="xs" color="#fff" fontWeight="bold">
               {intl.formatMessage({ id: 'app.next' })}
             </Text>

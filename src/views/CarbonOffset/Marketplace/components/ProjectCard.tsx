@@ -49,7 +49,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onPurchase })
       borderRadius="lg"
       overflow="hidden"
       transition="transform 0.2s"
-      _hover={{ transform: 'translateY(-4px)', shadow: 'lg' }}>
+      _hover={{ transform: 'translateY(-4px)', shadow: 'lg' }}
+    >
       <Image
         src={project.images[0] || '/images/placeholder-project.jpg'}
         alt={project.name}
@@ -68,7 +69,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onPurchase })
               colorScheme={getVerificationColor(project.verification_status)}
               px={2}
               py={1}
-              borderRadius="full">
+              borderRadius="full"
+            >
               {project.verification_status}
             </Badge>
           </Flex>
@@ -101,7 +103,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onPurchase })
             size="lg"
             width="full"
             onClick={onPurchase}
-            leftIcon={<FaCheckCircle />}>
+            leftIcon={<FaCheckCircle />}
+          >
             Purchase Offsets
           </Button>
         </Stack>

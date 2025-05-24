@@ -16,30 +16,24 @@
 */
 
 // Chakra imports
-import {
-    Button,
-    Flex,
-    Grid,
-    Icon, Text,
-    useColorModeValue
-} from "@chakra-ui/react";
-import avatar4 from "assets/img/avatars/avatar4.png";
-import ProfileBgImage from "assets/img/ProfileBackground.png";
+import { Button, Flex, Grid, Icon, Text, useColorModeValue } from '@chakra-ui/react';
+import avatar4 from 'assets/img/avatars/avatar4.png';
+import ProfileBgImage from 'assets/img/ProfileBackground.png';
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import React from "react";
-import { BsPlus } from "react-icons/bs";
-import { brandCardsData } from "variables/general";
-import BrandCard from "./components/BrandCard";
-import Header from "../Overview/components/Header";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import React from 'react';
+import { BsPlus } from 'react-icons/bs';
+import { brandCardsData } from 'variables/general';
+import BrandCard from './components/BrandCard';
+import Header from '../Overview/components/Header';
 
 function Projects() {
   // Chakra color mode
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
   const bgProfile = useColorModeValue(
-    "hsla(0,0%,100%,.8)",
-    "linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)"
+    'hsla(0,0%,100%,.8)',
+    'linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)'
   );
 
   return (
@@ -48,25 +42,25 @@ function Projects() {
         backgroundHeader={ProfileBgImage}
         backgroundProfile={bgProfile}
         avatarImage={avatar4}
-        name={"Esthera Jackson"}
-        email={"esthera@simmmple.com"}
+        name={'Esthera Jackson'}
+        email={'esthera@simmmple.com'}
       />
-      <Flex direction="column" mb="44px" mt={{ sm: "16px", lg: "0px" }}>
+      <Flex direction="column" mb="44px" mt={{ sm: '16px', lg: '0px' }}>
         <Text fontSize="xl" text={textColor} fontWeight="bold" mb="16px">
           Some of Our Awesome Projects
         </Text>
         <Text fontSize="sm" color="gray.400" fontWeight="normal">
-          This is the paragraph where you can write more details about your
-          projects. Keep you user engaged by providing meaningful information.
+          This is the paragraph where you can write more details about your projects. Keep you user
+          engaged by providing meaningful information.
         </Text>
       </Flex>
       <Grid
         templateColumns={{
-          sm: "1fr",
-          md: "repeat(2, auto)",
-          lg: "repeat(3, auto)",
+          sm: '1fr',
+          md: 'repeat(2, auto)',
+          lg: 'repeat(3, auto)'
         }}
-        templateRows={{ md: "repeat(3, auto)", lg: "repeat(2, auto)" }}
+        templateRows={{ md: 'repeat(3, auto)', lg: 'repeat(2, auto)' }}
         gap="30px"
       >
         {brandCardsData.map((brand, idx) => {
@@ -86,19 +80,8 @@ function Projects() {
           <CardBody h="100%">
             <Flex w="100%" h="100%">
               <Button variant="no-hover" w="100%" h="100%">
-                <Flex
-                  direction="column"
-                  align="center"
-                  justify="center"
-                  color="gray.500"
-                >
-                  <Icon
-                    as={BsPlus}
-                    w="30px"
-                    h="30px"
-                    mb="12px"
-                    fontWeight="bold"
-                  />
+                <Flex direction="column" align="center" justify="center" color="gray.500">
+                  <Icon as={BsPlus} w="30px" h="30px" mb="12px" fontWeight="bold" />
                   <Text fontSize="lg" fontWeight="bold">
                     Create a New Project
                   </Text>

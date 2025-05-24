@@ -16,22 +16,15 @@
 */
 
 // Chakra imports
-import {
-  Button,
-  Flex,
-  Progress,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Button, Flex, Progress, Stack, Text, useColorModeValue } from '@chakra-ui/react';
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import React from "react";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import React from 'react';
 
 const Reviews = () => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
     <Card>
@@ -52,12 +45,7 @@ const Reviews = () => {
                   80%
                 </Text>
               </Flex>
-              <Progress
-                colorScheme="teal"
-                size="sm"
-                value={80}
-                borderRadius="15px"
-              ></Progress>
+              <Progress colorScheme="teal" size="sm" value={80} borderRadius="15px"></Progress>
             </Flex>
             <Flex direction="column">
               <Flex justify="space-between" mb="8px">
@@ -68,12 +56,7 @@ const Reviews = () => {
                   17%
                 </Text>
               </Flex>
-              <Progress
-                colorScheme="gray"
-                size="sm"
-                value={17}
-                borderRadius="15px"
-              ></Progress>
+              <Progress colorScheme="gray" size="sm" value={17} borderRadius="15px"></Progress>
             </Flex>
             <Flex direction="column">
               <Flex justify="space-between" mb="8px">
@@ -84,33 +67,24 @@ const Reviews = () => {
                   3%
                 </Text>
               </Flex>
-              <Progress
-                colorScheme="red"
-                size="sm"
-                value={3}
-                borderRadius="15px"
-              ></Progress>
+              <Progress colorScheme="red" size="sm" value={3} borderRadius="15px"></Progress>
             </Flex>
           </Stack>
-          <Flex
-            justify="space-between"
-            w="100%"
-            direction={{ sm: "column", lg: "row" }}
-          >
+          <Flex justify="space-between" w="100%" direction={{ sm: 'column', lg: 'row' }}>
             <Text
               color="gray.500"
               fontSize="md"
-              maxW={{ lg: "65%" }}
-              mb={{ sm: "16px", lg: "0px" }}
+              maxW={{ lg: '65%' }}
+              mb={{ sm: '16px', lg: '0px' }}
             >
-              More than{" "}
+              More than{' '}
               <Text as="span" color={textColor} fontWeight="bold">
                 1,500,000 developers
-              </Text>{" "}
-              used Creative Tim's products and over{" "}
+              </Text>{' '}
+              used Creative Tim's products and over{' '}
               <Text as="span" color={textColor} fontWeight="bold">
                 700,000 projects
-              </Text>{" "}
+              </Text>{' '}
               were created.
             </Text>
             <Button

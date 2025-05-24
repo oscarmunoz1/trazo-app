@@ -10,19 +10,19 @@ import {
   Select,
   Text,
   Textarea,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { FormProvider, useForm } from "react-hook-form";
+  useColorModeValue
+} from '@chakra-ui/react';
+import { FormProvider, useForm } from 'react-hook-form';
 // Custom components
-import React, { useState } from "react";
-import { number, object, string } from "zod";
+import React, { useState } from 'react';
+import { number, object, string } from 'zod';
 
-import { FaPlus } from "react-icons/fa";
-import FormInput from "components/Forms/FormInput";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { FaPlus } from 'react-icons/fa';
+import FormInput from 'components/Forms/FormInput';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const formSchema = object({
-  type: string().min(1, "Type is required"),
+  type: string().min(1, 'Type is required'),
   temperature: string()
     .optional()
     .transform((val) => Number(val)),
@@ -31,23 +31,23 @@ const formSchema = object({
     .transform((val) => Number(val)),
   startDate: string().optional(),
   endDate: string().optional(),
-  observations: string().optional(),
+  observations: string().optional()
 });
 
 const WeatherTab = ({ onSubmitHandler, isLoading }) => {
-  const bgPrevButton = useColorModeValue("gray.100", "gray.100");
-  const textColor = useColorModeValue("gray.700", "white");
-  const iconColor = useColorModeValue("gray.300", "gray.700");
+  const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
+  const textColor = useColorModeValue('gray.700', 'white');
+  const iconColor = useColorModeValue('gray.300', 'gray.700');
 
   const methods = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema)
   });
 
   const {
     reset,
     handleSubmit,
     register,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors, isSubmitSuccessful }
   } = methods;
 
   const onSubmit = (data) => {
@@ -57,23 +57,23 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
   return (
     <FormControl>
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
+        <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
           <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
             Type
           </FormLabel>
           <Select
             placeholder={intl.formatMessage({ id: 'app.selectOption' })}
             placeholderTextColor="red"
-            css={{ "&::placeholder": { color: "red" } }}
-            mb={errors.type ? "12px" : "24px"}
-            borderColor={errors.type && "red.500"}
-            boxShadow={errors.type && "0 0 0 1px red.500"}
-            borderWidth={errors.type && "2px"}
+            css={{ '&::placeholder': { color: 'red' } }}
+            mb={errors.type ? '12px' : '24px'}
+            borderColor={errors.type && 'red.500'}
+            boxShadow={errors.type && '0 0 0 1px red.500'}
+            borderWidth={errors.type && '2px'}
             ml="4px"
-            height={"3rem"}
-            borderRadius={"15px"}
-            fontSize={"0.875rem"}
-            {...register("type")}
+            height={'3rem'}
+            borderRadius={'15px'}
+            fontSize={'0.875rem'}
+            {...register('type')}
           >
             <option value="FR">{intl.formatMessage({ id: 'app.frost' })}</option>
             <option value="DR">{intl.formatMessage({ id: 'app.drought' })}</option>
@@ -84,12 +84,12 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
             <option value="LH">{intl.formatMessage({ id: 'app.lowHumidity' })}</option>
           </Select>
           {errors.type && (
-            <Text fontSize="sm" color="red.500" mt={"0.5rem"}>
+            <Text fontSize="sm" color="red.500" mt={'0.5rem'}>
               {errors.type.message}
             </Text>
           )}
-          <Flex gap={"20px"}>
-            <Flex flexDir={"column"} flexGrow={1}>
+          <Flex gap={'20px'}>
+            <Flex flexDir={'column'} flexGrow={1}>
               <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
                 Temperature
               </FormLabel>
@@ -104,7 +104,7 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
                 name="temperature"
               />
             </Flex>
-            <Flex flexDir={"column"} flexGrow={1}>
+            <Flex flexDir={'column'} flexGrow={1}>
               <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
                 Humidity
               </FormLabel>
@@ -120,19 +120,13 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
               />
             </Flex>
           </Flex>
-          <Flex flexDir={"column"}>
+          <Flex flexDir={'column'}>
             <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
               {intl.formatMessage({ id: 'app.timePeriod' })}
             </FormLabel>
-            <Flex flexDir={"row"} width={"100%"} gap={"20px"}>
-              <Flex flexDir={"column"} flexGrow={1}>
-                <FormLabel
-                  ms="4px"
-                  fontSize="xs"
-                  fontWeight="bold"
-                  mb={"0"}
-                  textAlign={"end"}
-                >
+            <Flex flexDir={'row'} width={'100%'} gap={'20px'}>
+              <Flex flexDir={'column'} flexGrow={1}>
+                <FormLabel ms="4px" fontSize="xs" fontWeight="bold" mb={'0'} textAlign={'end'}>
                   {intl.formatMessage({ id: 'app.from' })}
                 </FormLabel>
                 <FormInput
@@ -145,14 +139,8 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
                   mb="24px"
                 />
               </Flex>
-              <Flex flexDir={"column"} flexGrow={1}>
-                <FormLabel
-                  ms="4px"
-                  fontSize="xs"
-                  fontWeight="bold"
-                  mb={"0"}
-                  textAlign={"end"}
-                >
+              <Flex flexDir={'column'} flexGrow={1}>
+                <FormLabel ms="4px" fontSize="xs" fontWeight="bold" mb={'0'} textAlign={'end'}>
                   {intl.formatMessage({ id: 'app.to' })}
                 </FormLabel>
                 <FormInput
@@ -179,7 +167,7 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
             mb="24px"
             size="lg"
             name="observations"
-            {...register("observations")}
+            {...register('observations')}
           />
           <Flex justify="space-between">
             <Button
@@ -187,7 +175,7 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
               bg={bgPrevButton}
               alignSelf="flex-end"
               mt="24px"
-              w={{ sm: "75px", lg: "100px" }}
+              w={{ sm: '75px', lg: '100px' }}
               h="35px"
             >
               <Text fontSize="xs" color="gray.700" fontWeight="bold">
@@ -199,17 +187,12 @@ const WeatherTab = ({ onSubmitHandler, isLoading }) => {
               bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
               alignSelf="flex-end"
               mt="24px"
-              w={{ sm: "75px", lg: "100px" }}
+              w={{ sm: '75px', lg: '100px' }}
               h="35px"
               type="submit"
             >
               {isLoading ? (
-                <CircularProgress
-                  isIndeterminate
-                  value={1}
-                  color="#313860"
-                  size="25px"
-                />
+                <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
               ) : (
                 <Text fontSize="xs" color="#fff" fontWeight="bold">
                   {intl.formatMessage({ id: 'app.send' })}

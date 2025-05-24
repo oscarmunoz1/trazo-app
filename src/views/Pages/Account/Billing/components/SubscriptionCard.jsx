@@ -264,13 +264,15 @@ export default function SubscriptionCard({
 
                 <Menu
                   onOpen={() => setPlanMenuIsOpen(true)}
-                  onClose={() => setPlanMenuIsOpen(false)}>
+                  onClose={() => setPlanMenuIsOpen(false)}
+                >
                   <MenuButton
                     as={Button}
                     rightIcon={<ChevronDownIcon />}
                     size="sm"
                     flex={1}
-                    colorScheme="blue">
+                    colorScheme="blue"
+                  >
                     {intl.formatMessage({ id: 'app.changePlan' })}
                   </MenuButton>
                   <MenuList maxH="300px" overflowY="auto">
@@ -292,7 +294,8 @@ export default function SubscriptionCard({
                                 key={`upgrade-${plan.id}`}
                                 onClick={() => handleChangePlan(plan.id)}
                                 icon={<ArrowUpIcon color="green.500" />}
-                                py={2}>
+                                py={2}
+                              >
                                 <Flex direction="column" align="start">
                                   <Text fontWeight="medium">{plan.name}</Text>
                                   <Text fontSize="xs" color="gray.600">
@@ -319,7 +322,8 @@ export default function SubscriptionCard({
                                 key={`downgrade-${plan.id}`}
                                 onClick={() => handleChangePlan(plan.id)}
                                 icon={<ArrowDownIcon color="gray.500" />}
-                                py={2}>
+                                py={2}
+                              >
                                 <Flex direction="column" align="start">
                                   <Text fontWeight="medium">{plan.name}</Text>
                                   <Text fontSize="xs" color="gray.600">

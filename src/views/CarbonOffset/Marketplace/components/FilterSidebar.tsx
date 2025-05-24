@@ -51,7 +51,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterC
       borderWidth="1px"
       borderColor={borderColor}
       position="sticky"
-      top="4">
+      top="4"
+    >
       <VStack spacing={6} align="stretch">
         <Heading size="md">Filters</Heading>
 
@@ -60,7 +61,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterC
           <Select
             value={filters.project_type}
             onChange={(e) => onFilterChange('project_type', e.target.value)}
-            placeholder="All Types">
+            placeholder="All Types"
+          >
             {projectTypes.map((type) => (
               <option key={type} value={type}>
                 {type}
@@ -74,7 +76,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterC
           <Select
             value={filters.certification}
             onChange={(e) => onFilterChange('certification', e.target.value)}
-            placeholder="All Standards">
+            placeholder="All Standards"
+          >
             {certificationStandards.map((standard) => (
               <option key={standard} value={standard}>
                 {standard}
@@ -115,7 +118,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterC
           colorScheme="blue"
           onClick={() => {
             Object.keys(filters).forEach((key) => onFilterChange(key, ''));
-          }}>
+          }}
+        >
           Clear Filters
         </Button>
       </VStack>

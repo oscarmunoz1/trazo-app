@@ -159,16 +159,33 @@ const companyApi = baseApi.injectEndpoints({
       }
     }),
     addEstablishmentCarbonFootprint: build.mutation<any, any>({
-      query: (data) => ({
-        url: '/establishment-footprints/',
-        method: 'POST',
-        body: data,
-        credentials: 'include'
-      })
+      query: (data) => {
+        // Create a new payload with explicit number conversions
+        const payload = {
+          // Convert field names to match what the serializer expects
+          establishment: data.establishment ? Number(data.establishment) : undefined,
+          production: data.production ? Number(data.production) : undefined,
+          type: data.type,
+          amount: Number(data.amount),
+          year: Number(data.year),
+          description: data.description || '',
+          source_id: Number(data.source_id)
+        };
+
+        // Debug output
+        console.log('API Request payload:', payload);
+
+        return {
+          url: '/carbon/entries/',
+          method: 'POST',
+          body: payload,
+          credentials: 'include'
+        };
+      }
     }),
     updateEstablishmentCarbonFootprint: build.mutation<any, { id: number; data: any }>({
       query: ({ id, data }) => ({
-        url: `/establishment-footprints/${id}/`,
+        url: `/carbon/entries/${id}/`,
         method: 'PUT',
         body: data,
         credentials: 'include'
@@ -176,7 +193,7 @@ const companyApi = baseApi.injectEndpoints({
     }),
     deleteEstablishmentCarbonFootprint: build.mutation<any, { id: number }>({
       query: ({ id }) => ({
-        url: `/establishment-footprints/${id}/`,
+        url: `/carbon/entries/${id}/`,
         method: 'DELETE',
         credentials: 'include'
       })
@@ -241,22 +258,32 @@ const companyApi = baseApi.injectEndpoints({
     }),
     generateCarbonReport: build.mutation<
       any,
-      {
-        establishment: number;
-        year: number;
-        reportType: 'annual' | 'quarterly' | 'custom';
-        quarter?: number;
-        startDate?: string;
-        endDate?: string;
-        document?: File;
-      }
+      | FormData
+      | {
+          establishment: number;
+          year: number;
+          reportType: 'annual' | 'quarterly' | 'custom';
+          quarter?: number;
+          startDate?: string;
+          endDate?: string;
+          document?: File;
+        }
     >({
-      query: (data) => ({
-        url: '/reports/generate_report/',
-        method: 'POST',
-        body: data,
-        credentials: 'include'
-      })
+      query: (data) => {
+        // Check if data is FormData (for file uploads) or regular object
+        const isFormData = data instanceof FormData;
+
+        return {
+          url: '/carbon/reports/generate/',
+          method: 'POST',
+          body: data,
+          // Don't set content-type for FormData to let the browser set it with boundary
+          formData: isFormData,
+          credentials: 'include'
+        };
+      },
+      // Invalidate any queries that might have cached report data
+      invalidatesTags: ['CarbonSummary']
     }),
     getProductionsByEstablishment: build.query({
       query: ({ establishmentId }) => ({
@@ -264,6 +291,17 @@ const companyApi = baseApi.injectEndpoints({
         method: 'GET',
         credentials: 'include'
       })
+    }),
+    getCarbonEntries: build.query<any[], { establishmentId: number; year?: number }>({
+      query: ({ establishmentId, year }) => {
+        let url = `/carbon/entries/?establishment=${establishmentId}`;
+        if (year) url += `&year=${year}`;
+        return {
+          url,
+          method: 'GET',
+          credentials: 'include'
+        };
+      }
     })
   }),
   overrideExisting: false
@@ -290,5 +328,6 @@ export const {
   useGetCarbonBenchmarksQuery,
   useGetCarbonReportsQuery,
   useGenerateCarbonReportMutation,
-  useGetProductionsByEstablishmentQuery
+  useGetProductionsByEstablishmentQuery,
+  useGetCarbonEntriesQuery
 } = companyApi;

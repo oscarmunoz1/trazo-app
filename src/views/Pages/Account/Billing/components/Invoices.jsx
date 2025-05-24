@@ -30,7 +30,8 @@ const Invoices = ({ title, data = [] }) => {
               color="green.400"
               variant="outline"
               fontSize="xs"
-              p="8px 32px">
+              p="8px 32px"
+            >
               {intl.formatMessage({ id: 'app.viewAll' }) || 'VIEW ALL'}
             </Button>
           )}

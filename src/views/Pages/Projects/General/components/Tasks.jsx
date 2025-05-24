@@ -16,37 +16,30 @@
 */
 
 // Chakra imports
-import { Flex, Progress, Text, useColorModeValue } from "@chakra-ui/react";
-import {
-  lineChartDataGeneral,
-  lineChartOptionsGeneral,
-} from "variables/charts";
+import { Flex, Progress, Text, useColorModeValue } from '@chakra-ui/react';
+import { lineChartDataGeneral, lineChartOptionsGeneral } from 'variables/charts';
 
 // Custom components
-import Card from "components/Card/Card";
-import CardHeader from "components/Card/CardHeader";
-import { HomeIcon } from "components/Icons/Icons";
-import IconBox from "components/Icons/IconBox";
-import LineChart from "components/Charts/LineChart";
-import React from "react";
+import Card from 'components/Card/Card';
+import CardHeader from 'components/Card/CardHeader';
+import { HomeIcon } from 'components/Icons/Icons';
+import IconBox from 'components/Icons/IconBox';
+import LineChart from 'components/Charts/LineChart';
+import React from 'react';
 
 const Tasks = () => {
-  const textColor = useColorModeValue("gray.700", "white");
-  const iconBoxInside = useColorModeValue("white", "white");
-  const iconTeal = useColorModeValue("green.400", "green.400");
+  const textColor = useColorModeValue('gray.700', 'white');
+  const iconBoxInside = useColorModeValue('white', 'white');
+  const iconTeal = useColorModeValue('green.400', 'green.400');
 
   return (
-    <Card
-      mb="24px"
-      maxW={{ sm: "330px", md: "100%" }}
-      px={{ sm: "0px", lg: "22px" }}
-    >
+    <Card mb="24px" maxW={{ sm: '330px', md: '100%' }} px={{ sm: '0px', lg: '22px' }}>
       <CardHeader>
         <Flex direction="column" w="100%">
-          <Flex justify="space-between" w="100%" px={{ sm: "22px", lg: "0px" }}>
+          <Flex justify="space-between" w="100%" px={{ sm: '22px', lg: '0px' }}>
             <Flex align="center">
-              <IconBox as="box" h={"45px"} w={"45px"} bg={iconTeal} me="16px">
-                <HomeIcon h={"24px"} w={"24px"} color={iconBoxInside} />
+              <IconBox as="box" h={'45px'} w={'45px'} bg={iconTeal} me="16px">
+                <HomeIcon h={'24px'} w={'24px'} color={iconBoxInside} />
               </IconBox>
               <Flex direction="column">
                 <Text color="gray.400" fontWeight="normal" fontSize="md">
@@ -61,18 +54,10 @@ const Tasks = () => {
               <Text color="gray.400" fontWeight="normal" fontSize="md">
                 60%
               </Text>
-              <Progress
-                colorScheme="teal"
-                size="sm"
-                borderRadius="15px"
-                value={60}
-              />
+              <Progress colorScheme="teal" size="sm" borderRadius="15px" value={60} />
             </Flex>
           </Flex>
-          <LineChart
-            chartData={lineChartDataGeneral}
-            chartOptions={lineChartOptionsGeneral}
-          />
+          <LineChart chartData={lineChartDataGeneral} chartOptions={lineChartOptionsGeneral} />
         </Flex>
       </CardHeader>
     </Card>

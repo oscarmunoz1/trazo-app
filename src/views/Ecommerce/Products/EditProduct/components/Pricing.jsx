@@ -27,31 +27,31 @@ import {
   TagCloseButton,
   TagLabel,
   Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import React, { useState } from "react";
+  useColorModeValue
+} from '@chakra-ui/react';
+import React, { useState } from 'react';
 
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
 
 const Pricing = () => {
   const [skills, setSkills] = useState([
     {
-      name: "chakra-ui",
-      id: 1,
+      name: 'chakra-ui',
+      id: 1
     },
     {
-      name: "react",
-      id: 2,
+      name: 'react',
+      id: 2
     },
     {
-      name: "javascript",
-      id: 3,
-    },
+      name: 'javascript',
+      id: 3
+    }
   ]);
 
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   const keyPress = (e) => {
     if (e.keyCode === 13) {
@@ -59,10 +59,10 @@ const Pricing = () => {
         ...skills,
         {
           name: e.target.value,
-          id: skills.length === 0 ? 1 : skills[skills.length - 1].id + 1,
-        },
+          id: skills.length === 0 ? 1 : skills[skills.length - 1].id + 1
+        }
       ]);
-      e.target.value = "";
+      e.target.value = '';
     }
   };
   return (
@@ -111,7 +111,7 @@ const Pricing = () => {
               wrap="wrap"
               border="1px solid lightgray"
               borderRadius="8px"
-              _focus={{ borderColor: "green.400" }}
+              _focus={{ borderColor: 'green.400' }}
               minH="40px"
               cursor="text"
             >
@@ -131,11 +131,7 @@ const Pricing = () => {
                     <TagCloseButton
                       justifySelf="flex-end"
                       onClick={() =>
-                        setSkills([
-                          ...skills.filter(
-                            (element) => element.id !== skill.id
-                          ),
-                        ])
+                        setSkills([...skills.filter((element) => element.id !== skill.id)])
                       }
                     />
                   </Tag>

@@ -27,33 +27,33 @@ import {
   Link,
   Switch,
   Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+  useColorModeValue
+} from '@chakra-ui/react';
 
-import React from "react";
+import React from 'react';
 // Assets
-import cover from "assets/img/cover-auth.png";
+import cover from 'assets/img/cover-auth.png';
 
 function SignIn() {
   // Chakra color mode
-  const titleColor = useColorModeValue("green.400", "teal.200");
-  const textColor = useColorModeValue("gray.400", "white");
+  const titleColor = useColorModeValue('green.400', 'teal.200');
+  const textColor = useColorModeValue('gray.400', 'white');
   return (
     <Flex position="relative" mb="70px">
       <Flex
-        h={{ sm: "initial", md: "75vh", lg: "85vh" }}
+        h={{ sm: 'initial', md: '75vh', lg: '85vh' }}
         w="100%"
         maxW="1044px"
         mx="auto"
         justifyContent="space-between"
         mb="30px"
-        pt={{ sm: "100px", md: "0px" }}
+        pt={{ sm: '100px', md: '0px' }}
       >
         <Flex
           alignItems="center"
           justifyContent="start"
-          style={{ userSelect: "none" }}
-          w={{ base: "100%", md: "50%", lg: "42%" }}
+          style={{ userSelect: 'none' }}
+          w={{ base: '100%', md: '50%', lg: '42%' }}
           pt="10px"
         >
           <Flex
@@ -61,18 +61,12 @@ function SignIn() {
             w="100%"
             background="transparent"
             p="48px"
-            mt={{ md: "150px", lg: "180px", "2xl": "80px" }}
+            mt={{ md: '150px', lg: '180px', '2xl': '80px' }}
           >
             <Heading color={titleColor} fontSize="32px" mb="10px">
               Welcome!
             </Heading>
-            <Text
-              mb="36px"
-              ms="4px"
-              color={textColor}
-              fontWeight="bold"
-              fontSize="14px"
-            >
+            <Text mb="36px" ms="4px" color={textColor} fontWeight="bold" fontSize="14px">
               Enter your name, email and password to sign up
             </Text>
             <FormControl>
@@ -130,10 +124,10 @@ function SignIn() {
                 color="white"
                 mt="20px"
                 _hover={{
-                  bg: "teal.200",
+                  bg: 'teal.200'
                 }}
                 _active={{
-                  bg: "teal.400",
+                  bg: 'teal.400'
                 }}
               >
                 SIGN UP
@@ -156,7 +150,7 @@ function SignIn() {
           </Flex>
         </Flex>
         <Box
-          display={{ base: "none", md: "block" }}
+          display={{ base: 'none', md: 'block' }}
           overflowX="hidden"
           h="100%"
           w="40vw"

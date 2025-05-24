@@ -16,21 +16,14 @@
 */
 
 // Chakra imports
-import {
-  FormControl,
-  FormLabel,
-  Input,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import React, { useState } from "react";
+import { FormControl, FormLabel, Input, Stack, Text, useColorModeValue } from '@chakra-ui/react';
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import React, { useState } from 'react';
 
 const Socials = () => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
     <Card>

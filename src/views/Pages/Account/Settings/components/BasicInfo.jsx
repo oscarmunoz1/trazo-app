@@ -27,38 +27,34 @@ import {
   TagCloseButton,
   TagLabel,
   Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import React, { useState } from "react";
+  useColorModeValue
+} from '@chakra-ui/react';
+import React, { useState } from 'react';
 
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import { Element } from "react-scroll";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import { Element } from 'react-scroll';
 
 const BasicInfo = () => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
   const [skills, setSkills] = useState([
     {
-      name: "chakra-ui",
-      id: 1,
+      name: 'chakra-ui',
+      id: 1
     },
     {
-      name: "react",
-      id: 2,
+      name: 'react',
+      id: 2
     },
     {
-      name: "javascript",
-      id: 3,
-    },
+      name: 'javascript',
+      id: 3
+    }
   ]);
   return (
-    <Card
-      w={{ sm: "100%", lg: "70%" }}
-      alignSelf="flex-end"
-      justifySelf="flex-end"
-    >
+    <Card w={{ sm: '100%', lg: '70%' }} alignSelf="flex-end" justifySelf="flex-end">
       <Element id="info" name="info">
         <CardHeader mb="40px">
           <Text color={textColor} fontSize="lg" fontWeight="bold">
@@ -67,62 +63,36 @@ const BasicInfo = () => {
         </CardHeader>
         <CardBody>
           <Stack direction="column" spacing="20px" w="100%">
-            <Stack direction="row" spacing={{ sm: "24px", lg: "30px" }}>
+            <Stack direction="row" spacing={{ sm: '24px', lg: '30px' }}>
               <FormControl>
                 <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                   First Name
                 </FormLabel>
-                <Input
-                  borderRadius="15px"
-                  placeholder="eg. Michael"
-                  fontSize="xs"
-                />
+                <Input borderRadius="15px" placeholder="eg. Michael" fontSize="xs" />
               </FormControl>
               <FormControl>
                 <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                   Last Name
                 </FormLabel>
-                <Input
-                  borderRadius="15px"
-                  placeholder="eg. Jackson"
-                  fontSize="xs"
-                />
+                <Input borderRadius="15px" placeholder="eg. Jackson" fontSize="xs" />
               </FormControl>
             </Stack>
-            <Stack
-              direction={{ sm: "column", lg: "row" }}
-              spacing={{ sm: "24px", lg: "30px" }}
-            >
+            <Stack direction={{ sm: 'column', lg: 'row' }} spacing={{ sm: '24px', lg: '30px' }}>
               <FormControl w="40%">
                 <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                   I'm
                 </FormLabel>
-                <Select
-                  borderRadius="15px"
-                  placeholder="Male"
-                  color="gray.400"
-                  fontSize="xs"
-                >
+                <Select borderRadius="15px" placeholder="Male" color="gray.400" fontSize="xs">
                   <option value="option1">Male</option>
                   <option value="option2">Female</option>
                 </Select>
               </FormControl>
-              <Stack
-                direction="row"
-                spacing={{ sm: "24px", lg: "30px" }}
-                w="100%"
-                align="flex-end"
-              >
-                <FormControl minW={{ sm: "35%", lg: null }}>
+              <Stack direction="row" spacing={{ sm: '24px', lg: '30px' }} w="100%" align="flex-end">
+                <FormControl minW={{ sm: '35%', lg: null }}>
                   <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                     Birth Date
                   </FormLabel>
-                  <Select
-                    borderRadius="15px"
-                    color="gray.400"
-                    fontSize="sm"
-                    fontSize="xs"
-                  >
+                  <Select borderRadius="15px" color="gray.400" fontSize="sm" fontSize="xs">
                     <option value="option1">January</option>
                     <option value="option2">February</option>
                     <option value="option3">March</option>
@@ -138,12 +108,7 @@ const BasicInfo = () => {
                   </Select>
                 </FormControl>
                 <FormControl>
-                  <Select
-                    borderRadius="15px"
-                    color="gray.400"
-                    placeholder="1"
-                    fontSize="xs"
-                  >
+                  <Select borderRadius="15px" color="gray.400" placeholder="1" fontSize="xs">
                     <option value="option2">2</option>
                     <option value="option3">3</option>
                     <option value="option4">4</option>
@@ -154,12 +119,7 @@ const BasicInfo = () => {
                   </Select>
                 </FormControl>
                 <FormControl>
-                  <Select
-                    borderRadius="15px"
-                    color="gray.400"
-                    placeholder="2010"
-                    fontSize="xs"
-                  >
+                  <Select borderRadius="15px" color="gray.400" placeholder="2010" fontSize="xs">
                     <option value="option2">2011</option>
                     <option value="option3">2012</option>
                     <option value="option4">2013</option>
@@ -174,64 +134,40 @@ const BasicInfo = () => {
                 </FormControl>
               </Stack>
             </Stack>
-            <Stack direction="row" spacing={{ sm: "24px", lg: "30px" }}>
+            <Stack direction="row" spacing={{ sm: '24px', lg: '30px' }}>
               <FormControl>
                 <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                   Email Address
                 </FormLabel>
-                <Input
-                  borderRadius="15px"
-                  placeholder="eg. esthera@address.com"
-                  fontSize="xs"
-                />
+                <Input borderRadius="15px" placeholder="eg. esthera@address.com" fontSize="xs" />
               </FormControl>
               <FormControl>
                 <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                   Confirmation Email
                 </FormLabel>
-                <Input
-                  borderRadius="15px"
-                  placeholder="eg. esthera@address.com"
-                  fontSize="xs"
-                />
+                <Input borderRadius="15px" placeholder="eg. esthera@address.com" fontSize="xs" />
               </FormControl>
             </Stack>
-            <Stack direction="row" spacing={{ sm: "24px", lg: "30px" }}>
+            <Stack direction="row" spacing={{ sm: '24px', lg: '30px' }}>
               <FormControl>
                 <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                   Your Location
                 </FormLabel>
-                <Input
-                  borderRadius="15px"
-                  placeholder="eg. Bucharest"
-                  fontSize="xs"
-                />
+                <Input borderRadius="15px" placeholder="eg. Bucharest" fontSize="xs" />
               </FormControl>
               <FormControl>
                 <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                   Phone Number
                 </FormLabel>
-                <Input
-                  borderRadius="15px"
-                  placeholder="eg. +40 941 353 292"
-                  fontSize="xs"
-                />
+                <Input borderRadius="15px" placeholder="eg. +40 941 353 292" fontSize="xs" />
               </FormControl>
             </Stack>
-            <Stack
-              direction={{ sm: "column", lg: "row" }}
-              spacing={{ sm: "24px", lg: "30px" }}
-            >
+            <Stack direction={{ sm: 'column', lg: 'row' }} spacing={{ sm: '24px', lg: '30px' }}>
               <FormControl>
                 <FormLabel fontWeight="semibold" fontSize="xs" mb="10px">
                   Language
                 </FormLabel>
-                <Select
-                  borderRadius="15px"
-                  placeholder="English"
-                  color="gray.400"
-                  fontSize="xs"
-                >
+                <Select borderRadius="15px" placeholder="English" color="gray.400" fontSize="xs">
                   <option value="option1">French</option>
                   <option value="option2">Spanish</option>
                   <option value="option3">Romanian</option>
@@ -247,7 +183,7 @@ const BasicInfo = () => {
                   wrap="wrap"
                   border="1px solid lightgray"
                   borderRadius="15px"
-                  _focus={{ borderColor: "green.400" }}
+                  _focus={{ borderColor: 'green.400' }}
                   minH="60px"
                   cursor="text"
                 >
@@ -269,11 +205,7 @@ const BasicInfo = () => {
                         <TagCloseButton
                           justifySelf="flex-end"
                           onClick={() =>
-                            setSkills([
-                              ...skills.filter(
-                                (element) => element.id !== skill.id
-                              ),
-                            ])
+                            setSkills([...skills.filter((element) => element.id !== skill.id)])
                           }
                         />
                       </Tag>

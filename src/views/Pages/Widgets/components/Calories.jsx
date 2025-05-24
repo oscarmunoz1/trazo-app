@@ -23,22 +23,19 @@ import {
   StatHelpText,
   StatLabel,
   StatNumber,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import LineChart from "components/Charts/LineChart";
-import React from "react";
-import {
-  lineChartDataWidgets3,
-  lineChartOptionsWidgets3,
-} from "variables/charts";
+  useColorModeValue
+} from '@chakra-ui/react';
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import LineChart from 'components/Charts/LineChart';
+import React from 'react';
+import { lineChartDataWidgets3, lineChartOptionsWidgets3 } from 'variables/charts';
 
 const Calories = () => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
   return (
-    <Card px="0px" pb="0px" gridColumn={{ md: "1 / 3", lg: "auto" }}>
+    <Card px="0px" pb="0px" gridColumn={{ md: '1 / 3', lg: 'auto' }}>
       <CardHeader px="22px">
         <Stat me="auto">
           <StatLabel fontSize="xs" color="gray.400" fontWeight="normal">
@@ -64,10 +61,7 @@ const Calories = () => {
       </CardHeader>
       <CardBody>
         <Box w="100%" maxH="100px">
-          <LineChart
-            chartData={lineChartDataWidgets3}
-            chartOptions={lineChartOptionsWidgets3}
-          />
+          <LineChart chartData={lineChartDataWidgets3} chartOptions={lineChartOptionsWidgets3} />
         </Box>
       </CardBody>
     </Card>

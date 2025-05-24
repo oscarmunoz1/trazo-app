@@ -16,19 +16,19 @@
 */
 
 // Chakra imports
-import { Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import { Stack, Text, useColorModeValue } from '@chakra-ui/react';
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import TimelineRow from "components/Tables/TimelineRow";
-import React from "react";
-import { timelineProjectsData } from "variables/general";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import TimelineRow from 'components/Tables/TimelineRow';
+import React from 'react';
+import { timelineProjectsData } from 'variables/general';
 
 const DarkTimeline = () => {
   const bgCard = useColorModeValue(
-    "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
-    "gray.700"
+    'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)',
+    'gray.700'
   );
   return (
     <Card bg={bgCard}>

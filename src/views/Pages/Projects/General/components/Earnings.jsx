@@ -16,17 +16,17 @@
 */
 
 // Chakra imports
-import { Badge, Button, Flex, Text, useColorModeValue } from "@chakra-ui/react";
-import basic from "assets/img/backgroundImage.png";
+import { Badge, Button, Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import basic from 'assets/img/backgroundImage.png';
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import React from "react";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import React from 'react';
 
 const Earnings = () => {
   const bgButton = useColorModeValue(
-    "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
-    "gray.800"
+    'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)',
+    'gray.800'
   );
   return (
     <Card bgImage={basic} bgPosition="50%">
@@ -48,14 +48,7 @@ const Earnings = () => {
             justify="center"
             align="center"
           >
-            <Text
-              textAlign="center"
-              py="6px"
-              fontSize="11px"
-              w="100%"
-              h="100%"
-              alignSelf="center"
-            >
+            <Text textAlign="center" py="6px" fontSize="11px" w="100%" h="100%" alignSelf="center">
               +15% SINCE LAST WEEK
             </Text>
           </Badge>

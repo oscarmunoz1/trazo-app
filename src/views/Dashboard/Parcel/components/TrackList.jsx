@@ -26,6 +26,8 @@ import TimelineRow from 'components/Tables/TimelineRow';
 import { setCurrentHistory } from 'store/features/historySlice';
 import { useGetCurrentHistoryQuery } from 'store/api/historyApi';
 import { useIntl } from 'react-intl';
+import { QuickAddEventModal } from 'components/Events/QuickAddEventModal';
+import { FaClock } from 'react-icons/fa';
 
 const TrackList = ({ amount }) => {
   const textColor = useColorModeValue('gray.700', 'white');
@@ -45,6 +47,11 @@ const TrackList = ({ amount }) => {
   const { establishmentId, parcelId } = useParams();
 
   const { isOpen: isOpen1, onOpen: onOpen1, onClose: onClose1 } = useDisclosure();
+  const {
+    isOpen: isQuickAddOpen,
+    onOpen: onQuickAddOpen,
+    onClose: onQuickAddClose
+  } = useDisclosure();
 
   const { data, error, isLoading, isFetching, refetch } = useGetCurrentHistoryQuery(
     {
@@ -76,6 +83,11 @@ const TrackList = ({ amount }) => {
     }
   };
 
+  const handleEventCreated = () => {
+    // Refetch the current history data to show the new event
+    refetch();
+  };
+
   return (
     <Card maxH="100%" height={'fit-content;'}>
       <CardHeader p="0px 0px 35px 0px">
@@ -89,7 +101,8 @@ const TrackList = ({ amount }) => {
                 onClick={onOpen1}
                 alignSelf="flex-start"
                 disabled={!currentHistory?.product}
-                cursor={!currentHistory?.product ? 'default' : 'pointer'}>
+                cursor={!currentHistory?.product ? 'default' : 'pointer'}
+              >
                 <Icon as={IoEllipsisVerticalSharp} color="gray.400" w="20px" h="20px" />
               </MenuButton>
               <MenuList>
@@ -98,7 +111,8 @@ const TrackList = ({ amount }) => {
                     navigate(
                       `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${currentHistory?.id}/change`
                     )
-                  }>
+                  }
+                >
                   <Flex color={textColor} cursor="pointer" align="center" p="4px">
                     {/* <Icon as={FaPencilAlt} me="4px" /> */}
                     <Text fontSize="sm" fontWeight="500">
@@ -167,7 +181,8 @@ const TrackList = ({ amount }) => {
                     fontWeight={'300'}
                     justifyContent={'center'}
                     alignItems={'center'}
-                    textAlign={'center'}>
+                    textAlign={'center'}
+                  >
                     {currentHistory?.product
                       ? intl.formatMessage({ id: 'app.noEventsYet' })
                       : intl.formatMessage({ id: 'app.noProductionYet' })}
@@ -178,18 +193,35 @@ const TrackList = ({ amount }) => {
           )}
         </Flex>
       </CardBody>
-      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+        {/* Quick Add Event Button - Only show if there's a current production */}
+        {currentHistory?.product && (
+          <Button
+            leftIcon={<Icon as={FaClock} />}
+            variant="outline"
+            colorScheme="blue"
+            fontSize="xs"
+            minW="110px"
+            h="36px"
+            onClick={onQuickAddOpen}
+          >
+            {intl.formatMessage({ id: 'app.quickAdd' }) || 'Quick Add'}
+          </Button>
+        )}
+
         <Button
           bg={bgButton}
           color="white"
           fontSize="xs"
           variant="no-hover"
           minW={!currentHistory?.product ? '135px' : '100px'}
-          onClick={handleOnPrimaryClick}>
+          onClick={handleOnPrimaryClick}
+        >
           {!currentHistory?.product
             ? intl.formatMessage({ id: 'app.startProduction' }).toUpperCase()
             : intl.formatMessage({ id: 'app.addEvent' }).toUpperCase()}
         </Button>
+
         {currentHistory?.events && currentHistory?.events.length > 0 && (
           <Button
             variant="outline"
@@ -202,11 +234,20 @@ const TrackList = ({ amount }) => {
               navigate(
                 `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${currentHistory?.id}/finish`
               )
-            }>
+            }
+          >
             {intl.formatMessage({ id: 'app.finishProduction' }).toUpperCase()}
           </Button>
         )}
       </div>
+
+      {/* Quick Add Event Modal */}
+      <QuickAddEventModal
+        isOpen={isQuickAddOpen}
+        onClose={onQuickAddClose}
+        parcelId={parseInt(parcelId)}
+        onEventCreated={handleEventCreated}
+      />
     </Card>
   );
 };

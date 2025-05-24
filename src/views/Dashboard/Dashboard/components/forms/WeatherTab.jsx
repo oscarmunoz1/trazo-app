@@ -12,19 +12,22 @@ import {
   Text,
   Textarea,
   useColorModeValue,
-} from "@chakra-ui/react";
-import { FormProvider, useForm } from "react-hook-form";
+  HStack,
+  Box
+} from '@chakra-ui/react';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FormProvider, useForm } from 'react-hook-form';
 // Custom components
-import React, { useState } from "react";
-import { number, object, string } from "zod";
+import React, { useState } from 'react';
+import { number, object, string } from 'zod';
 
-import { FaPlus } from "react-icons/fa";
-import FormInput from "components/Forms/FormInput";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { FaPlus } from 'react-icons/fa';
+import FormInput from 'components/Forms/FormInput';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useIntl } from 'react-intl';
 
 const formSchemaMainInfo = object({
-  type: string().min(1, "Name is required"),
+  type: string().min(1, 'Name is required'),
   lower_temperature: string()
     .optional()
     .transform((val) => Number(val)),
@@ -46,17 +49,17 @@ const formSchemaMainInfo = object({
     .transform((val) => Number(val)),
   start_date: string().optional(),
   end_date: string().optional(),
-  observation: string().optional(),
+  observation: string().optional()
 });
 
 const WeatherTab = ({ onSubmitHandler, onPrev }) => {
   const intl = useIntl();
-  const bgPrevButton = useColorModeValue("gray.100", "gray.100");
-  const textColor = useColorModeValue("gray.700", "white");
-  const iconColor = useColorModeValue("gray.300", "gray.700");
+  const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
+  const textColor = useColorModeValue('gray.700', 'white');
+  const iconColor = useColorModeValue('gray.300', 'gray.700');
 
   const mainInfoMethods = useForm({
-    resolver: zodResolver(formSchemaMainInfo),
+    resolver: zodResolver(formSchemaMainInfo)
   });
 
   const {
@@ -65,51 +68,51 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
     watch,
     errors: mainInfoErrors,
     formState: { errors, isSubmitSuccessful },
-    register,
+    register
   } = mainInfoMethods;
 
-  const type = watch("type", "");
+  const type = watch('type', '');
 
   const onSubmit = (data) => {
     switch (type) {
-      case "FR":
+      case 'FR':
         data = {
           type: data.type,
           lower_temperature: data.lower_temperature,
-          way_of_protection: data.way_of_protection,  
-          observation: data.observation,
+          way_of_protection: data.way_of_protection,
+          observation: data.observation
         };
         break;
-      case "DR":
+      case 'DR':
         data = {
           type: data.type,
           water_deficit: data.water_deficit,
-          observation: data.observation,
+          observation: data.observation
         };
         break;
-      case "HA":
+      case 'HA':
         data = {
           type: data.type,
           weight: data.weight,
           diameter: data.diameter,
           duration: data.duration,
           way_of_protection: data.way_of_protection,
-          observation: data.observation,
+          observation: data.observation
         };
         break;
-      case "HT":
+      case 'HT':
         data = {
           type: data.type,
           highest_temperature: data.highest_temperature,
           start_date: data.start_date,
           end_date: data.end_date,
-          observation: data.observation,
+          observation: data.observation
         };
         break;
       default:
         data = {
           type: data.type,
-          observation: data.observation,
+          observation: data.observation
         };
         break;
     }
@@ -119,28 +122,27 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
 
   return (
     <FormProvider {...mainInfoMethods}>
-      <form onSubmit={mainInfoSubmit(onSubmit)} style={{ width: "100%" }}>
+      <form onSubmit={mainInfoSubmit(onSubmit)} style={{ width: '100%' }}>
         <Flex direction="column" w="100%">
-          <Flex gap={"20px"}>
-            <Flex flexDir={"column"} flexGrow={1}>
+          <Flex gap={'20px'}>
+            <Flex flexDir={'column'} flexGrow={1}>
               <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
                 {intl.formatMessage({ id: 'app.type' })}
               </FormLabel>
               <ChakraSelect
                 placeholder={intl.formatMessage({ id: 'app.selectOption' })}
                 placeholderTextColor="red"
-                css={{ "&::placeholder": { color: "red" } }}
-                mb={errors.type ? "12px" : "24px"}
-                borderColor={errors.type && "red.500"}
-                boxShadow={errors.type && "0 0 0 1px red.500"}
-                borderWidth={errors.type && "2px"}
+                css={{ '&::placeholder': { color: 'red' } }}
+                mb={errors.type ? '12px' : '24px'}
+                borderColor={errors.type && 'red.500'}
+                boxShadow={errors.type && '0 0 0 1px red.500'}
+                borderWidth={errors.type && '2px'}
                 ml="4px"
-                height={"40px"}
-                borderRadius={"15px"}
-                fontSize={"0.875rem"}
+                height={'40px'}
+                borderRadius={'15px'}
+                fontSize={'0.875rem'}
                 mt="4px"
-                {...register("type")}
-              >
+                {...register('type')}>
                 <option value="FR">{intl.formatMessage({ id: 'app.frost' })}</option>
                 <option value="DR">{intl.formatMessage({ id: 'app.drought' })}</option>
                 <option value="HA">{intl.formatMessage({ id: 'app.hailstorms' })}</option>
@@ -151,14 +153,14 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                 <option value="LH">{intl.formatMessage({ id: 'app.lowHumidity' })}</option>
               </ChakraSelect>
               {errors.type && (
-                <Text fontSize="sm" color="red.500" mt={"0.5rem"}>
+                <Text fontSize="sm" color="red.500" mt={'0.5rem'}>
                   {errors.type.message}
                 </Text>
               )}
             </Flex>
           </Flex>
-          {type === "FR" ? (
-            <Flex gap={"20px"}>
+          {type === 'FR' ? (
+            <Flex gap={'20px'}>
               <FormInput
                 fontSize="xs"
                 label={intl.formatMessage({ id: 'app.lowerTemperature' })}
@@ -180,8 +182,8 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                 name="way_of_protection"
               />
             </Flex>
-          ) : type === "DR" ? (
-            <Flex gap={"20px"}>
+          ) : type === 'DR' ? (
+            <Flex gap={'20px'}>
               <FormInput
                 fontSize="xs"
                 label={intl.formatMessage({ id: 'app.accumulatedWaterDeficit' })}
@@ -193,9 +195,9 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                 name="water_deficit"
               />
             </Flex>
-          ) : type === "HA" ? (
+          ) : type === 'HA' ? (
             <>
-              <Flex gap={"20px"}>
+              <Flex gap={'20px'}>
                 <FormInput
                   fontSize="xs"
                   label={intl.formatMessage({ id: 'app.averageWeightOfHailstones' })}
@@ -217,7 +219,7 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                   name="diameter"
                 />
               </Flex>
-              <Flex gap={"20px"}>
+              <Flex gap={'20px'}>
                 <FormInput
                   fontSize="xs"
                   label={intl.formatMessage({ id: 'app.duration' })}
@@ -240,8 +242,8 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                 />
               </Flex>
             </>
-          ) : type === "HT" ? (
-            <Flex gap={"20px"} direction={"column"}>
+          ) : type === 'HT' ? (
+            <Flex gap={'20px'} direction={'column'}>
               <FormInput
                 fontSize="xs"
                 label={intl.formatMessage({ id: 'app.highestTemperature' })}
@@ -252,19 +254,13 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                 mb="24px"
                 name="highest_temperature"
               />
-              <Flex flexDir={"column"}>
+              <Flex flexDir={'column'}>
                 <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
                   {intl.formatMessage({ id: 'app.timePeriod' })}
                 </FormLabel>
-                <Flex flexDir={"row"} width={"100%"} gap={"20px"}>
-                  <Flex flexDir={"column"} flexGrow={1}>
-                    <FormLabel
-                      ms="4px"
-                      fontSize="xs"
-                      fontWeight="bold"
-                      mb={"0"}
-                      textAlign={"end"}
-                    >
+                <Flex flexDir={'row'} width={'100%'} gap={'20px'}>
+                  <Flex flexDir={'column'} flexGrow={1}>
+                    <FormLabel ms="4px" fontSize="xs" fontWeight="bold" mb={'0'} textAlign={'end'}>
                       {intl.formatMessage({ id: 'app.from' })}
                     </FormLabel>
                     <FormInput
@@ -277,14 +273,8 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                       mb="24px"
                     />
                   </Flex>
-                  <Flex flexDir={"column"} flexGrow={1}>
-                    <FormLabel
-                      ms="4px"
-                      fontSize="xs"
-                      fontWeight="bold"
-                      mb={"0"}
-                      textAlign={"end"}
-                    >
+                  <Flex flexDir={'column'} flexGrow={1}>
+                    <FormLabel ms="4px" fontSize="xs" fontWeight="bold" mb={'0'} textAlign={'end'}>
                       {intl.formatMessage({ id: 'app.to' })}
                     </FormLabel>
                     <FormInput
@@ -316,37 +306,39 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
             mb="24px"
             size="lg"
             name="observation"
-            {...register("observation")}
+            {...register('observation')}
           />
-          <Flex justify="space-between">
-            <Button
-              variant="no-hover"
-              bg={bgPrevButton}
-              alignSelf="flex-end"
-              mt="24px"
-              w={{ sm: "75px", lg: "100px" }}
-              h="35px"
-              onClick={onPrev}
-            >
-              <Text fontSize="xs" color="gray.700" fontWeight="bold">
-                {intl.formatMessage({ id: 'app.prev' })}
-              </Text>
-            </Button>
-
-            <Button
-              variant="no-hover"
-              bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-              alignSelf="flex-end"
-              mt="24px"
-              w="100px"
-              h="35px"
-              type="submit"
-            >
-              <Text fontSize="xs" color="#fff" fontWeight="bold">
-                {intl.formatMessage({ id: 'app.next' })}
-              </Text>
-            </Button>
-          </Flex>
+          <Box pt={6} mt={4} borderTop="1px" borderColor="gray.200">
+            <HStack justify="space-between">
+              <Button
+                variant="outline"
+                onClick={onPrev}
+                leftIcon={<FaChevronLeft />}
+                size="md"
+                px={6}
+                h="42px"
+                borderRadius="lg"
+                fontWeight="600"
+                _hover={{ transform: 'translateY(-1px)' }}
+                transition="all 0.3s ease">
+                {intl.formatMessage({ id: 'app.previous' }) || 'Previous'}
+              </Button>
+              <Button
+                colorScheme="green"
+                type="submit"
+                rightIcon={<FaChevronRight />}
+                size="md"
+                px={6}
+                h="42px"
+                borderRadius="lg"
+                fontWeight="600"
+                boxShadow="lg"
+                _hover={{ boxShadow: 'xl', transform: 'translateY(-1px)' }}
+                transition="all 0.3s ease">
+                {intl.formatMessage({ id: 'app.continue' }) || 'Continue'}
+              </Button>
+            </HStack>
+          </Box>
         </Flex>
       </form>
     </FormProvider>

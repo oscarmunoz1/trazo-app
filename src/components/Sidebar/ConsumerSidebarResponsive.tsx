@@ -73,7 +73,8 @@ function ConsumerSidebarResponsive(props: ConsumerSidebarResponsiveProps) {
               <Text
                 color={activeRoute(prop.regex) ? activeColor : inactiveColor}
                 fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}
-                fontSize="sm">
+                fontSize="sm"
+              >
                 {Object.keys(intl?.messages).includes(`app.${prop.id}`)
                   ? intl.formatMessage({ id: `app.${prop.id}` })
                   : prop.name}
@@ -103,7 +104,8 @@ function ConsumerSidebarResponsive(props: ConsumerSidebarResponsiveProps) {
         fontWeight="bold"
         justifyContent="center"
         alignItems="center"
-        fontSize="11px">
+        fontSize="11px"
+      >
         <Image src={logo} alt="trazo logo" height="30px" paddingRight="10px" href="" />
       </Link>
       <HSeparator />
@@ -138,7 +140,8 @@ function ConsumerSidebarResponsive(props: ConsumerSidebarResponsiveProps) {
               my={{
                 sm: '16px'
               }}
-              borderRadius="16px">
+              borderRadius="16px"
+            >
               <DrawerCloseButton _focus={{ boxShadow: 'none' }} _hover={{ boxShadow: 'none' }} />
               <DrawerBody maxW="250px" px="1rem">
                 <Box maxW="100%" h="100vh">

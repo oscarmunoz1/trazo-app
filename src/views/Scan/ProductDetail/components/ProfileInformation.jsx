@@ -1,12 +1,12 @@
-import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
 // Chakra imports
-import { Flex, Icon, Link, Text, useColorModeValue } from "@chakra-ui/react";
+import { Flex, Icon, Link, Text, useColorModeValue } from '@chakra-ui/react';
 
 // Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import React from "react";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import React from 'react';
 
 const ProfileInformation = ({
   title,
@@ -15,10 +15,10 @@ const ProfileInformation = ({
   establishment,
   parcel,
   email,
-  location,
+  location
 }) => {
   // Chakra color mode
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
     <Card p="0" mb="24px">
@@ -34,7 +34,7 @@ const ProfileInformation = ({
           </Text>
           <Flex align="center" mb="18px">
             <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-              Location:{" "}
+              Location:{' '}
             </Text>
             <Text fontSize="md" color="gray.500" fontWeight="400">
               {country}
@@ -42,23 +42,23 @@ const ProfileInformation = ({
           </Flex>
           <Flex align="center" mb="18px">
             <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-              Establishment:{" "}
+              Establishment:{' '}
             </Text>
             <Text fontSize="md" color="gray.500" fontWeight="400">
-              <Link textDecoration={"underline"}>{establishment}</Link>
+              <Link textDecoration={'underline'}>{establishment}</Link>
             </Text>
           </Flex>
           <Flex align="center" mb="18px">
             <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-              Parcel:{" "}
+              Parcel:{' '}
             </Text>
             <Text fontSize="md" color="gray.500" fontWeight="400">
-              <Link textDecoration={"underline"}>{parcel}</Link>
+              <Link textDecoration={'underline'}>{parcel}</Link>
             </Text>
           </Flex>
           <Flex align="center" mb="18px">
             <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-              Location:{" "}
+              Location:{' '}
             </Text>
             <Text fontSize="md" color="gray.500" fontWeight="400">
               {location}
@@ -66,7 +66,7 @@ const ProfileInformation = ({
           </Flex>
           <Flex align="center" mb="18px">
             <Text fontSize="md" color={textColor} fontWeight="bold" me="10px">
-              Social Media:{" "}
+              Social Media:{' '}
             </Text>
             <Flex>
               <Link
@@ -74,7 +74,7 @@ const ProfileInformation = ({
                 color="green.400"
                 fontSize="lg"
                 me="10px"
-                _hover={{ color: "green.400" }}
+                _hover={{ color: 'green.400' }}
               >
                 <Icon as={FaFacebook} />
               </Link>
@@ -83,7 +83,7 @@ const ProfileInformation = ({
                 color="green.400"
                 fontSize="lg"
                 me="10px"
-                _hover={{ color: "green.400" }}
+                _hover={{ color: 'green.400' }}
               >
                 <Icon as={FaInstagram} />
               </Link>
@@ -92,7 +92,7 @@ const ProfileInformation = ({
                 color="green.400"
                 fontSize="lg"
                 me="10px"
-                _hover={{ color: "green.400" }}
+                _hover={{ color: 'green.400' }}
               >
                 <Icon as={FaTwitter} />
               </Link>

@@ -30,6 +30,7 @@ import {
   ModalCloseButton,
   useDisclosure
 } from '@chakra-ui/react';
+import { DownloadIcon } from '@chakra-ui/icons';
 import { useGetCarbonReportsQuery, useGenerateCarbonReportMutation } from 'store/api/companyApi';
 import { useForm } from 'react-hook-form';
 
@@ -62,18 +63,36 @@ const CarbonReportTab = ({ establishmentId }) => {
   // Generate report
   const onSubmit = async (data) => {
     try {
-      await generateReport({
+      // Create form data if there's a document file
+      const formData = new FormData();
+      formData.append('establishment', establishmentId.toString());
+      formData.append('year', data.year.toString());
+      formData.append('reportType', data.reportType);
+      formData.append('quarter', data.quarter.toString());
+
+      // Add document if it exists
+      if (data.document && data.document.length > 0) {
+        formData.append('document', data.document[0]);
+      }
+
+      console.log('Sending report data:', {
         establishment: establishmentId,
-        ...data
-      }).unwrap();
+        year: data.year,
+        reportType: data.reportType,
+        quarter: data.quarter,
+        document: data.document && data.document.length > 0 ? data.document[0].name : 'None'
+      });
+
+      await generateReport(formData).unwrap();
       toast({ title: 'Reporte generado', status: 'success' });
       onClose();
       reset();
       refetch();
     } catch (e) {
+      console.error('Error generating report:', e);
       toast({
         title: 'Error',
-        description: e?.data?.detail || 'Error al generar el reporte',
+        description: e?.data?.error || e?.data?.detail || 'Error al generar el reporte',
         status: 'error'
       });
     }
@@ -105,7 +124,8 @@ const CarbonReportTab = ({ establishmentId }) => {
             <Select
               w="200px"
               value={selectedYear}
-              onChange={(e) => setSelectedYear(Number(e.target.value))}>
+              onChange={(e) => setSelectedYear(Number(e.target.value))}
+            >
               {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map((year) => (
                 <option key={year} value={year}>
                   {year}
@@ -146,9 +166,15 @@ const CarbonReportTab = ({ establishmentId }) => {
                     <Td>{(report.net_footprint || 0).toFixed(2)} kg CO₂e</Td>
                     <Td>
                       {report.document ? (
-                        <a href={report.document} target="_blank" rel="noopener noreferrer">
+                        <Button
+                          colorScheme="green"
+                          variant="solid"
+                          size="sm"
+                          leftIcon={<DownloadIcon />}
+                          onClick={() => window.open(report.document, '_blank')}
+                        >
                           Ver
-                        </a>
+                        </Button>
                       ) : (
                         'N/A'
                       )}
@@ -207,14 +233,25 @@ const CarbonReportTab = ({ establishmentId }) => {
 
                 <FormControl>
                   <FormLabel>Documento (opcional)</FormLabel>
-                  <Input type="file" {...register('document')} />
+                  <Input
+                    type="file"
+                    {...register('document')}
+                    onChange={(e) => {
+                      // Register file input manually to ensure it's captured correctly
+                      const files = e.target.files;
+                      if (files && files.length > 0) {
+                        console.log('File selected:', files[0].name);
+                      }
+                    }}
+                  />
                 </FormControl>
 
                 <Button
                   type="submit"
                   colorScheme="blue"
                   isLoading={generatingReport}
-                  loadingText="Generando...">
+                  loadingText="Generando..."
+                >
                   Generar Reporte
                 </Button>
               </Stack>

@@ -17,7 +17,8 @@ const SidebarHelp = ({ sidebarWidth }: { sidebarWidth: number }) => {
       boxSize="border-box"
       p={sidebarWidth === 275 || !sidebarWidth ? '16px' : '12px'}
       h={sidebarWidth === 275 || !sidebarWidth ? '170px' : 'auto'}
-      w={sidebarWidth === 275 || !sidebarWidth ? '100%' : '77%'}>
+      w={sidebarWidth === 275 || !sidebarWidth ? '100%' : '77%'}
+    >
       <IconBox width="35px" h="35px" bg="white" mb="auto">
         <QuestionIcon color="green.400" h="18px" w="18px" />
       </IconBox>
@@ -25,14 +26,16 @@ const SidebarHelp = ({ sidebarWidth }: { sidebarWidth: number }) => {
         fontSize="sm"
         color="white"
         fontWeight="bold"
-        display={sidebarWidth === 275 || !sidebarWidth ? 'block' : 'none'}>
+        display={sidebarWidth === 275 || !sidebarWidth ? 'block' : 'none'}
+      >
         {intl.formatMessage({ id: 'app.needHelp' })}
       </Text>
       <Text
         fontSize="xs"
         color="white"
         mb="10px"
-        display={sidebarWidth === 275 || !sidebarWidth ? 'block' : 'none'}>
+        display={sidebarWidth === 275 || !sidebarWidth ? 'block' : 'none'}
+      >
         {intl.formatMessage({ id: 'app.checkOutDocs' })}
       </Text>
       <Link w="100%" href="">
@@ -51,7 +54,8 @@ const SidebarHelp = ({ sidebarWidth }: { sidebarWidth: number }) => {
             boxShadow: 'none'
           }}
           color="black"
-          display={sidebarWidth === 275 || !sidebarWidth ? 'block' : 'none'}>
+          display={sidebarWidth === 275 || !sidebarWidth ? 'block' : 'none'}
+        >
           {intl.formatMessage({ id: 'app.documentation' }).toUpperCase()}
         </Button>
       </Link>

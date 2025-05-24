@@ -85,7 +85,8 @@ const SubscriptionLimitModal = ({ isOpen, onClose, resourceType, currentPlan, us
       isCentered
       size="md"
       closeOnOverlayClick={false}
-      closeOnEsc={false}>
+      closeOnEsc={false}
+    >
       <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
       <ModalContent bg={bgColor} borderRadius="xl" p={4}>
         <ModalHeader color={textColor} fontSize="xl">
@@ -104,7 +105,8 @@ const SubscriptionLimitModal = ({ isOpen, onClose, resourceType, currentPlan, us
             borderRadius="md"
             p={4}
             mb={6}
-            bg={useColorModeValue('gray.50', 'gray.800')}>
+            bg={useColorModeValue('gray.50', 'gray.800')}
+          >
             <Flex justify="space-between" align="center" mb={2}>
               <Text fontWeight="bold">{intl.formatMessage({ id: 'app.currentPlan' })}</Text>
               <Text>{currentPlan?.name || 'Basic'}</Text>
@@ -143,7 +145,8 @@ const SubscriptionLimitModal = ({ isOpen, onClose, resourceType, currentPlan, us
               bg: 'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)',
               opacity: 0.9
             }}
-            color="white">
+            color="white"
+          >
             {intl.formatMessage({ id: 'app.upgradePlan' })}
           </Button>
         </ModalFooter>

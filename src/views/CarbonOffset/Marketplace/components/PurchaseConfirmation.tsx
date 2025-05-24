@@ -65,7 +65,8 @@ export const PurchaseConfirmation: React.FC<PurchaseConfirmationProps> = ({
           onChange={handleAmountChange}
           min={1}
           max={project.available_capacity}
-          precision={2}>
+          precision={2}
+        >
           <NumberInputField />
           <NumberInputStepper>
             <NumberIncrementStepper />
@@ -79,7 +80,8 @@ export const PurchaseConfirmation: React.FC<PurchaseConfirmationProps> = ({
         borderWidth="1px"
         borderColor={borderColor}
         borderRadius="md"
-        bg={useColorModeValue('gray.50', 'gray.700')}>
+        bg={useColorModeValue('gray.50', 'gray.700')}
+      >
         <Flex justify="space-between" mb={2}>
           <Text>Price per ton:</Text>
           <Text>${project.price_per_ton}</Text>
@@ -100,7 +102,8 @@ export const PurchaseConfirmation: React.FC<PurchaseConfirmationProps> = ({
         size="lg"
         onClick={() => onPurchase(amount)}
         isLoading={isLoading}
-        loadingText="Processing...">
+        loadingText="Processing..."
+      >
         Confirm Purchase
       </Button>
     </VStack>

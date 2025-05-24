@@ -25,7 +25,7 @@ export const formSlice = createSlice({
         state.currentForm = { ...state.currentForm, ...action.payload };
       }
     },
-    clearForm: (state, action) => {
+    clearForm: (state) => {
       state.currentForm = initialState.currentForm;
     }
   }

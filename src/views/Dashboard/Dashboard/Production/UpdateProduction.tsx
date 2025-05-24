@@ -14,12 +14,17 @@ function UpdateProduction(props: UpdateProductionProps) {
   const { isEdit } = props;
   return (
     <BoxBackground
-      title={isEdit ? intl.formatMessage({ id: 'app.editProduction' }) : intl.formatMessage({ id: 'app.addProduction' })}
+      title={
+        isEdit
+          ? intl.formatMessage({ id: 'app.editProduction' })
+          : intl.formatMessage({ id: 'app.addProduction' })
+      }
       subtitle={
         isEdit
           ? intl.formatMessage({ id: 'app.editProductionDescription' })
           : intl.formatMessage({ id: 'app.addProductionDescription' })
-      }>
+      }
+    >
       {isEdit ? <EditProduction /> : <NewProduction />}
     </BoxBackground>
   );

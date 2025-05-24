@@ -16,23 +16,16 @@
 */
 
 // Chakra imports
-import {
-  Box,
-  Button,
-  Flex,
-  Image,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Box, Button, Flex, Image, Text, useColorModeValue } from '@chakra-ui/react';
+import React, { useState } from 'react';
 
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
-import productImage1 from "assets/img/product-page-1.png";
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
+import productImage1 from 'assets/img/product-page-1.png';
 
 const CameraCard = () => {
-  const textColor = useColorModeValue("gray.700", "white");
+  const textColor = useColorModeValue('gray.700', 'white');
 
   return (
     <Card>
@@ -44,17 +37,17 @@ const CameraCard = () => {
       <CardBody>
         <Flex direction="column" w="100%">
           <Box
-            maxW={{ sm: "280px", md: "670px", lg: "600px" }}
-            maxH={{ sm: "185px", md: "450px", lg: "400px" }}
+            maxW={{ sm: '280px', md: '670px', lg: '600px' }}
+            maxH={{ sm: '185px', md: '450px', lg: '400px' }}
             mb="24px"
           >
             <Image src={productImage1} w="100%" h="100%" />
           </Box>
-          <Flex alignSelf={"flex-end"}>
+          <Flex alignSelf={'flex-end'}>
             <Button
               variant="no-hover"
               bg="gray.100"
-              w={{ sm: "75px", md: "100px" }}
+              w={{ sm: '75px', md: '100px' }}
               h="35px"
               me="12px"
             >
@@ -65,7 +58,7 @@ const CameraCard = () => {
             <Button
               variant="no-hover"
               bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-              w={{ sm: "75px", md: "100px" }}
+              w={{ sm: '75px', md: '100px' }}
               h="35px"
             >
               <Text fontSize="xs" color="#fff" fontWeight="bold">

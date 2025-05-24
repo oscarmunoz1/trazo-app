@@ -53,7 +53,8 @@ function TimelineRow(props) {
             bg: 'gray.100'
           }}
           cursor="pointer"
-          onClick={() => navigate(url)}>
+          onClick={() => navigate(url)}
+        >
           <Flex direction="column" w="100%">
             <Text fontSize="sm" color={textColor} fontWeight="bold">
               {title}

@@ -16,19 +16,12 @@
 */
 
 // Chakra imports
-import {
-  Box,
-  Flex,
-  Icon,
-  Spacer,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import BackgroundCard1 from "assets/img/BackgroundCard1.png";
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import React, { useState } from "react";
-import { RiMastercardFill } from "react-icons/ri";
+import { Box, Flex, Icon, Spacer, Text, useColorModeValue } from '@chakra-ui/react';
+import BackgroundCard1 from 'assets/img/BackgroundCard1.png';
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import React, { useState } from 'react';
+import { RiMastercardFill } from 'react-icons/ri';
 
 const PaymentCard = () => {
   return (
@@ -38,17 +31,11 @@ const PaymentCard = () => {
       background="cover"
       bgPosition="10%"
       p="16px"
-      h={{ sm: "220px", xl: "100%" }}
-      gridColumn={{ md: "1 / 3", lg: "auto" }}
+      h={{ sm: '220px', xl: '100%' }}
+      gridColumn={{ md: '1 / 3', lg: 'auto' }}
     >
       <CardBody h="100%" w="100%">
-        <Flex
-          direction="column"
-          color="white"
-          h="100%"
-          p="0px 10px 20px 10px"
-          w="100%"
-        >
+        <Flex direction="column" color="white" h="100%" p="0px 10px 20px 10px" w="100%">
           <Flex justify="space-between" align="center">
             <Text fontSize="md" fontWeight="bold">
               Purity UI

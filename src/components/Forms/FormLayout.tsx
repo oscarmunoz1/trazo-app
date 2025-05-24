@@ -88,7 +88,8 @@ function FormLayout(props) {
       bg={bgColor}
       w={{ base: '100%', md: '768px' }}
       boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
-      borderRadius="15px">
+      borderRadius="15px"
+    >
       <Tabs variant="unstyled" mt="24px" alignSelf="center" w="100%">
         <TabList display="flex" align="center" justifyContent={{ base: 'center' }}>
           {tabsList.map((tab, index) => {
@@ -104,7 +105,8 @@ function FormLayout(props) {
                       ? { base: '80px', sm: '100px', smdd: '160px', smddd: '200px', md: '200px' }
                       : { base: '60px', sm: '80px', smdd: '140px', smddd: '180px', md: '180px' }
                   }
-                  onClick={() => tab.onClick()}>
+                  onClick={() => tab.onClick()}
+                >
                   <Flex direction="column" justify="center" align="center" w="100%">
                     <Icon
                       as={BsCircleFill}
@@ -122,7 +124,8 @@ function FormLayout(props) {
                       fontWeight={activeBullets[tab.name] ? 'bold' : 'normal'}
                       transition="all .3s ease"
                       _hover={{ color: textColor }}
-                      display={{ base: 'none', smddd: 'block' }}>
+                      display={{ base: 'none', smddd: 'block' }}
+                    >
                       {tab.label}
                     </Text>
                   </Flex>
@@ -138,7 +141,8 @@ function FormLayout(props) {
                       ? { base: '80px', sm: '100px', smdd: '160px', smddd: '200px', md: '200px' }
                       : { base: '60px', sm: '80px', smdd: '140px', smddd: '180px', md: '180px' }
                   }
-                  onClick={() => tab.onClick()}>
+                  onClick={() => tab.onClick()}
+                >
                   <Flex
                     direction="column"
                     justify="center"
@@ -159,7 +163,8 @@ function FormLayout(props) {
                       bottom: activeBullets[tab.name] ? '40px' : '38px',
 
                       transition: 'all .3s ease'
-                    }}>
+                    }}
+                  >
                     <Icon
                       as={BsCircleFill}
                       color={activeBullets[tab.name] ? textColor : 'gray.300'}
@@ -174,7 +179,8 @@ function FormLayout(props) {
                       overflow="hidden"
                       color={activeBullets[tab.name] ? { textColor } : 'gray.300'}
                       fontWeight={activeBullets[tab.name] ? 'bold' : 'normal'}
-                      display={{ base: 'none', smddd: 'block' }}>
+                      display={{ base: 'none', smddd: 'block' }}
+                    >
                       {tab.label}
                     </Text>
                   </Flex>

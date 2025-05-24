@@ -39,42 +39,42 @@ import {
   TagCloseButton,
   TagLabel,
   Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import React, { useReducer, useRef, useState } from "react";
+  useColorModeValue
+} from '@chakra-ui/react';
+import React, { useReducer, useRef, useState } from 'react';
 
-import { BsCircleFill } from "react-icons/bs";
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
+import { BsCircleFill } from 'react-icons/bs';
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody';
+import CardHeader from 'components/Card/CardHeader';
 // Custom components
-import Editor from "components/Editor/Editor";
-import Header from "views/Pages/Profile/Overview/components/Header";
-import ProfileBgImage from "assets/img/ProfileBackground.png";
-import avatar4 from "assets/img/avatars/avatar4.png";
-import { useDropzone } from "react-dropzone";
+import Editor from 'components/Editor/Editor';
+import Header from 'views/Pages/Profile/Overview/components/Header';
+import ProfileBgImage from 'assets/img/ProfileBackground.png';
+import avatar4 from 'assets/img/avatars/avatar4.png';
+import { useDropzone } from 'react-dropzone';
 
 const reducer = (state, action) => {
-  if (action.type === "SWITCH_ACTIVE") {
-    if (action.payload === "overview") {
+  if (action.type === 'SWITCH_ACTIVE') {
+    if (action.payload === 'overview') {
       const newState = {
         overview: true,
         teams: false,
-        projects: false,
+        projects: false
       };
       return newState;
-    } else if (action.payload === "teams") {
+    } else if (action.payload === 'teams') {
       const newState = {
         overview: false,
         teams: true,
-        projects: false,
+        projects: false
       };
       return newState;
-    } else if (action.payload === "projects") {
+    } else if (action.payload === 'projects') {
       const newState = {
         overview: false,
         teams: false,
-        projects: true,
+        projects: true
       };
       return newState;
     }
@@ -85,24 +85,24 @@ const reducer = (state, action) => {
 function NewProduct() {
   const [skills, setSkills] = useState([
     {
-      name: "chakra-ui",
-      id: 1,
+      name: 'chakra-ui',
+      id: 1
     },
     {
-      name: "react",
-      id: 2,
+      name: 'react',
+      id: 2
     },
     {
-      name: "javascript",
-      id: 3,
-    },
+      name: 'javascript',
+      id: 3
+    }
   ]);
 
   const [activeBullets, setActiveBullets] = useState({
     productInfo: true,
     media: false,
     socials: false,
-    pricing: false,
+    pricing: false
   });
 
   const productInfoTab = useRef();
@@ -118,19 +118,19 @@ function NewProduct() {
         ...skills,
         {
           name: e.target.value,
-          id: skills.length === 0 ? 1 : skills[skills.length - 1].id + 1,
-        },
+          id: skills.length === 0 ? 1 : skills[skills.length - 1].id + 1
+        }
       ]);
-      e.target.value = "";
+      e.target.value = '';
     }
   };
 
   // Chakra color mode
-  const textColor = useColorModeValue("gray.700", "white");
-  const bgPrevButton = useColorModeValue("gray.100", "gray.100");
+  const textColor = useColorModeValue('gray.700', 'white');
+  const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
   const bgProfile = useColorModeValue(
-    "hsla(0,0%,100%,.8)",
-    "linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)"
+    'hsla(0,0%,100%,.8)',
+    'linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)'
   );
 
   return (
@@ -139,21 +139,21 @@ function NewProduct() {
         backgroundHeader={ProfileBgImage}
         backgroundProfile={bgProfile}
         avatarImage={avatar4}
-        name={"Esthera Jackson"}
-        email={"esthera@simmmple.com"}
+        name={'Esthera Jackson'}
+        email={'esthera@simmmple.com'}
       />
       <Tabs variant="unstyled" mt="24px" alignSelf="center">
         <TabList display="flex" align="center">
           <Tab
             ref={productInfoTab}
             _focus="none"
-            w={{ sm: "80px", md: "200px" }}
+            w={{ sm: '80px', md: '200px' }}
             onClick={() =>
               setActiveBullets({
                 productInfo: true,
                 media: false,
                 socials: false,
-                pricing: false,
+                pricing: false
               })
             }
           >
@@ -164,31 +164,31 @@ function NewProduct() {
               position="relative"
               _before={{
                 content: "''",
-                width: { sm: "80px", md: "200px" },
-                height: "3px",
-                bg: activeBullets.media ? textColor : "gray.200",
-                left: { sm: "12px", md: "52px" },
+                width: { sm: '80px', md: '200px' },
+                height: '3px',
+                bg: activeBullets.media ? textColor : 'gray.200',
+                left: { sm: '12px', md: '52px' },
                 top: {
-                  sm: activeBullets.productInfo ? "6px" : "4px",
-                  md: null,
+                  sm: activeBullets.productInfo ? '6px' : '4px',
+                  md: null
                 },
-                position: "absolute",
-                bottom: activeBullets.productInfo ? "40px" : "38px",
+                position: 'absolute',
+                bottom: activeBullets.productInfo ? '40px' : '38px',
                 zIndex: -1,
-                transition: "all .3s ease",
+                transition: 'all .3s ease'
               }}
             >
               <Icon
                 as={BsCircleFill}
-                color={activeBullets.productInfo ? textColor : "gray.300"}
-                w={activeBullets.productInfo ? "16px" : "12px"}
-                h={activeBullets.productInfo ? "16px" : "12px"}
+                color={activeBullets.productInfo ? textColor : 'gray.300'}
+                w={activeBullets.productInfo ? '16px' : '12px'}
+                h={activeBullets.productInfo ? '16px' : '12px'}
                 mb="8px"
               />
               <Text
-                color={activeBullets.productInfo ? { textColor } : "gray.300"}
-                fontWeight={activeBullets.productInfo ? "bold" : "normal"}
-                display={{ sm: "none", md: "block" }}
+                color={activeBullets.productInfo ? { textColor } : 'gray.300'}
+                fontWeight={activeBullets.productInfo ? 'bold' : 'normal'}
+                display={{ sm: 'none', md: 'block' }}
               >
                 1. Product Info
               </Text>
@@ -197,13 +197,13 @@ function NewProduct() {
           <Tab
             ref={mediaTab}
             _focus="none"
-            w={{ sm: "80px", md: "200px" }}
+            w={{ sm: '80px', md: '200px' }}
             onClick={() =>
               setActiveBullets({
                 productInfo: true,
                 media: true,
                 socials: false,
-                pricing: false,
+                pricing: false
               })
             }
           >
@@ -214,30 +214,30 @@ function NewProduct() {
               position="relative"
               _before={{
                 content: "''",
-                width: { sm: "80px", md: "200px" },
-                height: "3px",
-                bg: activeBullets.socials ? textColor : "gray.200",
-                left: { sm: "12px", md: "32px" },
-                top: { sm: activeBullets.media ? "6px" : "4px", md: null },
-                position: "absolute",
-                bottom: activeBullets.media ? "40px" : "38px",
+                width: { sm: '80px', md: '200px' },
+                height: '3px',
+                bg: activeBullets.socials ? textColor : 'gray.200',
+                left: { sm: '12px', md: '32px' },
+                top: { sm: activeBullets.media ? '6px' : '4px', md: null },
+                position: 'absolute',
+                bottom: activeBullets.media ? '40px' : '38px',
                 zIndex: -1,
-                transition: "all .3s ease",
+                transition: 'all .3s ease'
               }}
             >
               <Icon
                 as={BsCircleFill}
-                color={activeBullets.media ? textColor : "gray.300"}
-                w={activeBullets.media ? "16px" : "12px"}
-                h={activeBullets.media ? "16px" : "12px"}
+                color={activeBullets.media ? textColor : 'gray.300'}
+                w={activeBullets.media ? '16px' : '12px'}
+                h={activeBullets.media ? '16px' : '12px'}
                 mb="8px"
               />
               <Text
-                color={activeBullets.media ? { textColor } : "gray.300"}
-                fontWeight={activeBullets.media ? "bold" : "normal"}
+                color={activeBullets.media ? { textColor } : 'gray.300'}
+                fontWeight={activeBullets.media ? 'bold' : 'normal'}
                 transition="all .3s ease"
                 _hover={{ color: textColor }}
-                display={{ sm: "none", md: "block" }}
+                display={{ sm: 'none', md: 'block' }}
               >
                 2. Media
               </Text>
@@ -246,13 +246,13 @@ function NewProduct() {
           <Tab
             ref={socialsTab}
             _focus="none"
-            w={{ sm: "80px", md: "200px" }}
+            w={{ sm: '80px', md: '200px' }}
             onClick={() =>
               setActiveBullets({
                 productInfo: true,
                 media: true,
                 socials: true,
-                pricing: false,
+                pricing: false
               })
             }
           >
@@ -263,30 +263,30 @@ function NewProduct() {
               position="relative"
               _before={{
                 content: "''",
-                width: { sm: "80px", md: "200px" },
-                height: "3px",
-                bg: activeBullets.pricing ? textColor : "gray.200",
-                left: { sm: "12px", md: "32px" },
-                top: { sm: activeBullets.socials ? "6px" : "4px", md: null },
-                position: "absolute",
-                bottom: activeBullets.socials ? "40px" : "38px",
+                width: { sm: '80px', md: '200px' },
+                height: '3px',
+                bg: activeBullets.pricing ? textColor : 'gray.200',
+                left: { sm: '12px', md: '32px' },
+                top: { sm: activeBullets.socials ? '6px' : '4px', md: null },
+                position: 'absolute',
+                bottom: activeBullets.socials ? '40px' : '38px',
                 zIndex: -1,
-                transition: "all .3s ease",
+                transition: 'all .3s ease'
               }}
             >
               <Icon
                 as={BsCircleFill}
-                color={activeBullets.socials ? textColor : "gray.300"}
-                w={activeBullets.socials ? "16px" : "12px"}
-                h={activeBullets.socials ? "16px" : "12px"}
+                color={activeBullets.socials ? textColor : 'gray.300'}
+                w={activeBullets.socials ? '16px' : '12px'}
+                h={activeBullets.socials ? '16px' : '12px'}
                 mb="8px"
               />
               <Text
-                color={activeBullets.socials ? { textColor } : "gray.300"}
-                fontWeight={activeBullets.socials ? "bold" : "normal"}
+                color={activeBullets.socials ? { textColor } : 'gray.300'}
+                fontWeight={activeBullets.socials ? 'bold' : 'normal'}
                 transition="all .3s ease"
                 _hover={{ color: textColor }}
-                display={{ sm: "none", md: "block" }}
+                display={{ sm: 'none', md: 'block' }}
               >
                 3. Socials
               </Text>
@@ -295,37 +295,37 @@ function NewProduct() {
           <Tab
             ref={pricingTab}
             _focus="none"
-            w={{ sm: "80px", md: "200px" }}
+            w={{ sm: '80px', md: '200px' }}
             onClick={() =>
               setActiveBullets({
                 productInfo: true,
                 media: true,
                 socials: true,
-                pricing: true,
+                pricing: true
               })
             }
           >
             <Flex direction="column" justify="center" align="center">
               <Icon
                 as={BsCircleFill}
-                color={activeBullets.pricing ? textColor : "gray.300"}
-                w={activeBullets.pricing ? "16px" : "12px"}
-                h={activeBullets.pricing ? "16px" : "12px"}
+                color={activeBullets.pricing ? textColor : 'gray.300'}
+                w={activeBullets.pricing ? '16px' : '12px'}
+                h={activeBullets.pricing ? '16px' : '12px'}
                 mb="8px"
               />
               <Text
-                color={activeBullets.pricing ? { textColor } : "gray.300"}
-                fontWeight={activeBullets.pricing ? "bold" : "normal"}
+                color={activeBullets.pricing ? { textColor } : 'gray.300'}
+                fontWeight={activeBullets.pricing ? 'bold' : 'normal'}
                 transition="all .3s ease"
                 _hover={{ color: textColor }}
-                display={{ sm: "none", md: "block" }}
+                display={{ sm: 'none', md: 'block' }}
               >
                 4. Pricing
               </Text>
             </Flex>
           </Tab>
         </TabList>
-        <TabPanels mt="24px" maxW={{ md: "90%", lg: "100%" }} mx="auto">
+        <TabPanels mt="24px" maxW={{ md: '90%', lg: '100%' }} mx="auto">
           <TabPanel>
             <Card>
               <CardHeader mb="22px">
@@ -335,7 +335,7 @@ function NewProduct() {
               </CardHeader>
               <CardBody>
                 <Stack direction="column" spacing="20px" w="100%">
-                  <Stack direction={{ sm: "column", md: "row" }} spacing="30px">
+                  <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
                     <FormControl>
                       <FormLabel fontSize="xs" fontWeight="bold" mb="10px">
                         Product Name
@@ -350,14 +350,10 @@ function NewProduct() {
                       <FormLabel fontSize="xs" fontWeight="bold" mb="10px">
                         Weight
                       </FormLabel>
-                      <Input
-                        borderRadius="15px"
-                        placeholder="eg. 42"
-                        fontSize="xs"
-                      />
+                      <Input borderRadius="15px" placeholder="eg. 42" fontSize="xs" />
                     </FormControl>
                   </Stack>
-                  <Stack direction={{ sm: "column", lg: "row" }} spacing="30px">
+                  <Stack direction={{ sm: 'column', lg: 'row' }} spacing="30px">
                     <FormControl>
                       <FormLabel fontSize="xs" fontWeight="bold" mb="10px">
                         Description
@@ -401,27 +397,18 @@ function NewProduct() {
                       </FormControl>
                     </Stack>
                   </Stack>
-                  <Stack direction={{ sm: "column", md: "row" }} spacing="30px">
+                  <Stack direction={{ sm: 'column', md: 'row' }} spacing="30px">
                     <FormControl>
                       <FormLabel fontSize="xs" fontWeight="bold" mb="10px">
                         Collection
                       </FormLabel>
-                      <Input
-                        borderRadius="15px"
-                        placeholder="eg. Summer"
-                        fontSize="xs"
-                      />
+                      <Input borderRadius="15px" placeholder="eg. Summer" fontSize="xs" />
                     </FormControl>
                     <FormControl>
                       <FormLabel fontSize="xs" fontWeight="bold" mb="10px">
                         Quantity
                       </FormLabel>
-                      <NumberInput
-                        defaultValue={1}
-                        min={1}
-                        max={20}
-                        color="gray.400"
-                      >
+                      <NumberInput defaultValue={1} min={1} max={20} color="gray.400">
                         <NumberInputField fontSize="xs" borderRadius="15px" />
                         <NumberInputStepper>
                           <NumberIncrementStepper />
@@ -450,23 +437,13 @@ function NewProduct() {
           <TabPanel>
             <Card>
               <CardHeader mb="40px">
-                <Text
-                  color={textColor}
-                  fontSize="xl"
-                  fontWeight="bold"
-                  mb="3px"
-                >
+                <Text color={textColor} fontSize="xl" fontWeight="bold" mb="3px">
                   Media
                 </Text>
               </CardHeader>
               <CardBody>
                 <Flex direction="column" w="100%">
-                  <Text
-                    color={textColor}
-                    fontSize="sm"
-                    fontWeight="bold"
-                    mb="12px"
-                  >
+                  <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
                     Product images
                   </Text>
                   <Flex
@@ -477,7 +454,7 @@ function NewProduct() {
                     w="100%"
                     minH="130px"
                     cursor="pointer"
-                    {...getRootProps({ className: "dropzone" })}
+                    {...getRootProps({ className: 'dropzone' })}
                   >
                     <Input {...getInputProps()} />
                     <Button variant="no-hover">
@@ -532,31 +509,19 @@ function NewProduct() {
                       <FormLabel fontSize="xs" fontWeight="bold" mb="10px">
                         Shopify Handle
                       </FormLabel>
-                      <Input
-                        borderRadius="15px"
-                        placeholder="@Purity"
-                        fontSize="xs"
-                      />
+                      <Input borderRadius="15px" placeholder="@Purity" fontSize="xs" />
                     </FormControl>
                     <FormControl>
                       <FormLabel fontSize="xs" fontWeight="bold" mb="10px">
                         Facebook Account
                       </FormLabel>
-                      <Input
-                        borderRadius="15px"
-                        placeholder="https://"
-                        fontSize="xs"
-                      />
+                      <Input borderRadius="15px" placeholder="https://" fontSize="xs" />
                     </FormControl>
                     <FormControl>
                       <FormLabel fontSize="xs" fontWeight="bold" mb="10px">
                         Instagram Account
                       </FormLabel>
-                      <Input
-                        borderRadius="15px"
-                        placeholder="https://"
-                        fontSize="xs"
-                      />
+                      <Input borderRadius="15px" placeholder="https://" fontSize="xs" />
                     </FormControl>
                   </Stack>
                   <Flex justify="space-between">
@@ -606,11 +571,7 @@ function NewProduct() {
                         <FormLabel fontSize="xs" fontWeight="bold" mb="10px">
                           Price
                         </FormLabel>
-                        <Input
-                          borderRadius="15px"
-                          placeholder="eg. $99.99"
-                          fontSize="xs"
-                        />
+                        <Input borderRadius="15px" placeholder="eg. $99.99" fontSize="xs" />
                       </FormControl>
                       <FormControl>
                         <FormLabel fontSize="xs" fontWeight="bold" mb="10px">
@@ -634,11 +595,7 @@ function NewProduct() {
                         <FormLabel fontSize="xs" fontWeight="bold" mb="10px">
                           SKU
                         </FormLabel>
-                        <Input
-                          borderRadius="15px"
-                          placeholder="71283476591"
-                          fontSize="xs"
-                        />
+                        <Input borderRadius="15px" placeholder="71283476591" fontSize="xs" />
                       </FormControl>
                     </Stack>
                     <FormControl>
@@ -651,7 +608,7 @@ function NewProduct() {
                         wrap="wrap"
                         border="1px solid lightgray"
                         borderRadius="15px"
-                        _focus={{ borderColor: "green.400" }}
+                        _focus={{ borderColor: 'green.400' }}
                         minH="40px"
                         cursor="text"
                       >
@@ -673,9 +630,7 @@ function NewProduct() {
                                 justifySelf="flex-end"
                                 onClick={() =>
                                   setSkills([
-                                    ...skills.filter(
-                                      (element) => element.id !== skill.id
-                                    ),
+                                    ...skills.filter((element) => element.id !== skill.id)
                                   ])
                                 }
                               />
