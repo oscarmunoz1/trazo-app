@@ -2,7 +2,7 @@ import { CSRF_HEADER_KEY, CSRF_TOKEN } from 'config';
 
 import { BaseQueryApi } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import { Mutex } from 'async-mutex';
-import { fetchBaseQuery } from '@reduxjs/toolkit/query';
+import { fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 const baseUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
@@ -13,7 +13,10 @@ function getCookie(name: string) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
 
-  if (parts.length === 2) return parts.pop().split(';').shift();
+  if (parts.length === 2) {
+    const part = parts.pop();
+    return part ? part.split(';').shift() : undefined;
+  }
 }
 
 const baseQuery = fetchBaseQuery({
@@ -28,42 +31,63 @@ const baseQuery = fetchBaseQuery({
   }
 });
 
-const customFetchBase = async (args: string, api: BaseQueryApi, extraOptions: string) => {
+const customFetchBase = async (args: any, api: BaseQueryApi, extraOptions: any) => {
   // wait until the mutex is available without locking it
   await mutex.waitForUnlock();
   let result = await baseQuery(args, api, extraOptions);
-  if (result.error?.data?.detail === 'Authentication credentials were not provided.') {
-    window.replace = 'auth/signin';
-    return;
-  }
-  if (result.error?.data?.code === 'token_not_valid') {
-    if (!mutex.isLocked()) {
-      const release = await mutex.acquire();
 
-      try {
-        const refreshResult = await baseQuery(
-          { credentials: 'include', url: 'auth/refresh' },
-          api,
-          extraOptions
-        );
+  // Type guard for error checking
+  const hasErrorData = (error: any): error is FetchBaseQueryError & { data: any } => {
+    return error && typeof error === 'object' && 'data' in error && error.data;
+  };
 
-        if (refreshResult.data) {
-          // Retry the initial query
-          result = await baseQuery(args, api, extraOptions);
-        } else {
-          // api.dispatch(logout());
-          if (window.location.pathname !== '/auth/signin') {
-            window.location.replace = 'auth/signin';
+  if (hasErrorData(result.error)) {
+    const errorData = result.error.data;
+
+    // Check for authentication error
+    if (
+      typeof errorData === 'object' &&
+      'detail' in errorData &&
+      errorData.detail === 'Authentication credentials were not provided.'
+    ) {
+      window.location.href = '/auth/signin';
+      return result;
+    }
+
+    // Check for token validation error
+    if (
+      typeof errorData === 'object' &&
+      'code' in errorData &&
+      errorData.code === 'token_not_valid'
+    ) {
+      if (!mutex.isLocked()) {
+        const release = await mutex.acquire();
+
+        try {
+          const refreshResult = await baseQuery(
+            { credentials: 'include', url: 'auth/refresh' },
+            api,
+            extraOptions
+          );
+
+          if (refreshResult.data) {
+            // Retry the initial query
+            result = await baseQuery(args, api, extraOptions);
+          } else {
+            // api.dispatch(logout());
+            if (window.location.pathname !== '/auth/signin') {
+              window.location.href = '/auth/signin';
+            }
           }
+        } finally {
+          // release must be called once the mutex should be released again.
+          release();
         }
-      } finally {
-        // release must be called once the mutex should be released again.
-        release();
+      } else {
+        // wait until the mutex is available without locking it
+        await mutex.waitForUnlock();
+        result = await baseQuery(args, api, extraOptions);
       }
-    } else {
-      // wait until the mutex is available without locking it
-      await mutex.waitForUnlock();
-      result = await baseQuery(args, api, extraOptions);
     }
   }
 

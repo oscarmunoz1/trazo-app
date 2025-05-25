@@ -45,7 +45,7 @@ const dashRoutes: Route[] = [
     authIcon: <FaLeaf color="inherit" />,
     layout: '/admin',
     collapse: true,
-    isDashboard: true,
+    isCarbonDashboard: true,
     regex: /^\/admin\/dashboard\/establishment\/[0-9]+\/carbon$/
   },
   {

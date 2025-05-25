@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Button,
   FormControl,
@@ -35,25 +35,43 @@ const businessSchema = object({
   observation: string().optional()
 });
 
-const BusinessTab = ({ onSubmitHandler, onPrev }) => {
+const BusinessTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
   const intl = useIntl();
   const borderColor = useColorModeValue('gray.200', 'gray.600');
 
   const methods = useForm({
     resolver: zodResolver(businessSchema),
     defaultValues: {
-      type: 'HS',
-      name: '',
-      revenue_amount: '',
-      quantity_sold: '',
-      buyer_name: '',
-      certification_type: '',
-      inspector_name: '',
-      compliance_status: '',
-      carbon_credits_earned: '',
-      observation: ''
+      type: initialValues.type || 'HS',
+      name: initialValues.name || '',
+      revenue_amount: initialValues.revenue_amount?.toString() || '',
+      quantity_sold: initialValues.quantity_sold || '',
+      buyer_name: initialValues.buyer_name || '',
+      certification_type: initialValues.certification_type || '',
+      inspector_name: initialValues.inspector_name || '',
+      compliance_status: initialValues.compliance_status || '',
+      carbon_credits_earned: initialValues.carbon_credits_earned?.toString() || '',
+      observation: initialValues.observation || ''
     }
   });
+
+  // Update form values when initialValues change
+  useEffect(() => {
+    if (Object.keys(initialValues).length > 0) {
+      methods.reset({
+        type: initialValues.type || 'HS',
+        name: initialValues.name || '',
+        revenue_amount: initialValues.revenue_amount?.toString() || '',
+        quantity_sold: initialValues.quantity_sold || '',
+        buyer_name: initialValues.buyer_name || '',
+        certification_type: initialValues.certification_type || '',
+        inspector_name: initialValues.inspector_name || '',
+        compliance_status: initialValues.compliance_status || '',
+        carbon_credits_earned: initialValues.carbon_credits_earned?.toString() || '',
+        observation: initialValues.observation || ''
+      });
+    }
+  }, [initialValues, methods]);
 
   const { watch } = methods;
   const businessType = watch('type');

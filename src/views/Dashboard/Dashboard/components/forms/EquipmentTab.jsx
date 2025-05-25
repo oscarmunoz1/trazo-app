@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Button,
   FormControl,
@@ -34,36 +34,103 @@ const equipmentSchema = object({
   observation: string().optional()
 });
 
-const EquipmentTab = ({ onSubmitHandler, onPrev }) => {
+const EquipmentTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
   const intl = useIntl();
   const borderColor = useColorModeValue('gray.200', 'gray.600');
 
   const methods = useForm({
     resolver: zodResolver(equipmentSchema),
     defaultValues: {
-      type: 'MA',
-      name: '',
-      equipment_name: '',
-      fuel_amount: '',
-      fuel_type: 'diesel',
-      maintenance_cost: '',
-      hours_used: '',
-      area_covered: '',
-      observation: ''
+      type: initialValues.type || 'MN',
+      name: initialValues.name || '',
+      equipment_name: initialValues.equipment_name || '',
+      fuel_amount: initialValues.fuel_amount?.toString() || '',
+      fuel_type: initialValues.fuel_type || 'diesel',
+      maintenance_cost: initialValues.maintenance_cost?.toString() || '',
+      hours_used: initialValues.hours_used?.toString() || '',
+      area_covered: initialValues.area_covered || '',
+      observation: initialValues.observation || ''
     }
   });
+
+  // Update form values when initialValues change
+  useEffect(() => {
+    if (Object.keys(initialValues).length > 0) {
+      methods.reset({
+        type: initialValues.type || 'MN',
+        name: initialValues.name || '',
+        equipment_name: initialValues.equipment_name || '',
+        fuel_amount: initialValues.fuel_amount?.toString() || '',
+        fuel_type: initialValues.fuel_type || 'diesel',
+        maintenance_cost: initialValues.maintenance_cost?.toString() || '',
+        hours_used: initialValues.hours_used?.toString() || '',
+        area_covered: initialValues.area_covered || '',
+        observation: initialValues.observation || ''
+      });
+    }
+  }, [initialValues, methods]);
 
   const { watch } = methods;
   const equipmentType = watch('type');
 
   const onSubmit = (data) => {
-    // Convert string numbers to proper format
+    console.log('Raw form data:', data); // Debug log
+
+    // Helper function to safely parse numeric values
+    const parseNumericField = (value) => {
+      console.log('Parsing value:', value, 'Type:', typeof value); // Debug log
+
+      // Handle various input types
+      if (value === null || value === undefined) {
+        return null;
+      }
+
+      // Convert to string and trim
+      const stringValue = String(value).trim();
+
+      // If empty string, return null
+      if (stringValue === '') {
+        return null;
+      }
+
+      // Try to parse as float
+      const parsed = parseFloat(stringValue);
+
+      // If parsing failed (NaN), return null
+      if (isNaN(parsed)) {
+        console.warn('Failed to parse numeric value:', value);
+        return null;
+      }
+
+      return parsed;
+    };
+
+    // Convert string numbers to proper format and only include relevant fields
     const processedData = {
       ...data,
-      fuel_amount: data.fuel_amount ? parseFloat(data.fuel_amount) : null,
-      maintenance_cost: data.maintenance_cost ? parseFloat(data.maintenance_cost) : null,
-      hours_used: data.hours_used ? parseFloat(data.hours_used) : null
+      // Only include fuel-related fields for Fuel Consumption events
+      fuel_amount: equipmentType === 'FC' ? parseNumericField(data.fuel_amount) : undefined,
+      fuel_type: equipmentType === 'FC' ? data.fuel_type : undefined,
+
+      // Only include maintenance cost for relevant event types
+      maintenance_cost: ['MN', 'RE', 'BD'].includes(equipmentType)
+        ? parseNumericField(data.maintenance_cost)
+        : undefined,
+
+      // Hours used is optional for all types
+      hours_used: parseNumericField(data.hours_used)
     };
+
+    console.log('Processed data before cleanup:', processedData); // Debug log
+
+    // Remove undefined fields to avoid sending them to the backend
+    Object.keys(processedData).forEach((key) => {
+      if (processedData[key] === undefined) {
+        delete processedData[key];
+      }
+    });
+
+    console.log('Final processed data:', processedData); // Debug log
     onSubmitHandler(processedData);
   };
 
@@ -85,7 +152,7 @@ const EquipmentTab = ({ onSubmitHandler, onPrev }) => {
               {intl.formatMessage({ id: 'app.equipmentEventType' }) || 'Equipment Event Type'}
             </FormLabel>
             <Select {...methods.register('type')} size="md">
-              <option value="MA">
+              <option value="MN">
                 {intl.formatMessage({ id: 'app.maintenance' }) || 'Maintenance'}
               </option>
               <option value="RE">{intl.formatMessage({ id: 'app.repair' }) || 'Repair'}</option>
@@ -95,10 +162,10 @@ const EquipmentTab = ({ onSubmitHandler, onPrev }) => {
               <option value="FC">
                 {intl.formatMessage({ id: 'app.fuelConsumption' }) || 'Fuel Consumption'}
               </option>
-              <option value="BR">
+              <option value="BD">
                 {intl.formatMessage({ id: 'app.breakdown' }) || 'Breakdown'}
               </option>
-              <option value="IN">
+              <option value="EI">
                 {intl.formatMessage({ id: 'app.inspection' }) || 'Inspection'}
               </option>
             </Select>
@@ -119,7 +186,7 @@ const EquipmentTab = ({ onSubmitHandler, onPrev }) => {
                   <FormLabel fontSize="sm" fontWeight="semibold">
                     {intl.formatMessage({ id: 'app.fuelAmount' }) || 'Fuel Amount (L)'}
                   </FormLabel>
-                  <NumberInput min={0}>
+                  <NumberInput min={0} precision={2} step={0.1}>
                     <NumberInputField {...methods.register('fuel_amount')} placeholder="0.0" />
                     <NumberInputStepper>
                       <NumberIncrementStepper />
@@ -152,12 +219,12 @@ const EquipmentTab = ({ onSubmitHandler, onPrev }) => {
           )}
 
           {/* Maintenance/Repair cost */}
-          {(equipmentType === 'MA' || equipmentType === 'RE' || equipmentType === 'BR') && (
+          {(equipmentType === 'MN' || equipmentType === 'RE' || equipmentType === 'BD') && (
             <FormControl>
               <FormLabel fontSize="sm" fontWeight="semibold">
                 {intl.formatMessage({ id: 'app.maintenanceCost' }) || 'Cost ($)'}
               </FormLabel>
-              <NumberInput min={0}>
+              <NumberInput min={0} precision={2} step={0.01}>
                 <NumberInputField {...methods.register('maintenance_cost')} placeholder="0.00" />
                 <NumberInputStepper>
                   <NumberIncrementStepper />
@@ -173,7 +240,7 @@ const EquipmentTab = ({ onSubmitHandler, onPrev }) => {
               <FormLabel fontSize="sm" fontWeight="semibold">
                 {intl.formatMessage({ id: 'app.hoursUsed' }) || 'Hours Used'}
               </FormLabel>
-              <NumberInput min={0} precision={1}>
+              <NumberInput min={0} precision={1} step={0.1}>
                 <NumberInputField {...methods.register('hours_used')} placeholder="0.0" />
                 <NumberInputStepper>
                   <NumberIncrementStepper />

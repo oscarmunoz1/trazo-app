@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { FormProvider, useForm } from 'react-hook-form';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { number, object, string } from 'zod';
 
 import { FaPlus } from 'react-icons/fa';
@@ -28,18 +28,49 @@ import { useIntl } from 'react-intl';
 // Custom components
 
 const formSchemaMainInfo = object({
-  type: string().min(1, 'Name is required')
+  type: string().min(1, 'Type is required'),
+  observation: string().optional()
 });
 
-const WeatherTab = ({ onSubmitHandler, onPrev }) => {
+const ProductionTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
   const intl = useIntl();
   const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
   const textColor = useColorModeValue('gray.700', 'white');
   const iconColor = useColorModeValue('gray.300', 'gray.700');
 
+  // Map API format to form format
+  const mapApiTypeToFormType = (apiType) => {
+    if (!apiType) return '';
+
+    const typeMapping = {
+      'event.production.planting': 'PL',
+      'event.production.harvesting': 'HA',
+      'event.production.irrigation': 'IR',
+      'event.production.pruning': 'PR'
+    };
+
+    return typeMapping[apiType] || apiType;
+  };
+
+  const formType = mapApiTypeToFormType(initialValues.type);
+
   const mainInfoMethods = useForm({
-    resolver: zodResolver(formSchemaMainInfo)
+    resolver: zodResolver(formSchemaMainInfo),
+    defaultValues: {
+      type: formType || '',
+      observation: initialValues.observation || ''
+    }
   });
+
+  // Update form values when initialValues change
+  useEffect(() => {
+    if (Object.keys(initialValues).length > 0) {
+      mainInfoMethods.reset({
+        type: formType || '',
+        observation: initialValues.observation || ''
+      });
+    }
+  }, [initialValues, mainInfoMethods]);
 
   const {
     reset: mainInfoReset,
@@ -48,6 +79,9 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
     formState: { errors, isSubmitSuccessful },
     register
   } = mainInfoMethods;
+
+  console.log('initialValues', initialValues);
+  console.log('formType', formType);
 
   return (
     <FormProvider {...mainInfoMethods}>
@@ -69,6 +103,7 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
             borderRadius={'15px'}
             fontSize={'0.875rem'}
             mt="4px"
+            defaultValue={formType || ''}
             {...register('type')}>
             <option value="PL">{intl.formatMessage({ id: 'app.planting' })}</option>
             <option value="HA">{intl.formatMessage({ id: 'app.harvesting' })}</option>
@@ -91,8 +126,9 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
             placeholder={intl.formatMessage({ id: 'app.descriptionOfTheEvent' })}
             mb="24px"
             size="lg"
-            name="observations"
-            {...register('observations')}
+            name="observation"
+            defaultValue={initialValues.observation || ''}
+            {...register('observation')}
           />
           <Box pt={6} mt={4} borderTop="1px" borderColor="gray.200">
             <HStack justify="space-between">
@@ -131,4 +167,4 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
   );
 };
 
-export default WeatherTab;
+export default ProductionTab;

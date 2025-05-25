@@ -126,6 +126,7 @@ export interface QRCodeSummary {
     report_type: string;
   }>;
   badges: Array<{
+    id: string;
     name: string;
     description: string;
     icon: string;
@@ -192,14 +193,6 @@ export const carbonApi = baseApi.injectEndpoints({
       providesTags: ['CarbonBenchmarks']
     }),
 
-    getCarbonRecommendations: builder.query<CarbonRecommendation[], string>({
-      query: (establishmentId) => ({
-        url: `carbon/establishments/${establishmentId}/recommendations/`,
-        method: 'GET'
-      }),
-      providesTags: ['CarbonRecommendations']
-    }),
-
     // Consumer endpoints
     getQRCodeSummary: builder.query<QRCodeSummary, string>({
       query: (productionId) => ({
@@ -212,31 +205,6 @@ export const carbonApi = baseApi.injectEndpoints({
     getPublicCarbonSummary: builder.query<CarbonSummary, string>({
       query: (productionId) => ({
         url: `carbon/public/productions/${productionId}/summary/`,
-        method: 'GET'
-      }),
-      providesTags: ['CarbonSummary']
-    }),
-
-    getProductionRecommendations: builder.query<
-      {
-        recommendations: Array<{
-          id: string;
-          title: string;
-          description: string;
-          impact: string;
-          costSavings: string;
-          implementation: string;
-          category: string;
-        }>;
-        emissionsByCategory: Record<string, number>;
-        totalEmissions: number;
-        totalOffsets: number;
-        netFootprint: number;
-      },
-      string
-    >({
-      query: (productionId) => ({
-        url: `carbon/public/productions/${productionId}/recommendations/`,
         method: 'GET'
       }),
       providesTags: ['CarbonSummary']
@@ -269,65 +237,6 @@ export const carbonApi = baseApi.injectEndpoints({
       invalidatesTags: ['CarbonSummary']
     }),
 
-    // IoT endpoints
-    getIoTData: builder.query<
-      {
-        soilMoisture: number;
-        temperature: number;
-        humidity: number;
-        solarRadiation: number;
-        waterUsage: number;
-        energyConsumption: number;
-      },
-      string
-    >({
-      query: (establishmentId) => ({
-        url: `carbon/establishments/${establishmentId}/iot-data/`,
-        method: 'GET'
-      }),
-      providesTags: ['CarbonSummary']
-    }),
-
-    // Historical data endpoints
-    getHistoricalData: builder.query<
-      {
-        labels: string[];
-        emissions: number[];
-        offsets: number[];
-      },
-      { establishmentId: string; timeRange: 'week' | 'month' | 'year' }
-    >({
-      query: ({ establishmentId, timeRange }) => ({
-        url: `carbon/establishments/${establishmentId}/historical-data/`,
-        method: 'GET',
-        params: { timeRange }
-      }),
-      providesTags: ['CarbonSummary']
-    }),
-
-    // Emissions breakdown endpoints
-    getEmissionsBreakdown: builder.query<
-      {
-        direct: {
-          equipment: number;
-          irrigation: number;
-          storage: number;
-        };
-        indirect: {
-          energy: number;
-          transportation: number;
-          waste: number;
-        };
-      },
-      string
-    >({
-      query: (establishmentId) => ({
-        url: `carbon/establishments/${establishmentId}/emissions-breakdown/`,
-        method: 'GET'
-      }),
-      providesTags: ['CarbonSummary']
-    }),
-
     // Real-time event carbon calculation
     calculateEventCarbonImpact: builder.mutation<
       CarbonCalculationResult,
@@ -347,14 +256,9 @@ export const {
   useGetEstablishmentCarbonSummaryQuery,
   useGetProductionCarbonSummaryQuery,
   useGetCarbonBenchmarksQuery,
-  useGetCarbonRecommendationsQuery,
   useGetQRCodeSummaryQuery,
   useGetPublicCarbonSummaryQuery,
   useGetProductionTimelineQuery,
-  useGetProductionRecommendationsQuery,
   useCreateOffsetMutation,
-  useGetIoTDataQuery,
-  useGetHistoricalDataQuery,
-  useGetEmissionsBreakdownQuery,
   useCalculateEventCarbonImpactMutation
 } = carbonApi;

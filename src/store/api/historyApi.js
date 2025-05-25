@@ -115,6 +115,42 @@ export const historyApi = baseApi.injectEndpoints({
       },
       invalidatesTags: (result) => (result ? ['Event', 'History'] : [])
     }),
+    updateEvent: build.mutation({
+      query: ({ companyId, establishmentId, eventId, eventType, ...eventData }) => {
+        const formData = new FormData();
+
+        // Handle album images if present
+        if (eventData.album?.images) {
+          eventData.album.images.forEach((file) => {
+            formData.append('album[images]', file);
+          });
+        }
+
+        // Handle parcels if present
+        if (eventData.parcels) {
+          eventData.parcels.forEach((parcel) => {
+            formData.append('parcels', parcel);
+          });
+        }
+
+        // Add other fields
+        for (const [key, value] of Object.entries(eventData)) {
+          if (key !== 'album' && key !== 'parcels' && value !== null && value !== undefined) {
+            formData.append(key, value);
+          }
+        }
+
+        return {
+          url: EVENT_URL(companyId, establishmentId, eventId, eventType),
+          method: 'PUT',
+          credentials: 'include',
+          body: formData,
+          formData: true
+        };
+      },
+      invalidatesTags: (result, error, { eventId }) =>
+        result ? [{ type: 'Event', eventId }, 'History'] : []
+    }),
     createProduction: build.mutation({
       query: (production) => ({
         url: PRODUCTION_URL(),
@@ -175,6 +211,7 @@ export const {
   useGetHistoryQuery,
   useGetEventQuery,
   useCreateEventMutation,
+  useUpdateEventMutation,
   useCreateProductionMutation,
   useFinishCurrentHistoryMutation,
   useGetPublicHistoryQuery,

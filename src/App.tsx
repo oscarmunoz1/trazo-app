@@ -182,7 +182,7 @@ const App = () => {
                 <Route
                   path="establishment/:establishmentId/parcel/:parcelId/event/:eventId/change"
                   exact
-                  element={<AddEstablishment isEdit={true} />}
+                  element={<UpdateEvent isEdit={true} />}
                 />
                 <Route
                   path="establishment/:establishmentId/parcel/:parcelId/production/add"

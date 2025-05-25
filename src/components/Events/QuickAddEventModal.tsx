@@ -193,11 +193,11 @@ const eventTemplates: EventTemplate[] = [
     id: 'equipment_maintenance',
     name: 'Equipment Maintenance',
     type: 4,
-    eventType: 'MA',
+    eventType: 'MN',
     icon: FaTools,
     color: 'gray',
     category: 'Equipment',
-    defaultData: { type: 'MA', equipment_name: 'Tractor' }
+    defaultData: { type: 'MN', equipment_name: 'Tractor' }
   },
   {
     id: 'fuel_consumption',

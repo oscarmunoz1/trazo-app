@@ -18,7 +18,7 @@ import {
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { FormProvider, useForm } from 'react-hook-form';
 // Custom components
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { number, object, string } from 'zod';
 
 import { FaPlus } from 'react-icons/fa';
@@ -52,15 +52,72 @@ const formSchemaMainInfo = object({
   observation: string().optional()
 });
 
-const WeatherTab = ({ onSubmitHandler, onPrev }) => {
+const WeatherTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
   const intl = useIntl();
   const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
   const textColor = useColorModeValue('gray.700', 'white');
   const iconColor = useColorModeValue('gray.300', 'gray.700');
 
+  // Map API format to form format
+  const mapApiTypeToFormType = (apiType) => {
+    if (!apiType) return '';
+
+    const typeMapping = {
+      'event.weather.frost': 'FR',
+      'event.weather.drought': 'DR',
+      'event.weather.hailstorm': 'HL',
+      'event.weather.high_temperature': 'HT',
+      'event.weather.tropical_storm': 'TS',
+      'event.weather.high_winds': 'HW',
+      'event.weather.high_humidity': 'HH',
+      'event.weather.low_humidity': 'LH'
+    };
+
+    return typeMapping[apiType] || apiType;
+  };
+
+  const formType = mapApiTypeToFormType(initialValues.type);
+
+  // Extract extra_data fields if they exist
+  const extraData = initialValues.extra_data || {};
+
   const mainInfoMethods = useForm({
-    resolver: zodResolver(formSchemaMainInfo)
+    resolver: zodResolver(formSchemaMainInfo),
+    defaultValues: {
+      type: formType || '',
+      lower_temperature: extraData.lower_temperature?.toString() || '',
+      way_of_protection: extraData.way_of_protection || '',
+      water_deficit: extraData.water_deficit?.toString() || '',
+      weight: extraData.weight?.toString() || '',
+      diameter: extraData.diameter?.toString() || '',
+      duration: extraData.duration?.toString() || '',
+      highest_temperature: extraData.highest_temperature?.toString() || '',
+      start_date: extraData.start_date || '',
+      end_date: extraData.end_date || '',
+      observation: initialValues.observation || ''
+    }
   });
+
+  // Update form values when initialValues change
+  useEffect(() => {
+    if (Object.keys(initialValues).length > 0) {
+      const extraData = initialValues.extra_data || {};
+      const mappedType = mapApiTypeToFormType(initialValues.type);
+      mainInfoMethods.reset({
+        type: mappedType || '',
+        lower_temperature: extraData.lower_temperature?.toString() || '',
+        way_of_protection: extraData.way_of_protection || '',
+        water_deficit: extraData.water_deficit?.toString() || '',
+        weight: extraData.weight?.toString() || '',
+        diameter: extraData.diameter?.toString() || '',
+        duration: extraData.duration?.toString() || '',
+        highest_temperature: extraData.highest_temperature?.toString() || '',
+        start_date: extraData.start_date || '',
+        end_date: extraData.end_date || '',
+        observation: initialValues.observation || ''
+      });
+    }
+  }, [initialValues, mainInfoMethods]);
 
   const {
     reset: mainInfoReset,
@@ -90,7 +147,7 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
           observation: data.observation
         };
         break;
-      case 'HA':
+      case 'HL':
         data = {
           type: data.type,
           weight: data.weight,
@@ -145,7 +202,7 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                 {...register('type')}>
                 <option value="FR">{intl.formatMessage({ id: 'app.frost' })}</option>
                 <option value="DR">{intl.formatMessage({ id: 'app.drought' })}</option>
-                <option value="HA">{intl.formatMessage({ id: 'app.hailstorms' })}</option>
+                <option value="HL">{intl.formatMessage({ id: 'app.hailstorms' })}</option>
                 <option value="HT">{intl.formatMessage({ id: 'app.highTemperatures' })}</option>
                 <option value="TS">{intl.formatMessage({ id: 'app.tropicalStorm' })}</option>
                 <option value="HW">{intl.formatMessage({ id: 'app.highWinds' })}</option>
@@ -195,7 +252,7 @@ const WeatherTab = ({ onSubmitHandler, onPrev }) => {
                 name="water_deficit"
               />
             </Flex>
-          ) : type === 'HA' ? (
+          ) : type === 'HL' ? (
             <>
               <Flex gap={'20px'}>
                 <FormInput

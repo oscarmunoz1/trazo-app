@@ -58,12 +58,12 @@ export const EVENT_URL = (
   companyId: string,
   establishmentId: string,
   eventId: string,
-  eventType: string
+  eventType: string | number
 ) =>
-  eventId && eventType
+  eventId && eventType !== undefined && eventType !== null && eventType !== ''
     ? `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/events/${eventId}/?event_type=${eventType}`
     : eventId
-    ? `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/events/${eventId}`
+    ? `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/events/${eventId}/`
     : `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/events/`;
 
 export const EVENT_CREATE_URL = (companyId: string, establishmentId: string) =>

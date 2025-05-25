@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { FormProvider, useForm } from 'react-hook-form';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { number, object, string } from 'zod';
 
 import { FaPlus } from 'react-icons/fa';
@@ -29,22 +29,45 @@ import { useIntl } from 'react-intl';
 
 const formSchemaMainInfo = object({
   type: string().min(1, 'Name is required'),
-  product_name: string().min(1, 'Product Name is required'),
   commercial_name: string().min(1, 'Commercial Name is required'),
   volume: string().min(1, 'Volume is required'),
   area: string().min(1, 'Area is required'),
-  observations: string(),
+  observation: string(),
   way_of_application: string().min(1, 'Way of application is required')
 });
 
-const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
+const ChemicalTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
   const intl = useIntl();
   const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
   const textColor = useColorModeValue('gray.700', 'white');
   const iconColor = useColorModeValue('gray.300', 'gray.700');
 
+  // Map API format to form format
+  const mapApiTypeToFormType = (apiType) => {
+    if (!apiType) return '';
+
+    const typeMapping = {
+      'event.chemical.fertilizer': 'FE',
+      'event.chemical.pesticide': 'PE',
+      'event.chemical.fungicide': 'FU',
+      'event.chemical.herbicide': 'HE'
+    };
+
+    return typeMapping[apiType] || apiType;
+  };
+
+  const formType = mapApiTypeToFormType(initialValues.type);
+
   const mainInfoMethods = useForm({
-    resolver: zodResolver(formSchemaMainInfo)
+    resolver: zodResolver(formSchemaMainInfo),
+    defaultValues: {
+      type: formType || '',
+      commercial_name: initialValues.commercial_name || '',
+      volume: initialValues.volume || '',
+      area: initialValues.area || '',
+      way_of_application: initialValues.way_of_application || '',
+      observation: initialValues.observation || ''
+    }
   });
 
   const {
@@ -54,6 +77,21 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
     formState: { errors, isSubmitSuccessful },
     register
   } = mainInfoMethods;
+
+  // Update form values when initialValues change
+  useEffect(() => {
+    if (Object.keys(initialValues).length > 0) {
+      const mappedType = mapApiTypeToFormType(initialValues.type);
+      mainInfoMethods.reset({
+        type: mappedType || '',
+        commercial_name: initialValues.commercial_name || '',
+        volume: initialValues.volume || '',
+        area: initialValues.area || '',
+        way_of_application: initialValues.way_of_application || '',
+        observation: initialValues.observation || ''
+      });
+    }
+  }, [initialValues, mainInfoMethods]);
 
   return (
     <FormProvider {...mainInfoMethods}>
@@ -105,17 +143,6 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
           </Flex>
           <Flex gap={'20px'}>
             <FormInput
-              label={intl.formatMessage({ id: 'app.productName' })}
-              ms="4px"
-              borderRadius="15px"
-              type="text"
-              placeholder={intl.formatMessage({ id: 'app.nameOfTheProduct' })}
-              mb="24px"
-              name="product_name"
-              fontSize="xs"
-            />
-
-            <FormInput
               fontSize="xs"
               label={intl.formatMessage({ id: 'app.commercialName' })}
               ms="4px"
@@ -159,8 +186,8 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
             type="text"
             placeholder={intl.formatMessage({ id: 'app.descriptionOfTheEvent' })}
             mb="24px"
-            name="observations"
-            {...register('observations')}
+            name="observation"
+            {...register('observation')}
           />
           <Box pt={6} mt={4} borderTop="1px" borderColor="gray.200">
             <HStack justify="space-between">

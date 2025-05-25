@@ -89,10 +89,7 @@ import React, { useEffect, useState } from 'react';
 import { object, string } from 'zod';
 import { useCommentHistoryMutation, useGetPublicHistoryQuery } from 'store/api/historyApi';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  useGetQRCodeSummaryQuery,
-  useGetProductionRecommendationsQuery
-} from 'store/api/carbonApi';
+import { useGetQRCodeSummaryQuery } from 'store/api/carbonApi';
 import { useAddEstablishmentCarbonFootprintMutation } from 'store/api/companyApi';
 import { StarIcon, DownloadIcon } from '@chakra-ui/icons';
 
@@ -181,12 +178,6 @@ function Capture() {
   } = useGetQRCodeSummaryQuery(productionId || '', {
     skip: productionId === undefined
   });
-
-  // Add recommendations query
-  const { data: recommendationsData, isLoading: isRecommendationsLoading } =
-    useGetProductionRecommendationsQuery(productionId || '', {
-      skip: productionId === undefined
-    });
 
   const {
     isOpen: isOffsetModalOpen,
@@ -395,16 +386,14 @@ function Capture() {
         }}
         bgSize="cover"
         mx={{ md: 'auto' }}
-        mt={{ md: '14px' }}
-      ></Box>
+        mt={{ md: '14px' }}></Box>
       <Flex
         direction="column"
         textAlign="center"
         justifyContent="center"
         align="center"
         mt="6.5rem"
-        pt={'55px'}
-      >
+        pt={'55px'}>
         <Text fontSize="4xl" color="white" fontWeight="bold">
           {intl.formatMessage({ id: 'app.welcome' })}
         </Text>
@@ -414,8 +403,7 @@ function Capture() {
           fontWeight="normal"
           mt="10px"
           mb="26px"
-          w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}
-        >
+          w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}>
           {intl.formatMessage({ id: 'app.welcomeMessage' })}
         </Text>
       </Flex>
@@ -426,8 +414,7 @@ function Capture() {
           mt={{ md: '75px' }}
           w={{ sm: '100%', md: '90%', lg: '85%' }}
           p={{ sm: '16px', md: '32px', lg: '48px' }}
-          boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px"
-        >
+          boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px">
           <CardHeader mb="24px">
             <HStack spacing={3}>
               <Badge colorScheme="green" fontSize="md" px={3} py={1} borderRadius="full">
@@ -538,8 +525,7 @@ function Capture() {
                       borderRadius="md"
                       borderLeft="3px solid"
                       borderColor="blue.400"
-                      bg="blue.50"
-                    >
+                      bg="blue.50">
                       <HStack>
                         <Icon as={FaInfoCircle} color="blue.500" />
                         <Text fontSize="sm" color="blue.700">
@@ -622,8 +608,7 @@ function Capture() {
                           onClick={() => {
                             setOffsetAmount(0.05);
                             onOffsetModalOpen();
-                          }}
-                        >
+                          }}>
                           $0.05
                         </Button>
                         <Button
@@ -633,8 +618,7 @@ function Capture() {
                           onClick={() => {
                             setOffsetAmount(0.1);
                             onOffsetModalOpen();
-                          }}
-                        >
+                          }}>
                           $0.10
                         </Button>
                         <Button
@@ -644,8 +628,7 @@ function Capture() {
                           onClick={() => {
                             setOffsetAmount(0.25);
                             onOffsetModalOpen();
-                          }}
-                        >
+                          }}>
                           $0.25
                         </Button>
                       </HStack>
@@ -687,8 +670,7 @@ function Capture() {
                         colorScheme="blue"
                         onClick={handleShare}
                         flex={1}
-                        size="md"
-                      >
+                        size="md">
                         {intl.formatMessage({ id: 'app.share' }) || 'Share'} (+3)
                       </Button>
                       <Button
@@ -696,8 +678,7 @@ function Capture() {
                         colorScheme="yellow"
                         onClick={onFeedbackModalOpen}
                         flex={1}
-                        size="md"
-                      >
+                        size="md">
                         {intl.formatMessage({ id: 'app.rate' }) || 'Rate'} (+2)
                       </Button>
                     </HStack>
@@ -883,8 +864,7 @@ function Capture() {
                         }}
                         zoom={historyData?.parcel?.map_metadata?.zoom || 15}
                         center={historyData?.parcel?.map_metadata?.center || { lat: 0, lng: 0 }}
-                        mapTypeId="satellite"
-                      >
+                        mapTypeId="satellite">
                         <Polygon
                           path={historyData?.parcel?.polygon || []}
                           options={{
@@ -1070,8 +1050,7 @@ function Capture() {
                               variant="solid"
                               size="sm"
                               leftIcon={<DownloadIcon />}
-                              onClick={() => window.open(report.document!, '_blank')}
-                            >
+                              onClick={() => window.open(report.document!, '_blank')}>
                               {intl.formatMessage({ id: 'app.view' }) || 'View'}
                             </Button>
                           ) : (
@@ -1118,8 +1097,7 @@ function Capture() {
                     cursor="pointer"
                     onClick={() => navigate(`/production/${history.id}`, { replace: true })}
                     transition="all 0.2s"
-                    _hover={{ transform: 'translateY(-2px)', boxShadow: 'md' }}
-                  >
+                    _hover={{ transform: 'translateY(-2px)', boxShadow: 'md' }}>
                     <Flex align="center" mb={3}>
                       <Image
                         src={history.image || defaultEstablishmentImage}
@@ -1157,7 +1135,7 @@ function Capture() {
             </Box>
 
             {/* Sustainability Recommendations */}
-            {recommendationsData &&
+            {/* {recommendationsData &&
               recommendationsData.recommendations &&
               recommendationsData.recommendations.length > 0 && (
                 <Box mb={6}>
@@ -1196,7 +1174,7 @@ function Capture() {
                     ))}
                   </SimpleGrid>
                 </Box>
-              )}
+              )} */}
 
             {/* Feedback Section */}
             <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6}>
@@ -1230,8 +1208,7 @@ function Capture() {
                         px={6}
                         isDisabled={isLoadingComment || !commentValue || isSuccessComment}
                         onClick={() => onSubmitHandler()}
-                        leftIcon={<Icon as={FaRegCheckCircle} />}
-                      >
+                        leftIcon={<Icon as={FaRegCheckCircle} />}>
                         {intl.formatMessage({ id: 'app.send' })}
                       </Button>
                     </Flex>
@@ -1286,24 +1263,21 @@ function Capture() {
                   size="sm"
                   colorScheme="green"
                   variant={offsetAmount === 0.05 ? 'solid' : 'outline'}
-                  onClick={() => setOffsetAmount(0.05)}
-                >
+                  onClick={() => setOffsetAmount(0.05)}>
                   $0.05
                 </Button>
                 <Button
                   size="sm"
                   colorScheme="green"
                   variant={offsetAmount === 0.1 ? 'solid' : 'outline'}
-                  onClick={() => setOffsetAmount(0.1)}
-                >
+                  onClick={() => setOffsetAmount(0.1)}>
                   $0.10
                 </Button>
                 <Button
                   size="sm"
                   colorScheme="green"
                   variant={offsetAmount === 0.25 ? 'solid' : 'outline'}
-                  onClick={() => setOffsetAmount(0.25)}
-                >
+                  onClick={() => setOffsetAmount(0.25)}>
                   $0.25
                 </Button>
               </SimpleGrid>
@@ -1314,16 +1288,14 @@ function Capture() {
               colorScheme="gray"
               mr={3}
               onClick={onOffsetModalClose}
-              isDisabled={offsetLoading}
-            >
+              isDisabled={offsetLoading}>
               {intl.formatMessage({ id: 'app.cancel' }) || 'Cancel'}
             </Button>
             <Button
               colorScheme="green"
               onClick={handleOffset}
               isLoading={offsetLoading}
-              leftIcon={<Icon as={FaLeaf} />}
-            >
+              leftIcon={<Icon as={FaLeaf} />}>
               {intl.formatMessage({ id: 'app.payAmount' }, { amount: offsetAmount.toFixed(2) }) ||
                 `Pay $${offsetAmount.toFixed(2)}`}
             </Button>

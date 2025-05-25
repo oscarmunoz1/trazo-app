@@ -124,7 +124,7 @@ const companyApi = baseApi.injectEndpoints({
           url = `/carbon/productions/${productionId}/summary/`;
           if (year) params = `?year=${year}`;
         } else {
-          url = `/carbon/establishments/${establishmentId}/emissions-breakdown/`;
+          url = `/carbon/establishments/${establishmentId}/summary/`;
           if (year) params = `?year=${year}`;
         }
         return {
@@ -145,9 +145,8 @@ const companyApi = baseApi.injectEndpoints({
           url = `/carbon/productions/${productionId}/summary/`;
           if (year) params = `?year=${year}`;
         } else if (establishmentId) {
-          url = `/carbon/entries/summary/`;
-          params = `?establishment=${establishmentId}`;
-          if (year) params += `&year=${year}`;
+          url = `/carbon/establishments/${establishmentId}/summary/`;
+          if (year) params = `?year=${year}`;
         } else {
           url = '/carbon/entries/summary/';
         }

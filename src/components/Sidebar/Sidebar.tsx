@@ -89,6 +89,7 @@ function Sidebar(props: SidebarProps) {
   const [dynamicRoutes, setDynamicRoutes] = useState<Route[]>([]);
   const [certificationsRoutes, setCertificationsRoutes] = useState([]);
   const [commercialDynamicRoutes, setCommercialDynamicRoutes] = useState([]);
+  const [carbonDynamicRoutes, setCarbonDynamicRoutes] = useState([]);
 
   const establishments = useSelector(
     (state: RootState) => state.company.currentCompany?.establishments
@@ -168,10 +169,25 @@ function Sidebar(props: SidebarProps) {
         };
       });
 
+    const carbonDynamicRoutes =
+      establishments &&
+      establishments.map((e: EstablishmentType) => {
+        return {
+          name: e.name,
+          path: `/dashboard/establishment/${e.id}/carbon`,
+          establishmentId: e.id,
+          authIcon: <HomeIcon color="inherit" />,
+          regex: new RegExp(`^\\/admin\\/dashboard\\/establishment\\/${e.id}\\/carbon$`),
+          layout: '/admin',
+          items: []
+        };
+      });
+
     if (establishments) {
       setDynamicRoutes(dynamicRoutes);
       setCertificationsRoutes(certificationsRoutes);
       setCommercialDynamicRoutes(commercialDynamicRoutes);
+      setCarbonDynamicRoutes(carbonDynamicRoutes);
     }
   }, [establishments]);
 
@@ -209,8 +225,7 @@ function Sidebar(props: SidebarProps) {
                 xl: '16px'
               }}
               py="12px"
-              key={index}
-            >
+              key={index}>
               {Object.keys(intl?.messages).includes(`app.${prop.id}`)
                 ? intl.formatMessage({ id: `app.${prop.id}` })
                 : prop.name}
@@ -238,8 +253,7 @@ function Sidebar(props: SidebarProps) {
                 w={sidebarWidth === 275 ? '100%' : '77%'}
                 px={prop.icon ? null : '0px'}
                 py={prop.icon ? '12px' : null}
-                bg={activeRoute(prop.regex) && prop.icon ? activeAccordionBg : 'transparent'}
-              >
+                bg={activeRoute(prop.regex) && prop.icon ? activeAccordionBg : 'transparent'}>
                 {activeRoute(prop.regex) ? (
                   <Button
                     boxSize="initial"
@@ -264,8 +278,7 @@ function Sidebar(props: SidebarProps) {
                       transform: 'none',
                       borderColor: 'transparent',
                       border: 'none'
-                    }}
-                  >
+                    }}>
                     {prop.icon ? (
                       <Flex>
                         <IconBox
@@ -274,16 +287,14 @@ function Sidebar(props: SidebarProps) {
                           h="30px"
                           w="30px"
                           me="12px"
-                          transition={variantChange}
-                        >
+                          transition={variantChange}>
                           {prop.icon}
                         </IconBox>
                         <Text
                           color={activeColor}
                           my="auto"
                           fontSize="sm"
-                          display={sidebarWidth === 275 ? 'block' : 'none'}
-                        >
+                          display={sidebarWidth === 275 ? 'block' : 'none'}>
                           {Object.keys(intl?.messages).includes(`app.${prop.id}`)
                             ? intl.formatMessage({ id: `app.${prop.id}` })
                             : prop.name}
@@ -293,8 +304,7 @@ function Sidebar(props: SidebarProps) {
                       <HStack
                         spacing={sidebarWidth === 275 ? '22px' : '0px'}
                         ps={sidebarWidth === 275 ? '10px' : '0px'}
-                        ms={sidebarWidth === 275 ? '0px' : '8px'}
-                      >
+                        ms={sidebarWidth === 275 ? '0px' : '8px'}>
                         <Icon
                           as={FaCircle}
                           w="10px"
@@ -336,8 +346,7 @@ function Sidebar(props: SidebarProps) {
                     _focus={{
                       borderColor: 'transparent',
                       boxShadow: 'none'
-                    }}
-                  >
+                    }}>
                     {prop.icon ? (
                       <NavLink to={prop.isCompanySettings ? prop.layout + prop.path : null}>
                         <Flex>
@@ -349,16 +358,14 @@ function Sidebar(props: SidebarProps) {
                             me="12px"
                             transition={variantChange}
                             boxShadow={sidebarActiveShadow}
-                            _hover={{ boxShadow: sidebarActiveShadow }}
-                          >
+                            _hover={{ boxShadow: sidebarActiveShadow }}>
                             {prop.icon}
                           </IconBox>
                           <Text
                             color={inactiveColor}
                             my="auto"
                             fontSize="sm"
-                            display={sidebarWidth === 275 ? 'block' : 'none'}
-                          >
+                            display={sidebarWidth === 275 ? 'block' : 'none'}>
                             {Object.keys(intl?.messages).includes(`app.${prop.id}`)
                               ? intl.formatMessage({ id: `app.${prop.id}` })
                               : prop.name}
@@ -369,8 +376,7 @@ function Sidebar(props: SidebarProps) {
                       <HStack
                         spacing={sidebarWidth === 275 ? '26px' : '0px'}
                         ps={sidebarWidth === 275 ? '10px' : '0px'}
-                        ms={sidebarWidth === 275 ? '0px' : '8px'}
-                      >
+                        ms={sidebarWidth === 275 ? '0px' : '8px'}>
                         <Icon
                           as={FaCircle}
                           w="6px"
@@ -416,9 +422,11 @@ function Sidebar(props: SidebarProps) {
                 pb="8px"
                 ps={
                   prop.icon && !prop.isCompanySettings ? null : sidebarWidth === 275 ? null : '8px'
-                }
-              >
-                {(dynamicRoutes || certificationsRoutes || commercialDynamicRoutes) && (
+                }>
+                {(dynamicRoutes ||
+                  certificationsRoutes ||
+                  commercialDynamicRoutes ||
+                  carbonDynamicRoutes) && (
                   <List>
                     {
                       prop.icon && !prop.isCompanySettings
@@ -429,6 +437,8 @@ function Sidebar(props: SidebarProps) {
                               ? certificationsRoutes
                               : prop.isCommercial
                               ? commercialDynamicRoutes
+                              : prop.isCarbonDashboard
+                              ? carbonDynamicRoutes
                               : prop.items
                           ) // for bullet accordion links
                         : createAccordionLinks(
@@ -438,6 +448,8 @@ function Sidebar(props: SidebarProps) {
                               ? certificationsRoutes
                               : prop.isCommercial
                               ? commercialDynamicRoutes
+                              : prop.isCarbonDashboard
+                              ? carbonDynamicRoutes
                               : prop.items
                           ) // for non-bullet accordion links
                     }
@@ -458,15 +470,13 @@ function Sidebar(props: SidebarProps) {
                     color="white"
                     h="30px"
                     w="30px"
-                    transition={variantChange}
-                  >
+                    transition={variantChange}>
                     {prop.icon}
                   </IconBox>
                   <Text
                     color={activeRoute(prop.regex) ? activeColor : inactiveColor}
                     fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}
-                    fontSize="sm"
-                  >
+                    fontSize="sm">
                     {prop.name}
                   </Text>
                 </HStack>
@@ -478,8 +488,7 @@ function Sidebar(props: SidebarProps) {
                     sidebarWidth === 275 ? (activeRoute(prop.regex) ? '22px' : '26px') : '8px'
                   }
                   py="5px"
-                  px={sidebarWidth === 275 ? '10px' : '0px'}
-                >
+                  px={sidebarWidth === 275 ? '10px' : '0px'}>
                   <Icon
                     as={FaCircle}
                     w={activeRoute(prop.regex) ? '10px' : '6px'}
@@ -488,8 +497,7 @@ function Sidebar(props: SidebarProps) {
                   />
                   <Text
                     color={activeRoute(prop.regex) ? activeColor : inactiveColor}
-                    fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}
-                  >
+                    fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}>
                     {sidebarWidth === 275 ? prop.name : prop.name[0]}
                   </Text>
                 </HStack>
@@ -512,8 +520,7 @@ function Sidebar(props: SidebarProps) {
               mb="4px"
               color={activeRoute(prop.regex) ? activeColor : inactiveColor}
               fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}
-              fontSize="sm"
-            >
+              fontSize="sm">
               {sidebarWidth === 275 ? prop.name : prop.name[0]}
             </Text>
           </ListItem>
@@ -544,8 +551,7 @@ function Sidebar(props: SidebarProps) {
         fontWeight="bold"
         justifyContent="center"
         alignItems="center"
-        fontSize="11px"
-      >
+        fontSize="11px">
         <Image src={logo} alt="trazo logo" height="40px" paddingRight="10px" href="" />
       </Link>
       <HSeparator />
@@ -569,8 +575,7 @@ function Sidebar(props: SidebarProps) {
     <Box
       ref={mainPanel}
       onMouseEnter={toggleSidebar ? () => setSidebarWidth(sidebarWidth === 120 ? 275 : 120) : null}
-      onMouseLeave={toggleSidebar ? () => setSidebarWidth(sidebarWidth === 275 ? 120 : 275) : null}
-    >
+      onMouseLeave={toggleSidebar ? () => setSidebarWidth(sidebarWidth === 275 ? 120 : 275) : null}>
       <Box display={{ sm: 'none', xl: 'block' }} position="fixed">
         <Box
           bg={sidebarBg}
@@ -586,15 +591,13 @@ function Sidebar(props: SidebarProps) {
           ps="20px"
           pe="20px"
           m={sidebarMargins}
-          borderRadius={sidebarRadius}
-        >
+          borderRadius={sidebarRadius}>
           {isWindows ? (
             <Scrollbars
               autoHide
               renderTrackVertical={renderTrack}
               renderThumbVertical={useColorModeValue(renderThumbLight, renderThumbDark)}
-              renderView={renderView}
-            >
+              renderView={renderView}>
               {sidebarContent}
             </Scrollbars>
           ) : (

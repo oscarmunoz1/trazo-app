@@ -18,7 +18,12 @@ export const baseApi = createApi({
     'Invoice',
     'CarbonSummary',
     'CarbonBenchmarks',
-    'CarbonRecommendations'
+    'CarbonRecommendations',
+    'ROISavings',
+    'Equipment',
+    'EquipmentMarketplace',
+    'BulkPurchasing',
+    'GovernmentIncentives'
   ]
 });
 

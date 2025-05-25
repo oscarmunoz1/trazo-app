@@ -135,8 +135,7 @@ export const BadgeCarousel: React.FC<BadgeCarouselProps> = ({
         borderColor={borderColor}
         p={4}
         borderRadius="md"
-        textAlign="center"
-      >
+        textAlign="center">
         <Text fontSize="sm" color="gray.500">
           No badges earned yet
         </Text>
@@ -151,8 +150,7 @@ export const BadgeCarousel: React.FC<BadgeCarouselProps> = ({
       p={4}
       borderRadius="lg"
       borderWidth="1px"
-      borderColor={borderColor}
-    >
+      borderColor={borderColor}>
       <Heading size="sm" mb={4}>
         Sustainability Achievements
       </Heading>
@@ -161,8 +159,7 @@ export const BadgeCarousel: React.FC<BadgeCarouselProps> = ({
       <SimpleGrid
         columns={{ base: 2, sm: 3, md: badges.length < 4 ? badges.length : 4 }}
         spacing={3}
-        mb={3}
-      >
+        mb={3}>
         {badges.map((badge) => {
           const BadgeIcon = getBadgeIcon(badge.name);
           const colorScheme = getBadgeColor(badge.name, badge.level);
@@ -179,8 +176,7 @@ export const BadgeCarousel: React.FC<BadgeCarouselProps> = ({
               onClick={() => handleBadgeClick(badge)}
               _hover={{ transform: 'translateY(-2px)', boxShadow: 'md' }}
               transition="all 0.2s"
-              textAlign="center"
-            >
+              textAlign="center">
               <VStack spacing={2}>
                 <Icon as={BadgeIcon} boxSize={6} color={`${colorScheme}.500`} />
                 <Text fontWeight="medium" fontSize="sm" noOfLines={2} textAlign="center">
@@ -221,8 +217,7 @@ export const BadgeCarousel: React.FC<BadgeCarouselProps> = ({
                       borderRadius="md"
                       borderWidth="1px"
                       borderColor={`${colorScheme}.200`}
-                      bg={`${colorScheme}.50`}
-                    >
+                      bg={`${colorScheme}.50`}>
                       <VStack>
                         <Icon as={BadgeIcon} boxSize={8} color={`${colorScheme}.500`} />
                         <Text fontWeight="bold">{badge.name}</Text>

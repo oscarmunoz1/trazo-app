@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Button,
   FormControl,
@@ -37,26 +37,45 @@ const pestSchema = object({
   observation: string().optional()
 });
 
-const PestManagementTab = ({ onSubmitHandler, onPrev }) => {
+const PestManagementTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
   const intl = useIntl();
   const borderColor = useColorModeValue('gray.200', 'gray.600');
 
   const methods = useForm({
     resolver: zodResolver(pestSchema),
     defaultValues: {
-      type: 'SC',
-      name: '',
-      pest_species: '',
-      pest_pressure_level: 'Low',
-      beneficial_species: '',
-      release_quantity: '',
-      trap_count: '',
-      damage_percentage: '',
-      action_threshold_met: false,
-      imp_strategy: '',
-      observation: ''
+      type: initialValues.type || 'SC',
+      name: initialValues.name || '',
+      pest_species: initialValues.pest_species || '',
+      pest_pressure_level: initialValues.pest_pressure_level || 'Low',
+      beneficial_species: initialValues.beneficial_species || '',
+      release_quantity: initialValues.release_quantity || '',
+      trap_count: initialValues.trap_count?.toString() || '',
+      damage_percentage: initialValues.damage_percentage?.toString() || '',
+      action_threshold_met: initialValues.action_threshold_met || false,
+      imp_strategy: initialValues.imp_strategy || '',
+      observation: initialValues.observation || ''
     }
   });
+
+  // Update form values when initialValues change
+  useEffect(() => {
+    if (Object.keys(initialValues).length > 0) {
+      methods.reset({
+        type: initialValues.type || 'SC',
+        name: initialValues.name || '',
+        pest_species: initialValues.pest_species || '',
+        pest_pressure_level: initialValues.pest_pressure_level || 'Low',
+        beneficial_species: initialValues.beneficial_species || '',
+        release_quantity: initialValues.release_quantity || '',
+        trap_count: initialValues.trap_count?.toString() || '',
+        damage_percentage: initialValues.damage_percentage?.toString() || '',
+        action_threshold_met: initialValues.action_threshold_met || false,
+        imp_strategy: initialValues.imp_strategy || '',
+        observation: initialValues.observation || ''
+      });
+    }
+  }, [initialValues, methods]);
 
   const { watch } = methods;
   const pestType = watch('type');
@@ -204,7 +223,7 @@ const PestManagementTab = ({ onSubmitHandler, onPrev }) => {
                 {intl.formatMessage({ id: 'app.impStrategy' }) || 'IPM Strategy'}
               </FormLabel>
               <Textarea
-                {...methods.register('ipm_strategy')}
+                {...methods.register('imp_strategy')}
                 placeholder={
                   intl.formatMessage({ id: 'app.enterImpStrategy' }) ||
                   'Describe the integrated pest management strategy implemented...'

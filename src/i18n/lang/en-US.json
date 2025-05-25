@@ -724,5 +724,6 @@
   "app.implementProtectiveMeasures": "Implement protective measures to reduce impact",
   "app.documentObservations": "Document observations for future reference",
   "app.maintainDetailedRecords": "Maintain detailed records for analysis",
-  "app.considerSustainablePractices": "Consider sustainable practices"
+  "app.considerSustainablePractices": "Consider sustainable practices",
+  "app.eventTypeCannotBeChanged": "Cannot change event type after creation"
 }

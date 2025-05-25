@@ -74,6 +74,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
   const [dynamicRoutes, setDynamicRoutes] = useState([]);
   const [certificationsRoutes, setCertificationsRoutes] = useState([]);
   const [commercialDynamicRoutes, setCommercialDynamicRoutes] = useState([]);
+  const [carbonDynamicRoutes, setCarbonDynamicRoutes] = useState([]);
 
   // this is for the rest of the collapses
   //  BRAND
@@ -164,10 +165,25 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
         };
       });
 
+    const carbonDynamicRoutes =
+      establishments &&
+      establishments.map((e: EstablishmentType) => {
+        return {
+          name: e.name,
+          path: `/dashboard/establishment/${e.id}/carbon`,
+          establishmentId: e.id,
+          authIcon: <HomeIcon color="inherit" />,
+          regex: new RegExp(`^\\/admin\\/dashboard\\/establishment\\/${e.id}\\/carbon$`),
+          layout: '/admin',
+          items: []
+        };
+      });
+
     if (establishments) {
       setDynamicRoutes(dynamicRoutes);
       setCertificationsRoutes(certificationsRoutes);
       setCommercialDynamicRoutes(commercialDynamicRoutes);
+      setCarbonDynamicRoutes(carbonDynamicRoutes);
     }
   }, [establishments]);
 
@@ -472,8 +488,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                 xl: '16px'
               }}
               py="12px"
-              key={index}
-            >
+              key={index}>
               {Object.keys(intl?.messages).includes(`app.${prop.id}`)
                 ? intl.formatMessage({ id: `app.${prop.id}` })
                 : prop.name}
@@ -501,8 +516,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                 w={'100%'}
                 px={prop.icon ? null : '0px'}
                 py={prop.icon ? '12px' : null}
-                bg={activeRoute(prop.regex) && prop.icon ? activeAccordionBg : 'transparent'}
-              >
+                bg={activeRoute(prop.regex) && prop.icon ? activeAccordionBg : 'transparent'}>
                 {activeRoute(prop.regex) ? (
                   <Button
                     boxSize="initial"
@@ -527,8 +541,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                       transform: 'none',
                       borderColor: 'transparent',
                       border: 'none'
-                    }}
-                  >
+                    }}>
                     {prop.icon ? (
                       <Flex>
                         <IconBox
@@ -537,8 +550,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                           h="30px"
                           w="30px"
                           me="12px"
-                          transition={variantChange}
-                        >
+                          transition={variantChange}>
                           {prop.icon}
                         </IconBox>
                         <Text color={activeColor} my="auto" fontSize="sm" display={'block'}>
@@ -585,8 +597,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                     _focus={{
                       borderColor: 'transparent',
                       boxShadow: 'none'
-                    }}
-                  >
+                    }}>
                     {prop.icon ? (
                       <NavLink to={prop.isCompanySettings ? prop.layout + prop.path : null}>
                         <Flex>
@@ -598,8 +609,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                             me="12px"
                             transition={variantChange}
                             boxShadow={sidebarActiveShadow}
-                            _hover={{ boxShadow: sidebarActiveShadow }}
-                          >
+                            _hover={{ boxShadow: sidebarActiveShadow }}>
                             {prop.icon}
                           </IconBox>
                           <Text color={inactiveColor} my="auto" fontSize="sm" display={'block'}>
@@ -643,9 +653,11 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                 pe={prop.icon ? null : '0px'}
                 display={prop.isCompanySettings ? 'none' : 'block'}
                 pb="8px"
-                ps={prop.icon && !prop.isCompanySettings ? null : '8px'}
-              >
-                {(dynamicRoutes || certificationsRoutes || commercialDynamicRoutes) && (
+                ps={prop.icon && !prop.isCompanySettings ? null : '8px'}>
+                {(dynamicRoutes ||
+                  certificationsRoutes ||
+                  commercialDynamicRoutes ||
+                  carbonDynamicRoutes) && (
                   <List>
                     {
                       prop.icon && !prop.isCompanySettings
@@ -656,6 +668,8 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                               ? certificationsRoutes
                               : prop.isCommercial
                               ? commercialDynamicRoutes
+                              : prop.isCarbonDashboard
+                              ? carbonDynamicRoutes
                               : prop.items
                           ) // for bullet accordion links
                         : createAccordionLinks(
@@ -665,6 +679,8 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                               ? certificationsRoutes
                               : prop.isCommercial
                               ? commercialDynamicRoutes
+                              : prop.isCarbonDashboard
+                              ? carbonDynamicRoutes
                               : prop.items
                           ) // for non-bullet accordion links
                     }
@@ -685,15 +701,13 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                     color="white"
                     h="30px"
                     w="30px"
-                    transition={variantChange}
-                  >
+                    transition={variantChange}>
                     {prop.icon}
                   </IconBox>
                   <Text
                     color={activeRoute(prop.regex) ? activeColor : inactiveColor}
                     fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}
-                    fontSize="sm"
-                  >
+                    fontSize="sm">
                     {prop.name}
                   </Text>
                 </HStack>
@@ -709,8 +723,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
                   />
                   <Text
                     color={activeRoute(prop.regex) ? activeColor : inactiveColor}
-                    fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}
-                  >
+                    fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}>
                     {prop.name}
                   </Text>
                 </HStack>
@@ -733,8 +746,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
               mb="4px"
               color={activeRoute(prop.regex) ? activeColor : inactiveColor}
               fontWeight={activeRoute(prop.regex) ? 'bold' : 'normal'}
-              fontSize="sm"
-            >
+              fontSize="sm">
               {prop.name}
             </Text>
           </ListItem>
@@ -761,8 +773,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
         fontWeight="bold"
         justifyContent="center"
         alignItems="center"
-        fontSize="11px"
-      >
+        fontSize="11px">
         <Image src={logo} alt="trazo logo" height="30px" paddingRight="10px" href="" />
       </Link>
       <HSeparator />
@@ -795,8 +806,7 @@ function SidebarResponsive(props: SidebarResponsiveProps) {
               my={{
                 sm: '16px'
               }}
-              borderRadius="16px"
-            >
+              borderRadius="16px">
               <DrawerCloseButton _focus={{ boxShadow: 'none' }} _hover={{ boxShadow: 'none' }} />
               <DrawerBody maxW="250px" px="1rem">
                 <Box maxW="100%" h="100vh">

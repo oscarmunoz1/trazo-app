@@ -52,9 +52,9 @@ function ProfileEstablishment() {
     isFetching,
     refetch
   } = useGetEventQuery(
-    { companyId: currentCompany.id, establishmentId, parcelId, eventId, eventType },
+    { companyId: currentCompany?.id, establishmentId, parcelId, eventId, eventType },
     {
-      skip: !eventId || !parcelId || !establishmentId || !currentCompany.id || !eventType
+      skip: !eventId || !parcelId || !establishmentId || !currentCompany?.id || !eventType
     }
   );
 
@@ -80,8 +80,7 @@ function ProfileEstablishment() {
           maxWidth={{ sm: '100%', md: '100%', lg: '80%' }}
           px="0px"
           pt={{ sm: '16px', md: '32px', lg: '0px' }}
-          boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px"
-        >
+          boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px">
           <CardHeader justifyContent="end">
             {/* <Flex
               direction={{ sm: "column", md: "row" }}
@@ -127,10 +126,9 @@ function ProfileEstablishment() {
                   <MenuItem
                     onClick={() =>
                       navigate(
-                        `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/event/${eventId}/change`
+                        `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/event/${eventId}/change?event_type=${eventType}`
                       )
-                    }
-                  >
+                    }>
                     <Flex color={textColor} cursor="pointer" align="center" p="4px">
                       {/* <Icon as={FaPencilAlt} me="4px" /> */}
                       <Text fontSize="sm" fontWeight="500">
@@ -156,14 +154,12 @@ function ProfileEstablishment() {
                 <Flex
                   direction="column"
                   me={{ lg: '48px', xl: '48px' }}
-                  mb={{ sm: '24px', lg: '0px' }}
-                >
+                  mb={{ sm: '24px', lg: '0px' }}>
                   <Box
                     w={{ sm: '100%', md: '100%', lg: '380px', xl: '400px' }}
                     h={{ sm: '200px', md: '500px', lg: '230px', xl: '300px' }}
                     mb="26px"
-                    mx={{ sm: 'auto', lg: '0px' }}
-                  >
+                    mx={{ sm: 'auto', lg: '0px' }}>
                     <Image
                       src={eventData?.image || BgMusicCard}
                       w="100%"
@@ -282,8 +278,7 @@ function ProfileEstablishment() {
                       navigate(
                         `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}`
                       )
-                    }
-                  >
+                    }>
                     {parcel?.name}
                   </Text>
                   <Text color="gray.400" fontWeight="normal" fontSize="sm">
@@ -297,8 +292,7 @@ function ProfileEstablishment() {
                     mb="12px"
                     textDecor={'underline'}
                     cursor={'pointer'}
-                    onClick={() => navigate(`/admin/dashboard/establishment/${establishmentId}`)}
-                  >
+                    onClick={() => navigate(`/admin/dashboard/establishment/${establishmentId}`)}>
                     {establishment?.name}
                   </Text>
 

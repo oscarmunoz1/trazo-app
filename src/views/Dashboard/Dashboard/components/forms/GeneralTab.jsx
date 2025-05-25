@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { FormProvider, useForm } from 'react-hook-form';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { number, object, string } from 'zod';
 
 import { FaPlus } from 'react-icons/fa';
@@ -27,18 +27,33 @@ import { useIntl } from 'react-intl';
 // Custom components
 
 const formSchemaMainInfo = object({
-  name: string().min(1, 'Name is required')
+  name: string().min(1, 'Name is required'),
+  observation: string().optional()
 });
 
-const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
+const GeneralTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
   const intl = useIntl();
   const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
   const textColor = useColorModeValue('gray.700', 'white');
   const iconColor = useColorModeValue('gray.300', 'gray.700');
 
   const mainInfoMethods = useForm({
-    resolver: zodResolver(formSchemaMainInfo)
+    resolver: zodResolver(formSchemaMainInfo),
+    defaultValues: {
+      name: initialValues.name || '',
+      observation: initialValues.observation || ''
+    }
   });
+
+  // Update form values when initialValues change
+  useEffect(() => {
+    if (Object.keys(initialValues).length > 0) {
+      mainInfoMethods.reset({
+        name: initialValues.name || '',
+        observation: initialValues.observation || ''
+      });
+    }
+  }, [initialValues, mainInfoMethods]);
 
   const {
     reset: mainInfoReset,
@@ -73,8 +88,8 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
             placeholder={intl.formatMessage({ id: 'app.descriptionOfTheEvent' })}
             mb="24px"
             size="lg"
-            name="observations"
-            {...register('observations')}
+            name="observation"
+            {...register('observation')}
           />
           <Box pt={6} mt={4} borderTop="1px" borderColor="gray.200">
             <HStack justify="space-between">
@@ -113,4 +128,4 @@ const ChemicalTab = ({ onSubmitHandler, onPrev }) => {
   );
 };
 
-export default ChemicalTab;
+export default GeneralTab;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Button,
   FormControl,
@@ -33,23 +33,41 @@ const soilSchema = object({
   observation: string().optional()
 });
 
-const SoilManagementTab = ({ onSubmitHandler, onPrev }) => {
+const SoilManagementTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
   const intl = useIntl();
   const borderColor = useColorModeValue('gray.200', 'gray.600');
 
   const methods = useForm({
     resolver: zodResolver(soilSchema),
     defaultValues: {
-      type: 'ST',
-      name: '',
-      soil_ph: '',
-      organic_matter_percentage: '',
-      amendment_type: '',
-      amendment_amount: '',
-      carbon_sequestration_potential: '',
-      observation: ''
+      type: initialValues.type || 'ST',
+      name: initialValues.name || '',
+      soil_ph: initialValues.soil_ph?.toString() || '',
+      organic_matter_percentage: initialValues.organic_matter_percentage?.toString() || '',
+      amendment_type: initialValues.amendment_type || '',
+      amendment_amount: initialValues.amendment_amount || '',
+      carbon_sequestration_potential:
+        initialValues.carbon_sequestration_potential?.toString() || '',
+      observation: initialValues.observation || ''
     }
   });
+
+  // Update form values when initialValues change
+  useEffect(() => {
+    if (Object.keys(initialValues).length > 0) {
+      methods.reset({
+        type: initialValues.type || 'ST',
+        name: initialValues.name || '',
+        soil_ph: initialValues.soil_ph?.toString() || '',
+        organic_matter_percentage: initialValues.organic_matter_percentage?.toString() || '',
+        amendment_type: initialValues.amendment_type || '',
+        amendment_amount: initialValues.amendment_amount || '',
+        carbon_sequestration_potential:
+          initialValues.carbon_sequestration_potential?.toString() || '',
+        observation: initialValues.observation || ''
+      });
+    }
+  }, [initialValues, methods]);
 
   const { watch } = methods;
   const soilType = watch('type');
