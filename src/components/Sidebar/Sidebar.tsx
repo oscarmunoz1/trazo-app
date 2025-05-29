@@ -90,6 +90,7 @@ function Sidebar(props: SidebarProps) {
   const [certificationsRoutes, setCertificationsRoutes] = useState([]);
   const [commercialDynamicRoutes, setCommercialDynamicRoutes] = useState([]);
   const [carbonDynamicRoutes, setCarbonDynamicRoutes] = useState([]);
+  const [iotDynamicRoutes, setIotDynamicRoutes] = useState([]);
 
   const establishments = useSelector(
     (state: RootState) => state.company.currentCompany?.establishments
@@ -183,11 +184,26 @@ function Sidebar(props: SidebarProps) {
         };
       });
 
+    const iotDynamicRoutes =
+      establishments &&
+      establishments.map((e: EstablishmentType) => {
+        return {
+          name: e.name,
+          path: `/dashboard/establishment/${e.id}/iot`,
+          establishmentId: e.id,
+          authIcon: <HomeIcon color="inherit" />,
+          regex: new RegExp(`^\\/admin\\/dashboard\\/establishment\\/${e.id}\\/iot$`),
+          layout: '/admin',
+          items: []
+        };
+      });
+
     if (establishments) {
       setDynamicRoutes(dynamicRoutes);
       setCertificationsRoutes(certificationsRoutes);
       setCommercialDynamicRoutes(commercialDynamicRoutes);
       setCarbonDynamicRoutes(carbonDynamicRoutes);
+      setIotDynamicRoutes(iotDynamicRoutes);
     }
   }, [establishments]);
 
@@ -236,62 +252,132 @@ function Sidebar(props: SidebarProps) {
       }
       if (prop.collapse) {
         return (
-          <Accordion allowToggle>
-            <AccordionItem border="none">
-              <AccordionButton
-                display="flex"
-                align="center"
-                justify="center"
-                boxShadow={activeRoute(prop.regex) && prop.icon ? sidebarActiveShadow : null}
-                _hover={{
-                  boxShadow: activeRoute(prop.regex) && prop.icon ? sidebarActiveShadow : null
-                }}
-                _focus={{
-                  boxShadow: 'none'
-                }}
-                borderRadius="15px"
-                w={sidebarWidth === 275 ? '100%' : '77%'}
-                px={prop.icon ? null : '0px'}
-                py={prop.icon ? '12px' : null}
-                bg={activeRoute(prop.regex) && prop.icon ? activeAccordionBg : 'transparent'}>
-                {activeRoute(prop.regex) ? (
-                  <Button
-                    boxSize="initial"
-                    justifyContent="flex-start"
-                    alignItems="center"
-                    bg="transparent"
-                    transition={variantChange}
-                    mx={{
-                      xl: 'auto'
-                    }}
-                    px="0px"
-                    borderRadius="15px"
-                    w="100%"
-                    _hover="none"
-                    _active={{
-                      bg: 'inherit',
-                      transform: 'none',
-                      borderColor: 'transparent',
-                      border: 'none'
-                    }}
-                    _focus={{
-                      transform: 'none',
-                      borderColor: 'transparent',
-                      border: 'none'
-                    }}>
-                    {prop.icon ? (
+          <AccordionItem border="none">
+            <AccordionButton
+              display="flex"
+              align="center"
+              justify="center"
+              boxShadow={activeRoute(prop.regex) && prop.icon ? sidebarActiveShadow : null}
+              _hover={{
+                boxShadow: activeRoute(prop.regex) && prop.icon ? sidebarActiveShadow : null
+              }}
+              _focus={{
+                boxShadow: 'none'
+              }}
+              borderRadius="15px"
+              w={sidebarWidth === 275 ? '100%' : '77%'}
+              px={prop.icon ? null : '0px'}
+              py={prop.icon ? '12px' : null}
+              bg={activeRoute(prop.regex) && prop.icon ? activeAccordionBg : 'transparent'}>
+              {activeRoute(prop.regex) ? (
+                <Button
+                  boxSize="initial"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  bg="transparent"
+                  transition={variantChange}
+                  mx={{
+                    xl: 'auto'
+                  }}
+                  px="0px"
+                  borderRadius="15px"
+                  w="100%"
+                  _hover="none"
+                  _active={{
+                    bg: 'inherit',
+                    transform: 'none',
+                    borderColor: 'transparent',
+                    border: 'none'
+                  }}
+                  _focus={{
+                    transform: 'none',
+                    borderColor: 'transparent',
+                    border: 'none'
+                  }}>
+                  {prop.icon ? (
+                    <Flex>
+                      <IconBox
+                        bg={activeBg}
+                        color={activeColorIcon}
+                        h="30px"
+                        w="30px"
+                        me="12px"
+                        transition={variantChange}>
+                        {prop.icon}
+                      </IconBox>
+                      <Text
+                        color={activeColor}
+                        my="auto"
+                        fontSize="sm"
+                        display={sidebarWidth === 275 ? 'block' : 'none'}>
+                        {Object.keys(intl?.messages).includes(`app.${prop.id}`)
+                          ? intl.formatMessage({ id: `app.${prop.id}` })
+                          : prop.name}
+                      </Text>
+                    </Flex>
+                  ) : (
+                    <HStack
+                      spacing={sidebarWidth === 275 ? '22px' : '0px'}
+                      ps={sidebarWidth === 275 ? '10px' : '0px'}
+                      ms={sidebarWidth === 275 ? '0px' : '8px'}>
+                      <Icon
+                        as={FaCircle}
+                        w="10px"
+                        color="green.400"
+                        display={sidebarWidth === 275 ? 'block' : 'none'}
+                      />
+                      {prop.establishmentId ? (
+                        <NavLink to={prop.layout + prop.path}>
+                          <Text color={activeColor} my="auto" fontSize="sm">
+                            {sidebarWidth === 275 ? prop.name : prop.name[0]}
+                          </Text>
+                        </NavLink>
+                      ) : (
+                        <Text color={activeColor} my="auto" fontSize="sm">
+                          {sidebarWidth === 275 ? prop.name : prop.name[0]}
+                        </Text>
+                      )}
+                    </HStack>
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  boxSize="initial"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  bg="transparent"
+                  mx={{
+                    xl: 'auto'
+                  }}
+                  px="0px"
+                  borderRadius="15px"
+                  w="100%"
+                  _hover="none"
+                  _active={{
+                    bg: 'inherit',
+                    transform: 'none',
+                    borderColor: 'transparent'
+                  }}
+                  _focus={{
+                    borderColor: 'transparent',
+                    boxShadow: 'none'
+                  }}>
+                  {prop.icon ? (
+                    <NavLink to={prop.isCompanySettings ? prop.layout + prop.path : null}>
                       <Flex>
                         <IconBox
-                          bg={activeBg}
-                          color={activeColorIcon}
+                          bg={inactiveBg}
+                          color={inactiveColorIcon}
                           h="30px"
                           w="30px"
                           me="12px"
-                          transition={variantChange}>
+                          transition={variantChange}
+                          boxShadow={sidebarActiveShadow}
+                          _hover={{ boxShadow: sidebarActiveShadow }}>
                           {prop.icon}
                         </IconBox>
                         <Text
-                          color={activeColor}
+                          color={inactiveColor}
                           my="auto"
                           fontSize="sm"
                           display={sidebarWidth === 275 ? 'block' : 'none'}>
@@ -300,164 +386,97 @@ function Sidebar(props: SidebarProps) {
                             : prop.name}
                         </Text>
                       </Flex>
-                    ) : (
-                      <HStack
-                        spacing={sidebarWidth === 275 ? '22px' : '0px'}
-                        ps={sidebarWidth === 275 ? '10px' : '0px'}
-                        ms={sidebarWidth === 275 ? '0px' : '8px'}>
-                        <Icon
-                          as={FaCircle}
-                          w="10px"
-                          color="green.400"
-                          display={sidebarWidth === 275 ? 'block' : 'none'}
-                        />
-                        {prop.establishmentId ? (
-                          <NavLink to={prop.layout + prop.path}>
-                            <Text color={activeColor} my="auto" fontSize="sm">
-                              {sidebarWidth === 275 ? prop.name : prop.name[0]}
-                            </Text>
-                          </NavLink>
-                        ) : (
-                          <Text color={activeColor} my="auto" fontSize="sm">
-                            {sidebarWidth === 275 ? prop.name : prop.name[0]}
-                          </Text>
-                        )}
-                      </HStack>
-                    )}
-                  </Button>
-                ) : (
-                  <Button
-                    boxSize="initial"
-                    justifyContent="flex-start"
-                    alignItems="center"
-                    bg="transparent"
-                    mx={{
-                      xl: 'auto'
-                    }}
-                    px="0px"
-                    borderRadius="15px"
-                    w="100%"
-                    _hover="none"
-                    _active={{
-                      bg: 'inherit',
-                      transform: 'none',
-                      borderColor: 'transparent'
-                    }}
-                    _focus={{
-                      borderColor: 'transparent',
-                      boxShadow: 'none'
-                    }}>
-                    {prop.icon ? (
-                      <NavLink to={prop.isCompanySettings ? prop.layout + prop.path : null}>
-                        <Flex>
-                          <IconBox
-                            bg={inactiveBg}
-                            color={inactiveColorIcon}
-                            h="30px"
-                            w="30px"
-                            me="12px"
-                            transition={variantChange}
-                            boxShadow={sidebarActiveShadow}
-                            _hover={{ boxShadow: sidebarActiveShadow }}>
-                            {prop.icon}
-                          </IconBox>
-                          <Text
-                            color={inactiveColor}
-                            my="auto"
-                            fontSize="sm"
-                            display={sidebarWidth === 275 ? 'block' : 'none'}>
-                            {Object.keys(intl?.messages).includes(`app.${prop.id}`)
-                              ? intl.formatMessage({ id: `app.${prop.id}` })
-                              : prop.name}
-                          </Text>
-                        </Flex>
-                      </NavLink>
-                    ) : (
-                      <HStack
-                        spacing={sidebarWidth === 275 ? '26px' : '0px'}
-                        ps={sidebarWidth === 275 ? '10px' : '0px'}
-                        ms={sidebarWidth === 275 ? '0px' : '8px'}>
-                        <Icon
-                          as={FaCircle}
-                          w="6px"
-                          color="green.400"
-                          display={sidebarWidth === 275 ? 'block' : 'none'}
-                        />
-                        {prop.establishmentId ? (
-                          <NavLink color="red" to={prop.layout + prop.path}>
-                            <Text color={inactiveColor} my="auto" fontSize="md" fontWeight="normal">
-                              {sidebarWidth === 275 ? prop.name : prop.name[0]}
-                            </Text>
-                          </NavLink>
-                        ) : (
+                    </NavLink>
+                  ) : (
+                    <HStack
+                      spacing={sidebarWidth === 275 ? '26px' : '0px'}
+                      ps={sidebarWidth === 275 ? '10px' : '0px'}
+                      ms={sidebarWidth === 275 ? '0px' : '8px'}>
+                      <Icon
+                        as={FaCircle}
+                        w="6px"
+                        color="green.400"
+                        display={sidebarWidth === 275 ? 'block' : 'none'}
+                      />
+                      {prop.establishmentId ? (
+                        <NavLink color="red" to={prop.layout + prop.path}>
                           <Text color={inactiveColor} my="auto" fontSize="md" fontWeight="normal">
                             {sidebarWidth === 275 ? prop.name : prop.name[0]}
                           </Text>
-                        )}
-                      </HStack>
-                    )}
-                  </Button>
-                )}
-                <AccordionIcon
-                  color="gray.400"
-                  display={
-                    prop.icon
-                      ? sidebarWidth === 275 && !prop.isCompanySettings
-                        ? 'block'
-                        : 'none'
-                      : 'block'
-                  }
-                  transform={
+                        </NavLink>
+                      ) : (
+                        <Text color={inactiveColor} my="auto" fontSize="md" fontWeight="normal">
+                          {sidebarWidth === 275 ? prop.name : prop.name[0]}
+                        </Text>
+                      )}
+                    </HStack>
+                  )}
+                </Button>
+              )}
+              <AccordionIcon
+                color="gray.400"
+                display={
+                  prop.icon
+                    ? sidebarWidth === 275 && !prop.isCompanySettings
+                      ? 'block'
+                      : 'none'
+                    : 'block'
+                }
+                transform={
+                  prop.icon && !prop.isCompanySettings
+                    ? null
+                    : sidebarWidth === 275
+                    ? null
+                    : 'translateX(-70%)'
+                }
+              />
+            </AccordionButton>
+            <AccordionPanel
+              pe={prop.icon ? null : '0px'}
+              display={prop.isCompanySettings ? 'none' : 'block'}
+              pb="8px"
+              ps={
+                prop.icon && !prop.isCompanySettings ? null : sidebarWidth === 275 ? null : '8px'
+              }>
+              {(dynamicRoutes ||
+                certificationsRoutes ||
+                commercialDynamicRoutes ||
+                carbonDynamicRoutes ||
+                iotDynamicRoutes) && (
+                <List>
+                  {
                     prop.icon && !prop.isCompanySettings
-                      ? null
-                      : sidebarWidth === 275
-                      ? null
-                      : 'translateX(-70%)'
+                      ? createLinks(
+                          prop.isDashboard && !prop.items
+                            ? dynamicRoutes
+                            : prop.isCertifications
+                            ? certificationsRoutes
+                            : prop.isCommercial
+                            ? commercialDynamicRoutes
+                            : prop.isCarbonDashboard
+                            ? carbonDynamicRoutes
+                            : prop.isIoTDashboard
+                            ? iotDynamicRoutes
+                            : prop.items
+                        ) // for bullet accordion links
+                      : createAccordionLinks(
+                          prop.isDashboard && !prop.items
+                            ? dynamicRoutes
+                            : prop.isCertifications
+                            ? certificationsRoutes
+                            : prop.isCommercial
+                            ? commercialDynamicRoutes
+                            : prop.isCarbonDashboard
+                            ? carbonDynamicRoutes
+                            : prop.isIoTDashboard
+                            ? iotDynamicRoutes
+                            : prop.items
+                        ) // for non-bullet accordion links
                   }
-                />
-              </AccordionButton>
-              <AccordionPanel
-                pe={prop.icon ? null : '0px'}
-                display={prop.isCompanySettings ? 'none' : 'block'}
-                pb="8px"
-                ps={
-                  prop.icon && !prop.isCompanySettings ? null : sidebarWidth === 275 ? null : '8px'
-                }>
-                {(dynamicRoutes ||
-                  certificationsRoutes ||
-                  commercialDynamicRoutes ||
-                  carbonDynamicRoutes) && (
-                  <List>
-                    {
-                      prop.icon && !prop.isCompanySettings
-                        ? createLinks(
-                            prop.isDashboard && !prop.items
-                              ? dynamicRoutes
-                              : prop.isCertifications
-                              ? certificationsRoutes
-                              : prop.isCommercial
-                              ? commercialDynamicRoutes
-                              : prop.isCarbonDashboard
-                              ? carbonDynamicRoutes
-                              : prop.items
-                          ) // for bullet accordion links
-                        : createAccordionLinks(
-                            prop.isDashboard && !prop.items
-                              ? dynamicRoutes
-                              : prop.isCertifications
-                              ? certificationsRoutes
-                              : prop.isCommercial
-                              ? commercialDynamicRoutes
-                              : prop.isCarbonDashboard
-                              ? carbonDynamicRoutes
-                              : prop.items
-                          ) // for non-bullet accordion links
-                    }
-                  </List>
-                )}
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
+                </List>
+              )}
+            </AccordionPanel>
+          </AccordionItem>
         );
       } else {
         return (
@@ -557,7 +576,28 @@ function Sidebar(props: SidebarProps) {
       <HSeparator />
     </Box>
   );
-  let links = <>{createLinks(routes)}</>;
+  // Separate collapsible and non-collapsible routes
+  const collapsibleRoutes = routes?.filter((route: Route) => route.collapse) || [];
+  const nonCollapsibleRoutes = routes?.filter((route: Route) => !route.collapse) || [];
+
+  let links = (
+    <>
+      {/* Non-collapsible routes */}
+      {createLinks(nonCollapsibleRoutes)}
+
+      {/* Single accordion for all collapsible routes */}
+      {collapsibleRoutes.length > 0 && (
+        <Accordion allowToggle>
+          {collapsibleRoutes.map((route: Route, index: number) =>
+            createLinks([route]).map((item, itemIndex) =>
+              React.cloneElement(item, { key: `${index}-${itemIndex}` })
+            )
+          )}
+        </Accordion>
+      )}
+    </>
+  );
+
   let sidebarContent = (
     <Box justifyContent={'space-between'}>
       <Flex direction={'column'}>

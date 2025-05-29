@@ -257,7 +257,8 @@ export const ROIDashboard: React.FC<ROIDashboardProps> = ({ establishmentId }) =
             colorScheme="green"
             onClick={handleCalculateSavings}
             isLoading={isCalculating}
-            leftIcon={<Icon as={FaCalculator} />}>
+            leftIcon={<Icon as={FaCalculator} />}
+          >
             Recalculate Savings
           </Button>
         </HStack>
@@ -446,7 +447,8 @@ export const ROIDashboard: React.FC<ROIDashboardProps> = ({ establishmentId }) =
                           <Card
                             key={equipment.id || index}
                             borderWidth="1px"
-                            borderColor={borderColor}>
+                            borderColor={borderColor}
+                          >
                             <CardBody>
                               <Grid templateColumns="2fr 1fr" gap={6}>
                                 <VStack align="start" spacing={3}>
@@ -536,7 +538,8 @@ export const ROIDashboard: React.FC<ROIDashboardProps> = ({ establishmentId }) =
                                                 <Text
                                                   fontSize="xs"
                                                   fontWeight="semibold"
-                                                  textTransform="capitalize">
+                                                  textTransform="capitalize"
+                                                >
                                                   {option.type.replace('_', ' ')}
                                                 </Text>
                                                 {option.monthly_payment && (
@@ -598,7 +601,8 @@ export const ROIDashboard: React.FC<ROIDashboardProps> = ({ establishmentId }) =
                         <Card
                           key={incentive.id || index}
                           borderWidth="1px"
-                          borderColor={borderColor}>
+                          borderColor={borderColor}
+                        >
                           <CardBody>
                             <VStack align="start" spacing={3}>
                               <HStack justify="space-between" w="100%">
@@ -609,7 +613,8 @@ export const ROIDashboard: React.FC<ROIDashboardProps> = ({ establishmentId }) =
                                       colorScheme={
                                         incentive.application_status === 'open' ? 'green' : 'red'
                                       }
-                                      variant="outline">
+                                      variant="outline"
+                                    >
                                       {incentive.application_status}
                                     </Badge>
                                   </HStack>
@@ -677,7 +682,8 @@ export const ROIDashboard: React.FC<ROIDashboardProps> = ({ establishmentId }) =
                                       variant="outline"
                                       as="a"
                                       href={incentive.contact_info.website}
-                                      target="_blank">
+                                      target="_blank"
+                                    >
                                       Apply Now
                                     </Button>
                                   </VStack>
@@ -758,7 +764,8 @@ export const ROIDashboard: React.FC<ROIDashboardProps> = ({ establishmentId }) =
                                 duration: 3000,
                                 isClosable: true
                               });
-                            }}>
+                            }}
+                          >
                             Start Bulk Purchase Analysis
                           </Button>
                         </VStack>

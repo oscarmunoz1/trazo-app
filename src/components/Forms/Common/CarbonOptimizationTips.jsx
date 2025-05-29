@@ -120,7 +120,8 @@ const CarbonOptimizationTips = ({
                   : 'red'
               }
               fontSize="xs"
-              borderRadius="full">
+              borderRadius="full"
+            >
               {carbonCalculation.efficiency_score}/100
             </Badge>
           )}

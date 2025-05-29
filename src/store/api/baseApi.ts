@@ -23,7 +23,12 @@ export const baseApi = createApi({
     'Equipment',
     'EquipmentMarketplace',
     'BulkPurchasing',
-    'GovernmentIncentives'
+    'GovernmentIncentives',
+    'IoTDevice',
+    'IoTData',
+    'AutomationRule',
+    'PendingEvent',
+    'Weather'
   ]
 });
 

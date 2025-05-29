@@ -28,7 +28,8 @@ const FormCard = ({
       borderRadius="xl"
       border={showBorder ? '1px solid' : 'none'}
       borderColor={borderColor}
-      {...cardProps}>
+      {...cardProps}
+    >
       {showHeader && (title || headerActions) && (
         <CardHeader pb={2}>
           <HStack justify="space-between" align="center" w="100%">
@@ -40,7 +41,8 @@ const FormCard = ({
                     fontSize={titleSize}
                     fontWeight="semibold"
                     color={textColor}
-                    lineHeight="1.2">
+                    lineHeight="1.2"
+                  >
                     {title}
                   </Text>
                 )}
@@ -67,7 +69,8 @@ const FormCard = ({
               mt={4}
               borderTop="1px"
               borderColor={borderColor}
-              w="100%">
+              w="100%"
+            >
               {actions}
             </HStack>
           )}

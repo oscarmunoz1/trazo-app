@@ -36,7 +36,8 @@ const EventTypeSelector = ({
             boxShadow: 'lg',
             borderColor: `${eventType.color}.300`
           }}
-          h={{ base: '120px', md: '140px' }}>
+          h={{ base: '120px', md: '140px' }}
+        >
           <CardBody display="flex" alignItems="center" justifyContent="center" p={4}>
             <VStack spacing={3} align="center" textAlign="center">
               <Icon
@@ -55,7 +56,8 @@ const EventTypeSelector = ({
                   fontSize={{ base: 'sm', md: 'md' }}
                   fontWeight="bold"
                   color={textColor}
-                  lineHeight="1.2">
+                  lineHeight="1.2"
+                >
                   {eventType.label}
                 </Text>
 
@@ -65,7 +67,8 @@ const EventTypeSelector = ({
                   lineHeight="1.3"
                   noOfLines={2}
                   whiteSpace="normal"
-                  textAlign="center">
+                  textAlign="center"
+                >
                   {eventType.description}
                 </Text>
               </VStack>

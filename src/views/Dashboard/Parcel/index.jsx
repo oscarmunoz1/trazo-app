@@ -4,7 +4,6 @@ import React, { useEffect } from 'react';
 import { dashboardTableData, timelineData } from 'variables/general';
 import { useDispatch, useSelector } from 'react-redux';
 
-import BgMusicCard from 'assets/img/BgMusicCard.png';
 import Card from 'components/Card/Card';
 import CardWithImage from 'components/Card/CardWithImage';
 import CardWithMap from './components/CardWithMap';
@@ -13,6 +12,7 @@ import TrackList from './components/TrackList';
 // assets
 import imageMap from 'assets/img/imageMap.png';
 import imageParcel1 from 'assets/img/ImageParcel1.png';
+import defaultParcelImage from 'assets/img/ImageParcel1.png';
 import { setParcel } from 'store/features/productSlice';
 import { useGetParcelQuery } from 'store/api/productApi';
 import { useIntl } from 'react-intl';
@@ -71,8 +71,7 @@ export default function ParcelView() {
           mb={4}
           borderLeftWidth="4px"
           borderLeftColor="green.500"
-          boxShadow="md"
-        >
+          boxShadow="md">
           <Flex align="center" justify="space-between">
             <Box>
               <Text fontSize="lg" fontWeight="bold" color="green.700">
@@ -88,8 +87,7 @@ export default function ParcelView() {
             <Button
               colorScheme="green"
               size="md"
-              onClick={() => navigate('/admin/dashboard/account/billing')}
-            >
+              onClick={() => navigate('/admin/dashboard/account/billing')}>
               {intl.formatMessage({ id: 'app.manageTrial' })}
             </Button>
           </Flex>
@@ -102,16 +100,14 @@ export default function ParcelView() {
         bg="inherit"
         borderRadius="inherit"
         fontWeight="bold"
-        padding="10px"
-      >
+        padding="10px">
         {establishment?.name}
       </Text>
       <Grid
         templateColumns={{ md: '1fr', lg: '1.8fr 1.2fr' }}
         templateRows={{ md: '1fr auto', lg: '1fr' }}
         my="26px"
-        gap="24px"
-      >
+        gap="24px">
         {establishment ? (
           <CardWithImage
             title={`${establishment?.city || establishment?.zone || ''}, ${establishment?.state}`}
@@ -122,15 +118,27 @@ export default function ParcelView() {
             zone={establishment?.zone}
             readMoreLink={`/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/profile`}
             image={
-              <Image
-                src={data?.image || (!isLoading && !isFetching && BgMusicCard)}
-                alt="chakra image"
-                objectFit={'cover'}
-                minWidth={{ md: '300px', lg: 'auto' }}
-                width="100%"
-                borderRadius="15px"
-                height="100%"
-              />
+              data?.image ? (
+                <Image
+                  src={data.image}
+                  alt="parcel image"
+                  objectFit={'cover'}
+                  minWidth={{ md: '300px', lg: 'auto' }}
+                  width="100%"
+                  borderRadius="15px"
+                  height="100%"
+                />
+              ) : (
+                <Image
+                  src={defaultParcelImage}
+                  alt="default parcel image"
+                  objectFit={'cover'}
+                  minWidth={{ md: '300px', lg: 'auto' }}
+                  width="100%"
+                  borderRadius="15px"
+                  height="100%"
+                />
+              )
             }
           />
         ) : (
@@ -146,8 +154,7 @@ export default function ParcelView() {
       <Grid
         templateColumns={{ sm: '1fr', md: '1fr', lg: '1fr 2fr' }}
         templateRows={{ sm: '1fr auto', md: '1fr', lg: '1fr' }}
-        gap="24px"
-      >
+        gap="24px">
         <TrackList amount={40} />
         <HistoryCard
           title={'History'}

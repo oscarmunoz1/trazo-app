@@ -89,14 +89,16 @@ function ProfileProduction() {
       title={intl.formatMessage({ id: 'app.productionDetail' })}
       subtitle={intl.formatMessage({
         id: 'app.hereYouCanSeeTheInformationOfTheProductionYouHaveSelected'
-      })}>
+      })}
+    >
       <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px" width={'100%'}>
         <Card
           mt={{ md: '24px' }}
           maxWidth={{ sm: '100%', md: '100%', lg: '80%' }}
           px="0px"
           pt={{ sm: '16px', md: '32px', lg: '0px' }}
-          boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px">
+          boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px"
+        >
           <CardHeader justifyContent="end">
             <Flex p="24px" align="center" justify="center">
               <Menu isOpen={isOpen1} onClose={onClose1}>
@@ -109,7 +111,8 @@ function ProfileProduction() {
                       navigate(
                         `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${productionId}/change`
                       )
-                    }>
+                    }
+                  >
                     <Flex color={textColor} cursor="pointer" align="center" p="4px">
                       <Text fontSize="sm" fontWeight="500">
                         {intl.formatMessage({ id: 'app.edit' })}
@@ -211,7 +214,8 @@ function ProfileProduction() {
                     borderRadius="15px"
                     display="flex"
                     alignItems="center"
-                    justifyContent="center">
+                    justifyContent="center"
+                  >
                     {intl.formatMessage({ id: 'app.certified' })}
                   </Badge>
                   <Flex direction="column">
@@ -302,7 +306,8 @@ function ProfileProduction() {
                   bg={useColorModeValue('white', 'gray.700')}
                   borderRadius="xl"
                   boxShadow="sm"
-                  position="relative">
+                  position="relative"
+                >
                   <Text fontSize="xl" color={textColor} fontWeight="bold" mb="4">
                     {intl.formatMessage({ id: 'app.qrCode' })}
                   </Text>
@@ -315,7 +320,8 @@ function ProfileProduction() {
                     p={6}
                     bg="white"
                     transition="all 0.3s ease"
-                    _hover={{ transform: 'scale(1.02)', boxShadow: 'xl' }}>
+                    _hover={{ transform: 'scale(1.02)', boxShadow: 'xl' }}
+                  >
                     <Image
                       src={historyData?.qr_code}
                       alt="QR Code"
@@ -337,12 +343,14 @@ function ProfileProduction() {
                       bg="blackAlpha.50"
                       display="flex"
                       alignItems="center"
-                      justifyContent="center">
+                      justifyContent="center"
+                    >
                       <Button
                         leftIcon={<Icon as={FiDownload} />}
                         colorScheme="green"
                         size="lg"
-                        onClick={downloadQRCode}>
+                        onClick={downloadQRCode}
+                      >
                         {intl.formatMessage({ id: 'app.downloadQRCode' })}
                       </Button>
                     </Box>

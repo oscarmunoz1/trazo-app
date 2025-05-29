@@ -46,7 +46,8 @@ const FormStepper = ({
               cursor={allowStepClick ? 'pointer' : 'default'}
               onClick={() => allowStepClick && onStepClick?.(index)}
               _hover={allowStepClick ? { opacity: 0.8 } : {}}
-              transition="all 0.3s ease">
+              transition="all 0.3s ease"
+            >
               <Circle
                 size={circleSize}
                 bg={
@@ -60,7 +61,8 @@ const FormStepper = ({
                 fontWeight="bold"
                 transition="all 0.3s ease"
                 boxShadow={index === activeStep ? 'lg' : 'md'}
-                _hover={allowStepClick ? { transform: 'scale(1.05)' } : {}}>
+                _hover={allowStepClick ? { transform: 'scale(1.05)' } : {}}
+              >
                 {completedSteps.includes(index) || index < activeStep ? (
                   <Icon as={step.icon || FaCheckCircle} boxSize="18px" />
                 ) : (
@@ -74,7 +76,8 @@ const FormStepper = ({
                   fontWeight={index === activeStep ? 'bold' : 'medium'}
                   color={index === activeStep ? textColor : subTextColor}
                   textAlign="center"
-                  transition="all 0.3s ease">
+                  transition="all 0.3s ease"
+                >
                   {step.title}
                 </Text>
                 {showDescriptions && step.description && (
@@ -82,7 +85,8 @@ const FormStepper = ({
                     fontSize="xs"
                     color={subTextColor}
                     textAlign="center"
-                    display={{ base: 'none', md: 'block' }}>
+                    display={{ base: 'none', md: 'block' }}
+                  >
                     {step.description}
                   </Text>
                 )}

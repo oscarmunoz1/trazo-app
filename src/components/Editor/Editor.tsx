@@ -27,7 +27,8 @@ const CustomToolbar = () => (
     id="toolbar"
     borderTopStartRadius="15px"
     borderTopEndRadius="15px"
-    borderBottom="0px solid transparent !important">
+    borderBottom="0px solid transparent !important"
+  >
     <select className="ql-header" defaultValue={''} onChange={(e) => e.persist()}>
       <option value="1"></option>
       <option value="2"></option>
@@ -38,32 +39,37 @@ const CustomToolbar = () => (
       justifyContent="center !important"
       alignItems="center !important"
       me="5px !important"
-      className="ql-bold"></Button>
+      className="ql-bold"
+    ></Button>
     <Button
       display="flex !important"
       justifyContent="center !important"
       alignItems="center !important"
       me="5px !important"
-      className="ql-italic"></Button>
+      className="ql-italic"
+    ></Button>
     <Button
       display="flex !important"
       justifyContent="center !important"
       alignItems="center !important"
       me="5px !important"
-      className="ql-underline"></Button>
+      className="ql-underline"
+    ></Button>
     <Button
       display="flex !important"
       justifyContent="center !important"
       alignItems="center !important"
       me="5px !important"
       className="ql-list"
-      value="ordered"></Button>
+      value="ordered"
+    ></Button>
     <Button
       display="flex !important"
       justifyContent="center !important"
       alignItems="center !important"
       className="ql-list"
-      value="bullet"></Button>
+      value="bullet"
+    ></Button>
   </Box>
 );
 

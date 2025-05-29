@@ -51,7 +51,8 @@ const SimpleForm = () => {
                 nextLabel="Create Company"
                 isLoading={false}
               />
-            }>
+            }
+          >
             <FormInput name="name" label="Company Name" isRequired />
             <FormInput name="email" label="Email" type="email" isRequired />
             <FormInput name="description" label="Description" />

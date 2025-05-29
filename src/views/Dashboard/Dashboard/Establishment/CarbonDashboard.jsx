@@ -35,10 +35,17 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
-  Divider
+  Divider,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  Stack
 } from '@chakra-ui/react';
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import { InfoOutlineIcon, ChevronDownIcon, WarningIcon, CheckCircleIcon } from '@chakra-ui/icons';
+import { IoIosArrowDown } from 'react-icons/io';
 import {
   FaLeaf,
   FaChartLine,
@@ -260,46 +267,83 @@ const CarbonDashboard = () => {
     <Box minH="100vh" bg={bg} py={{ base: 4, md: 8 }} px={{ base: 2, md: 6 }}>
       {/* Header Section */}
       <VStack spacing={6} align="stretch">
-        <HStack justify="space-between" align="center" flexWrap="wrap" gap={4}>
+        <Flex
+          direction={{ sm: 'column', md: 'row' }}
+          justify="space-between"
+          align="center"
+          gap="24px"
+          paddingTop={12}
+          w="100%">
           <VStack align="start" spacing={1}>
-            <Heading size="xl" color={textColor}>
-              <Icon as={FaLeaf} mr={3} color="green.500" />
-              Dashboard de Carbono
-            </Heading>
             <Text color="gray.500" fontSize="md">
               Gestiona tu huella de carbono y optimiza costos operacionales
             </Text>
           </VStack>
 
           {/* View Mode Selector */}
-          <HStack spacing={4}>
-            <Select
-              value={viewMode}
-              onChange={handleViewModeChange}
-              width="200px"
-              bg={cardBg}
-              borderColor={borderColor}>
-              <option value="establishment">Establecimiento</option>
-              <option value="production">Producción</option>
-            </Select>
+          <Stack direction="row" spacing="10px" alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}>
+            <Menu>
+              <MenuButton
+                as={Button}
+                rightIcon={<IoIosArrowDown />}
+                color="gray.700"
+                width="fit-content"
+                h="35px"
+                bg="#fff"
+                minW="155px"
+                fontSize="xs">
+                {viewMode === 'establishment' ? 'ESTABLECIMIENTO' : 'PRODUCCIÓN'}
+              </MenuButton>
+              <MenuList>
+                <MenuItem
+                  onClick={() => handleViewModeChange({ target: { value: 'establishment' } })}
+                  color="gray.500">
+                  Establecimiento
+                </MenuItem>
+                <MenuDivider />
+                <MenuItem
+                  onClick={() => handleViewModeChange({ target: { value: 'production' } })}
+                  color="gray.500">
+                  Producción
+                </MenuItem>
+              </MenuList>
+            </Menu>
             {viewMode === 'production' && (
-              <Select
-                value={productionId}
-                onChange={handleProductionChange}
-                width="250px"
-                placeholder="Seleccionar Producción"
-                isDisabled={isProductionsLoading}
-                bg={cardBg}
-                borderColor={borderColor}>
-                {productions?.map((prod) => (
-                  <option key={prod.id} value={prod.id}>
-                    {prod.name || `Producción ${prod.id}`}
-                  </option>
-                ))}
-              </Select>
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  rightIcon={<IoIosArrowDown />}
+                  color="gray.700"
+                  width="fit-content"
+                  h="35px"
+                  bg="#fff"
+                  minW="200px"
+                  fontSize="xs"
+                  isDisabled={isProductionsLoading}>
+                  {(productionId &&
+                    productions?.find((p) => p.id === parseInt(productionId))?.name) ||
+                    'SELECCIONAR PRODUCCIÓN'}
+                </MenuButton>
+                <MenuList>
+                  <MenuItem
+                    onClick={() => handleProductionChange({ target: { value: '' } })}
+                    color="gray.500">
+                    Seleccionar Producción
+                  </MenuItem>
+                  <MenuDivider />
+                  {productions?.map((prod) => (
+                    <MenuItem
+                      key={prod.id}
+                      onClick={() => handleProductionChange({ target: { value: prod.id } })}
+                      color="gray.500">
+                      {prod.name || `Producción ${prod.id}`}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </Menu>
             )}
-          </HStack>
-        </HStack>
+          </Stack>
+        </Flex>
 
         {/* Summary Banner */}
         <Card
@@ -309,11 +353,11 @@ const CarbonDashboard = () => {
           boxShadow="lg"
           borderRadius="xl"
           overflow="hidden">
-          <CardBody p={6}>
+          <CardBody p={4}>
             <Flex align="center" justify="space-between" wrap="wrap" gap={6}>
               <Flex align="center" gap={4}>
                 <Box>
-                  <Heading size="lg" color="green.700" mb={2}>
+                  <Heading size="md" color="green.700" mb={2}>
                     Huella de Carbono -{' '}
                     {viewMode === 'establishment' ? 'Establecimiento' : 'Producción'}
                   </Heading>

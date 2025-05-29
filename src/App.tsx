@@ -53,6 +53,7 @@ import Billing from 'views/Pages/Account/Billing';
 import NoSubscriptionRedirect from './utils/protections/NoSubscriptionRedirect';
 import NewProduction from 'views/Dashboard/Dashboard/components/forms/NewProduction';
 import CarbonDashboard from 'views/Dashboard/Dashboard/Establishment/CarbonDashboard';
+import IoTDashboard from 'views/Dashboard/Dashboard/Establishment/IoTDashboard';
 
 const App = () => {
   const location = useLocation();
@@ -228,6 +229,15 @@ const App = () => {
                   element={
                     <NoSubscriptionRedirect>
                       <CarbonDashboard />
+                    </NoSubscriptionRedirect>
+                  }
+                />
+                <Route
+                  path="establishment/:establishmentId/iot"
+                  exact
+                  element={
+                    <NoSubscriptionRedirect>
+                      <IoTDashboard />
                     </NoSubscriptionRedirect>
                   }
                 />

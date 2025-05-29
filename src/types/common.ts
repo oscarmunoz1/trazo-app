@@ -14,6 +14,7 @@ interface Route {
   isCertifications?: boolean;
   isCommercial?: boolean;
   isCarbonDashboard?: boolean;
+  isIoTDashboard?: boolean;
   isCompanySettings?: boolean;
   items?: Route[];
   secondaryNavbar?: boolean | undefined;

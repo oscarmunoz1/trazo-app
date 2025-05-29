@@ -43,6 +43,8 @@ const customFetchBase = async (args: any, api: BaseQueryApi, extraOptions: any) 
 
   if (hasErrorData(result.error)) {
     const errorData = result.error.data;
+    const currentPath = window.location.pathname;
+    const isOnAuthPage = currentPath.startsWith('/auth/');
 
     // Check for authentication error
     if (
@@ -50,7 +52,15 @@ const customFetchBase = async (args: any, api: BaseQueryApi, extraOptions: any) 
       'detail' in errorData &&
       errorData.detail === 'Authentication credentials were not provided.'
     ) {
-      window.location.href = '/auth/signin';
+      // Only redirect if not already on an auth page
+      if (!isOnAuthPage) {
+        // Include current path as 'next' parameter for protected routes
+        const isProtectedRoute = currentPath.startsWith('/admin/');
+        const redirectUrl = isProtectedRoute
+          ? `/auth/signin?next=${encodeURIComponent(currentPath + window.location.search)}`
+          : '/auth/signin';
+        window.location.href = redirectUrl;
+      }
       return result;
     }
 
@@ -74,9 +84,14 @@ const customFetchBase = async (args: any, api: BaseQueryApi, extraOptions: any) 
             // Retry the initial query
             result = await baseQuery(args, api, extraOptions);
           } else {
-            // api.dispatch(logout());
-            if (window.location.pathname !== '/auth/signin') {
-              window.location.href = '/auth/signin';
+            // Only redirect if not already on signin page
+            if (currentPath !== '/auth/signin' && !isOnAuthPage) {
+              // Include current path as 'next' parameter for protected routes
+              const isProtectedRoute = currentPath.startsWith('/admin/');
+              const redirectUrl = isProtectedRoute
+                ? `/auth/signin?next=${encodeURIComponent(currentPath + window.location.search)}`
+                : '/auth/signin';
+              window.location.href = redirectUrl;
             }
           }
         } finally {

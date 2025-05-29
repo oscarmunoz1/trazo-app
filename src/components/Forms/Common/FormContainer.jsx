@@ -30,7 +30,8 @@ const FormContainer = ({
                 w={sidebarWidth}
                 position={{ xl: sidebarPosition }}
                 top={sidebarTop}
-                alignSelf="flex-start">
+                alignSelf="flex-start"
+              >
                 {sidebarContent}
               </Box>
             </Flex>

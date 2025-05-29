@@ -25,7 +25,8 @@ const EventFormStepper = ({ steps, activeStep, completedSteps = [] }) => {
                 }
                 color="white"
                 fontWeight="bold"
-                transition="all 0.3s ease">
+                transition="all 0.3s ease"
+              >
                 {completedSteps.includes(index) || index < activeStep ? (
                   <FaCheckCircle />
                 ) : (
@@ -39,7 +40,8 @@ const EventFormStepper = ({ steps, activeStep, completedSteps = [] }) => {
                   fontWeight={index === activeStep ? 'bold' : 'medium'}
                   color={index === activeStep ? textColor : subTextColor}
                   textAlign="center"
-                  transition="all 0.3s ease">
+                  transition="all 0.3s ease"
+                >
                   {step.title}
                 </Text>
                 {step.description && (
@@ -47,7 +49,8 @@ const EventFormStepper = ({ steps, activeStep, completedSteps = [] }) => {
                     fontSize="xs"
                     color={subTextColor}
                     textAlign="center"
-                    display={{ base: 'none', md: 'block' }}>
+                    display={{ base: 'none', md: 'block' }}
+                  >
                     {step.description}
                   </Text>
                 )}

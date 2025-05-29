@@ -104,7 +104,8 @@ const ProductionTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
             fontSize={'0.875rem'}
             mt="4px"
             defaultValue={formType || ''}
-            {...register('type')}>
+            {...register('type')}
+          >
             <option value="PL">{intl.formatMessage({ id: 'app.planting' })}</option>
             <option value="HA">{intl.formatMessage({ id: 'app.harvesting' })}</option>
             <option value="IR">{intl.formatMessage({ id: 'app.irrigation' })}</option>
@@ -142,7 +143,8 @@ const ProductionTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
                 borderRadius="lg"
                 fontWeight="600"
                 _hover={{ transform: 'translateY(-1px)' }}
-                transition="all 0.3s ease">
+                transition="all 0.3s ease"
+              >
                 {intl.formatMessage({ id: 'app.previous' }) || 'Previous'}
               </Button>
               <Button
@@ -156,7 +158,8 @@ const ProductionTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
                 fontWeight="600"
                 boxShadow="lg"
                 _hover={{ boxShadow: 'xl', transform: 'translateY(-1px)' }}
-                transition="all 0.3s ease">
+                transition="all 0.3s ease"
+              >
                 {intl.formatMessage({ id: 'app.continue' }) || 'Continue'}
               </Button>
             </HStack>

@@ -63,7 +63,8 @@ const MediaUpload = ({
         p={4}
         border="1px solid"
         borderColor={borderColor}
-        borderRadius="lg">
+        borderRadius="lg"
+      >
         <Icon as={FaFile} boxSize={8} color="gray.500" mb={2} />
         <Text fontSize="sm" color={textColor} noOfLines={1} fontWeight="500">
           {file.name}
@@ -91,7 +92,8 @@ const MediaUpload = ({
           boxShadow: disabled ? 'none' : 'lg'
         }}
         opacity={disabled ? 0.6 : 1}
-        {...getRootProps()}>
+        {...getRootProps()}
+      >
         <Input {...getInputProps()} />
 
         {acceptedFiles.length > 0 ? (
@@ -109,7 +111,8 @@ const MediaUpload = ({
                 gap={6}
                 w="100%"
                 maxW="600px"
-                mx="auto">
+                mx="auto"
+              >
                 {acceptedFiles.map((file, index) => renderFilePreview(file, index))}
               </Grid>
             )}

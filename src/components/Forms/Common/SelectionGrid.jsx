@@ -58,7 +58,8 @@ const SelectionGrid = ({
           fontSize={{ base: 'sm', md: 'md' }}
           fontWeight="bold"
           color={textColor}
-          lineHeight="1.2">
+          lineHeight="1.2"
+        >
           {option.label}
         </Text>
 
@@ -69,7 +70,8 @@ const SelectionGrid = ({
             lineHeight="1.3"
             noOfLines={2}
             whiteSpace="normal"
-            textAlign="center">
+            textAlign="center"
+          >
             {option.description}
           </Text>
         )}
@@ -100,7 +102,8 @@ const SelectionGrid = ({
             }}
             transition="all 0.2s"
             whiteSpace="normal"
-            overflow="hidden">
+            overflow="hidden"
+          >
             {renderOption
               ? renderOption(option, isSelected(option.value))
               : defaultRenderOption(option)}
@@ -119,7 +122,8 @@ const SelectionGrid = ({
           variant="unstyled"
           height="auto"
           p={0}
-          onClick={() => handleSelect(option.value)}>
+          onClick={() => handleSelect(option.value)}
+        >
           <VStack
             w="100%"
             h={height}
@@ -138,7 +142,8 @@ const SelectionGrid = ({
               borderColor: `${option.color || colorScheme}.300`
             }}
             justify="center"
-            align="center">
+            align="center"
+          >
             {renderOption
               ? renderOption(option, isSelected(option.value))
               : defaultRenderOption(option)}

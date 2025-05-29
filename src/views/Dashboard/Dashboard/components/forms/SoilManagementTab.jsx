@@ -250,7 +250,8 @@ const SoilManagementTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
               borderRadius="lg"
               fontWeight="600"
               _hover={{ transform: 'translateY(-1px)' }}
-              transition="all 0.3s ease">
+              transition="all 0.3s ease"
+            >
               {intl.formatMessage({ id: 'app.previous' }) || 'Previous'}
             </Button>
             <Button
@@ -264,7 +265,8 @@ const SoilManagementTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
               fontWeight="600"
               boxShadow="lg"
               _hover={{ boxShadow: 'xl', transform: 'translateY(-1px)' }}
-              transition="all 0.3s ease">
+              transition="all 0.3s ease"
+            >
               {intl.formatMessage({ id: 'app.continue' }) || 'Continue'}
             </Button>
           </HStack>

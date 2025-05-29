@@ -34,7 +34,8 @@ const FormNavigationButtons = ({
             transform: 'translateY(-1px)',
             boxShadow: 'md'
           }}
-          transition="all 0.3s ease">
+          transition="all 0.3s ease"
+        >
           {previousLabel}
         </Button>
       ) : (
@@ -58,7 +59,8 @@ const FormNavigationButtons = ({
           boxShadow: 'xl',
           transform: 'translateY(-1px)'
         }}
-        transition="all 0.3s ease">
+        transition="all 0.3s ease"
+      >
         {nextLabel}
       </Button>
     </HStack>

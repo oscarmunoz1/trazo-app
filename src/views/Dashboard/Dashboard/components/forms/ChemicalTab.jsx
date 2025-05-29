@@ -116,7 +116,8 @@ const ChemicalTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
                 fontSize={'0.875rem'}
                 noOptionsMessage={() => intl.formatMessage({ id: 'app.noOptions' })}
                 label={intl.formatMessage({ id: 'app.type' })}
-                {...register('type')}>
+                {...register('type')}
+              >
                 <option value="FE">{intl.formatMessage({ id: 'app.fertilizer' })}</option>
                 <option value="PE">{intl.formatMessage({ id: 'app.pesticide' })}</option>
                 <option value="FU">{intl.formatMessage({ id: 'app.fungicide' })}</option>
@@ -201,7 +202,8 @@ const ChemicalTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
                 borderRadius="lg"
                 fontWeight="600"
                 _hover={{ transform: 'translateY(-1px)' }}
-                transition="all 0.3s ease">
+                transition="all 0.3s ease"
+              >
                 {intl.formatMessage({ id: 'app.previous' }) || 'Previous'}
               </Button>
               <Button
@@ -215,7 +217,8 @@ const ChemicalTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
                 fontWeight="600"
                 boxShadow="lg"
                 _hover={{ boxShadow: 'xl', transform: 'translateY(-1px)' }}
-                transition="all 0.3s ease">
+                transition="all 0.3s ease"
+              >
                 {intl.formatMessage({ id: 'app.continue' }) || 'Continue'}
               </Button>
             </HStack>

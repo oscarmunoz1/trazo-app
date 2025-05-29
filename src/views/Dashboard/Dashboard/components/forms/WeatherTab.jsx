@@ -199,7 +199,8 @@ const WeatherTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
                 borderRadius={'15px'}
                 fontSize={'0.875rem'}
                 mt="4px"
-                {...register('type')}>
+                {...register('type')}
+              >
                 <option value="FR">{intl.formatMessage({ id: 'app.frost' })}</option>
                 <option value="DR">{intl.formatMessage({ id: 'app.drought' })}</option>
                 <option value="HL">{intl.formatMessage({ id: 'app.hailstorms' })}</option>
@@ -377,7 +378,8 @@ const WeatherTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
                 borderRadius="lg"
                 fontWeight="600"
                 _hover={{ transform: 'translateY(-1px)' }}
-                transition="all 0.3s ease">
+                transition="all 0.3s ease"
+              >
                 {intl.formatMessage({ id: 'app.previous' }) || 'Previous'}
               </Button>
               <Button
@@ -391,7 +393,8 @@ const WeatherTab = ({ onSubmitHandler, onPrev, initialValues = {} }) => {
                 fontWeight="600"
                 boxShadow="lg"
                 _hover={{ boxShadow: 'xl', transform: 'translateY(-1px)' }}
-                transition="all 0.3s ease">
+                transition="all 0.3s ease"
+              >
                 {intl.formatMessage({ id: 'app.continue' }) || 'Continue'}
               </Button>
             </HStack>
