@@ -54,6 +54,7 @@ import NoSubscriptionRedirect from './utils/protections/NoSubscriptionRedirect';
 import NewProduction from 'views/Dashboard/Dashboard/components/forms/NewProduction';
 import CarbonDashboard from 'views/Dashboard/Dashboard/Establishment/CarbonDashboard';
 import IoTDashboard from 'views/Dashboard/Dashboard/Establishment/IoTDashboard';
+import PublicEstablishmentProfile from 'views/Scan/PublicEstablishmentProfile/PublicEstablishmentProfile';
 
 const App = () => {
   const location = useLocation();
@@ -250,6 +251,10 @@ const App = () => {
           <>
             <Route element={<AuthLayout />}>
               <Route path="/production/:productionId" element={<ProductDetail />} />
+              <Route
+                path="/establishment/:establishmentId"
+                element={<PublicEstablishmentProfile />}
+              />
             </Route>
             <Route element={<Authenticated allowedRoles={config.protected.roles} />}>
               <Route path={config.protected.path} element={<AdminConsumerLayout />}>

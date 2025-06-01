@@ -13,7 +13,8 @@ import {
   Text,
   useColorModeValue,
   CircularProgress,
-  Grid
+  Grid,
+  VStack
 } from '@chakra-ui/react';
 import { NavLink, useLocation, useMatch, useParams } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
@@ -412,405 +413,339 @@ export default function CommercialView() {
   ];
 
   return (
-    <Flex flexDirection="column" pt={{ base: '120px', md: '75px' }}>
-      <Box mb={6}>
-        <Text
-          color={mainText}
-          bg="inherit"
-          borderRadius="inherit"
-          fontWeight="bold"
-          padding="10px"
-          mb={4}
-        >
-          {intl.formatMessage({ id: 'app.establishments' })}
-        </Text>
-
-        <Grid
-          templateColumns={{
-            base: '1fr',
-            sm: 'repeat(2, 1fr)',
-            md: 'repeat(3, 1fr)',
-            lg: 'repeat(auto-fill, minmax(240px, 1fr))'
-          }}
-          gap={{ base: 3, md: 4 }}
-          px={{ base: 4, md: 2 }}
-        >
-          {establishments ? (
-            establishments.map((prop) => (
-              <NavLink key={prop.id} to={`/admin/dashboard/establishment/${prop.id}/commercial/`}>
-                <Card
-                  p={4}
-                  cursor="pointer"
-                  bg={prop.id === establishment?.id ? 'green.500' : cardColor}
-                  _hover={{
-                    transform: 'translateY(-2px)',
-                    boxShadow: 'lg',
-                    transition: 'all 0.2s'
-                  }}
-                >
-                  <Flex align="center" gap={3}>
-                    <Box
-                      bg={prop.id === establishment?.id ? 'white' : 'green.500'}
-                      p={2}
-                      borderRadius="md"
-                    >
-                      <HomeIcon
-                        h={'24px'}
-                        w={'24px'}
-                        color={prop.id === establishment?.id ? 'green.500' : 'white'}
-                      />
-                    </Box>
-                    <Box>
-                      <Text
-                        fontWeight="bold"
-                        color={prop.id === establishment?.id ? 'white' : textColor}
-                      >
-                        {prop.name}
-                      </Text>
-                      <Text
-                        fontSize="sm"
-                        color={prop.id === establishment?.id ? 'white' : 'gray.500'}
-                      >
-                        {`${prop.city || prop.zone || ''}, ${prop.state}`}
-                      </Text>
-                    </Box>
-                  </Flex>
-                </Card>
-              </NavLink>
-            ))
-          ) : (
-            <Card minH="115px" bg={cardColor} />
-          )}
-        </Grid>
-      </Box>
-      <Flex mt={'20px'} mb={'20px'} w={'100%'} gap="20px" flexDirection={'column'}>
-        <Flex flexDirection={'column'}>
-          <Flex
-            direction={{ sm: 'column', md: 'row' }}
-            justify="space-between"
-            align="center"
-            gap="24px"
-            w="100%"
-          >
-            <Flex gap="24px" direction={{ base: 'column', smd: 'row' }}>
-              <Flex flexDirection={'column'}>
-                <Stack
-                  direction="row"
-                  spacing="10px"
-                  alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}
-                >
-                  <Menu>
-                    <MenuButton
-                      as={Button}
-                      rightIcon={<IoIosArrowDown />}
-                      color="gray.700"
-                      width="fit-content"
-                      h="35px"
-                      bg="#fff"
-                      minW="155px"
-                      fontSize="xs"
-                    >
-                      {filters.parcel
-                        ? filters.parcel.name
-                        : intl.formatMessage({ id: 'app.allParcels' }).toUpperCase()}
-                    </MenuButton>
-                    <MenuList>
-                      <MenuItem onClick={() => onParcelFilterChange(null)} color="gray.500">
-                        {intl.formatMessage({ id: 'app.allParcels' })}
-                      </MenuItem>
-                      <MenuDivider />
-                      {establishment &&
-                        establishment.parcels.map((parcel) => (
-                          <MenuItem onClick={() => onParcelFilterChange(parcel)} color="gray.500">
-                            {parcel.name}
-                          </MenuItem>
-                        ))}
-                    </MenuList>
-                  </Menu>
-                </Stack>
-              </Flex>
-              <Flex flexDirection={'column'}>
-                <Stack
-                  direction="row"
-                  spacing="10px"
-                  alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}
-                >
-                  <Menu>
-                    <MenuButton
-                      as={Button}
-                      rightIcon={<IoIosArrowDown />}
-                      color="gray.700"
-                      width="fit-content"
-                      h="35px"
-                      bg="#fff"
-                      minW="155px"
-                      fontSize="xs"
-                    >
-                      {filters.product
-                        ? filters.product.name
-                        : intl.formatMessage({ id: 'app.allProducts' }).toUpperCase()}
-                    </MenuButton>
-                    <MenuList>
-                      <MenuItem onClick={() => onProductFilterChange(null)} color="gray.500">
-                        {intl.formatMessage({ id: 'app.allProducts' })}
-                      </MenuItem>
-                      <MenuDivider />
-                      {filters?.parcel
-                        ? establishmentProducts &&
-                          establishmentProducts.map((product) => (
-                            <MenuItem
-                              onClick={() => onProductFilterChange(product)}
-                              color="gray.500"
-                            >
-                              {product.name}
-                            </MenuItem>
-                          ))
-                        : dataProducts &&
-                          dataProducts.map((product) => (
-                            <MenuItem
-                              onClick={() => onProductFilterChange(product)}
-                              color="gray.500"
-                            >
-                              {product.name}
+    <Box minH="100vh" py={{ base: 4, md: 8 }} px={{ base: 2, md: 6 }}>
+      <VStack spacing={6} align="stretch">
+        <Flex
+          direction={{ sm: 'column', md: 'row' }}
+          justify="space-between"
+          align="center"
+          gap="24px"
+          paddingTop={12}
+          w="100%">
+          <VStack align="start" spacing={1}>
+            <Text color="gray.500" fontSize="md">
+              Monitorea y gestiona tus escaneos y resultados
+            </Text>
+          </VStack>
+        </Flex>
+        <Flex mt={'20px'} mb={'20px'} w={'100%'} gap="20px" flexDirection={'column'}>
+          <Flex flexDirection={'column'}>
+            <Flex
+              direction={{ sm: 'column', md: 'row' }}
+              justify="space-between"
+              align="center"
+              gap="24px"
+              w="100%">
+              <Flex gap="24px" direction={{ base: 'column', smd: 'row' }}>
+                <Flex flexDirection={'column'}>
+                  <Stack
+                    direction="row"
+                    spacing="10px"
+                    alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}>
+                    <Menu>
+                      <MenuButton
+                        as={Button}
+                        rightIcon={<IoIosArrowDown />}
+                        color="gray.700"
+                        width="fit-content"
+                        h="35px"
+                        bg="#fff"
+                        minW="155px"
+                        fontSize="xs">
+                        {filters.parcel
+                          ? filters.parcel.name
+                          : intl.formatMessage({ id: 'app.allParcels' }).toUpperCase()}
+                      </MenuButton>
+                      <MenuList>
+                        <MenuItem onClick={() => onParcelFilterChange(null)} color="gray.500">
+                          {intl.formatMessage({ id: 'app.allParcels' })}
+                        </MenuItem>
+                        <MenuDivider />
+                        {establishment &&
+                          establishment.parcels.map((parcel) => (
+                            <MenuItem onClick={() => onParcelFilterChange(parcel)} color="gray.500">
+                              {parcel.name}
                             </MenuItem>
                           ))}
-                    </MenuList>
-                  </Menu>
-                </Stack>
-              </Flex>
-              <Flex flexDirection={'column'}>
-                <Stack
-                  direction="row"
-                  spacing="10px"
-                  alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}
-                >
-                  <Menu>
-                    <MenuButton
-                      as={Button}
-                      rightIcon={<IoIosArrowDown />}
-                      color="gray.700"
-                      minW="155px"
-                      h="35px"
-                      bg="#fff"
-                      fontSize="xs"
-                      width="fit-content"
-                      disabled={filters.product == null || filters.parcel == null}
-                    >
-                      {filters.production
-                        ? filters.production.period
-                        : intl.formatMessage({ id: 'app.allProductions' }).toUpperCase()}
-                    </MenuButton>
-                    <MenuList>
-                      <MenuItem onClick={() => onProductionFilterChange(null)} color="gray.500">
-                        {intl.formatMessage({ id: 'app.allProductions' })}
-                      </MenuItem>
-                      <MenuDivider />
-                      {dataHistories &&
-                        dataHistories.map((history) => (
-                          <MenuItem
-                            onClick={() => onProductionFilterChange(history)}
-                            color="gray.500"
-                          >
-                            {history.period}
-                          </MenuItem>
-                        ))}
-                      {/* <MenuItem color="gray.500">20/03/2021</MenuItem>
+                      </MenuList>
+                    </Menu>
+                  </Stack>
+                </Flex>
+                <Flex flexDirection={'column'}>
+                  <Stack
+                    direction="row"
+                    spacing="10px"
+                    alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}>
+                    <Menu>
+                      <MenuButton
+                        as={Button}
+                        rightIcon={<IoIosArrowDown />}
+                        color="gray.700"
+                        width="fit-content"
+                        h="35px"
+                        bg="#fff"
+                        minW="155px"
+                        fontSize="xs">
+                        {filters.product
+                          ? filters.product.name
+                          : intl.formatMessage({ id: 'app.allProducts' }).toUpperCase()}
+                      </MenuButton>
+                      <MenuList>
+                        <MenuItem onClick={() => onProductFilterChange(null)} color="gray.500">
+                          {intl.formatMessage({ id: 'app.allProducts' })}
+                        </MenuItem>
+                        <MenuDivider />
+                        {filters?.parcel
+                          ? establishmentProducts &&
+                            establishmentProducts.map((product) => (
+                              <MenuItem
+                                onClick={() => onProductFilterChange(product)}
+                                color="gray.500">
+                                {product.name}
+                              </MenuItem>
+                            ))
+                          : dataProducts &&
+                            dataProducts.map((product) => (
+                              <MenuItem
+                                onClick={() => onProductFilterChange(product)}
+                                color="gray.500">
+                                {product.name}
+                              </MenuItem>
+                            ))}
+                      </MenuList>
+                    </Menu>
+                  </Stack>
+                </Flex>
+                <Flex flexDirection={'column'}>
+                  <Stack
+                    direction="row"
+                    spacing="10px"
+                    alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}>
+                    <Menu>
+                      <MenuButton
+                        as={Button}
+                        rightIcon={<IoIosArrowDown />}
+                        color="gray.700"
+                        minW="155px"
+                        h="35px"
+                        bg="#fff"
+                        fontSize="xs"
+                        width="fit-content"
+                        disabled={filters.product == null || filters.parcel == null}>
+                        {filters.production
+                          ? filters.production.period
+                          : intl.formatMessage({ id: 'app.allProductions' }).toUpperCase()}
+                      </MenuButton>
+                      <MenuList>
+                        <MenuItem onClick={() => onProductionFilterChange(null)} color="gray.500">
+                          {intl.formatMessage({ id: 'app.allProductions' })}
+                        </MenuItem>
+                        <MenuDivider />
+                        {dataHistories &&
+                          dataHistories.map((history) => (
+                            <MenuItem
+                              onClick={() => onProductionFilterChange(history)}
+                              color="gray.500">
+                              {history.period}
+                            </MenuItem>
+                          ))}
+                        {/* <MenuItem color="gray.500">20/03/2021</MenuItem>
                       <MenuItem color="gray.500">20/07/2021</MenuItem>
                       <MenuItem color="gray.500">20/09/2021</MenuItem> */}
-                    </MenuList>
-                  </Menu>
-                </Stack>
+                      </MenuList>
+                    </Menu>
+                  </Stack>
+                </Flex>
+              </Flex>
+              <Stack
+                direction="row"
+                spacing="10px"
+                alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}>
+                <Menu>
+                  <MenuButton
+                    as={Button}
+                    rightIcon={<IoIosArrowDown />}
+                    color="gray.700"
+                    w="125px"
+                    h="35px"
+                    bg="#fff"
+                    fontSize="xs"
+                    width="fit-content"
+                    minW="125px">
+                    {filters.period.name.toUpperCase()}
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem
+                      onClick={() =>
+                        onPeriodFilterChange({
+                          id: 'week',
+                          name: intl.formatMessage({ id: 'app.thisWeek' })
+                        })
+                      }
+                      color="gray.500">
+                      {intl.formatMessage({ id: 'app.thisWeek' })}
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() =>
+                        onPeriodFilterChange({
+                          id: 'month',
+                          name: intl.formatMessage({ id: 'app.thisMonth' })
+                        })
+                      }
+                      color="gray.500">
+                      {intl.formatMessage({ id: 'app.thisMonth' })}
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() =>
+                        onPeriodFilterChange({
+                          id: 'year',
+                          name: intl.formatMessage({ id: 'app.thisYear' })
+                        })
+                      }
+                      color="gray.500">
+                      {intl.formatMessage({ id: 'app.thisYear' })}
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+              </Stack>
+            </Flex>
+          </Flex>
+          <Flex
+            flexDirection={{ base: 'column', lg: 'row' }}
+            gap="24px"
+            p={{ base: '20px', lg: '0' }}>
+            <Flex flex={2}>
+              <ScansList
+                title={intl.formatMessage({ id: 'app.scans' })}
+                labels={scansColumnsNames}
+                scansData={dataEstablishmentScans}
+              />
+            </Flex>
+            <Flex flexDirection={'column'} flex={1.5} gap={'24px'}>
+              <Flex flex={1}>
+                <Card px="0px" pb="0px" height="346px">
+                  <CardHeader mb="34px" px="22px">
+                    <Text color={textColor} fontSize="lg" fontWeight="bold">
+                      {intl.formatMessage({ id: 'app.numberScansAndSales' })}
+                    </Text>
+                  </CardHeader>
+                  <CardBody h="100%">
+                    <Box w="100%" h="100%">
+                      {isFetching ? (
+                        <Flex justify="center" align="center" h="100%">
+                          <CircularProgress isIndeterminate color="green.300" />
+                          <Text ml={4} color={textColor}>
+                            Loading chart data...
+                          </Text>
+                        </Flex>
+                      ) : !dataEstablishmentScansVsSaleInfo?.scans_vs_sales ? (
+                        <Flex justify="center" align="center" h="100%">
+                          <Text color={textColor}>No data available</Text>
+                        </Flex>
+                      ) : (
+                        <LineBarChart
+                          chartRef={chartRef}
+                          chartData={lineBarChartData.map((data) => ({
+                            name: data.name,
+                            type: data.type,
+                            data:
+                              data.name === 'Sales'
+                                ? dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.sales || []
+                                : dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.scans || []
+                          }))}
+                          chartOptions={{
+                            ...lineBarChartOptions,
+                            chart: {
+                              ...lineBarChartOptions.chart,
+                              animations: {
+                                enabled: true,
+                                dynamicAnimation: {
+                                  speed: 350
+                                }
+                              }
+                            },
+                            xaxis: {
+                              ...lineBarChartOptions.xaxis,
+                              categories: formatCategories(
+                                dataEstablishmentScansVsSaleInfo.scans_vs_sales.options
+                              ),
+                              labels: {
+                                show: true,
+                                style: {
+                                  colors: textColor,
+                                  fontSize: '12px'
+                                }
+                              }
+                            }
+                          }}
+                        />
+                      )}
+                    </Box>
+                  </CardBody>
+                </Card>
+              </Flex>
+              <Flex flex={1}>
+                <Card px="0px" pb="0px" minH="390px">
+                  <CardHeader mb="34px" px="22px">
+                    <Text color={textColor} fontSize="lg" fontWeight="bold">
+                      {intl.formatMessage({ id: 'app.productsReputation' })} ⭐️
+                    </Text>
+                  </CardHeader>
+                  <CardBody h="100%">
+                    <Box w="100%" h="100%">
+                      {isFetchingEstablishmentProductsReputation ? (
+                        <Flex justify="center" align="center" h="100%">
+                          <CircularProgress isIndeterminate color="green.300" />
+                        </Flex>
+                      ) : (
+                        <BarChart
+                          chartRef={reputationChartRef}
+                          chartData={[
+                            {
+                              name: 'Average',
+                              data:
+                                dataEstablishmentProductsReputation?.products_reputation?.series ||
+                                []
+                            }
+                          ]}
+                          chartOptions={{
+                            ...barChartOptionsCharts1,
+                            chart: {
+                              ...barChartOptionsCharts1.chart,
+                              animations: {
+                                enabled: true
+                              },
+                              toolbar: {
+                                show: false
+                              }
+                            },
+                            xaxis: {
+                              ...barChartOptionsCharts1.xaxis,
+                              categories:
+                                dataEstablishmentProductsReputation?.products_reputation?.options ||
+                                [],
+                              labels: {
+                                show: true,
+                                style: {
+                                  colors: textColor,
+                                  fontSize: '12px'
+                                }
+                              }
+                            }
+                          }}
+                        />
+                      )}
+                    </Box>
+                  </CardBody>
+                </Card>
               </Flex>
             </Flex>
-            <Stack direction="row" spacing="10px" alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}>
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rightIcon={<IoIosArrowDown />}
-                  color="gray.700"
-                  w="125px"
-                  h="35px"
-                  bg="#fff"
-                  fontSize="xs"
-                  width="fit-content"
-                  minW="125px"
-                >
-                  {filters.period.name.toUpperCase()}
-                </MenuButton>
-                <MenuList>
-                  <MenuItem
-                    onClick={() =>
-                      onPeriodFilterChange({
-                        id: 'week',
-                        name: intl.formatMessage({ id: 'app.thisWeek' })
-                      })
-                    }
-                    color="gray.500"
-                  >
-                    {intl.formatMessage({ id: 'app.thisWeek' })}
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() =>
-                      onPeriodFilterChange({
-                        id: 'month',
-                        name: intl.formatMessage({ id: 'app.thisMonth' })
-                      })
-                    }
-                    color="gray.500"
-                  >
-                    {intl.formatMessage({ id: 'app.thisMonth' })}
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() =>
-                      onPeriodFilterChange({
-                        id: 'year',
-                        name: intl.formatMessage({ id: 'app.thisYear' })
-                      })
-                    }
-                    color="gray.500"
-                  >
-                    {intl.formatMessage({ id: 'app.thisYear' })}
-                  </MenuItem>
-                </MenuList>
-              </Menu>
-            </Stack>
+          </Flex>
+          <Flex gap={'20px'}>
+            <Reviews />
           </Flex>
         </Flex>
-        <Flex
-          flexDirection={{ base: 'column', lg: 'row' }}
-          gap="24px"
-          p={{ base: '20px', lg: '0' }}
-        >
-          <Flex flex={2}>
-            <ScansList
-              title={intl.formatMessage({ id: 'app.scans' })}
-              labels={scansColumnsNames}
-              scansData={dataEstablishmentScans}
-            />
-          </Flex>
-          <Flex flexDirection={'column'} flex={1.5} gap={'24px'}>
-            <Flex flex={1}>
-              <Card px="0px" pb="0px" height="346px">
-                <CardHeader mb="34px" px="22px">
-                  <Text color={textColor} fontSize="lg" fontWeight="bold">
-                    {intl.formatMessage({ id: 'app.numberScansAndSales' })}
-                  </Text>
-                </CardHeader>
-                <CardBody h="100%">
-                  <Box w="100%" h="100%">
-                    {isFetching ? (
-                      <Flex justify="center" align="center" h="100%">
-                        <CircularProgress isIndeterminate color="green.300" />
-                        <Text ml={4} color={textColor}>
-                          Loading chart data...
-                        </Text>
-                      </Flex>
-                    ) : !dataEstablishmentScansVsSaleInfo?.scans_vs_sales ? (
-                      <Flex justify="center" align="center" h="100%">
-                        <Text color={textColor}>No data available</Text>
-                      </Flex>
-                    ) : (
-                      <LineBarChart
-                        chartRef={chartRef}
-                        chartData={lineBarChartData.map((data) => ({
-                          name: data.name,
-                          type: data.type,
-                          data:
-                            data.name === 'Sales'
-                              ? dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.sales || []
-                              : dataEstablishmentScansVsSaleInfo.scans_vs_sales.series.scans || []
-                        }))}
-                        chartOptions={{
-                          ...lineBarChartOptions,
-                          chart: {
-                            ...lineBarChartOptions.chart,
-                            animations: {
-                              enabled: true,
-                              dynamicAnimation: {
-                                speed: 350
-                              }
-                            }
-                          },
-                          xaxis: {
-                            ...lineBarChartOptions.xaxis,
-                            categories: formatCategories(
-                              dataEstablishmentScansVsSaleInfo.scans_vs_sales.options
-                            ),
-                            labels: {
-                              show: true,
-                              style: {
-                                colors: textColor,
-                                fontSize: '12px'
-                              }
-                            }
-                          }
-                        }}
-                      />
-                    )}
-                  </Box>
-                </CardBody>
-              </Card>
-            </Flex>
-            <Flex flex={1}>
-              <Card px="0px" pb="0px" minH="390px">
-                <CardHeader mb="34px" px="22px">
-                  <Text color={textColor} fontSize="lg" fontWeight="bold">
-                    {intl.formatMessage({ id: 'app.productsReputation' })} ⭐️
-                  </Text>
-                </CardHeader>
-                <CardBody h="100%">
-                  <Box w="100%" h="100%">
-                    {isFetchingEstablishmentProductsReputation ? (
-                      <Flex justify="center" align="center" h="100%">
-                        <CircularProgress isIndeterminate color="green.300" />
-                      </Flex>
-                    ) : (
-                      <BarChart
-                        chartRef={reputationChartRef}
-                        chartData={[
-                          {
-                            name: 'Average',
-                            data:
-                              dataEstablishmentProductsReputation?.products_reputation?.series || []
-                          }
-                        ]}
-                        chartOptions={{
-                          ...barChartOptionsCharts1,
-                          chart: {
-                            ...barChartOptionsCharts1.chart,
-                            animations: {
-                              enabled: true
-                            },
-                            toolbar: {
-                              show: false
-                            }
-                          },
-                          xaxis: {
-                            ...barChartOptionsCharts1.xaxis,
-                            categories:
-                              dataEstablishmentProductsReputation?.products_reputation?.options ||
-                              [],
-                            labels: {
-                              show: true,
-                              style: {
-                                colors: textColor,
-                                fontSize: '12px'
-                              }
-                            }
-                          }
-                        }}
-                      />
-                    )}
-                  </Box>
-                </CardBody>
-              </Card>
-            </Flex>
-          </Flex>
-        </Flex>
-        <Flex gap={'20px'}>
-          <Reviews />
-        </Flex>
-      </Flex>
-    </Flex>
+      </VStack>
+    </Box>
   );
 }

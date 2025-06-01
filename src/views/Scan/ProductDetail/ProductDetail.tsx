@@ -26,6 +26,7 @@ import {
   Tr,
   UnorderedList,
   useColorModeValue,
+  useBreakpointValue,
   VStack,
   Heading,
   Divider,
@@ -45,7 +46,17 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  Avatar
+  Avatar,
+  Circle,
+  Skeleton,
+  SkeletonCircle,
+  SkeletonText,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Spinner,
+  Container
 } from '@chakra-ui/react';
 import { BsStar, BsStarFill, BsStarHalf } from 'react-icons/bs';
 import {
@@ -81,7 +92,10 @@ import {
   MdCalendarToday,
   MdShare,
   MdStar,
-  MdTimeline
+  MdTimeline,
+  MdVerified,
+  MdPerson,
+  MdPlayCircleFilled
 } from 'react-icons/md';
 import { FormProvider, useForm } from 'react-hook-form';
 import { GoogleMap, Polygon, useJsApiLoader, useLoadScript } from '@react-google-maps/api';
@@ -100,7 +114,7 @@ import HTMLRenderer from 'components/Utils/HTMLRenderer';
 import ImageCarousel from 'components/ImageCarousel/ImageCarousel';
 import ImageParcel1 from 'assets/img/ImageParcel1.png';
 import TimelineRow from 'components/Tables/TimelineRow';
-import productPage1 from 'assets/img/ProductImage1.png';
+import productPage1 from 'assets/img/BgMusicCard.png';
 import productPage2 from 'assets/img/ProductImage2.png';
 import productPage3 from 'assets/img/ProductImage3.png';
 import productPage4 from 'assets/img/ProductImage4.png';
@@ -114,6 +128,11 @@ import { useDisclosure } from '@chakra-ui/react';
 import { EnhancedTimeline } from '../../../components/EnhancedTimeline';
 import { GamifiedOffset } from '../../../components/GamifiedOffset';
 import { ConsumerSustainabilityInfo } from '../../../components/ConsumerSustainabilityInfo';
+import {
+  EnhancedProductTimeline,
+  ProductHeader,
+  EstablishmentInfo
+} from '../../../components/ProductDetail';
 
 // Assets
 
@@ -148,6 +167,29 @@ function Capture() {
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: options.googleMapApiKey
   });
+
+  // Add helper functions for safe data access
+  const safeDate = (dateString?: string) => {
+    if (!dateString) return 'Not available';
+    try {
+      return new Date(dateString).toLocaleDateString();
+    } catch (error) {
+      return 'Invalid date';
+    }
+  };
+
+  const safeEstablishmentData = (path: string[], fallback: any = null) => {
+    try {
+      let current: any = historyData?.parcel?.establishment;
+      for (const key of path) {
+        if (!current || !current[key]) return fallback;
+        current = current[key];
+      }
+      return current;
+    } catch {
+      return fallback;
+    }
+  };
 
   const methods = useForm({
     resolver: zodResolver(registerSchema)
@@ -212,6 +254,22 @@ function Capture() {
   // Add user analytics state
   const [userTotalOffset, setUserTotalOffset] = useState(15.5); // For demo purposes
   const [userLevel, setUserLevel] = useState(2); // For demo purposes
+
+  // Mobile-first responsive utilities
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const containerPadding = useBreakpointValue({ base: 4, md: 8 });
+  const cardPadding = useBreakpointValue({ base: 4, md: 6 });
+  const headerFontSize = useBreakpointValue({ base: 'xl', md: '3xl' });
+  const carbonScoreSize = useBreakpointValue({ base: 'sm', md: 'md' });
+
+  // Progressive loading states
+  const [loadingStage, setLoadingStage] = useState<'initial' | 'carbon' | 'timeline' | 'complete'>(
+    'initial'
+  );
+
+  // Enhanced gamification state
+  const { points, addPoints } = usePointsStore();
+  const [hasScanned, setHasScanned] = useState(false);
 
   useEffect(() => {
     if (productionId) {
@@ -360,61 +418,112 @@ function Capture() {
 
   return (
     <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden" w="100%">
-      <Box
-        position="absolute"
-        minH={{ base: '70vh', md: '50vh' }}
-        w={{ md: 'calc(100vw - 50px)' }}
-        borderRadius={{ md: '15px' }}
-        left="0"
-        right="0"
-        bgRepeat="no-repeat"
-        overflow="hidden"
-        zIndex="-1"
-        top="0"
-        bgImage={BgSignUp}
-        marginInlineEnd={'25px'}
-        _before={{
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-          background: 'linear-gradient(180deg, rgba(0,128,0,0.85) 0%, rgba(0,128,0,0.6) 100%)',
-          borderRadius: '15px',
-          zIndex: 0
-        }}
-        bgSize="cover"
-        mx={{ md: 'auto' }}
-        mt={{ md: '14px' }}></Box>
-      <Flex
-        direction="column"
-        textAlign="center"
-        justifyContent="center"
-        align="center"
-        mt="6.5rem"
-        pt={'55px'}>
-        <Text fontSize="4xl" color="white" fontWeight="bold">
-          {intl.formatMessage({ id: 'app.welcome' })}
-        </Text>
-        <Text
-          fontSize="md"
-          color="white"
-          fontWeight="normal"
-          mt="10px"
-          mb="26px"
-          w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}>
-          {intl.formatMessage({ id: 'app.welcomeMessage' })}
-        </Text>
-      </Flex>
+      {/* Clean Modern Header */}
+      <Box bg="linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 100%)" pt="150px" pb="120px" px={4}>
+        <Container maxW="6xl" mx="auto">
+          <VStack spacing={6} textAlign="center">
+            {/* Welcome Badge */}
+            <Badge
+              colorScheme="green"
+              variant="subtle"
+              fontSize="sm"
+              px={4}
+              py={2}
+              borderRadius="full"
+              textTransform="none">
+              <HStack spacing={2}>
+                <Icon as={FaLeaf} boxSize={4} />
+                <Text fontWeight="medium">
+                  {intl.formatMessage({ id: 'app.sustainabilityTracker' }) ||
+                    'Sustainability Tracker'}
+                </Text>
+              </HStack>
+            </Badge>
 
-      {/* Main Content Container - Reduced width for better readability */}
-      <Flex alignItems="center" justifyContent="center" mb="60px" mt="-30px">
+            {/* Main Welcome Title */}
+            <VStack spacing={3}>
+              <Heading
+                as="h1"
+                size="2xl"
+                color={titleColor}
+                fontWeight="bold"
+                textAlign="center"
+                letterSpacing="-0.02em">
+                {intl.formatMessage({ id: 'app.welcome' })}
+              </Heading>
+              <Text
+                fontSize="lg"
+                color="gray.600"
+                fontWeight="normal"
+                maxW={{ base: '90%', sm: '70%', lg: '60%' }}
+                lineHeight="1.7"
+                textAlign="center">
+                {intl.formatMessage({ id: 'app.welcomeMessage' })}
+              </Text>
+            </VStack>
+
+            {/* Quick Stats */}
+            <SimpleGrid columns={{ base: 2, md: 3 }} spacing={6} w="full" maxW="lg">
+              <VStack>
+                <Circle size="50px" bg="green.100" color="green.600">
+                  <Icon as={FaLeaf} boxSize={6} />
+                </Circle>
+                <VStack spacing={1}>
+                  <Text fontSize="xl" fontWeight="bold" color="gray.800">
+                    {carbonData?.carbonScore || '--'}
+                  </Text>
+                  <Text fontSize="sm" color="gray.600">
+                    Carbon Score
+                  </Text>
+                </VStack>
+              </VStack>
+
+              <VStack>
+                <Circle size="50px" bg="blue.100" color="blue.600">
+                  <Icon as={MdVerified} boxSize={6} />
+                </Circle>
+                <VStack spacing={1}>
+                  <Text fontSize="xl" fontWeight="bold" color="gray.800">
+                    {pointsStore.points}
+                  </Text>
+                  <Text fontSize="sm" color="gray.600">
+                    Green Points
+                  </Text>
+                </VStack>
+              </VStack>
+
+              <VStack display={{ base: 'none', md: 'flex' }}>
+                <Circle size="50px" bg="purple.100" color="purple.600">
+                  <Icon as={FaChartLine} boxSize={6} />
+                </Circle>
+                <VStack spacing={1}>
+                  <Text fontSize="xl" fontWeight="bold" color="gray.800">
+                    {carbonData?.industryPercentile ? `${carbonData.industryPercentile}%` : '--'}
+                  </Text>
+                  <Text fontSize="sm" color="gray.600">
+                    Eco Ranking
+                  </Text>
+                </VStack>
+              </VStack>
+            </SimpleGrid>
+          </VStack>
+        </Container>
+      </Box>
+
+      {/* Main Content Container - Overlapping Card */}
+      <Flex
+        alignItems="center"
+        justifyContent="center"
+        mb="60px"
+        mt="-80px"
+        position="relative"
+        zIndex={10}>
         <Card
-          mt={{ md: '75px' }}
-          w={{ sm: '100%', md: '90%', lg: '85%' }}
+          w={{ sm: '95%', md: '90%', lg: '85%' }}
           p={{ sm: '16px', md: '32px', lg: '48px' }}
-          boxShadow="rgba(0, 0, 0, 0.05) 0px 20px 27px 0px">
+          boxShadow="0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+          borderRadius="2xl"
+          bg={bgColor}>
           <CardHeader mb="24px">
             <HStack spacing={3}>
               <Badge colorScheme="green" fontSize="md" px={3} py={1} borderRadius="full">
@@ -427,7 +536,7 @@ function Capture() {
               )}
             </HStack>
             <HStack mt={4} spacing={4} align="center">
-              <Heading color={textColor} fontSize="3xl" fontWeight="bold">
+              <Heading color={textColor} fontSize={headerFontSize} fontWeight="bold">
                 {historyData?.product.name}
               </Heading>
               <Stack direction="row" spacing="6px" color="orange.300">
@@ -489,7 +598,7 @@ function Capture() {
                 <Box borderRadius="lg" mb={6} bg="white" p={5} boxShadow="md">
                   <HStack spacing={2} mb={3} justify="center">
                     <Icon as={FaLeaf} color="green.500" boxSize={6} />
-                    <Heading as="h3" size="md" textAlign="center">
+                    <Heading as="h3" size={carbonScoreSize} textAlign="center">
                       {intl.formatMessage({ id: 'app.carbonScore' }) || 'Carbon Score'}
                     </Heading>
                   </HStack>
@@ -698,11 +807,11 @@ function Capture() {
                   </HStack>
                   <VStack spacing={4} align="stretch">
                     {/* Establishment Image */}
-                    {historyData?.parcel?.establishment?.photo && (
+                    {safeEstablishmentData(['photo']) && (
                       <Flex justify="center">
                         <Image
-                          src={historyData.parcel.establishment.photo}
-                          alt={historyData?.parcel?.establishment?.name}
+                          src={safeEstablishmentData(['photo'])}
+                          alt={historyData?.parcel?.establishment?.name || 'Establishment'}
                           boxSize="150px"
                           objectFit="cover"
                           borderRadius="full"
@@ -723,14 +832,15 @@ function Capture() {
                     </HStack>
 
                     {/* Establishment Certifications */}
-                    {historyData?.parcel?.establishment?.certifications &&
-                      historyData.parcel.establishment.certifications.length > 0 && (
+                    {safeEstablishmentData(['certifications']) &&
+                      Array.isArray(safeEstablishmentData(['certifications'])) &&
+                      safeEstablishmentData(['certifications']).length > 0 && (
                         <Box>
                           <Text fontWeight="bold" mb={2}>
                             {intl.formatMessage({ id: 'app.certifications' })}:
                           </Text>
                           <HStack spacing={2} flexWrap="wrap">
-                            {historyData.parcel.establishment.certifications.map(
+                            {safeEstablishmentData(['certifications']).map(
                               (cert: string, index: number) => (
                                 <Badge key={index} colorScheme="green" mb={1}>
                                   {cert}
@@ -754,24 +864,26 @@ function Capture() {
                     </Box>
 
                     {/* Contact Information */}
-                    {(historyData?.parcel?.establishment?.email ||
-                      historyData?.parcel?.establishment?.phone) && (
+                    {safeEstablishmentData(['email']) && (
                       <Box>
                         <Text fontWeight="bold" mb={2}>
                           {intl.formatMessage({ id: 'app.contact' })}:
                         </Text>
-                        {historyData?.parcel?.establishment?.email && (
-                          <HStack>
-                            <Icon as={MdInfo} color="blue.500" />
-                            <Text>{historyData.parcel.establishment.email}</Text>
-                          </HStack>
-                        )}
-                        {historyData?.parcel?.establishment?.phone && (
-                          <HStack>
-                            <Icon as={MdInfo} color="blue.500" />
-                            <Text>{historyData.parcel.establishment.phone}</Text>
-                          </HStack>
-                        )}
+                        <HStack>
+                          <Icon as={MdInfo} color="blue.500" />
+                          <Text>{safeEstablishmentData(['email'])}</Text>
+                        </HStack>
+                      </Box>
+                    )}
+                    {safeEstablishmentData(['phone']) && (
+                      <Box>
+                        <Text fontWeight="bold" mb={2}>
+                          {intl.formatMessage({ id: 'app.contact' })}:
+                        </Text>
+                        <HStack>
+                          <Icon as={MdInfo} color="blue.500" />
+                          <Text>{safeEstablishmentData(['phone'])}</Text>
+                        </HStack>
                       </Box>
                     )}
                   </VStack>
@@ -814,9 +926,9 @@ function Capture() {
                         {intl.formatMessage({ id: 'app.production' })}
                       </Text>
                       <Text color="gray.600">
-                        {`${new Date(historyData?.start_date).toLocaleDateString()} - ${new Date(
+                        {`${safeDate(historyData?.start_date)} - ${safeDate(
                           historyData?.finish_date
-                        ).toLocaleDateString()}`}
+                        )}`}
                       </Text>
                     </Box>
 
@@ -841,9 +953,7 @@ function Capture() {
                       <Text fontWeight="bold" color={textColor}>
                         {intl.formatMessage({ id: 'app.harvestDate' })}
                       </Text>
-                      <Text color="gray.600">
-                        {new Date(historyData?.finish_date).toLocaleDateString()}
-                      </Text>
+                      <Text color="gray.600">{safeDate(historyData?.finish_date)}</Text>
                     </Box>
                   </SimpleGrid>
                 </Box>
@@ -885,57 +995,59 @@ function Capture() {
                       {historyData?.parcel.establishment.name}
                     </Text>
                     <Box maxH="202px" overflowY="auto" pr={2}>
-                      <HTMLRenderer htmlString={historyData?.parcel.establishment.description} />
+                      <HTMLRenderer
+                        htmlString={historyData?.parcel?.establishment?.description || ''}
+                      />
                     </Box>
                   </Box>
                 </SimpleGrid>
               </Box>
             </SimpleGrid>
 
-            {/* Journey Timeline - Full Width */}
-            <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6} w="100%">
-              <HStack spacing={2} mb={3}>
-                <Icon as={MdTimeline} color="blue.500" boxSize={6} />
-                <Heading as="h3" size="md">
-                  {intl.formatMessage({ id: 'app.journeyOfYourProduct' })}
-                </Heading>
-              </HStack>
-              {carbonData && carbonData.timeline && (
-                <EnhancedTimeline
-                  events={carbonData.timeline.map((event: any) => ({
-                    id: (event.stage || '') + '-' + (event.date || ''),
-                    date: event.date,
-                    title: event.stage || '',
-                    description: event.description || '',
-                    type:
-                      event.stage && event.stage.toLowerCase().includes('plant')
-                        ? 'planting'
-                        : event.stage && event.stage.toLowerCase().includes('harvest')
-                        ? 'harvesting'
-                        : event.stage && event.stage.toLowerCase().includes('transport')
-                        ? 'transport'
-                        : event.stage && event.stage.toLowerCase().includes('process')
-                        ? 'processing'
-                        : 'general',
-                    carbonImpact: event.carbon_impact || undefined,
-                    photos: event.photos || [],
-                    additionalInfo: event.details || undefined
-                  }))}
-                  farmer={{
-                    name: historyData?.parcel?.establishment?.name || 'Establishment',
-                    photo: historyData?.parcel?.establishment?.photo || '',
-                    bio:
-                      historyData?.parcel?.establishment?.description ||
-                      'Sustainable agricultural establishment',
-                    generation: 0,
-                    location: historyData?.parcel?.establishment?.location || '',
-                    certifications: historyData?.parcel?.establishment?.certifications || [],
-                    sustainabilityInitiatives: [],
-                    carbonReduction: 0,
-                    yearsOfPractice: 0
-                  }}
-                />
-              )}
+            {/* Journey Timeline - Enhanced Version */}
+            <Box bg={bgColor} borderRadius="xl" boxShadow="lg" p={8} mb={6} w="100%">
+              <VStack spacing={6} align="stretch">
+                <HStack spacing={3} justify="center">
+                  <Icon as={MdTimeline} color="green.500" boxSize={8} />
+                  <Heading as="h2" size="xl" textAlign="center">
+                    {intl.formatMessage({ id: 'app.journeyOfYourProduct' }) ||
+                      'Recorrido de tu Producto'}
+                  </Heading>
+                </HStack>
+
+                <Text textAlign="center" color="gray.600" fontSize="lg">
+                  {intl.formatMessage({ id: 'app.journeyDescription' }) ||
+                    'Discover the complete story of how your product was grown, harvested, and prepared with care for the environment.'}
+                </Text>
+
+                <Divider />
+
+                {/* Fix timeline events access - handle missing events property properly */}
+                {(() => {
+                  // Try to get events from various possible sources
+                  const events =
+                    (historyData as any)?.events ||
+                    (historyData as any)?.timeline_events ||
+                    (historyData as any)?.production_events ||
+                    [];
+
+                  return Array.isArray(events) && events.length > 0 ? (
+                    <EnhancedProductTimeline events={events} />
+                  ) : (
+                    <Box p={8} textAlign="center" bg="gray.50" borderRadius="xl">
+                      <Icon as={MdTimeline} color="gray.400" boxSize={16} mb={4} />
+                      <Heading as="h3" size="md" color="gray.600" mb={2}>
+                        {intl.formatMessage({ id: 'app.noTimelineData' }) ||
+                          'Timeline data is being prepared'}
+                      </Heading>
+                      <Text color="gray.500" fontSize="md">
+                        {intl.formatMessage({ id: 'app.timelineComingSoon' }) ||
+                          'Production journey details will be available soon'}
+                      </Text>
+                    </Box>
+                  );
+                })()}
+              </VStack>
             </Box>
 
             {/* Emissions and Offsets Breakdown */}

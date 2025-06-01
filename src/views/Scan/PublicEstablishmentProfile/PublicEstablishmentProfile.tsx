@@ -1,5 +1,4 @@
 // Chakra imports
-import 'leaflet/dist/leaflet.css';
 import {
   Badge,
   Box,
@@ -12,23 +11,25 @@ import {
   HStack,
   Icon,
   Link,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   SimpleGrid,
   Tag,
   TagLabel,
   Text,
   VStack,
   useColorModeValue,
-  useDisclosure,
+  useBreakpointValue,
   Heading,
   Divider,
   Circle,
   Avatar,
   Skeleton,
   SkeletonText,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Spinner,
+  Image,
   useToast
 } from '@chakra-ui/react';
 import {
@@ -36,10 +37,6 @@ import {
   FaInstagram,
   FaTwitter,
   FaMapMarkerAlt,
-  FaRegIdBadge,
-  FaRegCommentDots,
-  FaRegListAlt,
-  FaRegLightbulb,
   FaBuilding,
   FaPhone,
   FaEnvelope,
@@ -48,65 +45,125 @@ import {
   FaTractor,
   FaCalendar,
   FaCertificate,
-  FaEdit,
-  FaTrash,
   FaSeedling,
   FaGlobe,
   FaChartLine,
-  FaEye,
-  FaShare
+  FaShare,
+  FaStar,
+  FaTree,
+  FaInfoCircle,
+  FaWater,
+  FaRecycle,
+  FaBolt
 } from 'react-icons/fa';
-import { MdLocationOn, MdBusiness, MdEco, MdCalendarToday, MdVerified } from 'react-icons/md';
+import {
+  MdLocationOn,
+  MdBusiness,
+  MdEco,
+  MdCalendarToday,
+  MdVerified,
+  MdShare,
+  MdTimeline
+} from 'react-icons/md';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import HTMLRenderer from 'components/Utils/HTMLRenderer';
 import ImageCarousel from 'components/ImageCarousel/ImageCarousel';
-import { IoEllipsisVerticalSharp } from 'react-icons/io5';
-import establishmentImage from 'assets/img/basic-auth.png';
-import { useGetEstablishmentQuery } from 'store/api/companyApi';
+import defaultEstablishmentImage from 'assets/img/basic-auth.png';
+import { useGetPublicEstablishmentQuery } from 'store/api/companyApi';
+import { useGetQRCodeSummaryQuery } from 'store/api/carbonApi';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
-import { useState, useEffect } from 'react';
-// @ts-ignore: JSX component in TS file
-import CarbonSummaryCard from '../components/establishment/CarbonSummaryCard';
+import { CarbonScore } from '../../../components/CarbonScore';
+import { BadgeCarousel } from '../../../components/BadgeCarousel';
+import { usePointsStore } from '../../../store/pointsStore';
+import { useDisclosure } from '@chakra-ui/react';
+import { ConsumerSustainabilityInfo } from '../../../components/ConsumerSustainabilityInfo';
 
-// Add type for Redux state
-interface RootState {
-  company: {
-    currentCompany: {
-      id: string;
-      name: string;
-    };
-  };
+// Type definitions
+interface EstablishmentImage {
+  id: number;
+  url: string;
 }
 
-function ProfileEstablishment() {
+function PublicEstablishmentProfile() {
   const intl = useIntl();
   const titleColor = useColorModeValue('green.500', 'green.400');
   const textColor = useColorModeValue('gray.700', 'white');
   const bgColor = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.600');
-
   const navigate = useNavigate();
   const { establishmentId } = useParams();
-  const { isOpen: isOpen1, onOpen: onOpen1, onClose: onClose1 } = useDisclosure();
   const toast = useToast();
+  const pointsStore = usePointsStore();
 
-  const currentCompany = useSelector((state: RootState) => state.company.currentCompany);
+  // Mobile-first responsive utilities
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const containerPadding = useBreakpointValue({ base: 4, md: 8 });
+  const cardPadding = useBreakpointValue({ base: 4, md: 6 });
+  const headerFontSize = useBreakpointValue({ base: 'xl', md: '3xl' });
+  const carbonScoreSize = useBreakpointValue({ base: 'sm', md: 'md' });
 
   const {
     data: establishmentData,
     error,
-    isLoading
-  } = useGetEstablishmentQuery(
-    {
-      companyId: currentCompany?.id,
-      establishmentId
-    },
-    {
-      skip: !establishmentId || currentCompany?.id === undefined
+    isLoading,
+    isFetching,
+    refetch
+  } = useGetPublicEstablishmentQuery(establishmentId || '', {
+    skip: establishmentId === undefined
+  });
+
+  // Get carbon data for the establishment
+  const {
+    data: carbonData,
+    error: carbonError,
+    isLoading: isCarbonDataLoading,
+    isError: isCarbonDataError
+  } = useGetQRCodeSummaryQuery(establishmentId || '', {
+    skip: establishmentId === undefined
+  });
+
+  // Helper function to get crops grown
+  const getCropsGrown = () => {
+    if (!establishmentData?.crops_grown) return [];
+    if (Array.isArray(establishmentData.crops_grown)) {
+      return establishmentData.crops_grown;
     }
-  );
+    return [];
+  };
+
+  // Helper function to get image URLs in the format expected by ImageCarousel
+  const getImageUrls = () => {
+    if (!establishmentData?.images) return [defaultEstablishmentImage];
+
+    // Debug logging
+    console.log('Raw establishment images:', establishmentData.images);
+
+    // Handle both formats: array of objects {id, url} or array of strings
+    let imageUrls: string[] = [];
+
+    if (Array.isArray(establishmentData.images)) {
+      imageUrls = establishmentData.images
+        .map((image: EstablishmentImage | string) => {
+          // If image is an object with url property, extract the url
+          if (typeof image === 'object' && image.url) {
+            return image.url;
+          }
+          // If image is already a string URL, use it directly
+          if (typeof image === 'string') {
+            return image;
+          }
+          return null;
+        })
+        .filter(Boolean) as string[]; // Remove any null values and cast to string[]
+    }
+
+    console.log('Processed image URLs:', imageUrls);
+
+    // Return the processed URLs or fallback to default
+    return imageUrls.length > 0 ? imageUrls : [defaultEstablishmentImage];
+  };
 
   // Helper function to parse certifications
   const getCertifications = () => {
@@ -123,15 +180,6 @@ function ProfileEstablishment() {
     return [];
   };
 
-  // Helper function to get crops grown
-  const getCropsGrown = () => {
-    if (!establishmentData?.crops_grown) return [];
-    if (Array.isArray(establishmentData.crops_grown)) {
-      return establishmentData.crops_grown;
-    }
-    return [];
-  };
-
   // Helper function to get sustainability practices
   const getSustainabilityPractices = () => {
     if (!establishmentData?.sustainability_practices) return [];
@@ -141,123 +189,86 @@ function ProfileEstablishment() {
     return [];
   };
 
-  // Handle opening public profile
-  const handleViewPublicProfile = () => {
-    try {
-      // Construct the consumer domain URL
-      const baseUrl = window.location.hostname.includes('localhost')
-        ? 'http://localhost:3000'
-        : `https://consumer.${import.meta.env.VITE_APP_BASE_DOMAIN}`;
+  useEffect(() => {
+    if (establishmentId) {
+      refetch();
+    }
+  }, [establishmentId, refetch]);
 
-      const publicProfileUrl = `${baseUrl}/establishment/${establishmentId}`;
-
-      // Debug logging
-      console.log('Opening public profile URL:', publicProfileUrl);
-      console.log('Current hostname:', window.location.hostname);
-      console.log('Base URL:', baseUrl);
-      console.log('Establishment ID:', establishmentId);
-
-      // Try to open in new tab
-      const newWindow = window.open(publicProfileUrl, '_blank', 'noopener,noreferrer');
-
-      // Check if window.open was blocked
-      if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-        // Pop-up was blocked
-        console.error('Pop-up was blocked by browser');
-        toast({
-          title: 'Pop-up Blocked',
-          description:
-            'Please allow pop-ups for this site and try again, or copy the link manually.',
-          status: 'warning',
-          duration: 5000,
-          isClosable: true,
-          position: 'top-right'
-        });
-
-        // Fallback: copy to clipboard
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(publicProfileUrl).then(() => {
-            toast({
-              title: 'Link Copied',
-              description:
-                'The public profile link has been copied to your clipboard since pop-ups are blocked.',
-              status: 'info',
-              duration: 5000,
-              isClosable: true,
-              position: 'top-right'
-            });
-          });
-        }
-        return;
-      }
-
-      // Show success feedback only if window opened successfully
-      toast({
-        title: 'Public Profile Opened',
-        description: 'The public profile has been opened in a new tab.',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-        position: 'top-right'
-      });
-    } catch (error) {
-      console.error('Error opening public profile:', error);
+  useEffect(() => {
+    if (carbonError) {
       toast({
         title: 'Error',
-        description: 'Failed to open public profile. Please try again.',
+        description: 'Failed to load sustainability data. Please try again later.',
         status: 'error',
         duration: 5000,
-        isClosable: true,
-        position: 'top-right'
+        isClosable: true
       });
-    }
-  };
-
-  // Handle sharing establishment
-  const handleShare = async () => {
-    try {
-      const baseUrl = window.location.hostname.includes('localhost')
-        ? 'http://localhost:3000'
-        : `https://consumer.${import.meta.env.VITE_APP_BASE_DOMAIN}`;
-
-      const publicProfileUrl = `${baseUrl}/establishment/${establishmentId}`;
-
-      // Try native sharing first
-      if (navigator.share) {
-        await navigator.share({
-          title: `${establishmentData?.name} - Sustainable Agriculture`,
-          text: `Check out this sustainable farm! ${establishmentData?.description || ''}`,
-          url: publicProfileUrl
-        });
-      } else {
-        // Fallback to clipboard
-        await navigator.clipboard.writeText(publicProfileUrl);
+    } else if (carbonData) {
+      if (pointsStore.points === 0) {
+        pointsStore.addPoints(3);
         toast({
-          title: 'Link Copied',
-          description: 'The public profile link has been copied to your clipboard.',
+          title: 'Points Earned',
+          description: 'You earned 3 Green Points for viewing this sustainable establishment!',
           status: 'success',
-          duration: 3000,
-          isClosable: true,
-          position: 'top-right'
+          duration: 5000,
+          isClosable: true
         });
       }
+    }
+  }, [carbonError, carbonData, toast, pointsStore]);
+
+  const handleShare = async () => {
+    try {
+      await navigator.share({
+        title: `${establishmentData?.name} - Sustainable Agriculture`,
+        text: `Check out this sustainable farm! #Trazo #SustainableAgriculture`,
+        url: window.location.href
+      });
+      pointsStore.addPoints(3);
     } catch (error) {
       console.error('Error sharing:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to share. Please try again.',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-        position: 'top-right'
-      });
     }
   };
+
+  if (isLoading) {
+    return (
+      <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden" w="100%">
+        <Box bg="linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 100%)" pt="150px" pb="120px" px={4}>
+          <Container maxW="6xl" mx="auto">
+            <VStack spacing={6} textAlign="center">
+              <Skeleton height="20px" width="200px" />
+              <Skeleton height="40px" width="300px" />
+              <Skeleton height="20px" width="250px" />
+            </VStack>
+          </Container>
+        </Box>
+      </Flex>
+    );
+  }
+
+  if (error) {
+    return (
+      <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden" w="100%">
+        <Container maxW="6xl" mx="auto" py={20}>
+          <Alert status="error" borderRadius="lg">
+            <AlertIcon />
+            <Box>
+              <AlertTitle>Establishment not found!</AlertTitle>
+              <AlertDescription>
+                The establishment you're looking for doesn't exist or is not available publicly.
+              </AlertDescription>
+            </Box>
+          </Alert>
+        </Container>
+      </Flex>
+    );
+  }
 
   return (
     <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden" w="100%">
       {/* Clean Modern Header */}
-      <Box bg="linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 100%)" pt="70px" pb="120px" px={4}>
+      <Box bg="linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 100%)" pt="150px" pb="120px" px={4}>
         <Container maxW="6xl" mx="auto">
           <VStack spacing={6} textAlign="center">
             {/* Establishment Badge */}
@@ -272,7 +283,8 @@ function ProfileEstablishment() {
               <HStack spacing={2}>
                 <Icon as={FaBuilding} boxSize={4} />
                 <Text fontWeight="medium">
-                  {intl.formatMessage({ id: 'app.establishment' }) || 'Establishment Profile'}
+                  {intl.formatMessage({ id: 'app.sustainableEstablishment' }) ||
+                    'Sustainable Establishment'}
                 </Text>
               </HStack>
             </Badge>
@@ -295,7 +307,7 @@ function ProfileEstablishment() {
                 maxW={{ base: '90%', sm: '70%', lg: '60%' }}
                 lineHeight="1.7"
                 textAlign="center">
-                {establishmentData?.description || currentCompany?.name}
+                {establishmentData?.description || 'Sustainable Agriculture'}
               </Text>
             </VStack>
 
@@ -307,7 +319,7 @@ function ProfileEstablishment() {
                 </Circle>
                 <VStack spacing={1}>
                   <Text fontSize="xl" fontWeight="bold" color="gray.800">
-                    {establishmentData?.total_acreage || 0}
+                    {establishmentData?.total_acreage || '--'}
                   </Text>
                   <Text fontSize="sm" color="gray.600">
                     Acres
@@ -317,14 +329,14 @@ function ProfileEstablishment() {
 
               <VStack>
                 <Circle size="50px" bg="blue.100" color="blue.600">
-                  <Icon as={FaUsers} boxSize={6} />
+                  <Icon as={FaLeaf} boxSize={6} />
                 </Circle>
                 <VStack spacing={1}>
                   <Text fontSize="xl" fontWeight="bold" color="gray.800">
-                    {establishmentData?.employee_count || 0}
+                    {carbonData?.carbonScore || '--'}
                   </Text>
                   <Text fontSize="sm" color="gray.600">
-                    Employees
+                    Eco Score
                   </Text>
                 </VStack>
               </VStack>
@@ -375,52 +387,39 @@ function ProfileEstablishment() {
           boxShadow="0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
           borderRadius="2xl"
           bg={bgColor}>
-          {/* Header with Actions */}
+          {/* Header with Badges */}
           <CardHeader mb="24px">
-            <HStack justify="space-between" align="center">
-              <HStack spacing={3}>
-                <Badge colorScheme="green" fontSize="md" px={3} py={1} borderRadius="full">
-                  {establishmentData?.is_active !== false ? 'Active' : 'Inactive'}
+            <HStack spacing={3}>
+              <Badge colorScheme="green" fontSize="md" px={3} py={1} borderRadius="full">
+                {intl.formatMessage({ id: 'app.verified' })}
+              </Badge>
+              {establishmentData?.establishment_type && (
+                <Badge colorScheme="blue" fontSize="md" px={3} py={1} borderRadius="full">
+                  {establishmentData.establishment_type}
                 </Badge>
-                {establishmentData?.establishment_type && (
-                  <Badge colorScheme="blue" fontSize="md" px={3} py={1} borderRadius="full">
-                    {establishmentData.establishment_type}
-                  </Badge>
-                )}
-              </HStack>
-
-              <Menu placement="left-start">
-                <MenuButton as={Button} variant="ghost">
-                  <Icon as={IoEllipsisVerticalSharp} color="gray.400" w="20px" h="20px" />
-                </MenuButton>
-                <MenuList>
-                  <MenuItem
-                    onClick={() =>
-                      navigate(`/admin/dashboard/establishment/${establishmentId}/change`)
-                    }
-                    icon={<FaEdit />}>
-                    <Text fontSize="sm" fontWeight="500">
-                      {intl.formatMessage({ id: 'app.edit' }) || 'Edit'}
-                    </Text>
-                  </MenuItem>
-                  <MenuItem onClick={handleViewPublicProfile} icon={<FaEye />}>
-                    <Text fontSize="sm" fontWeight="500">
-                      View Public Profile
-                    </Text>
-                  </MenuItem>
-                  <MenuItem icon={<FaShare />} onClick={handleShare}>
-                    <Text fontSize="sm" fontWeight="500">
-                      Share
-                    </Text>
-                  </MenuItem>
-                  <MenuItem icon={<FaTrash />} color="red.500">
-                    <Text fontSize="sm" fontWeight="500">
-                      {intl.formatMessage({ id: 'app.delete' }) || 'Delete'}
-                    </Text>
-                  </MenuItem>
-                </MenuList>
-              </Menu>
+              )}
+              {establishmentData?.farming_method && (
+                <Badge colorScheme="purple" fontSize="md" px={3} py={1} borderRadius="full">
+                  {establishmentData.farming_method}
+                </Badge>
+              )}
             </HStack>
+            <HStack mt={4} spacing={4} align="center" justify="space-between">
+              <Heading color={textColor} fontSize={headerFontSize} fontWeight="bold">
+                About {establishmentData?.name}
+              </Heading>
+              <Button
+                leftIcon={<MdShare />}
+                colorScheme="green"
+                variant="outline"
+                onClick={handleShare}
+                size="sm">
+                Share
+              </Button>
+            </HStack>
+            <Text color="gray.500" fontSize="lg" mt={1}>
+              {establishmentData?.location || 'Sustainable Agriculture'}
+            </Text>
           </CardHeader>
 
           <CardBody>
@@ -429,117 +428,110 @@ function ProfileEstablishment() {
               <Box>
                 {/* Image Gallery */}
                 <Box mb={6}>
-                  <ImageCarousel
-                    imagesList={
-                      establishmentData?.images?.length > 0
-                        ? establishmentData.images
-                        : [establishmentImage]
-                    }
+                  <ImageCarousel imagesList={getImageUrls()} />
+                </Box>
+
+                {/* Carbon Score - Enhanced Version */}
+                {carbonData && (
+                  <Box borderRadius="lg" mb={6} bg="white" p={5} boxShadow="md">
+                    <HStack spacing={2} mb={3} justify="center">
+                      <Icon as={FaLeaf} color="green.500" boxSize={6} />
+                      <Heading as="h3" size={carbonScoreSize} textAlign="center">
+                        {intl.formatMessage({ id: 'app.sustainabilityScore' }) ||
+                          'Sustainability Score'}
+                      </Heading>
+                    </HStack>
+                    <CarbonScore
+                      score={carbonData?.carbonScore || 0}
+                      footprint={carbonData?.netFootprint || 0}
+                      industryPercentile={carbonData?.industryPercentile || 0}
+                      relatableFootprint={
+                        carbonData?.relatableFootprint ||
+                        intl.formatMessage({ id: 'app.calculatingFootprint' })
+                      }
+                    />
+                  </Box>
+                )}
+
+                {/* Consumer Sustainability Information */}
+                <Box mb={6}>
+                  <ConsumerSustainabilityInfo
+                    productName={establishmentData?.name || ''}
+                    carbonScore={carbonData?.carbonScore || 0}
+                    sustainabilityPractices={getSustainabilityPractices().map(
+                      (practice: string, index: number) => ({
+                        icon: (
+                          <Icon
+                            as={
+                              index % 5 === 0
+                                ? FaWater
+                                : index % 5 === 1
+                                ? FaRecycle
+                                : index % 5 === 2
+                                ? FaSeedling
+                                : index % 5 === 3
+                                ? MdEco
+                                : FaLeaf
+                            }
+                            color="green.500"
+                            boxSize={5}
+                          />
+                        ),
+                        title: practice,
+                        description: practice
+                      })
+                    )}
                   />
                 </Box>
 
-                {/* Contact Information */}
-                <Card bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6}>
-                  <HStack spacing={2} justify="center" mb={4}>
-                    <Icon as={FaPhone} color="green.500" boxSize={5} />
-                    <Heading as="h3" size="md" color={textColor}>
-                      Contact Information
-                    </Heading>
-                  </HStack>
-                  <VStack spacing={3} align="stretch">
-                    {establishmentData?.email && (
-                      <HStack>
-                        <Icon as={FaEnvelope} color="blue.500" />
-                        <Text fontWeight="medium">Email:</Text>
-                        <Link color="blue.500" href={`mailto:${establishmentData.email}`}>
-                          {establishmentData.email}
-                        </Link>
-                      </HStack>
-                    )}
-                    {establishmentData?.phone && (
-                      <HStack>
-                        <Icon as={FaPhone} color="green.500" />
-                        <Text fontWeight="medium">Phone:</Text>
-                        <Link color="green.500" href={`tel:${establishmentData.phone}`}>
-                          {establishmentData.phone}
-                        </Link>
-                      </HStack>
-                    )}
-                    {establishmentData?.contact_person && (
-                      <HStack>
-                        <Icon as={FaUsers} color="purple.500" />
-                        <Text fontWeight="medium">Contact Person:</Text>
-                        <Text>{establishmentData.contact_person}</Text>
-                      </HStack>
-                    )}
-                    {establishmentData?.contact_email &&
-                      establishmentData.contact_email !== establishmentData.email && (
-                        <HStack>
-                          <Icon as={FaEnvelope} color="blue.500" />
-                          <Text fontWeight="medium">Alt Email:</Text>
-                          <Link color="blue.500" href={`mailto:${establishmentData.contact_email}`}>
-                            {establishmentData.contact_email}
-                          </Link>
-                        </HStack>
-                      )}
-                    {establishmentData?.contact_phone &&
-                      establishmentData.contact_phone !== establishmentData.phone && (
-                        <HStack>
-                          <Icon as={FaPhone} color="green.500" />
-                          <Text fontWeight="medium">Alt Phone:</Text>
-                          <Link color="green.500" href={`tel:${establishmentData.contact_phone}`}>
-                            {establishmentData.contact_phone}
-                          </Link>
-                        </HStack>
-                      )}
-                  </VStack>
-                </Card>
-
-                {/* Social Media */}
-                {(establishmentData?.facebook || establishmentData?.instagram) && (
-                  <Card bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6}>
-                    <HStack spacing={2} justify="center" mb={4}>
-                      <Icon as={FaGlobe} color="green.500" boxSize={5} />
-                      <Heading as="h3" size="md" color={textColor}>
-                        Social Media
-                      </Heading>
-                    </HStack>
-                    <HStack spacing={4} justify="center">
-                      {establishmentData?.facebook && (
-                        <Link
-                          href={establishmentData.facebook}
-                          isExternal
-                          _hover={{ transform: 'scale(1.1)' }}
-                          transition="all 0.2s">
-                          <Circle size="50px" bg="blue.100" color="blue.600">
-                            <Icon as={FaFacebook} boxSize={6} />
-                          </Circle>
-                        </Link>
-                      )}
-                      {establishmentData?.instagram && (
-                        <Link
-                          href={establishmentData.instagram}
-                          isExternal
-                          _hover={{ transform: 'scale(1.1)' }}
-                          transition="all 0.2s">
-                          <Circle size="50px" bg="pink.100" color="pink.600">
-                            <Icon as={FaInstagram} boxSize={6} />
-                          </Circle>
-                        </Link>
-                      )}
-                    </HStack>
-                  </Card>
+                {/* Achievement Badges */}
+                {carbonData?.badges && (
+                  <Box borderRadius="lg" mb={6}>
+                    <BadgeCarousel badges={carbonData.badges} />
+                  </Box>
                 )}
               </Box>
 
               {/* Right Column */}
               <Box>
+                {/* Contact Information */}
+                {(establishmentData?.email || establishmentData?.phone) && (
+                  <Card bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6}>
+                    <HStack spacing={2} justify="center" mb={4}>
+                      <Icon as={FaPhone} color="green.500" boxSize={5} />
+                      <Heading as="h3" size="md" color={textColor}>
+                        Contact Information
+                      </Heading>
+                    </HStack>
+                    <VStack spacing={3} align="stretch">
+                      {establishmentData?.email && (
+                        <HStack>
+                          <Icon as={FaEnvelope} color="blue.500" />
+                          <Text fontWeight="medium">Email:</Text>
+                          <Link color="blue.500" href={`mailto:${establishmentData.email}`}>
+                            {establishmentData.email}
+                          </Link>
+                        </HStack>
+                      )}
+                      {establishmentData?.phone && (
+                        <HStack>
+                          <Icon as={FaPhone} color="green.500" />
+                          <Text fontWeight="medium">Phone:</Text>
+                          <Link color="green.500" href={`tel:${establishmentData.phone}`}>
+                            {establishmentData.phone}
+                          </Link>
+                        </HStack>
+                      )}
+                    </VStack>
+                  </Card>
+                )}
+
                 {/* Location Information */}
                 <Card bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6}>
                   <HStack spacing={2} justify="center" mb={4}>
                     <Icon as={MdLocationOn} color="green.500" boxSize={5} />
                     <Heading as="h3" size="md" color={textColor}>
-                      Location Details
+                      Location
                     </Heading>
                   </HStack>
                   <VStack spacing={3} align="stretch">
@@ -571,32 +563,6 @@ function ProfileEstablishment() {
                         <Text>{establishmentData.country}</Text>
                       </HStack>
                     )}
-                    {establishmentData?.zip_code && (
-                      <HStack>
-                        <Icon as={FaMapMarkerAlt} color="red.500" />
-                        <Text fontWeight="medium">ZIP Code:</Text>
-                        <Text>{establishmentData.zip_code}</Text>
-                      </HStack>
-                    )}
-                    {establishmentData?.zone && (
-                      <HStack>
-                        <Icon as={MdLocationOn} color="orange.500" />
-                        <Text fontWeight="medium">Zone:</Text>
-                        <Text>{establishmentData.zone}</Text>
-                      </HStack>
-                    )}
-                    {typeof establishmentData?.latitude === 'number' &&
-                      typeof establishmentData?.longitude === 'number' &&
-                      !isNaN(establishmentData.latitude) &&
-                      !isNaN(establishmentData.longitude) && (
-                        <HStack>
-                          <Icon as={FaMapMarkerAlt} color="red.500" />
-                          <Text fontWeight="medium">Coordinates:</Text>
-                          <Text>{`${establishmentData.latitude.toFixed(
-                            6
-                          )}, ${establishmentData.longitude.toFixed(6)}`}</Text>
-                        </HStack>
-                      )}
                   </VStack>
                 </Card>
 
@@ -642,11 +608,40 @@ function ProfileEstablishment() {
                   </VStack>
                 </Card>
 
-                {/* Carbon Summary */}
-                {establishmentData?.id && (
-                  <Box mb={6}>
-                    <CarbonSummaryCard establishmentId={establishmentData.id} />
-                  </Box>
+                {/* Social Media */}
+                {(establishmentData?.facebook || establishmentData?.instagram) && (
+                  <Card bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6}>
+                    <HStack spacing={2} justify="center" mb={4}>
+                      <Icon as={FaGlobe} color="green.500" boxSize={5} />
+                      <Heading as="h3" size="md" color={textColor}>
+                        Follow Us
+                      </Heading>
+                    </HStack>
+                    <HStack spacing={4} justify="center">
+                      {establishmentData?.facebook && (
+                        <Link
+                          href={establishmentData.facebook}
+                          isExternal
+                          _hover={{ transform: 'scale(1.1)' }}
+                          transition="all 0.2s">
+                          <Circle size="50px" bg="blue.100" color="blue.600">
+                            <Icon as={FaFacebook} boxSize={6} />
+                          </Circle>
+                        </Link>
+                      )}
+                      {establishmentData?.instagram && (
+                        <Link
+                          href={establishmentData.instagram}
+                          isExternal
+                          _hover={{ transform: 'scale(1.1)' }}
+                          transition="all 0.2s">
+                          <Circle size="50px" bg="pink.100" color="pink.600">
+                            <Icon as={FaInstagram} boxSize={6} />
+                          </Circle>
+                        </Link>
+                      )}
+                    </HStack>
+                  </Card>
                 )}
               </Box>
             </SimpleGrid>
@@ -717,7 +712,7 @@ function ProfileEstablishment() {
               {establishmentData?.about && (
                 <Card bg={bgColor} borderRadius="lg" boxShadow="md" p={6}>
                   <HStack spacing={2} justify="center" mb={4}>
-                    <Icon as={FaRegCommentDots} color="green.500" boxSize={5} />
+                    <Icon as={FaInfoCircle} color="green.500" boxSize={5} />
                     <Heading as="h3" size="md" color={textColor}>
                       About This Establishment
                     </Heading>
@@ -732,7 +727,7 @@ function ProfileEstablishment() {
               {establishmentData?.main_activities && (
                 <Card bg={bgColor} borderRadius="lg" boxShadow="md" p={6}>
                   <HStack spacing={2} justify="center" mb={4}>
-                    <Icon as={FaRegListAlt} color="blue.500" boxSize={5} />
+                    <Icon as={FaTractor} color="green.500" boxSize={5} />
                     <Heading as="h3" size="md" color={textColor}>
                       Main Activities & Services
                     </Heading>
@@ -747,7 +742,7 @@ function ProfileEstablishment() {
               {establishmentData?.location_highlights && (
                 <Card bg={bgColor} borderRadius="lg" boxShadow="md" p={6}>
                   <HStack spacing={2} justify="center" mb={4}>
-                    <Icon as={FaRegLightbulb} color="orange.500" boxSize={5} />
+                    <Icon as={FaMapMarkerAlt} color="orange.500" boxSize={5} />
                     <Heading as="h3" size="md" color={textColor}>
                       Location Highlights
                     </Heading>
@@ -762,7 +757,7 @@ function ProfileEstablishment() {
               {establishmentData?.custom_message && (
                 <Card bg={bgColor} borderRadius="lg" boxShadow="md" p={6}>
                   <HStack spacing={2} justify="center" mb={4}>
-                    <Icon as={FaRegCommentDots} color="purple.500" boxSize={5} />
+                    <Icon as={FaStar} color="purple.500" boxSize={5} />
                     <Heading as="h3" size="md" color={textColor}>
                       Special Message
                     </Heading>
@@ -780,4 +775,4 @@ function ProfileEstablishment() {
   );
 }
 
-export default ProfileEstablishment;
+export default PublicEstablishmentProfile;

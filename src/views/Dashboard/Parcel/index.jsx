@@ -12,7 +12,7 @@ import TrackList from './components/TrackList';
 // assets
 import imageMap from 'assets/img/imageMap.png';
 import imageParcel1 from 'assets/img/ImageParcel1.png';
-import defaultParcelImage from 'assets/img/ImageParcel1.png';
+import defaultParcelImage from 'assets/img/BgMusicCard.png';
 import { setParcel } from 'store/features/productSlice';
 import { useGetParcelQuery } from 'store/api/productApi';
 import { useIntl } from 'react-intl';

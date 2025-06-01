@@ -37,6 +37,7 @@ export const productApi = baseApi.injectEndpoints({
           });
         }
 
+        // Basic required fields
         formData.append('name', parcelData.name);
         formData.append('description', parcelData.description);
         formData.append('area', parcelData.area || '0'); // Ensure area is a string number
@@ -44,6 +45,32 @@ export const productApi = baseApi.injectEndpoints({
         formData.append('polygon', JSON.stringify(parcelData.polygon || []));
         formData.append('map_metadata', JSON.stringify(parcelData.map_metadata || {}));
         formData.append('establishment', establishmentId);
+
+        // Additional fields - now included!
+        if (parcelData.crop_type) {
+          formData.append('crop_type', parcelData.crop_type);
+        }
+        if (parcelData.soil_type) {
+          formData.append('soil_type', parcelData.soil_type);
+        }
+        if (parcelData.unique_code) {
+          formData.append('unique_code', parcelData.unique_code);
+        }
+        if (parcelData.certification_type) {
+          formData.append('certification_type', parcelData.certification_type);
+        }
+        if (parcelData.contact_person) {
+          formData.append('contact_person', parcelData.contact_person);
+        }
+        if (parcelData.contact_email) {
+          formData.append('contact_email', parcelData.contact_email);
+        }
+        if (parcelData.contact_phone) {
+          formData.append('contact_phone', parcelData.contact_phone);
+        }
+        if (parcelData.address) {
+          formData.append('address', parcelData.address);
+        }
 
         return {
           url: PARCEL_URL(companyId, establishmentId),
@@ -73,12 +100,39 @@ export const productApi = baseApi.injectEndpoints({
           });
         }
 
+        // Basic required fields
         formData.append('name', parcelData.name);
         formData.append('description', parcelData.description);
         formData.append('area', parcelData.area || '0'); // Ensure area is a string number
         formData.append('certified', parcelData.certified || false);
         formData.append('polygon', JSON.stringify(parcelData.polygon || []));
         formData.append('map_metadata', JSON.stringify(parcelData.map_metadata || {}));
+
+        // Additional fields - now included!
+        if (parcelData.crop_type) {
+          formData.append('crop_type', parcelData.crop_type);
+        }
+        if (parcelData.soil_type) {
+          formData.append('soil_type', parcelData.soil_type);
+        }
+        if (parcelData.unique_code) {
+          formData.append('unique_code', parcelData.unique_code);
+        }
+        if (parcelData.certification_type) {
+          formData.append('certification_type', parcelData.certification_type);
+        }
+        if (parcelData.contact_person) {
+          formData.append('contact_person', parcelData.contact_person);
+        }
+        if (parcelData.contact_email) {
+          formData.append('contact_email', parcelData.contact_email);
+        }
+        if (parcelData.contact_phone) {
+          formData.append('contact_phone', parcelData.contact_phone);
+        }
+        if (parcelData.address) {
+          formData.append('address', parcelData.address);
+        }
 
         return {
           url: PARCEL_URL(companyId, establishmentId, parcelId),

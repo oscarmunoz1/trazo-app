@@ -157,30 +157,14 @@ const companyApi = baseApi.injectEndpoints({
         };
       }
     }),
-    addEstablishmentCarbonFootprint: build.mutation<any, any>({
-      query: (data) => {
-        // Create a new payload with explicit number conversions
-        const payload = {
-          // Convert field names to match what the serializer expects
-          establishment: data.establishment ? Number(data.establishment) : undefined,
-          production: data.production ? Number(data.production) : undefined,
-          type: data.type,
-          amount: Number(data.amount),
-          year: Number(data.year),
-          description: data.description || '',
-          source_id: Number(data.source_id)
-        };
-
-        // Debug output
-        console.log('API Request payload:', payload);
-
-        return {
-          url: '/carbon/entries/',
-          method: 'POST',
-          body: payload,
-          credentials: 'include'
-        };
-      }
+    addEstablishmentCarbonFootprint: build.mutation({
+      query: ({ establishmentId, footprintData }) => ({
+        url: `carbon/establishments/${establishmentId}/footprint/`,
+        method: 'POST',
+        body: footprintData,
+        credentials: 'include'
+      }),
+      invalidatesTags: ['CarbonSummary']
     }),
     updateEstablishmentCarbonFootprint: build.mutation<any, { id: number; data: any }>({
       query: ({ id, data }) => ({
@@ -301,6 +285,16 @@ const companyApi = baseApi.injectEndpoints({
           credentials: 'include'
         };
       }
+    }),
+    // Public endpoint for consumer-facing establishment view
+    getPublicEstablishment: build.query({
+      query: (establishmentId: string) => ({
+        url: `companies/public/establishments/${establishmentId}/`,
+        method: 'GET'
+      }),
+      providesTags: (result, error, establishmentId) => [
+        { type: 'Establishment', id: establishmentId }
+      ]
     })
   }),
   overrideExisting: false
@@ -328,5 +322,6 @@ export const {
   useGetCarbonReportsQuery,
   useGenerateCarbonReportMutation,
   useGetProductionsByEstablishmentQuery,
-  useGetCarbonEntriesQuery
+  useGetCarbonEntriesQuery,
+  useGetPublicEstablishmentQuery
 } = companyApi;

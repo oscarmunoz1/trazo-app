@@ -28,7 +28,7 @@ import { FaPlus } from 'react-icons/fa';
 import FormInput from 'components/Forms/FormInput';
 import IconBox from 'components/Icons/IconBox';
 import { MdModeEdit } from 'react-icons/md';
-import parcel1 from 'assets/img/ImageParcel1.png';
+import parcel1 from 'assets/img/BgMusicCard.png';
 import { setForm } from 'store/features/formSlice';
 import { useGetProductsQuery } from 'store/api/productApi';
 import { useParams } from 'react-router-dom';
@@ -120,8 +120,7 @@ const AddParcelStep1 = ({ onClose, isOpen, nextTab, onSubmit }) => {
                   minW={{ sm: '200px', xl: '240px' }}
                   h={{ sm: '110px', xl: '150px' }}
                   mx={{ sm: '5px', md: '10px', xl: '20px' }}
-                  mb={{ sm: '25px' }}
-                >
+                  mb={{ sm: '25px' }}>
                   <Avatar src={parcel1} w="100%" h="100%" borderRadius="12px" />
                   <IconBox
                     bg="#fff"
@@ -131,8 +130,7 @@ const AddParcelStep1 = ({ onClose, isOpen, nextTab, onSubmit }) => {
                     position="absolute"
                     right="-10px"
                     bottom="-10px"
-                    cursor="pointer"
-                  >
+                    cursor="pointer">
                     <Icon as={MdModeEdit} w="15px" h="15px" color="#333" />
                   </IconBox>
                 </Box>
@@ -211,8 +209,7 @@ const AddParcelStep1 = ({ onClose, isOpen, nextTab, onSubmit }) => {
                 mt="24px"
                 w={{ sm: '75px', lg: '100px' }}
                 h="35px"
-                type="submit"
-              >
+                type="submit">
                 <Text fontSize="xs" color="#fff" fontWeight="bold">
                   NEXT
                 </Text>

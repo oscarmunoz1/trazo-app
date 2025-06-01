@@ -10,32 +10,40 @@ const CheckAuth = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  // Skip authentication check on auth pages to prevent redirect loops
+  // Skip authentication check on auth pages and public routes to prevent redirect loops
   const isAuthPage = location.pathname.startsWith('/auth/');
+  const isPublicProductRoute = location.pathname.match(/^\/production\/[^\/]+\/?$/);
+  const isPricingPage = location.pathname === '/pricing';
+
+  // Skip authentication for public routes
+  const skipAuth = isAuthPage || isPublicProductRoute || isPricingPage;
 
   const { data, isLoading, isError, isSuccess } = useUserDataQuery(undefined, {
-    skip: isAuthPage // Skip the query on auth pages
+    skip: skipAuth // Skip the query on auth pages and public routes
   });
 
   useEffect(() => {
     if (isSuccess && data) {
       dispatch(login(data));
-    } else if (isError && !isAuthPage) {
-      // Only dispatch logout if not on auth page
+    } else if (isError && !skipAuth) {
+      // Only dispatch logout if not on auth page or public route
       dispatch(logout());
     }
-  }, [dispatch, data, isSuccess, isError, isAuthPage]);
+  }, [dispatch, data, isSuccess, isError, skipAuth]);
 
-  // On auth pages, we skip the query, so we need to ensure loading is false
-  // so that NotAuthenticated component can render properly
+  // On auth pages and public routes, we skip the query, so we need to ensure loading is false
+  // so that the appropriate components can render properly
   useEffect(() => {
-    if (isAuthPage) {
-      // Set loading to false and ensure user is marked as not authenticated
-      dispatch(logout());
+    if (skipAuth) {
+      // For public routes, don't automatically logout - just skip auth
+      if (isAuthPage) {
+        // Only logout on auth pages to reset state
+        dispatch(logout());
+      }
     }
-  }, [isAuthPage, dispatch]);
+  }, [skipAuth, isAuthPage, dispatch]);
 
-  return isLoading && !isAuthPage ? <FullScreenLoader /> : <Outlet />;
+  return isLoading && !skipAuth ? <FullScreenLoader /> : <Outlet />;
 };
 
 export default CheckAuth;

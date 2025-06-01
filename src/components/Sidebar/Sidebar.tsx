@@ -445,33 +445,40 @@ function Sidebar(props: SidebarProps) {
                 iotDynamicRoutes) && (
                 <List>
                   {
-                    prop.icon && !prop.isCompanySettings
-                      ? createLinks(
-                          prop.isDashboard && !prop.items
-                            ? dynamicRoutes
-                            : prop.isCertifications
-                            ? certificationsRoutes
-                            : prop.isCommercial
-                            ? commercialDynamicRoutes
-                            : prop.isCarbonDashboard
-                            ? carbonDynamicRoutes
-                            : prop.isIoTDashboard
-                            ? iotDynamicRoutes
-                            : prop.items
-                        ) // for bullet accordion links
-                      : createAccordionLinks(
-                          prop.isDashboard && !prop.items
-                            ? dynamicRoutes
-                            : prop.isCertifications
-                            ? certificationsRoutes
-                            : prop.isCommercial
-                            ? commercialDynamicRoutes
-                            : prop.isCarbonDashboard
-                            ? carbonDynamicRoutes
-                            : prop.isIoTDashboard
-                            ? iotDynamicRoutes
-                            : prop.items
-                        ) // for non-bullet accordion links
+                    prop.icon && !prop.isCompanySettings ? (
+                      // Wrap establishment links in their own accordion to allow multiple open
+                      <Accordion allowMultiple>
+                        {(() => {
+                          const routes =
+                            prop.isDashboard && !prop.items
+                              ? dynamicRoutes
+                              : prop.isCertifications
+                              ? certificationsRoutes
+                              : prop.isCommercial
+                              ? commercialDynamicRoutes
+                              : prop.isCarbonDashboard
+                              ? carbonDynamicRoutes
+                              : prop.isIoTDashboard
+                              ? iotDynamicRoutes
+                              : prop.items;
+                          return createLinks(routes);
+                        })()}
+                      </Accordion>
+                    ) : (
+                      createAccordionLinks(
+                        prop.isDashboard && !prop.items
+                          ? dynamicRoutes
+                          : prop.isCertifications
+                          ? certificationsRoutes
+                          : prop.isCommercial
+                          ? commercialDynamicRoutes
+                          : prop.isCarbonDashboard
+                          ? carbonDynamicRoutes
+                          : prop.isIoTDashboard
+                          ? iotDynamicRoutes
+                          : prop.items
+                      )
+                    ) // for non-bullet accordion links
                   }
                 </List>
               )}
@@ -585,9 +592,9 @@ function Sidebar(props: SidebarProps) {
       {/* Non-collapsible routes */}
       {createLinks(nonCollapsibleRoutes)}
 
-      {/* Single accordion for all collapsible routes */}
+      {/* Fixed accordion - only one main section open, but allow multiple establishments within */}
       {collapsibleRoutes.length > 0 && (
-        <Accordion allowToggle>
+        <Accordion allowToggle defaultIndex={0}>
           {collapsibleRoutes.map((route: Route, index: number) =>
             createLinks([route]).map((item, itemIndex) =>
               React.cloneElement(item, { key: `${index}-${itemIndex}` })

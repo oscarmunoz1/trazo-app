@@ -725,5 +725,6 @@
   "app.documentObservations": "Document observations for future reference",
   "app.maintainDetailedRecords": "Maintain detailed records for analysis",
   "app.considerSustainablePractices": "Consider sustainable practices",
-  "app.eventTypeCannotBeChanged": "Cannot change event type after creation"
+  "app.eventTypeCannotBeChanged": "Cannot change event type after creation",
+  "app.sustainabilityTracker": "Sustainability Tracker"
 }
