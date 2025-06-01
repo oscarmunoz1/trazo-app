@@ -14,7 +14,8 @@ import {
   Icon,
   Box,
   Badge,
-  Divider
+  Divider,
+  Input
 } from '@chakra-ui/react';
 import {
   StandardPage,
@@ -50,27 +51,25 @@ import { MdLocalFlorist, MdHome } from 'react-icons/md';
 
 // Form Schema
 const productionSchema = object({
-  productId: string().min(1, 'Product is required'),
-  productName: string().min(1, 'Product name is required'),
+  productId: string().optional(),
+  productName: string().optional(),
   date: string().min(1, 'Date is required'),
   type: string().min(1, 'Production type is required'),
   isOutdoor: boolean().default(true),
   ageOfPlants: number().optional(),
   numberOfPlants: number().optional(),
-  soilPh: number().optional(),
-  observation: string().optional()
+  soilPh: number().optional()
 });
 
 interface ProductionFormData {
-  productId: string;
-  productName: string;
+  productId?: string;
+  productName?: string;
   date: string;
   type: string;
   isOutdoor: boolean;
   ageOfPlants?: number;
   numberOfPlants?: number;
   soilPh?: number;
-  observation?: string;
 }
 
 interface StandardProductionFormProps {
@@ -111,7 +110,7 @@ const environmentOptions = [
     description: 'Open field cultivation',
     icon: MdLocalFlorist,
     color: 'green',
-    value: true
+    value: 'outdoor'
   },
   {
     id: 'indoor',
@@ -119,7 +118,7 @@ const environmentOptions = [
     description: 'Controlled environment',
     icon: MdHome,
     color: 'blue',
-    value: false
+    value: 'indoor'
   }
 ];
 
@@ -142,7 +141,7 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
   const steps = [
     { title: 'Product Selection', description: 'Choose product & type', icon: FaSeedling },
     { title: 'Production Details', description: 'Date & environment', icon: FaCalendarAlt },
-    { title: 'Additional Info', description: 'Plant details & notes', icon: FaInfoCircle }
+    { title: 'Plant Details', description: 'Plant count & soil info', icon: FaInfoCircle }
   ];
 
   const methods = useForm<ProductionFormData>({
@@ -179,8 +178,17 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
   }, [initialData, reset, methods]);
 
   const onSubmitForm = (data: ProductionFormData) => {
+    console.log('Form submission started:', {
+      data,
+      selectedProduct,
+      hasSelectedProduct: !!selectedProduct,
+      selectedProductValue: selectedProduct?.value,
+      selectedProductLabel: selectedProduct?.label
+    });
+
     // Validate product selection
     if (!selectedProduct) {
+      console.log('Product validation failed - no selected product');
       setProductError('Product is required');
       return;
     }
@@ -190,9 +198,11 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
     try {
       const finalData = {
         ...data,
-        productId: selectedProduct.value,
+        productId: String(selectedProduct.value),
         productName: selectedProduct.label
       };
+
+      console.log('Final data to submit:', finalData);
 
       onSubmit(finalData);
       toast({
@@ -205,6 +215,7 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
         isClosable: true
       });
     } catch (error) {
+      console.error('Submit error:', error);
       toast({
         title: 'Error',
         description: 'Failed to save production. Please try again.',
@@ -226,22 +237,63 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
         const productFieldErrors = ['type'].some(
           (field) => currentErrors[field as keyof typeof currentErrors]
         );
-        return selectedProduct && formData.type && !productFieldErrors && !productError;
+        const step0Complete =
+          selectedProduct && formData.type && !productFieldErrors && !productError;
+
+        // Debug logging for step 0
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Step 0 validation:', {
+            selectedProduct: !!selectedProduct,
+            formDataType: formData.type,
+            productFieldErrors,
+            productError,
+            step0Complete
+          });
+        }
+
+        return step0Complete;
       case 1:
-        // Production Details: date required, no validation errors
+        // Production Details: date and environment required, no validation errors
         const detailsFieldErrors = ['date'].some(
           (field) => currentErrors[field as keyof typeof currentErrors]
         );
-        return formData.date && !detailsFieldErrors;
+        const hasDate = Boolean(
+          formData.date && typeof formData.date === 'string' && formData.date.trim().length > 0
+        );
+        const hasEnvironment = formData.isOutdoor !== undefined && formData.isOutdoor !== null;
+        const step1Complete = hasDate && hasEnvironment && !detailsFieldErrors;
+
+        // Debug logging for step 1 - always show when validating step 1
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Step 1 validation check:', {
+            formDataDate: formData.date,
+            hasDate,
+            formDataIsOutdoor: formData.isOutdoor,
+            hasEnvironment,
+            detailsFieldErrors,
+            currentErrors,
+            step1Complete,
+            allFormData: formData,
+            checkingFromStep: currentStep
+          });
+        }
+
+        return step1Complete;
       case 2:
         // Additional Info: optional step, check for validation errors
-        const additionalFieldErrors = [
-          'ageOfPlants',
-          'numberOfPlants',
-          'soilPh',
-          'observation'
-        ].some((field) => currentErrors[field as keyof typeof currentErrors]);
-        return !additionalFieldErrors;
+        const additionalFieldErrors = ['ageOfPlants', 'numberOfPlants', 'soilPh'].some(
+          (field) => currentErrors[field as keyof typeof currentErrors]
+        );
+        const step2Complete = !additionalFieldErrors;
+
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Step 2 validation:', {
+            additionalFieldErrors,
+            step2Complete
+          });
+        }
+
+        return step2Complete;
       default:
         return false;
     }
@@ -268,6 +320,21 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
+  };
+
+  // Debug helper for button state
+  const getButtonDebugInfo = () => {
+    if (process.env.NODE_ENV === 'development') {
+      const step1Valid = isStepComplete(1);
+      console.log('Button debug info:', {
+        currentStep,
+        step1Valid,
+        buttonDisabled: !step1Valid,
+        formData: watch()
+      });
+      return step1Valid;
+    }
+    return isStepComplete(1);
   };
 
   // Custom styles for CreatableSelect
@@ -386,10 +453,20 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
                   required
                   error={errors.date?.message}
                   helpText="When did this production start?">
-                  <StandardInput
-                    {...methods.register('date')}
+                  <Input
+                    {...methods.register('date', {
+                      required: 'Production date is required'
+                    })}
                     type="datetime-local"
-                    leftElement={<Icon as={FaCalendarAlt} color="gray.400" />}
+                    borderRadius="lg"
+                    onChange={(e) => {
+                      console.log('Date field onChange:', {
+                        value: e.target.value,
+                        dateFieldValue: watch('date')
+                      });
+                      // Let react-hook-form handle the change
+                      methods.register('date').onChange(e);
+                    }}
                   />
                 </StandardField>
 
@@ -398,7 +475,25 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
                   <StandardSelectionGrid
                     options={environmentOptions}
                     selectedValue={watch('isOutdoor') ? 'outdoor' : 'indoor'}
-                    onSelect={(value) => setValue('isOutdoor', value === 'outdoor')}
+                    onSelect={(value) => {
+                      console.log('Environment selection change:', {
+                        value,
+                        willSetTo: value === 'outdoor',
+                        currentIsOutdoor: watch('isOutdoor'),
+                        formDataBefore: watch()
+                      });
+                      setValue('isOutdoor', value === 'outdoor');
+
+                      // Force validation check after setting value
+                      setTimeout(() => {
+                        const updatedFormData = watch();
+                        console.log('After environment selection:', {
+                          newIsOutdoor: updatedFormData.isOutdoor,
+                          step1Valid: isStepComplete(1),
+                          formDataAfter: updatedFormData
+                        });
+                      }, 100);
+                    }}
                     columns={{ base: 'repeat(2, 1fr)' }}
                     size="md"
                   />
@@ -439,7 +534,7 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
                     <StandardButton
                       onClick={nextStep}
                       rightIcon={<FaChevronRight />}
-                      disabled={!isStepComplete(1)}>
+                      disabled={!getButtonDebugInfo()}>
                       Continue to Details
                     </StandardButton>
                   </HStack>
@@ -448,11 +543,9 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
             </StandardCard>
           )}
 
-          {/* Step 2: Additional Information */}
+          {/* Step 2: Plant Details */}
           {currentStep === 2 && (
-            <StandardCard
-              title="Additional Information"
-              subtitle="Optional details about plants and conditions">
+            <StandardCard title="Plant Details" subtitle="Specify plant count and soil conditions">
               <VStack spacing={6} align="stretch">
                 {/* Plant Details */}
                 <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
@@ -536,17 +629,6 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
                   </SimpleGrid>
                 </Box>
 
-                {/* Observations */}
-                <StandardField
-                  label="Observations"
-                  error={errors.observation?.message}
-                  helpText="Any additional notes about this production">
-                  <StandardTextarea
-                    {...methods.register('observation')}
-                    placeholder="Record any observations about soil conditions, plant health, weather conditions, or other relevant factors..."
-                  />
-                </StandardField>
-
                 {/* Production Summary */}
                 <Box p={4} bg="green.50" borderRadius="lg">
                   <Text fontWeight="semibold" color="green.700" mb={3}>
@@ -560,6 +642,16 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
                     <Text>Plants: {watch('numberOfPlants') || 0}</Text>
                     <Text>Soil pH: {watch('soilPh') || 'Not measured'}</Text>
                   </SimpleGrid>
+
+                  {/* Debug info */}
+                  {process.env.NODE_ENV === 'development' && (
+                    <Box mt={3} p={2} bg="yellow.100" borderRadius="md" fontSize="xs">
+                      <Text fontWeight="bold">Debug - Selected Product:</Text>
+                      <Text>Value: {selectedProduct?.value || 'undefined'}</Text>
+                      <Text>Label: {selectedProduct?.label || 'undefined'}</Text>
+                      <Text>Has Product: {selectedProduct ? 'Yes' : 'No'}</Text>
+                    </Box>
+                  )}
                 </Box>
 
                 {/* Navigation */}

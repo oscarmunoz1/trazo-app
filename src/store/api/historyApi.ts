@@ -50,7 +50,9 @@ export interface PublicHistory {
   company: string;
   producer: HistoryProducer;
   reputation: number;
+  certificate_percentage: number;
   history_scan: string;
+  qr_code?: string;
   similar_histories: Array<{
     id: string;
     product: {
@@ -61,6 +63,25 @@ export interface PublicHistory {
     reputation: number;
   }>;
   images: string[];
+  events: Array<{
+    id: number;
+    image: string | null;
+    type: string;
+    event_type: number;
+    description: string;
+    date: string;
+    index: number;
+    commercial_name: string;
+    volume: string;
+    concentration: string;
+    area: string;
+    way_of_application: string;
+    time_period: string;
+    observation: string;
+    album: any;
+    history: number;
+    created_by: number;
+  }>;
   timeline: Array<{
     id: string;
     date: string;

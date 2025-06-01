@@ -160,6 +160,16 @@ export const historyApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: (result) => (result ? ['History'] : [])
     }),
+    updateProduction: build.mutation({
+      query: ({ historyId, ...production }) => ({
+        url: PRODUCTION_URL(historyId),
+        method: 'PUT',
+        credentials: 'include',
+        body: production
+      }),
+      invalidatesTags: (result, error, { historyId }) =>
+        result ? [{ type: 'History', historyId }, 'History'] : []
+    }),
     getPublicHistory: build.query({
       query: (historyId) => ({
         url: PUBLIC_HISTORY_URL(historyId),
@@ -213,6 +223,7 @@ export const {
   useCreateEventMutation,
   useUpdateEventMutation,
   useCreateProductionMutation,
+  useUpdateProductionMutation,
   useFinishCurrentHistoryMutation,
   useGetPublicHistoryQuery,
   useCommentHistoryMutation,

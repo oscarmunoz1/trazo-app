@@ -39,8 +39,7 @@ const CarouselCard = ({ id, image, name, category, buttonText, avatars }: Carous
         h={{ sm: '190px', md: '200px' }}
         mb="20px"
         position="relative"
-        borderRadius="15px"
-      >
+        borderRadius="15px">
         {!imageLoaded && <Shimmer />}
         <Image
           width="100%"
@@ -61,8 +60,7 @@ const CarouselCard = ({ id, image, name, category, buttonText, avatars }: Carous
           position="absolute"
           top="0"
           borderRadius="15px"
-          bg="linear-gradient(360deg, rgba(49, 56, 96, 0.16) 0%, rgba(21, 25, 40, 0.28) 100%)"
-        ></Box>
+          bg="linear-gradient(360deg, rgba(49, 56, 96, 0.16) 0%, rgba(21, 25, 40, 0.28) 100%)"></Box>
       </Box>
       <Flex direction="column">
         <Text fontSize="md" color="gray.500" fontWeight="600" mb="10px">
@@ -83,8 +81,7 @@ const CarouselCard = ({ id, image, name, category, buttonText, avatars }: Carous
               navigate(`/admin/dashboard/establishment/${establishmentId}/parcel/${id}`, {
                 replace: true
               });
-            }}
-          >
+            }}>
             {buttonText}
           </Button>
           <AvatarGroup size="xs">
