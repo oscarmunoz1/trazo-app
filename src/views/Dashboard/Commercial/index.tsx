@@ -421,7 +421,8 @@ export default function CommercialView() {
           align="center"
           gap="24px"
           paddingTop={12}
-          w="100%">
+          w="100%"
+        >
           <VStack align="start" spacing={1}>
             <Text color="gray.500" fontSize="md">
               Monitorea y gestiona tus escaneos y resultados
@@ -435,13 +436,15 @@ export default function CommercialView() {
               justify="space-between"
               align="center"
               gap="24px"
-              w="100%">
+              w="100%"
+            >
               <Flex gap="24px" direction={{ base: 'column', smd: 'row' }}>
                 <Flex flexDirection={'column'}>
                   <Stack
                     direction="row"
                     spacing="10px"
-                    alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}>
+                    alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}
+                  >
                     <Menu>
                       <MenuButton
                         as={Button}
@@ -451,7 +454,8 @@ export default function CommercialView() {
                         h="35px"
                         bg="#fff"
                         minW="155px"
-                        fontSize="xs">
+                        fontSize="xs"
+                      >
                         {filters.parcel
                           ? filters.parcel.name
                           : intl.formatMessage({ id: 'app.allParcels' }).toUpperCase()}
@@ -475,7 +479,8 @@ export default function CommercialView() {
                   <Stack
                     direction="row"
                     spacing="10px"
-                    alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}>
+                    alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}
+                  >
                     <Menu>
                       <MenuButton
                         as={Button}
@@ -485,7 +490,8 @@ export default function CommercialView() {
                         h="35px"
                         bg="#fff"
                         minW="155px"
-                        fontSize="xs">
+                        fontSize="xs"
+                      >
                         {filters.product
                           ? filters.product.name
                           : intl.formatMessage({ id: 'app.allProducts' }).toUpperCase()}
@@ -500,7 +506,8 @@ export default function CommercialView() {
                             establishmentProducts.map((product) => (
                               <MenuItem
                                 onClick={() => onProductFilterChange(product)}
-                                color="gray.500">
+                                color="gray.500"
+                              >
                                 {product.name}
                               </MenuItem>
                             ))
@@ -508,7 +515,8 @@ export default function CommercialView() {
                             dataProducts.map((product) => (
                               <MenuItem
                                 onClick={() => onProductFilterChange(product)}
-                                color="gray.500">
+                                color="gray.500"
+                              >
                                 {product.name}
                               </MenuItem>
                             ))}
@@ -520,7 +528,8 @@ export default function CommercialView() {
                   <Stack
                     direction="row"
                     spacing="10px"
-                    alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}>
+                    alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}
+                  >
                     <Menu>
                       <MenuButton
                         as={Button}
@@ -531,7 +540,8 @@ export default function CommercialView() {
                         bg="#fff"
                         fontSize="xs"
                         width="fit-content"
-                        disabled={filters.product == null || filters.parcel == null}>
+                        disabled={filters.product == null || filters.parcel == null}
+                      >
                         {filters.production
                           ? filters.production.period
                           : intl.formatMessage({ id: 'app.allProductions' }).toUpperCase()}
@@ -545,7 +555,8 @@ export default function CommercialView() {
                           dataHistories.map((history) => (
                             <MenuItem
                               onClick={() => onProductionFilterChange(history)}
-                              color="gray.500">
+                              color="gray.500"
+                            >
                               {history.period}
                             </MenuItem>
                           ))}
@@ -560,7 +571,8 @@ export default function CommercialView() {
               <Stack
                 direction="row"
                 spacing="10px"
-                alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}>
+                alignSelf={{ sm: 'flex-start', lg: 'flex-end' }}
+              >
                 <Menu>
                   <MenuButton
                     as={Button}
@@ -571,7 +583,8 @@ export default function CommercialView() {
                     bg="#fff"
                     fontSize="xs"
                     width="fit-content"
-                    minW="125px">
+                    minW="125px"
+                  >
                     {filters.period.name.toUpperCase()}
                   </MenuButton>
                   <MenuList>
@@ -582,7 +595,8 @@ export default function CommercialView() {
                           name: intl.formatMessage({ id: 'app.thisWeek' })
                         })
                       }
-                      color="gray.500">
+                      color="gray.500"
+                    >
                       {intl.formatMessage({ id: 'app.thisWeek' })}
                     </MenuItem>
                     <MenuItem
@@ -592,7 +606,8 @@ export default function CommercialView() {
                           name: intl.formatMessage({ id: 'app.thisMonth' })
                         })
                       }
-                      color="gray.500">
+                      color="gray.500"
+                    >
                       {intl.formatMessage({ id: 'app.thisMonth' })}
                     </MenuItem>
                     <MenuItem
@@ -602,7 +617,8 @@ export default function CommercialView() {
                           name: intl.formatMessage({ id: 'app.thisYear' })
                         })
                       }
-                      color="gray.500">
+                      color="gray.500"
+                    >
                       {intl.formatMessage({ id: 'app.thisYear' })}
                     </MenuItem>
                   </MenuList>
@@ -613,7 +629,8 @@ export default function CommercialView() {
           <Flex
             flexDirection={{ base: 'column', lg: 'row' }}
             gap="24px"
-            p={{ base: '20px', lg: '0' }}>
+            p={{ base: '20px', lg: '0' }}
+          >
             <Flex flex={2}>
               <ScansList
                 title={intl.formatMessage({ id: 'app.scans' })}

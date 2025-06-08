@@ -42,7 +42,8 @@ const CardWithImage = ({ title, name, image, readMoreLink }: CardWithImageProps)
                 variant="no-hover"
                 bg="transparent"
                 my={{ sm: '1.5rem', lg: '0px' }}
-                onClick={() => navigate(readMoreLink)}>
+                onClick={() => navigate(readMoreLink)}
+              >
                 <Text
                   fontSize="sm"
                   color={textColor}
@@ -50,7 +51,8 @@ const CardWithImage = ({ title, name, image, readMoreLink }: CardWithImageProps)
                   cursor="pointer"
                   transition="all .5s ease"
                   my={{ sm: '1.5rem', lg: '0px' }}
-                  _hover={{ me: '4px' }}>
+                  _hover={{ me: '4px' }}
+                >
                   {intl.formatMessage({ id: 'app.readMore' })}
                 </Text>
                 <Icon
@@ -76,7 +78,8 @@ const CardWithImage = ({ title, name, image, readMoreLink }: CardWithImageProps)
             borderRadius="15px"
             width={{ sm: '100%', md: '320px' }}
             height="250px"
-            minH={'250px'}>
+            minH={'250px'}
+          >
             {!imageLoaded && <Shimmer />}
             <Box
               position={!imageLoaded ? 'absolute' : 'relative'}
@@ -85,7 +88,8 @@ const CardWithImage = ({ title, name, image, readMoreLink }: CardWithImageProps)
               width="100%"
               height="100%"
               opacity={imageLoaded ? 1 : 0}
-              transition="opacity 0.3s ease-in-out">
+              transition="opacity 0.3s ease-in-out"
+            >
               {React.cloneElement(image as React.ReactElement, {
                 onLoad: () => setImageLoaded(true)
               })}

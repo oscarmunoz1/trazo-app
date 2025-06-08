@@ -41,7 +41,9 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
-  Stack
+  Stack,
+  useBreakpointValue,
+  Container
 } from '@chakra-ui/react';
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import { InfoOutlineIcon, ChevronDownIcon, WarningIcon, CheckCircleIcon } from '@chakra-ui/icons';
@@ -64,6 +66,15 @@ import {
   FaInfoCircle
 } from 'react-icons/fa';
 
+// Step 5: Progressive Loading Imports for Carbon Dashboard
+import { ProgressiveLoader, CarbonDashboardSkeleton } from 'components/Loading/ProgressiveLoader';
+import {
+  usePerformanceMonitor,
+  useProgressiveLoading,
+  useMobileOptimization
+} from 'hooks/usePerformanceMonitor';
+import { PerformanceSummary } from 'components/Performance/PerformanceSummary';
+
 // Import existing components
 import CarbonFootprintTab from '../components/forms/CarbonFootprintTab';
 import { useGetCarbonFootprintSummaryQuery } from 'store/api/companyApi';
@@ -84,6 +95,26 @@ const CarbonDashboard = () => {
   const textColor = useColorModeValue('gray.700', 'white');
   const successColor = useColorModeValue('green.500', 'green.300');
 
+  // Step 5: Progressive Loading Implementation for Carbon Dashboard
+  const { metrics, markStageComplete, resetTimer } = usePerformanceMonitor();
+  const { isMobile, optimizationStrategy } = useMobileOptimization();
+
+  // Carbon-specific progressive loading configuration
+  const progressiveConfig = {
+    primaryQueries: ['carbon-summary', 'establishment-data'], // Critical carbon metrics
+    secondaryQueries: ['productions', 'roi-analysis', 'equipment', 'incentives'], // Enhanced features
+    enableCache: true,
+    targetTime: 3000 // 3-second target for carbon analytics
+  };
+
+  const { stage, registerQueryLoad, isLoading, primaryLoaded } =
+    useProgressiveLoading(progressiveConfig);
+
+  // Mobile-first responsive design
+  const containerPadding = useBreakpointValue({ base: 4, md: 8 });
+  const cardSpacing = useBreakpointValue({ base: 4, md: 6 });
+  const headerFontSize = useBreakpointValue({ base: 'xl', md: '2xl' });
+
   // State management
   const [viewMode, setViewMode] = useState('establishment');
   const [productionId, setProductionId] = useState('');
@@ -91,7 +122,7 @@ const CarbonDashboard = () => {
   const [roiData, setRoiData] = useState(null);
   const { isOpen: isAlertOpen, onClose: onAlertClose } = useDisclosure({ defaultIsOpen: true });
 
-  // Carbon data queries
+  // Carbon data queries with progressive loading registration
   const { data: summaryData, isLoading: isSummaryLoading } = useGetCarbonFootprintSummaryQuery({
     establishmentId: viewMode === 'establishment' ? establishmentId : undefined,
     productionId: viewMode === 'production' ? productionId : undefined,
@@ -110,6 +141,40 @@ const CarbonDashboard = () => {
   const { data: incentivesData, isLoading: isLoadingIncentives } = useGetGovernmentIncentivesQuery({
     establishment_id: establishmentId
   });
+
+  // Step 5: Progressive loading initialization and query registration
+  useEffect(() => {
+    resetTimer(); // Reset performance timer
+
+    // Register query loads for performance tracking
+    if (summaryData && !isSummaryLoading) {
+      registerQueryLoad('carbon-summary', false, summaryData);
+    }
+    if (establishmentId) {
+      registerQueryLoad('establishment-data', false, { id: establishmentId });
+    }
+    if (productions && !isProductionsLoading) {
+      registerQueryLoad('productions', false, productions);
+    }
+    if (equipmentData && !isLoadingEquipment) {
+      registerQueryLoad('equipment', false, equipmentData);
+    }
+    if (incentivesData && !isLoadingIncentives) {
+      registerQueryLoad('incentives', false, incentivesData);
+    }
+  }, [
+    summaryData,
+    isSummaryLoading,
+    establishmentId,
+    productions,
+    isProductionsLoading,
+    equipmentData,
+    isLoadingEquipment,
+    incentivesData,
+    isLoadingIncentives,
+    resetTimer,
+    registerQueryLoad
+  ]);
 
   // Calculate ROI on component mount
   useEffect(() => {
@@ -273,7 +338,8 @@ const CarbonDashboard = () => {
           align="center"
           gap="24px"
           paddingTop={12}
-          w="100%">
+          w="100%"
+        >
           <VStack align="start" spacing={1}>
             <Text color="gray.500" fontSize="md">
               Gestiona tu huella de carbono y optimiza costos operacionales
@@ -291,19 +357,22 @@ const CarbonDashboard = () => {
                 h="35px"
                 bg="#fff"
                 minW="155px"
-                fontSize="xs">
+                fontSize="xs"
+              >
                 {viewMode === 'establishment' ? 'ESTABLECIMIENTO' : 'PRODUCCIÓN'}
               </MenuButton>
               <MenuList>
                 <MenuItem
                   onClick={() => handleViewModeChange({ target: { value: 'establishment' } })}
-                  color="gray.500">
+                  color="gray.500"
+                >
                   Establecimiento
                 </MenuItem>
                 <MenuDivider />
                 <MenuItem
                   onClick={() => handleViewModeChange({ target: { value: 'production' } })}
-                  color="gray.500">
+                  color="gray.500"
+                >
                   Producción
                 </MenuItem>
               </MenuList>
@@ -319,7 +388,8 @@ const CarbonDashboard = () => {
                   bg="#fff"
                   minW="200px"
                   fontSize="xs"
-                  isDisabled={isProductionsLoading}>
+                  isDisabled={isProductionsLoading}
+                >
                   {(productionId &&
                     productions?.find((p) => p.id === parseInt(productionId))?.name) ||
                     'SELECCIONAR PRODUCCIÓN'}
@@ -327,7 +397,8 @@ const CarbonDashboard = () => {
                 <MenuList>
                   <MenuItem
                     onClick={() => handleProductionChange({ target: { value: '' } })}
-                    color="gray.500">
+                    color="gray.500"
+                  >
                     Seleccionar Producción
                   </MenuItem>
                   <MenuDivider />
@@ -335,7 +406,8 @@ const CarbonDashboard = () => {
                     <MenuItem
                       key={prod.id}
                       onClick={() => handleProductionChange({ target: { value: prod.id } })}
-                      color="gray.500">
+                      color="gray.500"
+                    >
                       {prod.name || `Producción ${prod.id}`}
                     </MenuItem>
                   ))}
@@ -352,7 +424,8 @@ const CarbonDashboard = () => {
           borderLeftColor={statusColor + '.500'}
           boxShadow="lg"
           borderRadius="xl"
-          overflow="hidden">
+          overflow="hidden"
+        >
           <CardBody p={4}>
             <Flex align="center" justify="space-between" wrap="wrap" gap={6}>
               <Flex align="center" gap={4}>
@@ -368,14 +441,16 @@ const CarbonDashboard = () => {
                       px={3}
                       py={1}
                       borderRadius="full"
-                      fontWeight="bold">
+                      fontWeight="bold"
+                    >
                       {status}
                     </Badge>
                     <Tooltip
                       label={`La huella de carbono mide el total de emisiones y compensaciones de CO₂e de este ${
                         viewMode === 'establishment' ? 'establecimiento' : 'producción'
                       }.`}
-                      fontSize="sm">
+                      fontSize="sm"
+                    >
                       <Icon as={InfoOutlineIcon} color="gray.400" boxSize={5} cursor="help" />
                     </Tooltip>
                   </HStack>
@@ -435,7 +510,8 @@ const CarbonDashboard = () => {
                             : offsetPercentage >= 50
                             ? 'blue.500'
                             : 'yellow.500'
-                        }>
+                        }
+                      >
                         {isNaN(offsetPercentage) ? '0' : offsetPercentage.toFixed(0)}%
                       </StatNumber>
                       <StatHelpText fontSize="xs">
@@ -471,7 +547,8 @@ const CarbonDashboard = () => {
                   py={4}
                   px={6}
                   fontWeight="semibold"
-                  _selected={{ bg: cardBg, borderColor: 'green.500', borderBottomColor: cardBg }}>
+                  _selected={{ bg: cardBg, borderColor: 'green.500', borderBottomColor: cardBg }}
+                >
                   <Icon as={FaLeaf} mr={2} />
                   Huella de Carbono
                 </Tab>
@@ -479,7 +556,8 @@ const CarbonDashboard = () => {
                   py={4}
                   px={6}
                   fontWeight="semibold"
-                  _selected={{ bg: cardBg, borderColor: 'green.500', borderBottomColor: cardBg }}>
+                  _selected={{ bg: cardBg, borderColor: 'green.500', borderBottomColor: cardBg }}
+                >
                   <Icon as={FaChartLine} mr={2} />
                   Análisis
                 </Tab>
@@ -487,7 +565,8 @@ const CarbonDashboard = () => {
                   py={4}
                   px={6}
                   fontWeight="semibold"
-                  _selected={{ bg: cardBg, borderColor: 'green.500', borderBottomColor: cardBg }}>
+                  _selected={{ bg: cardBg, borderColor: 'green.500', borderBottomColor: cardBg }}
+                >
                   <Icon as={FaFileAlt} mr={2} />
                   Reportes
                 </Tab>
@@ -495,7 +574,8 @@ const CarbonDashboard = () => {
                   py={4}
                   px={6}
                   fontWeight="semibold"
-                  _selected={{ bg: cardBg, borderColor: 'green.500', borderBottomColor: cardBg }}>
+                  _selected={{ bg: cardBg, borderColor: 'green.500', borderBottomColor: cardBg }}
+                >
                   <Icon as={FaAward} mr={2} />
                   Certificaciones
                 </Tab>
@@ -504,7 +584,8 @@ const CarbonDashboard = () => {
                   px={6}
                   fontWeight="semibold"
                   _selected={{ bg: cardBg, borderColor: 'green.500', borderBottomColor: cardBg }}
-                  position="relative">
+                  position="relative"
+                >
                   <Icon as={FaMoneyBillWave} mr={2} />
                   Análisis ROI
                   {roiData && (
@@ -514,7 +595,8 @@ const CarbonDashboard = () => {
                       top={1}
                       right={1}
                       fontSize="xs"
-                      borderRadius="full">
+                      borderRadius="full"
+                    >
                       ${(roiData.total_annual_savings / 1000).toFixed(0)}K
                     </Badge>
                   )}
@@ -628,7 +710,8 @@ const CarbonDashboard = () => {
                         onClick={handleCalculateROI}
                         isLoading={isCalculatingROI}
                         leftIcon={<Icon as={FaCalculator} />}
-                        size="lg">
+                        size="lg"
+                      >
                         Recalcular Análisis
                       </Button>
                     </HStack>
@@ -658,7 +741,8 @@ const CarbonDashboard = () => {
                               bg="white"
                               borderRadius="md"
                               borderWidth="1px"
-                              borderColor="blue.100">
+                              borderColor="blue.100"
+                            >
                               <HStack>
                                 <Icon as={FaTractor} color="orange.500" />
                                 <Text fontWeight="bold" fontSize="sm" color="blue.700">
@@ -682,7 +766,8 @@ const CarbonDashboard = () => {
                               bg="white"
                               borderRadius="md"
                               borderWidth="1px"
-                              borderColor="blue.100">
+                              borderColor="blue.100"
+                            >
                               <HStack>
                                 <Icon as={FaSeedling} color="green.500" />
                                 <Text fontWeight="bold" fontSize="sm" color="blue.700">
@@ -706,7 +791,8 @@ const CarbonDashboard = () => {
                               bg="white"
                               borderRadius="md"
                               borderWidth="1px"
-                              borderColor="blue.100">
+                              borderColor="blue.100"
+                            >
                               <HStack>
                                 <Icon as={FaSolarPanel} color="yellow.500" />
                                 <Text fontWeight="bold" fontSize="sm" color="blue.700">
@@ -730,7 +816,8 @@ const CarbonDashboard = () => {
                               bg="white"
                               borderRadius="md"
                               borderWidth="1px"
-                              borderColor="blue.100">
+                              borderColor="blue.100"
+                            >
                               <HStack>
                                 <Icon as={FaChartLine} color="purple.500" />
                                 <Text fontWeight="bold" fontSize="sm" color="blue.700">
@@ -754,7 +841,8 @@ const CarbonDashboard = () => {
                               bg="white"
                               borderRadius="md"
                               borderWidth="1px"
-                              borderColor="blue.100">
+                              borderColor="blue.100"
+                            >
                               <HStack>
                                 <Icon as={FaGift} color="blue.500" />
                                 <Text fontWeight="bold" fontSize="sm" color="blue.700">
@@ -778,7 +866,8 @@ const CarbonDashboard = () => {
                               bg="white"
                               borderRadius="md"
                               borderWidth="1px"
-                              borderColor="blue.100">
+                              borderColor="blue.100"
+                            >
                               <HStack>
                                 <Icon as={FaCalculator} color="teal.500" />
                                 <Text fontWeight="bold" fontSize="sm" color="blue.700">
@@ -801,7 +890,8 @@ const CarbonDashboard = () => {
                             p={3}
                             borderRadius="md"
                             borderWidth="1px"
-                            borderColor="green.200">
+                            borderColor="green.200"
+                          >
                             <HStack>
                               <Icon as={FaLeaf} color="green.500" />
                               <VStack align="start" spacing={1}>
@@ -851,7 +941,8 @@ const CarbonDashboard = () => {
                               bg="white"
                               borderRadius="md"
                               borderWidth="1px"
-                              borderColor="orange.100">
+                              borderColor="orange.100"
+                            >
                               <HStack>
                                 <Icon as={FaTractor} color="orange.500" boxSize={4} />
                                 <Text fontWeight="bold" fontSize="sm" color="orange.700">
@@ -888,7 +979,8 @@ const CarbonDashboard = () => {
                               bg="white"
                               borderRadius="md"
                               borderWidth="1px"
-                              borderColor="green.100">
+                              borderColor="green.100"
+                            >
                               <HStack>
                                 <Icon as={FaSeedling} color="green.500" boxSize={4} />
                                 <Text fontWeight="bold" fontSize="sm" color="green.700">
@@ -924,7 +1016,8 @@ const CarbonDashboard = () => {
                               bg="white"
                               borderRadius="md"
                               borderWidth="1px"
-                              borderColor="yellow.100">
+                              borderColor="yellow.100"
+                            >
                               <HStack>
                                 <Icon as={FaSolarPanel} color="yellow.500" boxSize={4} />
                                 <Text fontWeight="bold" fontSize="sm" color="yellow.700">
@@ -960,7 +1053,8 @@ const CarbonDashboard = () => {
                               bg="white"
                               borderRadius="md"
                               borderWidth="1px"
-                              borderColor="purple.100">
+                              borderColor="purple.100"
+                            >
                               <HStack>
                                 <Icon as={FaChartLine} color="purple.500" boxSize={4} />
                                 <Text fontWeight="bold" fontSize="sm" color="purple.700">
@@ -996,7 +1090,8 @@ const CarbonDashboard = () => {
                             p={3}
                             borderRadius="md"
                             borderWidth="1px"
-                            borderColor="blue.200">
+                            borderColor="blue.200"
+                          >
                             <VStack align="start" spacing={2}>
                               <HStack>
                                 <Icon as={FaInfoCircle} color="blue.500" boxSize={4} />

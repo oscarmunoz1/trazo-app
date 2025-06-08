@@ -48,6 +48,16 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FaClock } from 'react-icons/fa';
 
+// Add RootState type definition
+type RootState = {
+  company: {
+    currentCompany?: {
+      establishments?: any[];
+      subscription?: any;
+    };
+  };
+};
+
 type AdminNavbarProps = {
   brandText: string;
   variant: string;
@@ -135,7 +145,17 @@ export default function AdminNavbar(props: AdminNavbarProps) {
       setScrolled(false);
     }
   };
-  window.addEventListener('scroll', changeNavbar);
+
+  // Fix: Properly manage scroll event listener with useEffect and cleanup
+  useEffect(() => {
+    window.addEventListener('scroll', changeNavbar);
+
+    // Cleanup function to remove event listener
+    return () => {
+      window.removeEventListener('scroll', changeNavbar);
+    };
+  }, []); // Empty dependency array means this runs once on mount and cleanup on unmount
+
   return (
     <Flex
       position={navbarPosition}

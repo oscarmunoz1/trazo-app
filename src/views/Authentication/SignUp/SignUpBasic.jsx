@@ -11,7 +11,10 @@ import {
   Icon,
   Link,
   Text,
-  useColorModeValue
+  useColorModeValue,
+  Container,
+  Divider,
+  VStack
 } from '@chakra-ui/react';
 import { FaApple, FaFacebook, FaGoogle } from 'react-icons/fa';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -19,7 +22,6 @@ import React, { useEffect } from 'react';
 import { object, string } from 'zod';
 import { useIntl } from 'react-intl';
 // Assets
-import BgSignUp from 'assets/img/backgroundImage.png';
 import FormInput from 'components/Forms/FormInput';
 import { useNavigate } from 'react-router-dom';
 import { useSignUpMutation } from 'store/api/authApi';
@@ -44,7 +46,9 @@ function SignUp() {
   const titleColor = useColorModeValue('green.500', 'green.400');
   const textColor = useColorModeValue('gray.700', 'white');
   const bgColor = useColorModeValue('white', 'gray.700');
-  const bgIcons = useColorModeValue('green.200', 'rgba(255, 255, 255, 0.5)');
+  const bgIcons = useColorModeValue('gray.50', 'rgba(255, 255, 255, 0.1)');
+  const borderColor = useColorModeValue('gray.200', 'gray.600');
+  const subtitleColor = useColorModeValue('gray.600', 'gray.400');
   const navigate = useNavigate();
 
   const methods = useForm({
@@ -70,224 +74,199 @@ function SignUp() {
   };
 
   return (
-    <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden">
-      <Box
-        position="absolute"
-        minH={{ base: '70vh', md: '50vh' }}
-        w={{ md: 'calc(100vw - 50px)' }}
-        borderRadius={{ md: '15px' }}
-        left="0"
-        right="0"
-        bgRepeat="no-repeat"
-        overflow="hidden"
-        zIndex="-1"
-        top="0"
-        bgImage={BgSignUp}
-        marginInlineEnd={'25px'}
-        _before={{
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-          background: 'linear-gradient(180deg, rgba(0,128,0,0.85) 0%, rgba(0,128,0,0.6) 100%)',
-          borderRadius: '15px',
-          zIndex: 0
-        }}
-        bgSize="cover"
-        mx={{ md: 'auto' }}
-        mt={{ md: '14px' }}
-      ></Box>
-      <Flex
-        direction="column"
-        textAlign="center"
-        justifyContent="center"
-        align="center"
-        mt="6.5rem"
-        pt={'55px'}
-      >
-        <Text fontSize="4xl" color="white" fontWeight="bold">
-          {intl.formatMessage({ id: 'app.welcome' })}
-        </Text>
-        <Text
-          fontSize="md"
-          color="white"
-          fontWeight="normal"
-          mt="10px"
-          mb="26px"
-          w={{ base: '90%', sm: '60%', lg: '40%', xl: '25%' }}
-        >
-          {intl.formatMessage({ id: 'app.youCanLoginBy' })}
-        </Text>
-      </Flex>
-      <Flex alignItems="center" justifyContent="center" mb="60px" mt="20px">
-        <Flex
-          direction="column"
-          w="445px"
-          background="transparent"
-          borderRadius="15px"
-          p="40px"
-          mx={{ base: '100px' }}
-          bg={bgColor}
-          boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
-        >
-          {isSuccess ? (
-            <Text color="green.400" fontWeight="bold" textAlign="center" mb="22px">
-              {intl.formatMessage({ id: 'app.registrationSuccessful' })}
+    <Box
+      minH="100vh"
+      bg={useColorModeValue('gray.50', 'gray.900')}
+      pt="120px"
+      pb={{ base: 8, md: 12 }}
+    >
+      <Container maxW="md" centerContent>
+        <VStack spacing={8} w="100%">
+          {/* Header */}
+          <VStack spacing={4} textAlign="center">
+            <Text
+              fontSize={{ base: '2xl', md: '3xl' }}
+              fontWeight="bold"
+              color={titleColor}
+              letterSpacing="tight"
+            >
+              {intl.formatMessage({ id: 'app.welcome' })}
             </Text>
-          ) : (
-            <>
-              <Text fontSize="xl" color={textColor} fontWeight="bold" textAlign="center" mb="22px">
-                {intl.formatMessage({ id: 'app.registerWith' })}
-              </Text>
-              <HStack spacing="15px" justify="center" mb="22px">
-                <Flex
-                  justify="center"
-                  align="center"
-                  w="75px"
-                  h="75px"
-                  borderRadius="15px"
-                  border="1px solid lightgray"
-                  cursor="pointer"
-                  transition="all .25s ease"
-                  _hover={{ filter: 'brightness(120%)', bg: bgIcons }}
-                >
-                  <Link href="#">
-                    <Icon
-                      as={FaFacebook}
-                      w="30px"
-                      h="30px"
-                      _hover={{ filter: 'brightness(120%)' }}
-                    />
-                  </Link>
-                </Flex>
-                <Flex
-                  justify="center"
-                  align="center"
-                  w="75px"
-                  h="75px"
-                  borderRadius="15px"
-                  border="1px solid lightgray"
-                  cursor="pointer"
-                  transition="all .25s ease"
-                  _hover={{ filter: 'brightness(120%)', bg: bgIcons }}
-                >
-                  <Link href="#">
-                    <Icon as={FaApple} w="30px" h="30px" _hover={{ filter: 'brightness(120%)' }} />
-                  </Link>
-                </Flex>
-                <Flex
-                  justify="center"
-                  align="center"
-                  w="75px"
-                  h="75px"
-                  borderRadius="15px"
-                  border="1px solid lightgray"
-                  cursor="pointer"
-                  transition="all .25s ease"
-                  _hover={{ filter: 'brightness(120%)', bg: bgIcons }}
-                >
-                  <Link href="#">
-                    <Icon as={FaGoogle} w="30px" h="30px" _hover={{ filter: 'brightness(120%)' }} />
-                  </Link>
-                </Flex>
-              </HStack>
-              <Text fontSize="lg" color="gray.400" fontWeight="bold" textAlign="center" mb="22px">
-                {intl.formatMessage({ id: 'app.or' })}
-              </Text>
-              <FormProvider {...methods}>
-                <form onSubmit={handleSubmit(onSubmitHandler)}>
-                  <FormControl isInvalid={errors.name}>
-                    <FormInput
-                      name="first_name"
-                      label={intl.formatMessage({ id: 'app.firstName' })}
-                      placeholder={intl.formatMessage({ id: 'app.yourFirstName' })}
-                    />
-                    <FormInput
-                      name="last_name"
-                      label={intl.formatMessage({ id: 'app.lastName' })}
-                      placeholder={intl.formatMessage({ id: 'app.yourLastName' })}
-                    />
-                    <FormInput
-                      name="email"
-                      label={intl.formatMessage({ id: 'app.email' })}
-                      placeholder={intl.formatMessage({ id: 'app.yourEmailAddress' })}
-                    />
-                    <FormInput
-                      name="password"
-                      label={intl.formatMessage({ id: 'app.password' })}
-                      placeholder={intl.formatMessage({ id: 'app.yourPassword' })}
-                      type="password"
-                    />
-                    <FormInput
-                      name="password2"
-                      label={intl.formatMessage({ id: 'app.confirmPassword' })}
-                      placeholder={intl.formatMessage({ id: 'app.confirmYourPassword' })}
-                      type="password"
-                    />
-                    {/* <FormControl display="flex" alignItems="center" mb="24px">
-                  <Switch id="remember-login" colorScheme="green" me="10px" />
-                  <FormLabel
-                    htmlFor="remember-login"
-                    mb="0"
-                    fontWeight="normal"
+            <Text fontSize="md" color={subtitleColor} maxW="400px" lineHeight="1.6">
+              {intl.formatMessage({ id: 'app.youCanLoginBy' })}
+            </Text>
+          </VStack>
+
+          {/* Main Form Card */}
+          <Box
+            w="100%"
+            maxW="480px"
+            bg={bgColor}
+            borderRadius="xl"
+            boxShadow="lg"
+            border="1px solid"
+            borderColor={borderColor}
+            p={{ base: 6, md: 8 }}
+          >
+            {isSuccess ? (
+              <VStack spacing={4} textAlign="center">
+                <Icon
+                  boxSize={12}
+                  color="green.500"
+                  as={() => (
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-5-5 1.41-1.41L11 14.17l7.59-7.59L20 8l-9 9z" />
+                    </svg>
+                  )}
+                />
+                <Text color="green.500" fontWeight="bold" fontSize="lg">
+                  {intl.formatMessage({ id: 'app.registrationSuccessful' })}
+                </Text>
+                <Text color={subtitleColor} textAlign="center">
+                  Please check your email to verify your account.
+                </Text>
+              </VStack>
+            ) : (
+              <VStack spacing={6}>
+                {/* Social Login Section */}
+                <VStack spacing={4} w="100%">
+                  <Text fontSize="lg" color={textColor} fontWeight="semibold" textAlign="center">
+                    {intl.formatMessage({ id: 'app.registerWith' })}
+                  </Text>
+
+                  <HStack spacing={4} justify="center" w="100%">
+                    {[
+                      { icon: FaFacebook, color: '#1877F2', hoverColor: '#166FE5' },
+                      { icon: FaApple, color: '#000000', hoverColor: '#333333' },
+                      { icon: FaGoogle, color: '#EA4335', hoverColor: '#DB3E2F' }
+                    ].map((social, index) => (
+                      <Flex
+                        key={index}
+                        justify="center"
+                        align="center"
+                        w="60px"
+                        h="60px"
+                        borderRadius="lg"
+                        border="2px solid"
+                        borderColor={borderColor}
+                        cursor="pointer"
+                        transition="all 0.2s"
+                        bg={bgIcons}
+                        _hover={{
+                          borderColor: social.color,
+                          transform: 'translateY(-2px)',
+                          shadow: 'md'
+                        }}
+                      >
+                        <Icon as={social.icon} w="24px" h="24px" color={social.color} />
+                      </Flex>
+                    ))}
+                  </HStack>
+                </VStack>
+
+                {/* Divider */}
+                <Flex align="center" w="100%">
+                  <Divider />
+                  <Text
+                    px={4}
+                    color={subtitleColor}
+                    fontWeight="medium"
+                    fontSize="sm"
+                    flexShrink={0}
                   >
-                    Remember me
-                  </FormLabel>
-                </FormControl> */}
-                    <Button
-                      mt="12px"
-                      type="submit"
-                      bg="green.300"
-                      fontSize="10px"
-                      color="white"
-                      fontWeight="bold"
-                      w="100%"
-                      h="45"
-                      mb="24px"
-                      _hover={{
-                        bg: 'green.400'
-                      }}
-                      _active={{
-                        bg: 'green.500'
-                      }}
-                    >
-                      {isLoading ? (
-                        <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
-                      ) : (
-                        intl.formatMessage({ id: 'app.signUp' })
-                      )}
-                    </Button>
-                  </FormControl>
-                </form>
-              </FormProvider>
-              <Flex
-                flexDirection="column"
-                justifyContent="center"
-                alignItems="center"
-                maxW="100%"
-                mt="0px"
-              >
-                <Text color={textColor} fontWeight="medium">
-                  {intl.formatMessage({ id: 'app.alreadyHaveAnAccount' })}
+                    {intl.formatMessage({ id: 'app.or' })}
+                  </Text>
+                  <Divider />
+                </Flex>
+
+                {/* Registration Form */}
+                <FormProvider {...methods}>
+                  <Box as="form" onSubmit={handleSubmit(onSubmitHandler)} w="100%">
+                    <VStack spacing={5}>
+                      <HStack spacing={4} w="100%">
+                        <FormInput
+                          name="first_name"
+                          label={intl.formatMessage({ id: 'app.firstName' })}
+                          placeholder={intl.formatMessage({ id: 'app.yourFirstName' })}
+                        />
+                        <FormInput
+                          name="last_name"
+                          label={intl.formatMessage({ id: 'app.lastName' })}
+                          placeholder={intl.formatMessage({ id: 'app.yourLastName' })}
+                        />
+                      </HStack>
+
+                      <FormInput
+                        name="email"
+                        label={intl.formatMessage({ id: 'app.email' })}
+                        placeholder={intl.formatMessage({ id: 'app.yourEmailAddress' })}
+                      />
+
+                      <FormInput
+                        name="password"
+                        label={intl.formatMessage({ id: 'app.password' })}
+                        placeholder={intl.formatMessage({ id: 'app.yourPassword' })}
+                        type="password"
+                      />
+
+                      <FormInput
+                        name="password2"
+                        label={intl.formatMessage({ id: 'app.confirmPassword' })}
+                        placeholder={intl.formatMessage({ id: 'app.confirmYourPassword' })}
+                        type="password"
+                      />
+
+                      <Button
+                        type="submit"
+                        bg="green.500"
+                        color="white"
+                        size="lg"
+                        fontSize="md"
+                        fontWeight="semibold"
+                        w="100%"
+                        h="50px"
+                        borderRadius="lg"
+                        isLoading={isLoading}
+                        loadingText="Creating account..."
+                        _hover={{
+                          bg: 'green.600',
+                          transform: 'translateY(-2px)',
+                          shadow: 'lg'
+                        }}
+                        _active={{
+                          bg: 'green.700'
+                        }}
+                        transition="all 0.2s"
+                      >
+                        {isLoading ? (
+                          <CircularProgress isIndeterminate size="24px" color="white" />
+                        ) : (
+                          intl.formatMessage({ id: 'app.signUp' })
+                        )}
+                      </Button>
+                    </VStack>
+                  </Box>
+                </FormProvider>
+
+                {/* Sign In Link */}
+                <Text color={subtitleColor} textAlign="center" fontSize="sm">
+                  {intl.formatMessage({ id: 'app.alreadyHaveAnAccount' })}{' '}
                   <Link
                     color={titleColor}
-                    as="span"
-                    ms="5px"
-                    href="#"
-                    fontWeight="bold"
+                    fontWeight="semibold"
                     onClick={() => navigate('/auth/signin')}
+                    _hover={{ textDecoration: 'underline' }}
+                    cursor="pointer"
                   >
                     {intl.formatMessage({ id: 'app.signIn' })}
                   </Link>
                 </Text>
-              </Flex>
-            </>
-          )}
-        </Flex>
-      </Flex>
-    </Flex>
+              </VStack>
+            )}
+          </Box>
+        </VStack>
+      </Container>
+    </Box>
   );
 }
 

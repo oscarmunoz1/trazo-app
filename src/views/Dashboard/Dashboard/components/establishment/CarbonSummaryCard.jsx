@@ -71,7 +71,8 @@ const CarbonSummaryCard = ({ establishmentId }) => {
             size="sm"
             colorScheme="red"
             variant="outline"
-            onClick={() => window.location.reload()}>
+            onClick={() => window.location.reload()}
+          >
             Reintentar
           </Button>
         </VStack>
@@ -152,7 +153,8 @@ const CarbonSummaryCard = ({ establishmentId }) => {
             colorScheme="green"
             size="sm"
             onClick={() => navigate(`/admin/dashboard/establishment/${establishmentId}/carbon`)}
-            leftIcon={<Icon as={FaChartLine} />}>
+            leftIcon={<Icon as={FaChartLine} />}
+          >
             Ver Detalles
           </Button>
         </Flex>

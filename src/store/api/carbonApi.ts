@@ -290,6 +290,19 @@ export interface QRCodeSummary {
   industryAverage: number;
   isUsdaVerified?: boolean;
   verificationDate?: string;
+  // Enhanced blockchain verification data
+  blockchainVerification?: {
+    verified: boolean;
+    transaction_hash?: string;
+    record_hash?: string;
+    verification_url?: string;
+    network?: string;
+    verification_date?: string;
+    compliance_status?: boolean;
+    eligible_for_credits?: boolean;
+    mock_data?: boolean;
+    fallback_data?: boolean;
+  };
   reports?: Array<{
     id: string;
     period_start: string;

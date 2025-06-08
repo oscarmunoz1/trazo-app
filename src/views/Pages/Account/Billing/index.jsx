@@ -43,7 +43,9 @@ import {
   useAddAddonMutation,
   useCreateCustomerPortalSessionMutation,
   useSetDefaultPaymentMethodMutation,
-  useCreateCheckoutSessionMutation
+  useCreateCheckoutSessionMutation,
+  useSubscribeBlockchainMutation,
+  useGetBlockchainSubscriptionStatusQuery
 } from 'store/api/billingApi';
 import PaymentStatistics from './components/PaymentStatistics';
 import SubscriptionCard from './components/SubscriptionCard';
@@ -130,6 +132,9 @@ function Billing() {
     useSetDefaultPaymentMethodMutation();
   const [createCheckoutSession, { isLoading: isCreatingCheckoutSession }] =
     useCreateCheckoutSessionMutation();
+  const [subscribeBlockchain, { isLoading: isSubscribingBlockchain }] =
+    useSubscribeBlockchainMutation();
+  const { data: blockchainStatus } = useGetBlockchainSubscriptionStatusQuery();
 
   // Get normalized subscription
   const subscription = normalizeSubscription(dashboardData, activeCompany);
@@ -463,7 +468,8 @@ function Billing() {
     isAddingAddon ||
     isCreatingPortalSession ||
     isSettingDefaultPaymentMethod ||
-    isCreatingCheckoutSession;
+    isCreatingCheckoutSession ||
+    isSubscribingBlockchain;
 
   // Right after the trial banner and before the Main Subscription Card
   // Add a collapsible section for Add-ons that's closed by default
@@ -547,6 +553,32 @@ function Billing() {
         handleApiError(error, 'app.errorCreatingCheckout');
       });
   }, [activeCompany, createCheckoutSession, toast, intl, handleApiError]);
+
+  // Handle blockchain subscription
+  const handleSubscribeBlockchain = useCallback(async () => {
+    if (!hasSubscription) {
+      toast({
+        title: intl.formatMessage({ id: 'app.subscriptionRequired' }),
+        description: 'You need an active subscription to add blockchain verification',
+        status: 'warning',
+        duration: 5000,
+        isClosable: true
+      });
+      return;
+    }
+
+    try {
+      const response = await subscribeBlockchain().unwrap();
+
+      if (response.checkout_url) {
+        window.location.href = response.checkout_url;
+      } else {
+        throw new Error('Failed to create checkout session');
+      }
+    } catch (error) {
+      handleApiError(error, 'app.errorCreatingCheckout');
+    }
+  }, [subscribeBlockchain, hasSubscription, toast, intl, handleApiError]);
 
   return (
     <Box pt={{ base: '120px', md: '60px', xl: '60px' }}>
@@ -1246,6 +1278,85 @@ function Billing() {
                   </CardBody>
                 </Card>
               )}
+
+              {/* Blockchain Verification Add-On */}
+              <Card mt={6}>
+                <CardHeader>
+                  <Flex align="center" justify="space-between">
+                    <Flex align="center">
+                      <Icon as={FaCreditCard} mr={2} color="green.500" />
+                      <Text fontSize="lg" fontWeight="bold">
+                        Blockchain Verification
+                      </Text>
+                    </Flex>
+                    <Badge
+                      colorScheme={blockchainStatus?.blockchainSubscribed ? 'green' : 'gray'}
+                      px={3}
+                      py={1}
+                    >
+                      {blockchainStatus?.blockchainSubscribed ? 'Active' : 'Inactive'}
+                    </Badge>
+                  </Flex>
+                </CardHeader>
+                <CardBody>
+                  <Text fontSize="md" mb={4} color="gray.600">
+                    Add immutable blockchain verification to your sustainability claims. Carbon data
+                    stored permanently on Polygon network with USDA compliance verification.
+                  </Text>
+
+                  <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} mb={4}>
+                    <Box>
+                      <Text fontWeight="medium" mb={1}>
+                        Price
+                      </Text>
+                      <Text color="green.600" fontSize="lg" fontWeight="bold">
+                        $5/month
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text fontWeight="medium" mb={1}>
+                        Status
+                      </Text>
+                      <Text>
+                        {blockchainStatus?.blockchainSubscribed
+                          ? 'Blockchain verification enabled'
+                          : 'Not subscribed'}
+                      </Text>
+                    </Box>
+                  </SimpleGrid>
+
+                  {!blockchainStatus?.blockchainSubscribed ? (
+                    <Button
+                      colorScheme="green"
+                      size="md"
+                      isLoading={isSubscribingBlockchain}
+                      onClick={handleSubscribeBlockchain}
+                      isDisabled={!hasSubscription}
+                    >
+                      Add Blockchain Verification
+                    </Button>
+                  ) : (
+                    <Box
+                      p={3}
+                      bg="green.50"
+                      borderRadius="md"
+                      borderWidth="1px"
+                      borderColor="green.200"
+                    >
+                      <Text color="green.700" fontSize="sm">
+                        ✅ Blockchain verification is active! Your carbon data is being
+                        automatically verified and stored on the blockchain.
+                      </Text>
+                    </Box>
+                  )}
+
+                  {!hasSubscription && (
+                    <Text fontSize="sm" color="gray.500" mt={2}>
+                      Requires an active subscription to enable blockchain verification
+                    </Text>
+                  )}
+                </CardBody>
+              </Card>
 
               {/* Payment Security Information Box */}
               <Box mt={5} p={4} bg="gray.50" borderRadius="md">

@@ -139,7 +139,8 @@ const CardWithBackground = ({ polygon, zoom, center }) => {
             }}
             zoom={mapZoom}
             center={mapCenter}
-            mapTypeId="satellite">
+            mapTypeId="satellite"
+          >
             {polygon && polygon.length > 0 && (
               <Polygon
                 path={polygon}

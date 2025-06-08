@@ -186,7 +186,8 @@ export const EnhancedProductTimeline: React.FC<EnhancedProductTimelineProps> = (
             size="sm"
             variant={selectedCategory === 'all' ? 'solid' : 'outline'}
             colorScheme="gray"
-            onClick={() => setSelectedCategory('all')}>
+            onClick={() => setSelectedCategory('all')}
+          >
             All ({events.length})
           </Button>
           {categoryStats.map((category) => (
@@ -196,7 +197,8 @@ export const EnhancedProductTimeline: React.FC<EnhancedProductTimelineProps> = (
               variant={selectedCategory === category.key ? 'solid' : 'outline'}
               colorScheme={category.color}
               onClick={() => setSelectedCategory(category.key)}
-              isDisabled={category.count === 0}>
+              isDisabled={category.count === 0}
+            >
               {category.label} ({category.count})
             </Button>
           ))}
@@ -248,7 +250,8 @@ export const EnhancedProductTimeline: React.FC<EnhancedProductTimelineProps> = (
                     borderTop: '8px solid transparent',
                     borderBottom: '8px solid transparent',
                     borderRight: `8px solid ${eventConfig.bgColor}`
-                  }}>
+                  }}
+                >
                   <VStack align="start" spacing={3}>
                     {/* Header */}
                     <HStack justify="space-between" w="full" flexWrap="wrap">
@@ -361,7 +364,8 @@ export const EnhancedProductTimeline: React.FC<EnhancedProductTimelineProps> = (
             variant="outline"
             colorScheme="gray"
             leftIcon={<Icon as={showAll ? FaChevronUp : FaChevronDown} />}
-            onClick={() => setShowAll(!showAll)}>
+            onClick={() => setShowAll(!showAll)}
+          >
             {showAll ? `Show Less` : `Show ${filteredEvents.length - 5} More Events`}
           </Button>
         </Flex>

@@ -104,11 +104,11 @@ const eventTemplates: EventTemplate[] = [
     defaultData: { type: 'HA' }
   },
 
-  // Production Events (type 1)
+  // Production Events (type 2) - FIXED: was incorrectly type 1
   {
     id: 'irrigation',
     name: 'Irrigation',
-    type: 1,
+    type: 2, // ✅ FIXED: PRODUCTION_EVENT_TYPE = 2
     eventType: 'IR',
     icon: FaTractor,
     color: 'green',
@@ -118,7 +118,7 @@ const eventTemplates: EventTemplate[] = [
   {
     id: 'pruning',
     name: 'Pruning',
-    type: 1,
+    type: 2, // ✅ FIXED: PRODUCTION_EVENT_TYPE = 2
     eventType: 'PR',
     icon: FaTractor,
     color: 'purple',
@@ -128,7 +128,7 @@ const eventTemplates: EventTemplate[] = [
   {
     id: 'harvesting',
     name: 'Harvesting',
-    type: 1,
+    type: 2, // ✅ FIXED: PRODUCTION_EVENT_TYPE = 2
     eventType: 'HA',
     icon: FaTractor,
     color: 'yellow',
@@ -138,7 +138,7 @@ const eventTemplates: EventTemplate[] = [
   {
     id: 'planting',
     name: 'Planting',
-    type: 1,
+    type: 2, // ✅ FIXED: PRODUCTION_EVENT_TYPE = 2
     eventType: 'PL',
     icon: FaSeedling,
     color: 'green',
@@ -146,11 +146,11 @@ const eventTemplates: EventTemplate[] = [
     defaultData: { type: 'PL' }
   },
 
-  // Chemical Events (type 2)
+  // Chemical Events (type 1) - FIXED: was incorrectly type 2
   {
     id: 'fertilizer',
     name: 'Fertilizer Application',
-    type: 2,
+    type: 1, // ✅ FIXED: CHEMICAL_EVENT_TYPE = 1
     eventType: 'FE',
     icon: FaFlask,
     color: 'green',
@@ -160,7 +160,7 @@ const eventTemplates: EventTemplate[] = [
   {
     id: 'pesticide',
     name: 'Pesticide Application',
-    type: 2,
+    type: 1, // ✅ FIXED: CHEMICAL_EVENT_TYPE = 1
     eventType: 'PE',
     icon: FaFlask,
     color: 'red',
@@ -170,7 +170,7 @@ const eventTemplates: EventTemplate[] = [
   {
     id: 'herbicide',
     name: 'Herbicide Application',
-    type: 2,
+    type: 1, // ✅ FIXED: CHEMICAL_EVENT_TYPE = 1
     eventType: 'HE',
     icon: FaFlask,
     color: 'orange',
@@ -180,7 +180,7 @@ const eventTemplates: EventTemplate[] = [
   {
     id: 'fungicide',
     name: 'Fungicide Application',
-    type: 2,
+    type: 1, // ✅ FIXED: CHEMICAL_EVENT_TYPE = 1
     eventType: 'FU',
     icon: FaFlask,
     color: 'blue',

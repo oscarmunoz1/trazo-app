@@ -76,7 +76,7 @@ const EVENT_TYPES = [
     description: 'Track planting, harvesting, and maintenance',
     icon: FaSeedling,
     color: 'green',
-    value: 2,
+    value: 2, // ✅ CORRECT: PRODUCTION_EVENT_TYPE = 2
     subtypes: [
       { id: 'planting', name: 'Planting', icon: FaSeedling },
       { id: 'harvesting', name: 'Harvesting', icon: FaLeaf },
@@ -90,7 +90,7 @@ const EVENT_TYPES = [
     description: 'Log fertilizers, pesticides, and treatments',
     icon: FaFlask,
     color: 'orange',
-    value: 1,
+    value: 1, // ✅ CORRECT: CHEMICAL_EVENT_TYPE = 1
     subtypes: [
       { id: 'fertilizer', name: 'Fertilizer', icon: FaFlask },
       { id: 'pesticide', name: 'Pesticide', icon: FaBug },
@@ -221,7 +221,8 @@ export const StandardEventForm: React.FC<StandardEventFormProps> = ({
       title="Add New Event"
       description="Record agricultural activities and environmental conditions"
       showBackButton
-      onBack={onCancel}>
+      onBack={onCancel}
+    >
       {/* Progress Indicator */}
       <StandardCard>
         <HStack spacing={8} justify="center" mb={6}>
@@ -261,7 +262,8 @@ export const StandardEventForm: React.FC<StandardEventFormProps> = ({
       {currentStep === 1 && (
         <StandardCard
           title="Step 1: What happened?"
-          subtitle="Select the type of event you want to record">
+          subtitle="Select the type of event you want to record"
+        >
           <VStack spacing={6} align="stretch">
             {/* Event Type Selection */}
             <StandardField label="Event Type" required>
@@ -284,12 +286,14 @@ export const StandardEventForm: React.FC<StandardEventFormProps> = ({
                     }}
                     onClick={() =>
                       setFormData((prev) => ({ ...prev, eventType: eventType.id, subtype: '' }))
-                    }>
+                    }
+                  >
                     <VStack spacing={3}>
                       <Circle
                         size="50px"
                         bg={`${eventType.color}.100`}
-                        color={`${eventType.color}.600`}>
+                        color={`${eventType.color}.600`}
+                      >
                         <Icon as={eventType.icon} boxSize={6} />
                       </Circle>
 
@@ -334,12 +338,14 @@ export const StandardEventForm: React.FC<StandardEventFormProps> = ({
                       cursor="pointer"
                       transition="all 0.2s"
                       _hover={{ borderColor: `${selectedEventType.color}.300` }}
-                      onClick={() => setFormData((prev) => ({ ...prev, subtype: subtype.id }))}>
+                      onClick={() => setFormData((prev) => ({ ...prev, subtype: subtype.id }))}
+                    >
                       <HStack spacing={2}>
                         <Icon as={subtype.icon} color={`${selectedEventType.color}.600`} />
                         <Text
                           fontSize="sm"
-                          fontWeight={formData.subtype === subtype.id ? 'semibold' : 'normal'}>
+                          fontWeight={formData.subtype === subtype.id ? 'semibold' : 'normal'}
+                        >
                           {subtype.name}
                         </Text>
                       </HStack>
@@ -402,7 +408,8 @@ export const StandardEventForm: React.FC<StandardEventFormProps> = ({
               <StandardButton
                 onClick={() => setCurrentStep(2)}
                 rightIcon={<FaChevronRight />}
-                disabled={!isStepComplete(1)}>
+                disabled={!isStepComplete(1)}
+              >
                 Continue to Details
               </StandardButton>
             </HStack>
@@ -414,12 +421,14 @@ export const StandardEventForm: React.FC<StandardEventFormProps> = ({
       {currentStep === 2 && (
         <StandardCard
           title="Step 2: Additional Details"
-          subtitle="Optional information to enhance your record">
+          subtitle="Optional information to enhance your record"
+        >
           <VStack spacing={6} align="stretch">
             {/* Description */}
             <StandardField
               label="Description"
-              helpText="Add any notes, observations, or additional context">
+              helpText="Add any notes, observations, or additional context"
+            >
               <StandardTextarea
                 value={formData.description}
                 onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
@@ -444,14 +453,16 @@ export const StandardEventForm: React.FC<StandardEventFormProps> = ({
             {/* Photo Upload Placeholder */}
             <StandardField
               label="Photos"
-              helpText="Add photos to document this event (coming soon)">
+              helpText="Add photos to document this event (coming soon)"
+            >
               <Box
                 p={8}
                 borderRadius="lg"
                 border="2px dashed"
                 borderColor="gray.300"
                 textAlign="center"
-                bg="gray.50">
+                bg="gray.50"
+              >
                 <VStack spacing={2}>
                   <Icon as={FaCamera} boxSize={8} color="gray.400" />
                   <Text color="gray.500" fontSize="sm">
@@ -466,7 +477,8 @@ export const StandardEventForm: React.FC<StandardEventFormProps> = ({
               <StandardButton
                 variant="outline"
                 leftIcon={<FaChevronLeft />}
-                onClick={() => setCurrentStep(1)}>
+                onClick={() => setCurrentStep(1)}
+              >
                 Back to Event Details
               </StandardButton>
 
@@ -532,7 +544,8 @@ const DynamicEventFields: React.FC<{
             value={formData.applicationMethod || ''}
             onChange={(e: ChangeEvent<HTMLSelectElement>) =>
               setFormData((prev) => ({ ...prev, applicationMethod: e.target.value }))
-            }>
+            }
+          >
             <option value="">Select method...</option>
             <option value="spray">Spray Application</option>
             <option value="granular">Granular Broadcast</option>
@@ -563,7 +576,8 @@ const DynamicEventFields: React.FC<{
             <StandardField label="Fuel Amount (Gallons)">
               <NumberInput
                 value={formData.fuelAmount || ''}
-                onChange={(value) => setFormData((prev) => ({ ...prev, fuelAmount: value }))}>
+                onChange={(value) => setFormData((prev) => ({ ...prev, fuelAmount: value }))}
+              >
                 <NumberInputField />
                 <NumberInputStepper>
                   <NumberIncrementStepper />
@@ -577,7 +591,8 @@ const DynamicEventFields: React.FC<{
                 value={formData.fuelType || ''}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                   setFormData((prev) => ({ ...prev, fuelType: e.target.value }))
-                }>
+                }
+              >
                 <option value="">Select fuel type...</option>
                 <option value="diesel">Diesel</option>
                 <option value="gasoline">Gasoline</option>
@@ -590,7 +605,8 @@ const DynamicEventFields: React.FC<{
         <StandardField label="Hours Used">
           <NumberInput
             value={formData.hoursUsed || ''}
-            onChange={(value) => setFormData((prev) => ({ ...prev, hoursUsed: value }))}>
+            onChange={(value) => setFormData((prev) => ({ ...prev, hoursUsed: value }))}
+          >
             <NumberInputField />
             <NumberInputStepper>
               <NumberIncrementStepper />

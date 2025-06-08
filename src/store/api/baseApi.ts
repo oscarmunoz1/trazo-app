@@ -28,7 +28,8 @@ export const baseApi = createApi({
     'IoTData',
     'AutomationRule',
     'PendingEvent',
-    'Weather'
+    'Weather',
+    'Education'
   ]
 });
 

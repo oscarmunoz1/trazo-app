@@ -26,7 +26,12 @@ import {
   FaSync,
   FaChartBar,
   FaPlus,
-  FaCreditCard
+  FaCreditCard,
+  FaCog,
+  FaHeadset,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaArrowUp
 } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
@@ -34,6 +39,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { RootState } from 'store';
 import { Company } from 'types/company';
 import { useGetCompanyQuery } from 'store/api/companyApi';
+import { useGetBlockchainSubscriptionStatusQuery } from 'store/api/billingApi';
 import { setCompany } from 'store/features/companySlice';
 
 function PlanUsage() {
@@ -59,6 +65,9 @@ function PlanUsage() {
       refetchOnMountOrArgChange: false
     }
   );
+
+  // Get blockchain subscription status
+  const { data: blockchainStatus } = useGetBlockchainSubscriptionStatusQuery();
 
   // Get URL parameters and prepare for handling add-on purchase success
   const queryParams = new URLSearchParams(location.search);
@@ -360,6 +369,150 @@ function PlanUsage() {
         ))}
       </SimpleGrid>
 
+      {/* Plan Features & Compliance */}
+      <Card mt={6}>
+        <CardHeader>
+          <Text fontSize="lg" fontWeight="bold" color={textColor}>
+            {intl.formatMessage({ id: 'app.planFeatures' })}
+          </Text>
+          <Text fontSize="sm" color="gray.500" mt={1}>
+            {intl.formatMessage({ id: 'app.planFeaturesDescription' })}
+          </Text>
+        </CardHeader>
+        <CardBody pt={0}>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 2 }} spacing={6}>
+            {/* IoT Automation Level */}
+            <Box borderWidth="1px" borderColor="blue.200" borderRadius="lg" p={4} bg="blue.50">
+              <Flex align="center" mb={3}>
+                <Icon as={FaCog} mr={3} boxSize={5} color="blue.500" />
+                <Text fontWeight="bold" color="blue.700">
+                  {intl.formatMessage({ id: 'app.iotAutomation' })}
+                </Text>
+              </Flex>
+              <Text fontSize="2xl" fontWeight="bold" color="blue.600" mb={1}>
+                {features?.iot_automation_level || 50}%
+              </Text>
+              <Text fontSize="sm" color="gray.600">
+                {intl.formatMessage({ id: 'app.iotAutomationDescription' })}
+              </Text>
+            </Box>
+
+            {/* Carbon Tracking Mode */}
+            <Box borderWidth="1px" borderColor="green.200" borderRadius="lg" p={4} bg="green.50">
+              <Flex align="center" mb={3}>
+                <Icon as={FaLeaf} mr={3} boxSize={5} color="green.500" />
+                <Text fontWeight="bold" color="green.700">
+                  {intl.formatMessage({ id: 'app.carbonTracking' })}
+                </Text>
+              </Flex>
+              <Text
+                fontSize="lg"
+                fontWeight="bold"
+                color="green.600"
+                mb={1}
+                textTransform="capitalize"
+              >
+                {features?.carbon_tracking === 'manual'
+                  ? intl.formatMessage({ id: 'app.manual' })
+                  : intl.formatMessage({ id: 'app.automated' })}{' '}
+                {intl.formatMessage({ id: 'app.mode' })}
+              </Text>
+              <Text fontSize="sm" color="gray.600">
+                {features?.carbon_tracking === 'manual'
+                  ? intl.formatMessage({ id: 'app.manualCarbonTrackingDescription' })
+                  : intl.formatMessage({ id: 'app.automatedCarbonTrackingDescription' })}
+              </Text>
+            </Box>
+
+            {/* Support Response Time */}
+            <Box borderWidth="1px" borderColor="purple.200" borderRadius="lg" p={4} bg="purple.50">
+              <Flex align="center" mb={3}>
+                <Icon as={FaHeadset} mr={3} boxSize={5} color="purple.500" />
+                <Text fontWeight="bold" color="purple.700">
+                  {intl.formatMessage({ id: 'app.supportResponse' })}
+                </Text>
+              </Flex>
+              <Text fontSize="2xl" fontWeight="bold" color="purple.600" mb={1}>
+                {features?.support_response_time || 48}h
+              </Text>
+              <Text fontSize="sm" color="gray.600">
+                {intl.formatMessage({ id: 'app.supportResponseDescription' })}
+              </Text>
+            </Box>
+
+            {/* Priority Support */}
+            <Box
+              borderWidth="1px"
+              borderColor={features?.priority_support ? 'orange.200' : 'gray.200'}
+              borderRadius="lg"
+              p={4}
+              bg={features?.priority_support ? 'orange.50' : 'gray.50'}
+            >
+              <Flex align="center" mb={3}>
+                <Icon
+                  as={features?.priority_support ? FaCheckCircle : FaTimesCircle}
+                  mr={3}
+                  boxSize={5}
+                  color={features?.priority_support ? 'orange.500' : 'gray.400'}
+                />
+                <Text
+                  fontWeight="bold"
+                  color={features?.priority_support ? 'orange.700' : 'gray.600'}
+                >
+                  {intl.formatMessage({ id: 'app.prioritySupport' })}
+                </Text>
+              </Flex>
+              <Text
+                fontSize="lg"
+                fontWeight="bold"
+                color={features?.priority_support ? 'orange.600' : 'gray.500'}
+                mb={1}
+              >
+                {features?.priority_support
+                  ? intl.formatMessage({ id: 'app.included' })
+                  : intl.formatMessage({ id: 'app.notIncluded' })}
+              </Text>
+              <Text fontSize="sm" color="gray.600">
+                {features?.priority_support
+                  ? intl.formatMessage({ id: 'app.prioritySupportDescription' })
+                  : intl.formatMessage({ id: 'app.upgradeForPrioritySupport' })}
+              </Text>
+            </Box>
+          </SimpleGrid>
+
+          {/* Upgrade Notice for Basic Plan */}
+          {plan?.name === 'Basic' && (
+            <Box
+              mt={6}
+              p={4}
+              bg="blue.50"
+              borderRadius="md"
+              borderWidth="1px"
+              borderColor="blue.200"
+            >
+              <Flex align="center" justify="space-between">
+                <Box>
+                  <Text fontSize="md" fontWeight="bold" color="blue.700" mb={1}>
+                    {intl.formatMessage({ id: 'app.upgradeToUnlockMore' })}
+                  </Text>
+                  <Text fontSize="sm" color="blue.600">
+                    {intl.formatMessage({ id: 'app.standardPlanBenefits' })}
+                  </Text>
+                </Box>
+                <Button
+                  colorScheme="blue"
+                  size="sm"
+                  onClick={handleManagePlan}
+                  rightIcon={<Icon as={FaArrowUp} />}
+                >
+                  {intl.formatMessage({ id: 'app.upgradePlan' })}
+                </Button>
+              </Flex>
+            </Box>
+          )}
+        </CardBody>
+      </Card>
+
       {/* Quick Actions */}
       <Card mt={6} mb={6}>
         <CardHeader>
@@ -426,6 +579,67 @@ function PlanUsage() {
               </Text>
             </Button>
           </SimpleGrid>
+        </CardBody>
+      </Card>
+
+      {/* Blockchain Verification Status */}
+      <Card mt={6}>
+        <CardHeader>
+          <Text fontSize="lg" fontWeight="bold" color={textColor}>
+            {intl.formatMessage({ id: 'app.blockchainVerification' })}
+          </Text>
+        </CardHeader>
+        <CardBody pt={0}>
+          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+            <Box>
+              <Text fontWeight="medium" mb={1}>
+                Status
+              </Text>
+              <Text color={blockchainStatus?.blockchainSubscribed ? 'green.500' : 'gray.500'}>
+                {blockchainStatus?.blockchainSubscribed
+                  ? '✅ Active - Blockchain verification enabled'
+                  : '❌ Inactive - Not subscribed'}
+              </Text>
+            </Box>
+            <Box>
+              <Text fontWeight="medium" mb={1}>
+                Monthly Cost
+              </Text>
+              <Text fontWeight="bold" color="green.600">
+                $5/month
+              </Text>
+            </Box>
+          </SimpleGrid>
+
+          {blockchainStatus?.blockchainSubscribed ? (
+            <Box
+              mt={4}
+              p={3}
+              bg="green.50"
+              borderRadius="md"
+              borderWidth="1px"
+              borderColor="green.200"
+            >
+              <Text color="green.700" fontSize="sm">
+                Your carbon data is being automatically verified and stored on the Polygon
+                blockchain with USDA compliance verification.
+              </Text>
+            </Box>
+          ) : (
+            <Box mt={4}>
+              <Text fontSize="sm" color="gray.600" mb={3}>
+                Add immutable blockchain verification to your carbon footprint records. Get
+                tamper-proof sustainability certificates and carbon credit marketplace access.
+              </Text>
+              <Button
+                colorScheme="green"
+                size="sm"
+                onClick={() => navigate('/admin/dashboard/account/billing')}
+              >
+                Add Blockchain Verification
+              </Button>
+            </Box>
+          )}
         </CardBody>
       </Card>
 

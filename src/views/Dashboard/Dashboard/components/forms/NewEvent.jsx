@@ -523,8 +523,23 @@ function NewEvent({ isEdit = false, eventId = null }) {
 
   const onSubmitMedia = async () => {
     try {
+      // Map frontend activeEventType to correct backend event_type
+      const eventTypeMapping = {
+        0: 0, // Weather -> 0
+        1: 2, // Production -> 2 (FIXED: was incorrectly 1)
+        2: 1, // Chemical -> 1 (FIXED: was incorrectly 2)
+        3: 3, // General -> 3
+        4: 4, // Equipment -> 4
+        5: 5, // Soil Management -> 5
+        6: 6, // Business -> 6
+        7: 7 // Pest Management -> 7
+      };
+
+      const backendEventType = eventTypeMapping[activeEventType] ?? activeEventType;
+
       const finalEventData = {
         ...eventFormData,
+        event_type: backendEventType, // Use corrected event_type mapping
         companyId: currentCompany.id,
         establishmentId: parseInt(establishmentId || '0'),
         parcelId: parseInt(parcelId || '0'),
@@ -538,7 +553,7 @@ function NewEvent({ isEdit = false, eventId = null }) {
           companyId: currentCompany.id,
           establishmentId: parseInt(establishmentId || '0'),
           eventId: parseInt(eventId || '0'),
-          eventType: eventTypeFromUrl ? parseInt(eventTypeFromUrl) : activeEventType,
+          eventType: eventTypeFromUrl ? parseInt(eventTypeFromUrl) : backendEventType,
           ...finalEventData,
           id: existingEvent.id
         }).unwrap();
@@ -677,7 +692,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                     align="center"
                     w="100%"
                     maxW="800px"
-                    mx="auto">
+                    mx="auto"
+                  >
                     {steps.map((step, index) => (
                       <React.Fragment key={index}>
                         <VStack spacing={3} align="center" flex="1">
@@ -694,7 +710,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                             fontSize={{ base: 'sm', md: 'md' }}
                             fontWeight="bold"
                             boxShadow={index === activeStep ? 'lg' : 'md'}
-                            transition="all 0.3s">
+                            transition="all 0.3s"
+                          >
                             {index < activeStep ? (
                               <FaCheckCircle size="18px" />
                             ) : (
@@ -707,7 +724,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                               fontWeight="bold"
                               color={index <= activeStep ? 'green.500' : 'gray.500'}
                               textAlign="center"
-                              lineHeight="1.2">
+                              lineHeight="1.2"
+                            >
                               {step.title}
                             </Text>
                             <Text
@@ -715,7 +733,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                               color="gray.500"
                               textAlign="center"
                               display={{ base: 'none', md: 'block' }}
-                              lineHeight="1.2">
+                              lineHeight="1.2"
+                            >
                               {step.description}
                             </Text>
                           </VStack>
@@ -765,7 +784,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                                     bg="yellow.50"
                                     borderRadius="md"
                                     borderWidth="1px"
-                                    borderColor="yellow.200">
+                                    borderColor="yellow.200"
+                                  >
                                     <Text fontSize="sm" color="yellow.800">
                                       <Icon as={FaInfoCircle} mr={2} />
                                       {intl.formatMessage({ id: 'app.eventTypeCannotBeChanged' }) ||
@@ -775,7 +795,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                                 )}
                                 <Grid
                                   templateColumns={{ base: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }}
-                                  gap={4}>
+                                  gap={4}
+                                >
                                   {eventTypeConfig.map((eventType) => (
                                     <Button
                                       key={eventType.id}
@@ -804,7 +825,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                                       }
                                       transition="all 0.2s"
                                       whiteSpace="normal"
-                                      overflow="hidden">
+                                      overflow="hidden"
+                                    >
                                       <Icon as={eventType.icon} boxSize={6} />
                                       <VStack spacing={1} width="100%">
                                         <Text fontSize="sm" fontWeight="bold" textAlign="center">
@@ -816,7 +838,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                                           textAlign="center"
                                           lineHeight="1.2"
                                           noOfLines={2}
-                                          display={{ base: 'none', md: 'block' }}>
+                                          display={{ base: 'none', md: 'block' }}
+                                        >
                                           {eventType.description}
                                         </Text>
                                       </VStack>
@@ -850,7 +873,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                                     fontWeight="600"
                                     boxShadow="lg"
                                     _hover={{ boxShadow: 'xl', transform: 'translateY(-1px)' }}
-                                    transition="all 0.3s ease">
+                                    transition="all 0.3s ease"
+                                  >
                                     {intl.formatMessage({ id: 'app.continue' }) || 'Continue'}
                                   </Button>
                                 </HStack>
@@ -941,14 +965,16 @@ function NewEvent({ isEdit = false, eventId = null }) {
                         <FormProvider {...descriptionMethods}>
                           <form
                             onSubmit={descriptionMethods.handleSubmit(onSubmitDescription)}
-                            style={{ width: '100%' }}>
+                            style={{ width: '100%' }}
+                          >
                             <VStack spacing={{ base: 5, md: 6 }} align="stretch">
                               <Box w="100%">
                                 <FormLabel
                                   fontSize="sm"
                                   fontWeight="semibold"
                                   mb={3}
-                                  color={textColor}>
+                                  color={textColor}
+                                >
                                   {intl.formatMessage({ id: 'app.eventDescription' }) ||
                                     'Event Description'}
                                 </FormLabel>
@@ -961,7 +987,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                                     borderColor: 'green.400',
                                     boxShadow: '0 0 0 1px var(--chakra-colors-green-400)'
                                   }}
-                                  transition="all 0.3s ease">
+                                  transition="all 0.3s ease"
+                                >
                                   <Editor />
                                 </Box>
                               </Box>
@@ -978,7 +1005,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                                     borderRadius="lg"
                                     fontWeight="600"
                                     _hover={{ transform: 'translateY(-1px)' }}
-                                    transition="all 0.3s ease">
+                                    transition="all 0.3s ease"
+                                  >
                                     {intl.formatMessage({ id: 'app.previous' }) || 'Previous'}
                                   </Button>
                                   <Button
@@ -992,7 +1020,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                                     fontWeight="600"
                                     boxShadow="lg"
                                     _hover={{ boxShadow: 'xl', transform: 'translateY(-1px)' }}
-                                    transition="all 0.3s ease">
+                                    transition="all 0.3s ease"
+                                  >
                                     {intl.formatMessage({ id: 'app.continue' }) || 'Continue'}
                                   </Button>
                                 </HStack>
@@ -1033,7 +1062,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                                 transform: 'translateY(-2px)',
                                 boxShadow: 'lg'
                               }}
-                              {...getRootProps()}>
+                              {...getRootProps()}
+                            >
                               <Input {...getInputProps()} />
                               {acceptedFiles.length > 0 ? (
                                 <VStack spacing={6} justify="center" h="full">
@@ -1048,14 +1078,16 @@ function NewEvent({ isEdit = false, eventId = null }) {
                                     gap={6}
                                     w="100%"
                                     maxW="600px"
-                                    mx="auto">
+                                    mx="auto"
+                                  >
                                     {acceptedFiles.map((file, index) => (
                                       <Box key={index} textAlign="center">
                                         <Box
                                           borderRadius="xl"
                                           overflow="hidden"
                                           mb={3}
-                                          boxShadow="lg">
+                                          boxShadow="lg"
+                                        >
                                           <img
                                             src={URL.createObjectURL(file)}
                                             alt={file.name}
@@ -1070,7 +1102,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                                           fontSize="sm"
                                           color="gray.600"
                                           noOfLines={1}
-                                          fontWeight="500">
+                                          fontWeight="500"
+                                        >
                                           {file.name}
                                         </Text>
                                       </Box>
@@ -1087,7 +1120,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                                       fontSize="lg"
                                       color="gray.600"
                                       fontWeight="600"
-                                      textAlign="center">
+                                      textAlign="center"
+                                    >
                                       {intl.formatMessage({ id: 'app.dragDropPhotos' }) ||
                                         'Drag & drop photos here, or click to select'}
                                     </Text>
@@ -1113,7 +1147,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                                 borderRadius="lg"
                                 fontWeight="600"
                                 _hover={{ transform: 'translateY(-1px)' }}
-                                transition="all 0.3s ease">
+                                transition="all 0.3s ease"
+                              >
                                 {intl.formatMessage({ id: 'app.previous' }) || 'Previous'}
                               </Button>
                               <Button
@@ -1133,7 +1168,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                                 fontWeight="600"
                                 boxShadow="lg"
                                 _hover={{ boxShadow: 'xl', transform: 'translateY(-1px)' }}
-                                transition="all 0.3s ease">
+                                transition="all 0.3s ease"
+                              >
                                 {isEdit
                                   ? intl.formatMessage({ id: 'app.updateEvent' }) || 'Update Event'
                                   : intl.formatMessage({ id: 'app.createEvent' }) || 'Create Event'}
@@ -1152,7 +1188,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                   w={{ base: '100%', xl: '400px' }}
                   position={{ xl: 'sticky' }}
                   top="80px"
-                  alignSelf="flex-start">
+                  alignSelf="flex-start"
+                >
                   {activeStep === 0 && !carbonCalculation ? (
                     <Card boxShadow="lg" bg={bgColor} borderRadius="xl">
                       <CardBody>
@@ -1194,7 +1231,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
                                   : 'red'
                               }
                               fontSize="xs"
-                              borderRadius="full">
+                              borderRadius="full"
+                            >
                               {carbonCalculation.efficiency_score}/100
                             </Badge>
                           )}

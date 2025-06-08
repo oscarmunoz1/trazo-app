@@ -16,11 +16,6 @@ import { FaRegCheckCircle, FaRegDotCircle } from 'react-icons/fa';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-
-// Custom components
-import Card from 'components/Card/Card';
-import CardBody from 'components/Card/CardBody.tsx';
-import CardHeader from 'components/Card/CardHeader.tsx';
 import { IoEllipsisVerticalSharp } from 'react-icons/io5';
 import TimelineRow from 'components/Tables/TimelineRow';
 import { setCurrentHistory } from 'store/features/historySlice';
@@ -28,6 +23,11 @@ import { useGetCurrentHistoryQuery } from 'store/api/historyApi';
 import { useIntl } from 'react-intl';
 import { QuickAddEventModal } from 'components/Events/QuickAddEventModal';
 import { FaClock } from 'react-icons/fa';
+
+// Custom components
+import Card from 'components/Card/Card';
+import CardBody from 'components/Card/CardBody.tsx';
+import CardHeader from 'components/Card/CardHeader.tsx';
 
 const TrackList = ({ amount }) => {
   const textColor = useColorModeValue('gray.700', 'white');
@@ -72,16 +72,6 @@ const TrackList = ({ amount }) => {
     'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)',
     'gray.800'
   );
-
-  const handleOnPrimaryClick = () => {
-    if (!currentHistory?.product > 0) {
-      navigate(
-        `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/add`
-      );
-    } else {
-      navigate(`/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/event/add`);
-    }
-  };
 
   const handleEventCreated = () => {
     // Refetch the current history data to show the new event
@@ -209,18 +199,39 @@ const TrackList = ({ amount }) => {
           </Button>
         )}
 
-        <Button
-          bg={bgButton}
-          color="white"
-          fontSize="xs"
-          variant="no-hover"
-          minW={!currentHistory?.product ? '135px' : '100px'}
-          onClick={handleOnPrimaryClick}
-        >
-          {!currentHistory?.product
-            ? intl.formatMessage({ id: 'app.startProduction' }).toUpperCase()
-            : intl.formatMessage({ id: 'app.addEvent' }).toUpperCase()}
-        </Button>
+        {/* Production Start Button - Single enhanced form */}
+        {!currentHistory?.product ? (
+          <Button
+            bg={bgButton}
+            color="white"
+            fontSize="xs"
+            variant="no-hover"
+            minW="135px"
+            h="36px"
+            onClick={() =>
+              navigate(
+                `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/add`
+              )
+            }
+          >
+            {intl.formatMessage({ id: 'app.startProduction' }).toUpperCase()}
+          </Button>
+        ) : (
+          <Button
+            bg={bgButton}
+            color="white"
+            fontSize="xs"
+            variant="no-hover"
+            minW="100px"
+            onClick={() =>
+              navigate(
+                `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/event/add`
+              )
+            }
+          >
+            {intl.formatMessage({ id: 'app.addEvent' }).toUpperCase()}
+          </Button>
+        )}
 
         {currentHistory?.events && currentHistory?.events.length > 0 && (
           <Button

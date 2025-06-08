@@ -626,7 +626,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
         establishmentName ? ` in ${establishmentName}` : ''
       }`}
       showBackButton
-      onBack={onCancel}>
+      onBack={onCancel}
+    >
       {/* Modern Progress Stepper */}
       <StandardStepper
         steps={steps}
@@ -648,7 +649,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                     label="Parcel Name"
                     required
                     error={errors.name?.message}
-                    helpText="Unique name for this parcel">
+                    helpText="Unique name for this parcel"
+                  >
                     <Input
                       {...methods.register('name')}
                       placeholder="e.g., North Field, Block A"
@@ -664,7 +666,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                     label="Area (acres)"
                     required
                     error={errors.area?.message}
-                    helpText="Total area in acres">
+                    helpText="Total area in acres"
+                  >
                     <Controller
                       name="area"
                       control={methods.control}
@@ -674,7 +677,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                           onChange={(_, num) => field.onChange(num || 0)}
                           min={0.01}
                           step={0.1}
-                          precision={2}>
+                          precision={2}
+                        >
                           <NumberInputField borderRadius="lg" />
                           <NumberInputStepper>
                             <NumberIncrementStepper />
@@ -701,32 +705,11 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                   <StandardButton
                     onClick={nextStep}
                     rightIcon={<FaChevronRight />}
-                    disabled={!isStepComplete(0)}>
+                    disabled={!isStepComplete(0)}
+                  >
                     Continue to Location
                   </StandardButton>
                 </HStack>
-
-                {/* Debug Information - Enhanced for better debugging */}
-                {process.env.NODE_ENV === 'development' && (
-                  <Box p={4} bg="gray.100" borderRadius="md" fontSize="sm">
-                    <Text fontWeight="bold" mb={2}>
-                      Debug Info:
-                    </Text>
-                    <Text>Name: "{watch('name') || 'empty'}"</Text>
-                    <Text>Area: {watch('area') || 0}</Text>
-                    <Text>Initial Data Name: "{initialData?.name || 'no initial data'}"</Text>
-                    <Text>Name Error: {errors.name?.message || 'none'}</Text>
-                    <Text>Area Error: {errors.area?.message || 'none'}</Text>
-                    <Text>Step Complete: {isStepComplete(0) ? 'Yes' : 'No'}</Text>
-                    <Text>Form Dirty: {JSON.stringify(methods.formState.dirtyFields)}</Text>
-                    <Text>Form Touched: {JSON.stringify(methods.formState.touchedFields)}</Text>
-                    <Text>Form Valid: {methods.formState.isValid ? 'Yes' : 'No'}</Text>
-                    <Text>Form Values: {JSON.stringify(watch(), null, 2)}</Text>
-                    <Text>
-                      Register Name: {typeof methods.register('name') === 'object' ? 'OK' : 'ERROR'}
-                    </Text>
-                  </Box>
-                )}
               </VStack>
             </StandardCard>
           )}
@@ -772,7 +755,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                       }}
                       onCenterChanged={() => {
                         // Update center when changed
-                      }}>
+                      }}
+                    >
                       {polygon.length > 2 && (
                         <Polygon
                           path={polygon}
@@ -815,7 +799,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                           size="sm"
                           variant="outline"
                           leftIcon={<FaTrash />}
-                          onClick={() => setPolygon([])}>
+                          onClick={() => setPolygon([])}
+                        >
                           Clear Points
                         </StandardButton>
                       )}
@@ -828,7 +813,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                   <StandardButton
                     variant="outline"
                     leftIcon={<FaChevronLeft />}
-                    onClick={previousStep}>
+                    onClick={previousStep}
+                  >
                     Back to Basic Info
                   </StandardButton>
 
@@ -839,7 +825,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                     <StandardButton
                       onClick={nextStep}
                       rightIcon={<FaChevronRight />}
-                      disabled={!isStepComplete(1)}>
+                      disabled={!isStepComplete(1)}
+                    >
                       Continue to Description
                     </StandardButton>
                   </HStack>
@@ -852,14 +839,16 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
           {currentStep === 2 && (
             <StandardCard
               title="Parcel Description"
-              subtitle="Detailed information about the parcel">
+              subtitle="Detailed information about the parcel"
+            >
               <VStack spacing={6} align="stretch">
                 {/* Description */}
                 <StandardField
                   label="Description"
                   required
                   error={errors.description?.message}
-                  helpText="Describe the parcel, its characteristics, soil type, drainage, etc.">
+                  helpText="Describe the parcel, its characteristics, soil type, drainage, etc."
+                >
                   <Textarea
                     {...methods.register('description')}
                     placeholder="Describe the parcel including soil type, drainage, topography, existing vegetation, and any other relevant characteristics..."
@@ -881,7 +870,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                   <StandardField
                     label="Crop Type"
                     error={errors.crop_type?.message}
-                    helpText="Primary crop or vegetation type">
+                    helpText="Primary crop or vegetation type"
+                  >
                     <Input
                       {...methods.register('crop_type')}
                       placeholder="e.g., Tomatoes, Corn, Pasture"
@@ -896,7 +886,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                   <StandardField
                     label="Soil Type"
                     error={errors.soil_type?.message}
-                    helpText="Type of soil in this parcel">
+                    helpText="Type of soil in this parcel"
+                  >
                     <Input
                       {...methods.register('soil_type')}
                       placeholder="e.g., Clay, Sandy loam, Silty clay"
@@ -913,7 +904,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                   <StandardField
                     label="Unique Code"
                     error={errors.unique_code?.message}
-                    helpText="Internal parcel identifier or code">
+                    helpText="Internal parcel identifier or code"
+                  >
                     <Input
                       {...methods.register('unique_code')}
                       placeholder="e.g., P001, NorthField-A"
@@ -928,7 +920,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                   <StandardField
                     label="Certification Type"
                     error={errors.certification_type?.message}
-                    helpText="Type of agricultural certification">
+                    helpText="Type of agricultural certification"
+                  >
                     <Input
                       {...methods.register('certification_type')}
                       placeholder="e.g., USDA Organic, Fair Trade"
@@ -944,7 +937,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                 <StandardField
                   label="Address"
                   error={errors.address?.message}
-                  helpText="Specific address or location reference">
+                  helpText="Specific address or location reference"
+                >
                   <Input
                     {...methods.register('address')}
                     placeholder="e.g., 123 Farm Road, North Section"
@@ -965,7 +959,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                   <StandardField
                     label="Contact Person"
                     error={errors.contact_person?.message}
-                    helpText="Person responsible for this parcel">
+                    helpText="Person responsible for this parcel"
+                  >
                     <Input
                       {...methods.register('contact_person')}
                       placeholder="e.g., John Smith"
@@ -980,7 +975,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                   <StandardField
                     label="Contact Email"
                     error={errors.contact_email?.message}
-                    helpText="Contact email for this parcel">
+                    helpText="Contact email for this parcel"
+                  >
                     <Input
                       {...methods.register('contact_email')}
                       type="email"
@@ -1012,7 +1008,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                   <StandardButton
                     variant="outline"
                     leftIcon={<FaChevronLeft />}
-                    onClick={previousStep}>
+                    onClick={previousStep}
+                  >
                     Back to Location
                   </StandardButton>
 
@@ -1023,7 +1020,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                     <StandardButton
                       onClick={nextStep}
                       rightIcon={<FaChevronRight />}
-                      disabled={!isStepComplete(2)}>
+                      disabled={!isStepComplete(2)}
+                    >
                       Continue to Media
                     </StandardButton>
                   </HStack>
@@ -1036,12 +1034,14 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
           {currentStep === 3 && (
             <StandardCard
               title="Media & Certification"
-              subtitle="Upload images and set certification status">
+              subtitle="Upload images and set certification status"
+            >
               <VStack spacing={6} align="stretch">
                 {/* Image Upload Section with comprehensive management */}
                 <StandardField
                   label="Parcel Images"
-                  helpText="Upload up to 5 high-quality images (JPG, PNG, GIF - max 5MB each)">
+                  helpText="Upload up to 5 high-quality images (JPG, PNG, GIF - max 5MB each)"
+                >
                   <VStack spacing={4}>
                     {/* Comprehensive Dropzone with image preview */}
                     <Box
@@ -1056,7 +1056,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                       _hover={{ borderColor: 'blue.400', bg: 'gray.100' }}
                       position="relative"
                       transition="all 0.2s"
-                      w="full">
+                      w="full"
+                    >
                       <input {...getInputProps()} />
 
                       {/* Image Previews AT THE TOP of the dropzone */}
@@ -1158,7 +1159,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                         loadingText="Uploading..."
                         colorScheme="green"
                         leftIcon={<FaCloudUploadAlt />}
-                        size="lg">
+                        size="lg"
+                      >
                         Upload {newImages.length} Image{newImages.length > 1 ? 's' : ''}
                       </Button>
                     )}
@@ -1168,7 +1170,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                 {/* Certification */}
                 <StandardField
                   label="Certification"
-                  helpText="Mark this parcel as certified if it meets certification standards">
+                  helpText="Mark this parcel as certified if it meets certification standards"
+                >
                   <VStack align="stretch" spacing={4}>
                     <HStack>
                       <Switch {...methods.register('certified')} colorScheme="green" size="md" />
@@ -1181,7 +1184,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                       <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
                         <StandardField
                           label="Contact Number"
-                          helpText="For certification inquiries">
+                          helpText="For certification inquiries"
+                        >
                           <Input
                             {...methods.register('contact_phone')}
                             placeholder="(555) 123-4567"
@@ -1221,7 +1225,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                   <StandardButton
                     variant="outline"
                     leftIcon={<FaChevronLeft />}
-                    onClick={previousStep}>
+                    onClick={previousStep}
+                  >
                     Back to Description
                   </StandardButton>
 
@@ -1233,7 +1238,8 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                       type="submit"
                       isLoading={isLoading}
                       loadingText={isEdit ? 'Updating...' : 'Creating...'}
-                      leftIcon={<FaCheckCircle />}>
+                      leftIcon={<FaCheckCircle />}
+                    >
                       {isEdit ? 'Update Parcel' : 'Create Parcel'}
                     </StandardButton>
                   </HStack>

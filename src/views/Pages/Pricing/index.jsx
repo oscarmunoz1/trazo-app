@@ -7,6 +7,7 @@ import {
   CardFooter,
   CardHeader,
   Flex,
+  HStack,
   Icon,
   SimpleGrid,
   Stack,
@@ -40,7 +41,8 @@ import {
   Alert,
   AlertIcon,
   AlertTitle,
-  AlertDescription
+  AlertDescription,
+  VStack
 } from '@chakra-ui/react';
 import {
   FaCheckCircle,
@@ -59,11 +61,19 @@ import {
   FaGooglePay,
   FaEnvelope,
   FaComments,
-  FaExternalLinkAlt
+  FaExternalLinkAlt,
+  FaShieldAlt,
+  FaLink,
+  FaCalculator,
+  FaCogs,
+  FaBook,
+  FaChartBar,
+  FaStar
 } from 'react-icons/fa';
 import { useIntl } from 'react-intl';
 import { loadStripe } from '@stripe/stripe-js';
 import { useGetPlansQuery, useCreateCheckoutSessionMutation } from 'store/api/subscriptionApi';
+import { useSubscribeBlockchainMutation, useGetAddonsQuery } from 'store/api/billingApi';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -74,9 +84,22 @@ const stripePromise = loadStripe(import.meta.env.VITE_APP_STRIPE_PUBLIC_KEY);
 function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
   const textColor = useColorModeValue('gray.700', 'white');
   const bgCardButton = useColorModeValue('white', '#151f31');
+  const cardBg = useColorModeValue('white', 'gray.700');
   const intl = useIntl();
 
-  // Helper function to translate
+  // Add detection for new company context
+  const [isNewCompany, setIsNewCompany] = React.useState(false);
+
+  React.useEffect(() => {
+    // Check if user just created a company (could be a URL param or localStorage flag)
+    const urlParams = new URLSearchParams(window.location.search);
+    const newCompanyFlag = urlParams.get('newCompany') || localStorage.getItem('newCompanyCreated');
+    if (newCompanyFlag) {
+      setIsNewCompany(true);
+      localStorage.removeItem('newCompanyCreated'); // Clear the flag
+    }
+  }, []);
+
   const t = (id) => intl.formatMessage({ id });
 
   const [activeInterval, setActiveInterval] = useState('monthly');
@@ -92,12 +115,15 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
 
   // Use RTK Query hooks
   const { data: plans = [], isLoading: loading, error, refetch } = useGetPlansQuery(activeInterval);
+  const { data: addons = [], isLoading: addonsLoading } = useGetAddonsQuery();
   const [createCheckoutSession] = useCreateCheckoutSessionMutation();
+  const [subscribeBlockchain] = useSubscribeBlockchainMutation();
 
   const [addonQuantities, setAddonQuantities] = useState({
-    extraProduction: 1,
-    extraParcel: 1,
-    extraStorage: 1
+    'extra-production': 1,
+    'extra-parcel': 1,
+    'extra-storage': 1,
+    'blockchain-verification': 1
   });
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -158,16 +184,6 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
     if (newCompany && companyIdParam) {
       setNewCompanyFlow(true);
       setUrlCompanyId(companyIdParam);
-
-      // Show a notification that subscription is required
-      toast({
-        title: t('app.subscriptionRequired'),
-        description: t('app.pleaseSelectPlan'),
-        status: 'info',
-        duration: 5000,
-        isClosable: true,
-        position: 'top'
-      });
     }
 
     // Save the return path for after subscription
@@ -297,21 +313,42 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
     const features = plan.features || {};
     const value = features[featureKey];
 
+    // Handle undefined values early
+    if (value === undefined || value === null) {
+      return '0';
+    }
+
     switch (featureKey) {
       case 'max_establishments':
-        return `${value} ${value === 1 ? t('app.company') : t('app.company')}`;
+        return `${value || 0} ${
+          (value || 0) === 1 ? t('app.establishment') : t('app.establishments')
+        }`;
       case 'max_parcels':
-        return `${value} ${value === 1 ? t('app.parcel') : t('app.parcels')}`;
+        return `${value || 0} ${(value || 0) === 1 ? t('app.parcel') : t('app.parcels')}`;
       case 'max_parcels_per_establishment':
-        return `${value} ${t('app.parcels')} ${t('app.per')} ${t('app.establishment')}`;
+        return `${value || 0} ${t('app.parcels')} ${t('app.per')} ${t('app.establishment')}`;
       case 'max_productions_per_year':
-        return `${value} ${t('app.productions')}/${t('app.year')}`;
+        return `${value || 0} ${t('app.productions')}/${t('app.year')}`;
       case 'monthly_scan_limit':
-        return `${value.toLocaleString()} ${t('app.scans')}/${t('app.month')}`;
+        return `${(value || 0).toLocaleString()} ${t('app.scans')}/${t('app.month')}`;
       case 'storage_limit_gb':
-        return `${value}GB ${t('app.storage')}`;
+        return `${value || 0}GB ${t('app.storage')}`;
       case 'support_response_time':
-        return `${value}h ${t('app.supportResponse')}`;
+        return `${value || 0}h ${t('app.supportResponse')}`;
+      case 'iot_automation_level':
+        return `${value || 0}% ${t('app.iotAutomation')}`;
+      case 'carbon_tracking':
+        return value === 'manual'
+          ? t('app.manualCarbonTracking')
+          : t('app.automatedCarbonTracking');
+      case 'educational_resources':
+        return value
+          ? t('app.educationalResourcesIncluded')
+          : t('app.educationalResourcesNotIncluded');
+      case 'custom_reporting':
+        return value ? t('app.customReportingIncluded') : t('app.customReportingNotIncluded');
+      case 'priority_support':
+        return value ? t('app.prioritySupportIncluded') : t('app.prioritySupportNotIncluded');
       default:
         if (typeof value === 'boolean') {
           return value ? t('app.included') : t('app.notIncluded');
@@ -335,6 +372,16 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
         return FaDatabase;
       case 'support_response_time':
         return FaHeadset;
+      case 'iot_automation_level':
+        return FaCogs;
+      case 'carbon_tracking':
+        return FaLeaf;
+      case 'educational_resources':
+        return FaBook;
+      case 'custom_reporting':
+        return FaChartBar;
+      case 'priority_support':
+        return FaStar;
       default:
         return FaCheckCircle;
     }
@@ -414,28 +461,219 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
     }
   };
 
+  const handleSubscribeBlockchain = async () => {
+    if (!user) {
+      toast({
+        title: t('app.notLoggedIn'),
+        description: t('app.needLoginToSubscribe'),
+        status: 'warning',
+        duration: 5000,
+        isClosable: true
+      });
+      navigate('/auth/signin');
+      return;
+    }
+
+    if (!activeCompany?.subscription) {
+      toast({
+        title: t('app.subscriptionRequired'),
+        description: 'You need an active subscription to add blockchain verification',
+        status: 'warning',
+        duration: 5000,
+        isClosable: true
+      });
+      return;
+    }
+
+    try {
+      setCheckoutLoading(true);
+
+      // Call the blockchain subscription API
+      const response = await subscribeBlockchain().unwrap();
+
+      if (response.checkout_url) {
+        // Redirect to Stripe checkout
+        window.location.href = response.checkout_url;
+      } else {
+        throw new Error(response.error || 'Failed to create checkout session');
+      }
+    } catch (error) {
+      console.error('Error subscribing to blockchain:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to start blockchain subscription',
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    } finally {
+      setCheckoutLoading(false);
+    }
+  };
+
   // Filtered plans - only show upgrades from current plan
   const filteredPlans = useMemo(() => {
     if (!plans || !plans.length) return [];
 
+    // First filter by active interval (monthly or yearly) and exclude Enterprise
+    let intervalFiltered = plans.filter(
+      (plan) => plan.interval === activeInterval && plan.name !== 'Enterprise'
+    );
+
     // If user is in upgrade flow and has a current plan, only show higher tier plans
     if (isUpgradeFlow && activeCompany?.subscription_plan) {
-      const currentPlanIndex = plans.findIndex(
+      const currentPlanIndex = intervalFiltered.findIndex(
         (plan) => plan.id === activeCompany.subscription_plan.id
       );
 
       // If we found the current plan, only show plans with higher index (more expensive)
       if (currentPlanIndex >= 0) {
-        return plans.filter((_, index) => index > currentPlanIndex);
+        return intervalFiltered.filter((_, index) => index > currentPlanIndex);
       }
     }
 
-    // Otherwise show all plans
-    return plans;
-  }, [plans, isUpgradeFlow, activeCompany]);
+    // Otherwise show all plans for the selected interval (excluding Enterprise)
+    return intervalFiltered;
+  }, [plans, isUpgradeFlow, activeCompany, activeInterval]);
+
+  // Helper function to determine recommended plan
+  const getRecommendedPlan = (plans) => {
+    // For new companies, recommend Standard plan
+    if (isNewCompany) {
+      return plans.find((plan) => plan.name === 'Standard');
+    }
+    // For existing users, recommend based on current plan or usage
+    if (activeCompany?.subscription?.plan) {
+      const currentPlan = activeCompany.subscription.plan.name;
+      if (currentPlan === 'Basic') {
+        return plans.find((plan) => plan.name === 'Standard');
+      }
+    }
+    // Default recommendation
+    return plans.find((plan) => plan.name === 'Standard');
+  };
 
   return (
     <Box pt={inDashboard ? { base: '10px', md: '10px' } : { base: '130px', md: '80px' }}>
+      {/* Hero Section */}
+      <Box textAlign="center" py={{ base: 8, md: 12 }}>
+        <Text fontSize={{ base: '3xl', md: '5xl' }} fontWeight="bold" color={textColor} mb={4}>
+          {newCompanyFlow
+            ? t('app.selectYourPlan')
+            : inDashboard
+            ? t('app.upgradeYourPlan')
+            : t('app.pricingPlans')}
+        </Text>
+        <Text fontSize="xl" color="gray.500" maxW="2xl" mx="auto">
+          {newCompanyFlow
+            ? t('app.choosePlanToGetStarted')
+            : inDashboard
+            ? t('app.upgradeDescription')
+            : t('app.pricingDescription')}
+        </Text>
+
+        {/* Welcome banner for new companies - Simplified and consolidated */}
+        {newCompanyFlow && (
+          <Alert
+            status="success"
+            variant="subtle"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            textAlign="center"
+            maxW="5xl"
+            mx="auto"
+            mt={6}
+            py={6}
+            borderRadius="xl"
+            border="1px"
+            borderColor="green.200"
+            bg="green.50"
+          >
+            <AlertIcon boxSize="40px" mr={0} />
+            <AlertTitle mt={4} mb={1} fontSize="lg">
+              🎉 {t('app.welcomeToTrazo')}
+            </AlertTitle>
+            <AlertDescription maxWidth="4xl">
+              <VStack spacing={3} mt={2}>
+                <Text fontWeight="medium">{t('app.yourCompanyIsReady')}</Text>
+
+                {/* Consolidated next steps - more subtle */}
+                <HStack
+                  spacing={8}
+                  fontSize="sm"
+                  color="green.600"
+                  flexWrap="wrap"
+                  justify="center"
+                >
+                  <HStack>
+                    <Text fontWeight="medium">1.</Text>
+                    <Text>{t('app.step1StartTrial')}</Text>
+                  </HStack>
+                  <HStack>
+                    <Text fontWeight="medium">2.</Text>
+                    <Text>{t('app.step2CreateEstablishment')}</Text>
+                  </HStack>
+                  <HStack>
+                    <Text fontWeight="medium">3.</Text>
+                    <Text>{t('app.step3StartTracking')}</Text>
+                  </HStack>
+                </HStack>
+
+                <Text fontSize="sm" color="green.600" fontWeight="medium">
+                  💡 {t('app.mostFarmsStartWith')} <strong>{t('app.standardPlan')}</strong> -{' '}
+                  {t('app.allPlansInclude14DayTrial')}
+                </Text>
+              </VStack>
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Blockchain Verification Banner - Only show for non-new companies or make it subtle */}
+        {!newCompanyFlow && (
+          <Box mt={8} textAlign="center">
+            <Alert
+              status="info"
+              variant="subtle"
+              maxW="5xl"
+              mx="auto"
+              borderRadius="xl"
+              border="2px"
+              borderColor="green.200"
+              bg="green.50"
+            >
+              <VStack spacing={4} w="full">
+                <HStack spacing={3}>
+                  <Icon as={FaShieldAlt} boxSize={8} color="green.600" />
+                  <VStack spacing={1} align="start">
+                    <Text fontSize="lg" fontWeight="bold" color="green.700">
+                      🔗 {t('app.blockchainVerificationAvailable')}
+                    </Text>
+                    <Text fontSize="sm" color="green.600">
+                      {t('app.addImmutableRecords')}
+                    </Text>
+                  </VStack>
+                </HStack>
+                <HStack spacing={6} fontSize="sm" color="green.600">
+                  <HStack>
+                    <Icon as={FaCheckCircle} />
+                    <Text>{t('app.usdaVerified')}</Text>
+                  </HStack>
+                  <HStack>
+                    <Icon as={FaCheckCircle} />
+                    <Text>{t('app.carbonCredits')}</Text>
+                  </HStack>
+                  <HStack>
+                    <Icon as={FaCheckCircle} />
+                    <Text>{t('app.ecoFriendly')}</Text>
+                  </HStack>
+                </HStack>
+              </VStack>
+            </Alert>
+          </Box>
+        )}
+      </Box>
+
       {/* Upgrade context banner */}
       {isUpgradeFlow && (
         <Alert
@@ -464,69 +702,47 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
         </Alert>
       )}
 
-      {newCompanyFlow && (
-        <Box
-          mb={6}
-          p={4}
-          borderRadius="md"
-          bg="blue.50"
-          color="blue.700"
-          textAlign="center"
-          maxW="3xl"
-          mx="auto"
-        >
-          <Text fontSize="lg" fontWeight="bold">
-            {t('app.companyCreatedSuccessfully')}
-          </Text>
-          <Text>{t('app.selectSubscriptionRequired')}</Text>
-        </Box>
-      )}
-
       <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden">
-        <Box
-          mb="24px"
-          position="relative"
-          display="flex"
-          flexDirection={{ base: 'column', md: 'row' }}
-          justifyContent="center"
-        >
-          <Text color={textColor} fontSize="5xl" fontWeight="bold" mb="16px" textAlign="center">
-            {t('app.pricingPlans')}
-          </Text>
-        </Box>
-
-        {/* Billing toggle */}
+        {/* Billing toggle - make more prominent */}
         <Flex justify="center" mb="40px">
-          <Stack direction="row" spacing={2} align="center">
-            <Text fontWeight="500" color={textColor}>
-              {t('app.monthly')}
+          <VStack spacing={3}>
+            <Text fontSize="sm" color="gray.600" textAlign="center">
+              {t('app.chooseYourBillingCycle')}
             </Text>
-            <Box position="relative">
-              <Switch
-                size="lg"
-                colorScheme="green"
-                isChecked={activeInterval === 'yearly'}
-                onChange={() =>
-                  setActiveInterval(activeInterval === 'monthly' ? 'yearly' : 'monthly')
-                }
-              />
-              {activeInterval === 'yearly' && (
-                <Badge
+            <Stack direction="row" spacing={2} align="center">
+              <Text fontWeight="500" color={textColor}>
+                {t('app.monthly')}
+              </Text>
+              <Box position="relative">
+                <Switch
+                  size="lg"
                   colorScheme="green"
-                  position="absolute"
-                  top="-20px"
-                  right="-20px"
-                  borderRadius="full"
-                  px="2"
-                >
-                  {t('app.save')} 20%
-                </Badge>
-              )}
-            </Box>
-            <Text fontWeight="500" color={textColor}>
-              {t('app.yearly')}
-            </Text>
-          </Stack>
+                  isChecked={activeInterval === 'yearly'}
+                  onChange={() =>
+                    setActiveInterval(activeInterval === 'monthly' ? 'yearly' : 'monthly')
+                  }
+                />
+                {/* Show discount indicator for yearly */}
+                {activeInterval === 'yearly' && (
+                  <Badge
+                    position="absolute"
+                    top="-8px"
+                    right="-20px"
+                    bg="green.500"
+                    color="white"
+                    fontSize="xs"
+                    borderRadius="full"
+                    px={2}
+                  >
+                    -{t('app.twoMonthsFree')}
+                  </Badge>
+                )}
+              </Box>
+              <Text fontWeight="500" color={textColor}>
+                {t('app.yearly')}
+              </Text>
+            </Stack>
+          </VStack>
         </Flex>
 
         {loading ? (
@@ -581,18 +797,27 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
               >
                 {filteredPlans.map((plan) => (
                   <Card
-                    key={plan.id}
-                    boxShadow="rgba(0, 0, 0, 0.1) 0px 4px 12px"
-                    _hover={{
-                      boxShadow: 'rgba(0, 0, 0, 0.15) 0px 8px 24px',
-                      transform: 'translateY(-4px)',
-                      transition: 'all 0.3s ease'
-                    }}
-                    borderRadius="xl"
-                    overflow="hidden"
                     position="relative"
+                    key={plan.id}
+                    bg={cardBg}
+                    boxShadow="lg"
+                    borderRadius="20px"
+                    overflow="hidden"
+                    minH="500px"
+                    border={newCompanyFlow && plan.name === 'Standard' ? '3px solid' : '1px solid'}
+                    borderColor={
+                      newCompanyFlow && plan.name === 'Standard'
+                        ? 'blue.400'
+                        : useColorModeValue('gray.200', 'gray.600')
+                    }
+                    _hover={{
+                      transform: 'translateY(-4px)',
+                      boxShadow: 'xl'
+                    }}
+                    transition="all 0.3s ease"
                   >
-                    {/* Add trial badge */}
+                    {/* Recommended badge for Standard plan in new company flow */}
+                    {/* 14-day trial badge - always in top right */}
                     <Box
                       position="absolute"
                       top="0"
@@ -602,13 +827,34 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                       px={3}
                       py={1}
                       borderBottomLeftRadius="md"
+                      borderTopRightRadius="20px"
                       fontWeight="bold"
+                      fontSize="xs"
                       zIndex={1}
                     >
                       {t('app.14DayTrial')}
                     </Box>
 
-                    {/* Add upgrade badge */}
+                    {/* Recommended badge - positioned below trial badge to avoid overlap */}
+                    {newCompanyFlow && plan.name === 'Standard' && (
+                      <Box
+                        position="absolute"
+                        top="32px"
+                        right="0"
+                        bg="orange.500"
+                        color="white"
+                        px={3}
+                        py={1}
+                        borderBottomLeftRadius="md"
+                        fontWeight="bold"
+                        fontSize="xs"
+                        zIndex={2}
+                      >
+                        ⭐ {t('app.recommended')}
+                      </Box>
+                    )}
+
+                    {/* Upgrade badge - repositioned */}
                     {isUpgradeFlow && (
                       <Box
                         position="absolute"
@@ -619,8 +865,10 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                         px={3}
                         py={1}
                         borderBottomRightRadius="md"
+                        borderTopLeftRadius="20px"
                         fontWeight="bold"
-                        zIndex={1}
+                        fontSize="xs"
+                        zIndex={2}
                       >
                         {t('app.upgrade')}
                       </Box>
@@ -631,11 +879,19 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                       bg={plan.name === 'Corporate' ? 'green.600' : 'blue.500'}
                       py={6}
                       textAlign="center"
+                      position="relative"
                     >
                       <Box>
-                        <Tag size="sm" bg="whiteAlpha.200" color="white">
-                          {plan.name.toUpperCase()}
-                        </Tag>
+                        <Text
+                          fontSize="sm"
+                          fontWeight="bold"
+                          color="whiteAlpha.800"
+                          mb={2}
+                          textTransform="uppercase"
+                          letterSpacing="wide"
+                        >
+                          {plan.name}
+                        </Text>
                         <Text mt={2} fontSize="5xl" fontWeight="bold" color="white">
                           ${plan.price}
                         </Text>
@@ -656,6 +912,7 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                       </Box>
 
                       <Stack spacing={4}>
+                        {/* Core Features */}
                         {/* Establishments */}
                         <Flex align="center">
                           <Icon
@@ -667,22 +924,6 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                           />
                           <Text color={textColor} fontWeight="normal" fontSize="md">
                             {getFeatureDisplay(plan, 'max_establishments')}
-                          </Text>
-                        </Flex>
-
-                        {/* Establishments */}
-                        <Flex align="center">
-                          <Icon
-                            w="22px"
-                            h="22px"
-                            as={getFeatureIcon('max_parcels')}
-                            mr="10px"
-                            color="green.500"
-                          />
-                          <Text color={textColor} fontWeight="normal" fontSize="md">
-                            {plan.name === 'Corporate'
-                              ? `2 ${t('app.establishments')}`
-                              : `1 ${t('app.establishment')}`}
                           </Text>
                         </Flex>
 
@@ -718,34 +959,31 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                           </Text>
                         </Flex>
 
-                        {/* Establishment description */}
+                        {/* IoT Automation Level - NEW */}
                         <Flex align="center">
                           <Icon
                             w="22px"
                             h="22px"
-                            as={
-                              plan.features?.establishment_full_description
-                                ? getFeatureIcon('max_establishments')
-                                : FaTimesCircle
-                            }
+                            as={getFeatureIcon('iot_automation_level')}
                             mr="10px"
-                            color={
-                              plan.features?.establishment_full_description
-                                ? 'green.500'
-                                : 'red.500'
-                            }
+                            color="blue.500"
                           />
-                          <Text
-                            color={textColor}
-                            fontWeight="normal"
-                            fontSize="md"
-                            textDecoration={
-                              !plan.features?.establishment_full_description
-                                ? 'line-through'
-                                : 'none'
-                            }
-                          >
-                            {t('app.establishmentFullDescription')}
+                          <Text color={textColor} fontWeight="normal" fontSize="md">
+                            {getFeatureDisplay(plan, 'iot_automation_level')}
+                          </Text>
+                        </Flex>
+
+                        {/* Carbon Tracking - NEW */}
+                        <Flex align="center">
+                          <Icon
+                            w="22px"
+                            h="22px"
+                            as={getFeatureIcon('carbon_tracking')}
+                            mr="10px"
+                            color="green.600"
+                          />
+                          <Text color={textColor} fontWeight="normal" fontSize="md">
+                            {getFeatureDisplay(plan, 'carbon_tracking')}
                           </Text>
                         </Flex>
 
@@ -777,19 +1015,67 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                           </Text>
                         </Flex>
 
-                        {/* Support */}
+                        {/* Support Response Time */}
                         <Flex align="center">
                           <Icon
                             w="22px"
                             h="22px"
                             as={getFeatureIcon('support_response_time')}
                             mr="10px"
-                            color="green.500"
+                            color="purple.500"
                           />
                           <Text color={textColor} fontWeight="normal" fontSize="md">
                             {getFeatureDisplay(plan, 'support_response_time')}
                           </Text>
                         </Flex>
+
+                        {/* Educational Resources - Show if available */}
+                        {plan.features?.educational_resources && (
+                          <Flex align="center">
+                            <Icon
+                              w="22px"
+                              h="22px"
+                              as={getFeatureIcon('educational_resources')}
+                              mr="10px"
+                              color="orange.500"
+                            />
+                            <Text color={textColor} fontWeight="normal" fontSize="md">
+                              {getFeatureDisplay(plan, 'educational_resources')}
+                            </Text>
+                          </Flex>
+                        )}
+
+                        {/* Custom Reporting - Show if available */}
+                        {plan.features?.custom_reporting && (
+                          <Flex align="center">
+                            <Icon
+                              w="22px"
+                              h="22px"
+                              as={getFeatureIcon('custom_reporting')}
+                              mr="10px"
+                              color="cyan.500"
+                            />
+                            <Text color={textColor} fontWeight="normal" fontSize="md">
+                              {getFeatureDisplay(plan, 'custom_reporting')}
+                            </Text>
+                          </Flex>
+                        )}
+
+                        {/* Priority Support - Show if available */}
+                        {plan.features?.priority_support && (
+                          <Flex align="center">
+                            <Icon
+                              w="22px"
+                              h="22px"
+                              as={getFeatureIcon('priority_support')}
+                              mr="10px"
+                              color="yellow.500"
+                            />
+                            <Text color={textColor} fontWeight="normal" fontSize="md">
+                              {getFeatureDisplay(plan, 'priority_support')}
+                            </Text>
+                          </Flex>
+                        )}
                       </Stack>
                     </CardBody>
 
@@ -799,12 +1085,16 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
                         as={motion.button}
                         colorScheme={plan.name === 'Corporate' ? 'green' : 'blue'}
                         w="100%"
-                        py={6}
+                        h="60px"
+                        px={6}
                         onClick={() => handleSubscribe(plan.id)}
                         isLoading={checkoutLoading}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         transition={{ duration: 0.2 }}
+                        fontSize="md"
+                        fontWeight="semibold"
+                        borderRadius="lg"
                         _hover={{
                           bgGradient:
                             plan.name === 'Corporate'
@@ -833,171 +1123,196 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
             {t('app.additionalServices')}
           </Text>
 
-          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8} px={{ base: 4, md: 8 }} mt={8}>
-            {/* Extra Production Add-on */}
-            <Card boxShadow="md" borderRadius="lg">
-              <CardHeader pb={0}>
-                <Flex direction="column" align="center">
-                  <Text fontSize="xl" fontWeight="bold" color={textColor}>
-                    {t('app.extraProduction')}
-                  </Text>
-                </Flex>
-              </CardHeader>
-              <CardBody>
-                <Stack spacing={4} align="center">
-                  <Text fontSize="3xl" fontWeight="bold" color={textColor}>
-                    ${15 * addonQuantities.extraProduction}
-                  </Text>
-                  <Text color="gray.500">{t('app.perProduction')}</Text>
-                  <Text textAlign="center">{t('app.extraProductionDescription')}</Text>
+          {/* Simple note for new companies */}
+          {newCompanyFlow && (
+            <Text fontSize="sm" color="gray.600" mb={6} maxW="2xl" mx="auto">
+              {t('app.addonsAvailableAfterSubscription')}
+            </Text>
+          )}
 
-                  <NumberInput
-                    min={1}
-                    max={10}
-                    value={addonQuantities.extraProduction}
-                    onChange={(valueString) =>
-                      setAddonQuantities({
-                        ...addonQuantities,
-                        extraProduction: parseInt(valueString)
-                      })
+          {addonsLoading ? (
+            <SimpleGrid columns={{ base: 1, md: 4 }} spacing={8} px={{ base: 4, md: 8 }} mt={8}>
+              {[...Array(4)].map((_, i) => (
+                <Card key={i} boxShadow="md" borderRadius="lg">
+                  <Skeleton height="250px" />
+                </Card>
+              ))}
+            </SimpleGrid>
+          ) : (
+            <SimpleGrid
+              columns={{ base: 1, md: addons.length }}
+              spacing={8}
+              px={{ base: 4, md: 8 }}
+              mt={8}
+            >
+              {addons
+                .filter((addon) => addon.is_active)
+                .map((addon) => (
+                  <Card
+                    key={addon.id}
+                    boxShadow="lg"
+                    borderRadius="xl"
+                    border={
+                      addon.slug === 'blockchain-verification' && !newCompanyFlow
+                        ? '2px solid'
+                        : '1px solid'
                     }
-                  >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-
-                  <Button
-                    colorScheme="blue"
-                    isFullWidth
-                    isLoading={checkoutLoading}
-                    onClick={() =>
-                      handleAddAddon('extraProduction', addonQuantities.extraProduction)
+                    borderColor={
+                      addon.slug === 'blockchain-verification' && !newCompanyFlow
+                        ? 'green.400'
+                        : 'gray.200'
                     }
-                    isDisabled={!activeCompany?.subscription}
+                    position="relative"
+                    bg={cardBg}
+                    overflow="hidden"
+                    _hover={{
+                      transform: 'translateY(-4px)',
+                      boxShadow: 'xl',
+                      borderColor:
+                        addon.slug === 'blockchain-verification' ? 'green.500' : 'blue.300'
+                    }}
+                    transition="all 0.3s ease"
                   >
-                    {t('app.add')}
-                  </Button>
+                    {/* Special badge for blockchain - only for non-new companies */}
+                    {addon.slug === 'blockchain-verification' && !newCompanyFlow && (
+                      <Box
+                        position="absolute"
+                        top="0"
+                        right="0"
+                        bg="green.500"
+                        color="white"
+                        px={3}
+                        py={1}
+                        borderBottomLeftRadius="md"
+                        fontWeight="bold"
+                        fontSize="xs"
+                        zIndex={1}
+                      >
+                        🔗 Premium
+                      </Box>
+                    )}
 
-                  {!activeCompany?.subscription && (
-                    <Text fontSize="sm" color="orange.500">
-                      {t('app.availableForSubscribers')}
-                    </Text>
-                  )}
-                </Stack>
-              </CardBody>
-            </Card>
+                    <CardHeader pb={2} pt={6}>
+                      <VStack spacing={2}>
+                        <Text fontSize="xl" fontWeight="bold" color={textColor} textAlign="center">
+                          {addon.name}
+                        </Text>
+                        <HStack>
+                          <Text fontSize="3xl" fontWeight="bold" color={textColor}>
+                            ${(addon.price * (addonQuantities[addon.slug] || 1)).toFixed(2)}
+                          </Text>
+                          <Text color="gray.500" fontSize="sm">
+                            {addon.slug === 'blockchain-verification'
+                              ? t('app.perMonth')
+                              : addon.slug.includes('production')
+                              ? t('app.perProduction')
+                              : addon.slug.includes('parcel')
+                              ? t('app.perParcel')
+                              : t('app.perMonth')}
+                          </Text>
+                        </HStack>
+                      </VStack>
+                    </CardHeader>
 
-            {/* Extra Parcel Add-on */}
-            <Card boxShadow="md" borderRadius="lg">
-              <CardHeader pb={0}>
-                <Flex direction="column" align="center">
-                  <Text fontSize="xl" fontWeight="bold" color={textColor}>
-                    {t('app.extraParcel')}
-                  </Text>
-                </Flex>
-              </CardHeader>
-              <CardBody>
-                <Stack spacing={4} align="center">
-                  <Text fontSize="3xl" fontWeight="bold" color={textColor}>
-                    ${20 * addonQuantities.extraParcel}
-                  </Text>
-                  <Text color="gray.500">{t('app.perParcel')}</Text>
-                  <Text textAlign="center">{t('app.extraParcelDescription')}</Text>
+                    <CardBody pt={2}>
+                      <VStack spacing={4} align="stretch">
+                        <Text textAlign="center" fontSize="sm" color="gray.600" minH="40px">
+                          {addon.description}
+                        </Text>
 
-                  <NumberInput
-                    min={1}
-                    max={10}
-                    value={addonQuantities.extraParcel}
-                    onChange={(valueString) =>
-                      setAddonQuantities({
-                        ...addonQuantities,
-                        extraParcel: parseInt(valueString)
-                      })
-                    }
-                  >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
+                        {/* Special features for blockchain with better styling */}
+                        {addon.slug === 'blockchain-verification' && (
+                          <Box
+                            bg={useColorModeValue('green.50', 'green.900')}
+                            p={3}
+                            borderRadius="md"
+                            border="1px solid"
+                            borderColor="green.200"
+                          >
+                            <VStack spacing={2} fontSize="sm">
+                              <HStack>
+                                <Icon as={FaShieldAlt} color="green.600" />
+                                <Text color="green.700" fontWeight="medium">
+                                  {t('app.usdaVerified')}
+                                </Text>
+                              </HStack>
+                              <HStack>
+                                <Icon as={FaLeaf} color="green.600" />
+                                <Text color="green.700" fontWeight="medium">
+                                  {t('app.carbonCredits')}
+                                </Text>
+                              </HStack>
+                              <HStack>
+                                <Icon as={FaLink} color="green.600" />
+                                <Text color="green.700" fontWeight="medium">
+                                  {t('app.immutableRecords')}
+                                </Text>
+                              </HStack>
+                            </VStack>
+                          </Box>
+                        )}
 
-                  <Button
-                    colorScheme="blue"
-                    isFullWidth
-                    isLoading={checkoutLoading}
-                    onClick={() => handleAddAddon('extraParcel', addonQuantities.extraParcel)}
-                    isDisabled={!activeCompany?.subscription}
-                  >
-                    {t('app.add')}
-                  </Button>
+                        {/* Quantity selector for non-blockchain add-ons with better styling */}
+                        {addon.slug !== 'blockchain-verification' && (
+                          <Box>
+                            <Text fontSize="sm" fontWeight="medium" mb={2} color={textColor}>
+                              {t('app.quantity')}:
+                            </Text>
+                            <NumberInput
+                              min={1}
+                              max={10}
+                              value={addonQuantities[addon.slug] || 1}
+                              onChange={(valueString) =>
+                                setAddonQuantities({
+                                  ...addonQuantities,
+                                  [addon.slug]: parseInt(valueString) || 1
+                                })
+                              }
+                              size="sm"
+                            >
+                              <NumberInputField />
+                              <NumberInputStepper>
+                                <NumberIncrementStepper />
+                                <NumberDecrementStepper />
+                              </NumberInputStepper>
+                            </NumberInput>
+                          </Box>
+                        )}
 
-                  {!activeCompany?.subscription && (
-                    <Text fontSize="sm" color="orange.500">
-                      {t('app.availableForSubscribers')}
-                    </Text>
-                  )}
-                </Stack>
-              </CardBody>
-            </Card>
+                        <Button
+                          colorScheme={addon.slug === 'blockchain-verification' ? 'green' : 'blue'}
+                          isFullWidth
+                          isLoading={checkoutLoading}
+                          onClick={() =>
+                            addon.slug === 'blockchain-verification'
+                              ? handleSubscribeBlockchain()
+                              : handleAddAddon(addon.slug, addonQuantities[addon.slug] || 1)
+                          }
+                          isDisabled={!activeCompany?.subscription}
+                          size="md"
+                          fontWeight="semibold"
+                        >
+                          {addon.slug === 'blockchain-verification'
+                            ? '🔗 Add Blockchain'
+                            : t('app.add')}
+                        </Button>
 
-            {/* Extra Storage Add-on */}
-            <Card boxShadow="md" borderRadius="lg">
-              <CardHeader pb={0}>
-                <Flex direction="column" align="center">
-                  <Text fontSize="xl" fontWeight="bold" color={textColor}>
-                    {t('app.extraStorage')}
-                  </Text>
-                </Flex>
-              </CardHeader>
-              <CardBody>
-                <Stack spacing={4} align="center">
-                  <Text fontSize="3xl" fontWeight="bold" color={textColor}>
-                    ${5 * addonQuantities.extraStorage}
-                  </Text>
-                  <Text color="gray.500">{t('app.perMonth')}</Text>
-                  <Text textAlign="center">{t('app.extraStorageDescription')}</Text>
-
-                  <NumberInput
-                    min={1}
-                    max={10}
-                    value={addonQuantities.extraStorage}
-                    onChange={(valueString) =>
-                      setAddonQuantities({
-                        ...addonQuantities,
-                        extraStorage: parseInt(valueString)
-                      })
-                    }
-                  >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-
-                  <Button
-                    colorScheme="blue"
-                    isFullWidth
-                    isLoading={checkoutLoading}
-                    onClick={() => handleAddAddon('extraStorage', addonQuantities.extraStorage)}
-                    isDisabled={!activeCompany?.subscription}
-                  >
-                    {t('app.add')}
-                  </Button>
-
-                  {!activeCompany?.subscription && (
-                    <Text fontSize="sm" color="orange.500">
-                      {t('app.availableForSubscribers')}
-                    </Text>
-                  )}
-                </Stack>
-              </CardBody>
-            </Card>
-          </SimpleGrid>
+                        {!activeCompany?.subscription && (
+                          <Text
+                            fontSize="xs"
+                            color="orange.500"
+                            textAlign="center"
+                            fontStyle="italic"
+                          >
+                            {t('app.availableForSubscribers')}
+                          </Text>
+                        )}
+                      </VStack>
+                    </CardBody>
+                  </Card>
+                ))}
+            </SimpleGrid>
+          )}
         </Box>
 
         {/* Enterprise Section */}
@@ -1188,6 +1503,69 @@ function Pricing({ inDashboard = false, companyId: directCompanyId = null }) {
               </Button>
             </ButtonGroup>
           </Flex>
+        </Box>
+
+        {/* Quick Value Calculator */}
+        <Box
+          mt={16}
+          bg={useColorModeValue('blue.50', 'blue.900')}
+          borderRadius="xl"
+          p={8}
+          mx={{ base: 4, md: 8 }}
+        >
+          <VStack spacing={6}>
+            <Text fontSize="2xl" fontWeight="bold" color={textColor} textAlign="center">
+              💰 {t('app.calculateYourSavings')}
+            </Text>
+            <Text textAlign="center" color="gray.600" maxW="2xl">
+              {t('app.seeHowMuchTrazoSaves')}
+            </Text>
+
+            <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8} w="full">
+              <Box bg="white" p={6} borderRadius="lg" textAlign="center" boxShadow="sm">
+                <Text fontSize="3xl" fontWeight="bold" color="green.500">
+                  $2,400
+                </Text>
+                <Text fontSize="sm" color="gray.600">
+                  Average annual savings
+                </Text>
+                <Text fontSize="xs" color="gray.500">
+                  on compliance documentation
+                </Text>
+              </Box>
+              <Box bg="white" p={6} borderRadius="lg" textAlign="center" boxShadow="sm">
+                <Text fontSize="3xl" fontWeight="bold" color="blue.500">
+                  15 hrs
+                </Text>
+                <Text fontSize="sm" color="gray.600">
+                  Time saved per month
+                </Text>
+                <Text fontSize="xs" color="gray.500">
+                  on manual tracking
+                </Text>
+              </Box>
+              <Box bg="white" p={6} borderRadius="lg" textAlign="center" boxShadow="sm">
+                <Text fontSize="3xl" fontWeight="bold" color="purple.500">
+                  98%
+                </Text>
+                <Text fontSize="sm" color="gray.600">
+                  Accuracy improvement
+                </Text>
+                <Text fontSize="xs" color="gray.500">
+                  in carbon tracking
+                </Text>
+              </Box>
+            </SimpleGrid>
+
+            <Button
+              colorScheme="blue"
+              size="lg"
+              onClick={() => setActiveInterval('yearly')}
+              leftIcon={<Icon as={FaCalculator} />}
+            >
+              {t('app.startFreeTrial')}
+            </Button>
+          </VStack>
         </Box>
       </Flex>
     </Box>

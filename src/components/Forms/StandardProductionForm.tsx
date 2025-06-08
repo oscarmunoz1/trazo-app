@@ -15,7 +15,17 @@ import {
   Box,
   Badge,
   Divider,
-  Input
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Grid,
+  Avatar,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Progress,
+  Button
 } from '@chakra-ui/react';
 import {
   StandardPage,
@@ -45,9 +55,14 @@ import {
   FaLeaf,
   FaWater,
   FaCut,
-  FaWarehouse
+  FaWarehouse,
+  FaSearch,
+  FaAppleAlt,
+  FaCarrot,
+  FaGraduationCap,
+  FaCoffee
 } from 'react-icons/fa';
-import { MdLocalFlorist, MdHome } from 'react-icons/md';
+import { MdLocalFlorist, MdHome, MdGrass, MdFilterVintage, MdVerified } from 'react-icons/md';
 
 // Form Schema
 const productionSchema = object({
@@ -58,7 +73,13 @@ const productionSchema = object({
   isOutdoor: boolean().default(true),
   ageOfPlants: number().optional(),
   numberOfPlants: number().optional(),
-  soilPh: number().optional()
+  soilPh: number().optional(),
+  // Enhanced blockchain fields
+  enableBlockchain: boolean().default(true),
+  expectedHarvest: string().optional(),
+  estimatedYield: number().optional(),
+  irrigationMethod: string().optional(),
+  productionMethod: string().optional()
 });
 
 interface ProductionFormData {
@@ -70,6 +91,12 @@ interface ProductionFormData {
   ageOfPlants?: number;
   numberOfPlants?: number;
   soilPh?: number;
+  // Enhanced blockchain fields
+  enableBlockchain?: boolean;
+  expectedHarvest?: string;
+  estimatedYield?: number;
+  irrigationMethod?: string;
+  productionMethod?: string;
 }
 
 interface StandardProductionFormProps {
@@ -87,19 +114,48 @@ const productionTypeOptions = [
   {
     id: 'OR',
     title: 'Organic',
-    description: 'Organic farming methods',
+    description: 'Certified organic farming methods',
     icon: FaLeaf,
     color: 'green',
-    value: 'OR'
+    value: 'OR',
+    blockchainBenefits: 'Enhanced carbon credit eligibility'
   },
   {
     id: 'GA',
     title: 'General Agriculture',
-    description: 'Conventional farming',
+    description: 'Conventional farming with sustainability tracking',
     icon: FaTractor,
     color: 'blue',
-    value: 'GA'
+    value: 'GA',
+    blockchainBenefits: 'Transparent supply chain verification'
+  },
+  {
+    id: 'SU',
+    title: 'Sustainable',
+    description: 'Regenerative and sustainable practices',
+    icon: FaSeedling,
+    color: 'purple',
+    value: 'SU',
+    blockchainBenefits: 'Premium carbon credit potential'
   }
+];
+
+// Irrigation method options for enhanced tracking
+const irrigationMethodOptions = [
+  { value: 'drip', label: 'Drip Irrigation', efficiency: 'High', carbonImpact: 'Low' },
+  { value: 'sprinkler', label: 'Sprinkler System', efficiency: 'Medium', carbonImpact: 'Medium' },
+  { value: 'flood', label: 'Flood Irrigation', efficiency: 'Low', carbonImpact: 'High' },
+  { value: 'micro_spray', label: 'Micro Spray', efficiency: 'High', carbonImpact: 'Low' },
+  { value: 'rainwater', label: 'Rainwater Only', efficiency: 'Variable', carbonImpact: 'Very Low' }
+];
+
+// Production method options for blockchain verification
+const productionMethodOptions = [
+  { value: 'conventional', label: 'Conventional', carbonScore: 'Standard' },
+  { value: 'organic', label: 'Organic Certified', carbonScore: 'Enhanced' },
+  { value: 'biodynamic', label: 'Biodynamic', carbonScore: 'Premium' },
+  { value: 'regenerative', label: 'Regenerative', carbonScore: 'Premium' },
+  { value: 'permaculture', label: 'Permaculture', carbonScore: 'Enhanced' }
 ];
 
 // Growing environment options
@@ -122,6 +178,132 @@ const environmentOptions = [
   }
 ];
 
+// Crop categories for better organization
+const cropCategories = [
+  {
+    id: 'fruits',
+    title: 'Fruits',
+    icon: FaAppleAlt,
+    color: 'red',
+    keywords: [
+      'apple',
+      'orange',
+      'banana',
+      'grape',
+      'berry',
+      'citrus',
+      'avocado',
+      'mango',
+      'peach',
+      'cherry'
+    ]
+  },
+  {
+    id: 'vegetables',
+    title: 'Vegetables',
+    icon: FaCarrot,
+    color: 'orange',
+    keywords: [
+      'tomato',
+      'carrot',
+      'lettuce',
+      'spinach',
+      'broccoli',
+      'cabbage',
+      'pepper',
+      'cucumber',
+      'onion',
+      'potato'
+    ]
+  },
+  {
+    id: 'grains',
+    title: 'Grains & Cereals',
+    icon: FaGraduationCap,
+    color: 'yellow',
+    keywords: ['wheat', 'corn', 'rice', 'barley', 'oat', 'quinoa', 'millet', 'sorghum']
+  },
+  {
+    id: 'herbs',
+    title: 'Herbs & Spices',
+    icon: MdFilterVintage,
+    color: 'green',
+    keywords: ['basil', 'oregano', 'thyme', 'parsley', 'cilantro', 'rosemary', 'mint', 'sage']
+  },
+  {
+    id: 'legumes',
+    title: 'Legumes & Beans',
+    icon: FaSeedling,
+    color: 'purple',
+    keywords: ['bean', 'pea', 'lentil', 'chickpea', 'soybean', 'alfalfa']
+  },
+  {
+    id: 'nuts',
+    title: 'Nuts & Seeds',
+    icon: FaCoffee,
+    color: 'brown',
+    keywords: ['almond', 'walnut', 'pecan', 'hazelnut', 'sunflower', 'pumpkin']
+  }
+];
+
+// Helper function to categorize crops
+const categorizeCrop = (productName: string) => {
+  const name = productName.toLowerCase();
+  for (const category of cropCategories) {
+    if (category.keywords.some((keyword) => name.includes(keyword))) {
+      return category;
+    }
+  }
+  return cropCategories[1]; // Default to vegetables
+};
+
+// Helper function to get crop growth period estimation
+const getCropGrowthPeriod = (productName: string) => {
+  const name = productName.toLowerCase();
+
+  // Fruits (longer growing seasons)
+  if (name.includes('citrus') || name.includes('apple') || name.includes('avocado')) {
+    return { days: 365, season: 'Annual' };
+  }
+
+  // Nuts (very long growing seasons)
+  if (name.includes('almond') || name.includes('walnut') || name.includes('pecan')) {
+    return { days: 365, season: 'Annual' };
+  }
+
+  // Grains
+  if (name.includes('corn') || name.includes('wheat')) {
+    return { days: 120, season: '4 months' };
+  }
+  if (name.includes('rice')) {
+    return { days: 150, season: '5 months' };
+  }
+
+  // Vegetables (shorter growing seasons)
+  if (name.includes('lettuce') || name.includes('spinach')) {
+    return { days: 60, season: '2 months' };
+  }
+  if (name.includes('tomato') || name.includes('pepper')) {
+    return { days: 90, season: '3 months' };
+  }
+  if (name.includes('carrot') || name.includes('broccoli')) {
+    return { days: 75, season: '2.5 months' };
+  }
+
+  // Berries
+  if (name.includes('berry') || name.includes('strawberry')) {
+    return { days: 180, season: '6 months' };
+  }
+
+  // Herbs (quick growing)
+  if (name.includes('basil') || name.includes('cilantro') || name.includes('parsley')) {
+    return { days: 30, season: '1 month' };
+  }
+
+  // Default
+  return { days: 90, season: '3 months' };
+};
+
 export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
   onSubmit,
   onCancel,
@@ -134,6 +316,11 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [productError, setProductError] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [filteredProducts, setFilteredProducts] = useState<Array<{ value: string; label: string }>>(
+    []
+  );
   const intl = useIntl();
   const toast = useToast();
 
@@ -141,7 +328,8 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
   const steps = [
     { title: 'Product Selection', description: 'Choose product & type', icon: FaSeedling },
     { title: 'Production Details', description: 'Date & environment', icon: FaCalendarAlt },
-    { title: 'Plant Details', description: 'Plant count & soil info', icon: FaInfoCircle }
+    { title: 'Enhanced Tracking', description: 'Blockchain & sustainability', icon: FaInfoCircle },
+    { title: 'Plant Details', description: 'Optional specifics', icon: FaInfoCircle }
   ];
 
   const methods = useForm<ProductionFormData>({
@@ -152,6 +340,9 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
       ageOfPlants: 0,
       numberOfPlants: 0,
       soilPh: 7.0,
+      enableBlockchain: true,
+      productionMethod: 'conventional',
+      irrigationMethod: 'drip',
       ...initialData
     }
   });
@@ -176,6 +367,30 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
       }
     }
   }, [initialData, reset, methods]);
+
+  // Filter products based on search term and category
+  useEffect(() => {
+    let filtered = productOptions;
+
+    // Filter by category
+    if (selectedCategory) {
+      const category = cropCategories.find((cat) => cat.id === selectedCategory);
+      if (category) {
+        filtered = filtered.filter((product) =>
+          category.keywords.some((keyword) => product.label.toLowerCase().includes(keyword))
+        );
+      }
+    }
+
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter((product) =>
+        product.label.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    setFilteredProducts(filtered);
+  }, [productOptions, searchTerm, selectedCategory]);
 
   const onSubmitForm = (data: ProductionFormData) => {
     console.log('Form submission started:', {
@@ -280,20 +495,35 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
 
         return step1Complete;
       case 2:
-        // Additional Info: optional step, check for validation errors
-        const additionalFieldErrors = ['ageOfPlants', 'numberOfPlants', 'soilPh'].some(
+        // Enhanced Tracking: blockchain and sustainability settings
+        const trackingFieldErrors = ['productionMethod', 'irrigationMethod'].some(
           (field) => currentErrors[field as keyof typeof currentErrors]
         );
-        const step2Complete = !additionalFieldErrors;
+        const step2Complete = !trackingFieldErrors;
 
         if (process.env.NODE_ENV === 'development') {
-          console.log('Step 2 validation:', {
-            additionalFieldErrors,
+          console.log('Step 2 validation (Enhanced Tracking):', {
+            trackingFieldErrors,
             step2Complete
           });
         }
 
         return step2Complete;
+      case 3:
+        // Plant Details: optional step, check for validation errors
+        const additionalFieldErrors = ['ageOfPlants', 'numberOfPlants', 'soilPh'].some(
+          (field) => currentErrors[field as keyof typeof currentErrors]
+        );
+        const step3Complete = !additionalFieldErrors;
+
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Step 3 validation (Plant Details):', {
+            additionalFieldErrors,
+            step3Complete
+          });
+        }
+
+        return step3Complete;
       default:
         return false;
     }
@@ -322,21 +552,6 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
     }
   };
 
-  // Debug helper for button state
-  const getButtonDebugInfo = () => {
-    if (process.env.NODE_ENV === 'development') {
-      const step1Valid = isStepComplete(1);
-      console.log('Button debug info:', {
-        currentStep,
-        step1Valid,
-        buttonDisabled: !step1Valid,
-        formData: watch()
-      });
-      return step1Valid;
-    }
-    return isStepComplete(1);
-  };
-
   // Custom styles for CreatableSelect
   const selectStyles = {
     control: (provided: any) => ({
@@ -352,6 +567,28 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
     })
   };
 
+  // Calculate form completion percentage
+  const getFormCompletionPercentage = () => {
+    const formData = watch();
+    let completedFields = 0;
+    const totalRequiredFields = 3; // product, date, type
+
+    if (selectedProduct) completedFields++;
+    if (formData.date) completedFields++;
+    if (formData.type) completedFields++;
+
+    return Math.round((completedFields / totalRequiredFields) * 100);
+  };
+
+  // Get completion status text
+  const getCompletionStatusText = () => {
+    const percentage = getFormCompletionPercentage();
+    if (percentage === 100) return 'Ready to create production!';
+    if (percentage >= 66) return 'Almost ready...';
+    if (percentage >= 33) return 'Good progress...';
+    return 'Getting started...';
+  };
+
   return (
     <StandardPage
       title={isEdit ? 'Edit Production' : 'Start New Production'}
@@ -359,7 +596,8 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
         parcelName ? ` for ${parcelName}` : ''
       }`}
       showBackButton
-      onBack={onCancel}>
+      onBack={onCancel}
+    >
       {/* Modern Progress Stepper */}
       <StandardStepper
         steps={steps}
@@ -375,25 +613,152 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
           {currentStep === 0 && (
             <StandardCard
               title="Product & Production Type"
-              subtitle="Select the product and farming method">
+              subtitle="Select the product and farming method"
+            >
               <VStack spacing={6} align="stretch">
-                {/* Product Selection */}
+                {/* Crop Category Filter */}
+                <StandardField
+                  label="Crop Category"
+                  helpText="Filter products by crop type for easier selection"
+                >
+                  <SimpleGrid columns={{ base: 2, md: 3, lg: 6 }} spacing={3}>
+                    <Box
+                      p={3}
+                      borderRadius="lg"
+                      border="2px solid"
+                      borderColor={!selectedCategory ? 'green.500' : 'gray.200'}
+                      bg={!selectedCategory ? 'green.50' : 'white'}
+                      cursor="pointer"
+                      transition="all 0.2s"
+                      _hover={{ borderColor: 'green.400', transform: 'translateY(-1px)' }}
+                      onClick={() => setSelectedCategory('')}
+                      textAlign="center"
+                    >
+                      <VStack spacing={2}>
+                        <Icon
+                          as={FaSearch}
+                          color={!selectedCategory ? 'green.500' : 'gray.400'}
+                          boxSize={4}
+                        />
+                        <Text
+                          fontSize="xs"
+                          fontWeight="medium"
+                          color={!selectedCategory ? 'green.700' : 'gray.600'}
+                        >
+                          All Crops
+                        </Text>
+                      </VStack>
+                    </Box>
+                    {cropCategories.map((category) => (
+                      <Box
+                        key={category.id}
+                        p={3}
+                        borderRadius="lg"
+                        border="2px solid"
+                        borderColor={
+                          selectedCategory === category.id ? `${category.color}.500` : 'gray.200'
+                        }
+                        bg={selectedCategory === category.id ? `${category.color}.50` : 'white'}
+                        cursor="pointer"
+                        transition="all 0.2s"
+                        _hover={{
+                          borderColor: `${category.color}.400`,
+                          transform: 'translateY(-1px)'
+                        }}
+                        onClick={() => setSelectedCategory(category.id)}
+                        textAlign="center"
+                      >
+                        <VStack spacing={2}>
+                          <Icon
+                            as={category.icon}
+                            color={
+                              selectedCategory === category.id
+                                ? `${category.color}.500`
+                                : 'gray.400'
+                            }
+                            boxSize={4}
+                          />
+                          <Text
+                            fontSize="xs"
+                            fontWeight="medium"
+                            color={
+                              selectedCategory === category.id
+                                ? `${category.color}.700`
+                                : 'gray.600'
+                            }
+                          >
+                            {category.title}
+                          </Text>
+                        </VStack>
+                      </Box>
+                    ))}
+                  </SimpleGrid>
+                </StandardField>
+
+                {/* Search & Product Selection */}
                 <StandardField
                   label="Product"
                   required
                   error={productError}
-                  helpText="Select an existing product or create a new one">
+                  helpText="Search and select your crop or create a new one"
+                >
+                  {/* Product Selection Dropdown */}
                   <CreatableSelect
                     value={selectedProduct}
                     onChange={(newValue) => {
                       setSelectedProduct(newValue);
                       setProductError('');
                     }}
-                    options={productOptions}
+                    options={filteredProducts}
                     styles={selectStyles}
-                    placeholder="Select or type to create a new product..."
+                    placeholder="Select from filtered results or create new..."
                     isClearable
+                    noOptionsMessage={() =>
+                      searchTerm || selectedCategory
+                        ? 'No crops found. Type to create a new one.'
+                        : 'Start typing to search crops...'
+                    }
                   />
+
+                  {/* Product Info */}
+                  {selectedProduct && (
+                    <Box mt={3} p={4} bg="blue.50" borderRadius="lg">
+                      <HStack spacing={3}>
+                        <Avatar
+                          size="sm"
+                          icon={<Icon as={categorizeCrop(selectedProduct.label).icon} />}
+                          bg={`${categorizeCrop(selectedProduct.label).color}.100`}
+                          color={`${categorizeCrop(selectedProduct.label).color}.600`}
+                        />
+                        <VStack align="start" spacing={1}>
+                          <Text fontWeight="semibold" color="blue.700">
+                            {selectedProduct.label}
+                          </Text>
+                          <HStack spacing={2}>
+                            <Badge
+                              colorScheme={categorizeCrop(selectedProduct.label).color}
+                              size="sm"
+                            >
+                              {categorizeCrop(selectedProduct.label).title}
+                            </Badge>
+                            <Text fontSize="xs" color="blue.600">
+                              Estimated growing period:{' '}
+                              {getCropGrowthPeriod(selectedProduct.label).season}
+                            </Text>
+                          </HStack>
+                        </VStack>
+                      </HStack>
+                    </Box>
+                  )}
+
+                  {/* Available Products Count */}
+                  <Text fontSize="sm" color="gray.500" mt={2}>
+                    {filteredProducts.length} crop{filteredProducts.length !== 1 ? 's' : ''}{' '}
+                    available
+                    {selectedCategory &&
+                      ` in ${cropCategories.find((c) => c.id === selectedCategory)?.title}`}
+                    {searchTerm && ` matching "${searchTerm}"`}
+                  </Text>
                 </StandardField>
 
                 {/* Production Type Selection */}
@@ -401,7 +766,8 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
                   label="Production Type"
                   required
                   error={errors.type?.message}
-                  helpText="Choose your farming approach">
+                  helpText="Choose your farming approach"
+                >
                   <StandardSelectionGrid
                     options={productionTypeOptions}
                     selectedValue={watch('type')}
@@ -433,7 +799,8 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
                   <StandardButton
                     onClick={nextStep}
                     rightIcon={<FaChevronRight />}
-                    disabled={!isStepComplete(0)}>
+                    disabled={!isStepComplete(0)}
+                  >
                     Continue to Details
                   </StandardButton>
                 </HStack>
@@ -445,14 +812,16 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
           {currentStep === 1 && (
             <StandardCard
               title="Production Details"
-              subtitle="Set the date and growing environment">
+              subtitle="Set the date and growing environment"
+            >
               <VStack spacing={6} align="stretch">
                 {/* Date Selection */}
                 <StandardField
                   label="Production Date"
                   required
                   error={errors.date?.message}
-                  helpText="When did this production start?">
+                  helpText="When did this production start?"
+                >
                   <Input
                     {...methods.register('date', {
                       required: 'Production date is required'
@@ -523,7 +892,8 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
                   <StandardButton
                     variant="outline"
                     leftIcon={<FaChevronLeft />}
-                    onClick={previousStep}>
+                    onClick={previousStep}
+                  >
                     Back to Product
                   </StandardButton>
 
@@ -534,7 +904,8 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
                     <StandardButton
                       onClick={nextStep}
                       rightIcon={<FaChevronRight />}
-                      disabled={!getButtonDebugInfo()}>
+                      disabled={!isStepComplete(1)}
+                    >
                       Continue to Details
                     </StandardButton>
                   </HStack>
@@ -543,58 +914,221 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
             </StandardCard>
           )}
 
-          {/* Step 2: Plant Details */}
+          {/* Step 2: Enhanced Tracking & Blockchain */}
           {currentStep === 2 && (
-            <StandardCard title="Plant Details" subtitle="Specify plant count and soil conditions">
+            <StandardCard
+              title="Enhanced Tracking & Sustainability"
+              subtitle="Configure blockchain verification and sustainability tracking"
+            >
               <VStack spacing={6} align="stretch">
-                {/* Plant Details */}
-                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-                  <StandardField
-                    label="Age of Plants (days)"
-                    error={errors.ageOfPlants?.message}
-                    helpText="How old are the plants?">
-                    <NumberInput
-                      value={watch('ageOfPlants') || 0}
-                      onChange={(_, num) => setValue('ageOfPlants', num || 0)}
-                      min={0}>
-                      <NumberInputField borderRadius="lg" />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                  </StandardField>
+                {/* Blockchain Verification Section */}
+                <Box p={6} bg="blue.50" borderRadius="xl" border="1px solid" borderColor="blue.200">
+                  <HStack spacing={3} mb={4}>
+                    <Icon as={MdVerified} color="blue.600" boxSize={6} />
+                    <Text fontWeight="bold" color="blue.700" fontSize="lg">
+                      Blockchain Verification
+                    </Text>
+                    <Badge colorScheme="blue" variant="subtle">
+                      Recommended
+                    </Badge>
+                  </HStack>
 
-                  <StandardField
-                    label="Number of Plants"
-                    error={errors.numberOfPlants?.message}
-                    helpText="Total plant count">
-                    <NumberInput
-                      value={watch('numberOfPlants') || 0}
-                      onChange={(_, num) => setValue('numberOfPlants', num || 0)}
-                      min={0}>
-                      <NumberInputField borderRadius="lg" />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                  </StandardField>
-                </SimpleGrid>
+                  <VStack spacing={4} align="stretch">
+                    <HStack justify="space-between">
+                      <VStack align="start" spacing={1}>
+                        <Text fontWeight="medium" color="blue.700">
+                          Enable Blockchain Carbon Tracking
+                        </Text>
+                        <Text fontSize="sm" color="blue.600">
+                          Create immutable records for carbon credits and supply chain transparency
+                        </Text>
+                      </VStack>
+                      <Switch
+                        isChecked={watch('enableBlockchain')}
+                        onChange={(e) => setValue('enableBlockchain', e.target.checked)}
+                        colorScheme="blue"
+                        size="lg"
+                      />
+                    </HStack>
 
-                {/* Soil pH */}
+                    {watch('enableBlockchain') && (
+                      <Box
+                        p={4}
+                        bg="white"
+                        borderRadius="lg"
+                        border="1px solid"
+                        borderColor="blue.100"
+                      >
+                        <VStack spacing={3} align="stretch">
+                          <HStack>
+                            <Icon as={FaCheckCircle} color="green.500" />
+                            <Text fontSize="sm">
+                              <Text as="span" fontWeight="semibold">
+                                Carbon Credit Eligibility:
+                              </Text>{' '}
+                              Enabled
+                            </Text>
+                          </HStack>
+                          <HStack>
+                            <Icon as={FaCheckCircle} color="green.500" />
+                            <Text fontSize="sm">
+                              <Text as="span" fontWeight="semibold">
+                                Supply Chain Transparency:
+                              </Text>{' '}
+                              Full traceability
+                            </Text>
+                          </HStack>
+                          <HStack>
+                            <Icon as={FaCheckCircle} color="green.500" />
+                            <Text fontSize="sm">
+                              <Text as="span" fontWeight="semibold">
+                                USDA Compliance:
+                              </Text>{' '}
+                              Automated verification
+                            </Text>
+                          </HStack>
+                        </VStack>
+                      </Box>
+                    )}
+                  </VStack>
+                </Box>
+
+                {/* Production Method Selection */}
                 <StandardField
-                  label="Soil pH"
-                  error={errors.soilPh?.message}
-                  helpText="Soil acidity/alkalinity level (1-14 scale)">
+                  label="Production Method"
+                  required
+                  helpText="Choose your agricultural approach for accurate carbon scoring"
+                >
+                  <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={3}>
+                    {productionMethodOptions.map((method) => (
+                      <Box
+                        key={method.value}
+                        p={4}
+                        borderRadius="lg"
+                        border="2px solid"
+                        borderColor={
+                          watch('productionMethod') === method.value ? 'green.500' : 'gray.200'
+                        }
+                        bg={watch('productionMethod') === method.value ? 'green.50' : 'white'}
+                        cursor="pointer"
+                        transition="all 0.2s"
+                        _hover={{ borderColor: 'green.400', transform: 'translateY(-1px)' }}
+                        onClick={() => setValue('productionMethod', method.value)}
+                      >
+                        <VStack spacing={2}>
+                          <Text
+                            fontWeight="semibold"
+                            color={
+                              watch('productionMethod') === method.value ? 'green.700' : 'gray.700'
+                            }
+                          >
+                            {method.label}
+                          </Text>
+                          <Badge
+                            colorScheme={
+                              method.carbonScore === 'Premium'
+                                ? 'purple'
+                                : method.carbonScore === 'Enhanced'
+                                ? 'green'
+                                : 'gray'
+                            }
+                          >
+                            {method.carbonScore} Carbon Score
+                          </Badge>
+                        </VStack>
+                      </Box>
+                    ))}
+                  </SimpleGrid>
+                </StandardField>
+
+                {/* Irrigation Method Selection */}
+                <StandardField
+                  label="Irrigation Method"
+                  required
+                  helpText="Water management impacts carbon footprint and sustainability score"
+                >
+                  <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3}>
+                    {irrigationMethodOptions.map((irrigation) => (
+                      <Box
+                        key={irrigation.value}
+                        p={4}
+                        borderRadius="lg"
+                        border="2px solid"
+                        borderColor={
+                          watch('irrigationMethod') === irrigation.value ? 'blue.500' : 'gray.200'
+                        }
+                        bg={watch('irrigationMethod') === irrigation.value ? 'blue.50' : 'white'}
+                        cursor="pointer"
+                        transition="all 0.2s"
+                        _hover={{ borderColor: 'blue.400', transform: 'translateY(-1px)' }}
+                        onClick={() => setValue('irrigationMethod', irrigation.value)}
+                      >
+                        <VStack spacing={2} align="start">
+                          <Text
+                            fontWeight="semibold"
+                            color={
+                              watch('irrigationMethod') === irrigation.value
+                                ? 'blue.700'
+                                : 'gray.700'
+                            }
+                          >
+                            {irrigation.label}
+                          </Text>
+                          <HStack spacing={3}>
+                            <Badge
+                              colorScheme={
+                                irrigation.efficiency === 'High'
+                                  ? 'green'
+                                  : irrigation.efficiency === 'Medium'
+                                  ? 'yellow'
+                                  : 'gray'
+                              }
+                            >
+                              {irrigation.efficiency} Efficiency
+                            </Badge>
+                            <Badge
+                              colorScheme={
+                                irrigation.carbonImpact === 'Very Low' ||
+                                irrigation.carbonImpact === 'Low'
+                                  ? 'green'
+                                  : irrigation.carbonImpact === 'Medium'
+                                  ? 'yellow'
+                                  : 'red'
+                              }
+                            >
+                              {irrigation.carbonImpact} Carbon
+                            </Badge>
+                          </HStack>
+                        </VStack>
+                      </Box>
+                    ))}
+                  </SimpleGrid>
+                </StandardField>
+
+                {/* Expected Harvest Date */}
+                <StandardField
+                  label="Expected Harvest Date"
+                  helpText="Estimated completion date for production planning"
+                >
+                  <Input
+                    type="date"
+                    value={watch('expectedHarvest') || ''}
+                    onChange={(e) => setValue('expectedHarvest', e.target.value)}
+                    borderRadius="lg"
+                  />
+                </StandardField>
+
+                {/* Estimated Yield */}
+                <StandardField
+                  label="Estimated Yield"
+                  helpText="Expected production volume (optional, for carbon calculations)"
+                >
                   <NumberInput
-                    value={watch('soilPh') || 7.0}
-                    onChange={(_, num) => setValue('soilPh', num || 7.0)}
-                    min={1}
-                    max={14}
-                    step={0.1}
-                    precision={1}>
-                    <NumberInputField borderRadius="lg" />
+                    value={watch('estimatedYield') || 0}
+                    onChange={(_, num) => setValue('estimatedYield', num || 0)}
+                    min={0}
+                  >
+                    <NumberInputField borderRadius="lg" placeholder="e.g., 1000 (lbs, kg, units)" />
                     <NumberInputStepper>
                       <NumberIncrementStepper />
                       <NumberDecrementStepper />
@@ -602,54 +1136,66 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
                   </NumberInput>
                 </StandardField>
 
-                {/* pH Guide */}
-                <Box p={4} bg="gray.50" borderRadius="lg">
-                  <Text fontWeight="semibold" mb={2}>
-                    pH Scale Guide:
-                  </Text>
-                  <SimpleGrid columns={3} spacing={2} fontSize="sm">
-                    <Text>
-                      <Badge colorScheme="red" mr={2}>
-                        1-6
-                      </Badge>
-                      Acidic
+                {/* Sustainability Preview */}
+                <Box
+                  p={6}
+                  bg="green.50"
+                  borderRadius="xl"
+                  border="1px solid"
+                  borderColor="green.200"
+                >
+                  <HStack spacing={3} mb={4}>
+                    <Icon as={FaLeaf} color="green.600" boxSize={6} />
+                    <Text fontWeight="bold" color="green.700" fontSize="lg">
+                      Sustainability Impact Preview
                     </Text>
-                    <Text>
-                      <Badge colorScheme="green" mr={2}>
-                        6-8
-                      </Badge>
-                      Neutral
-                    </Text>
-                    <Text>
-                      <Badge colorScheme="blue" mr={2}>
-                        8-14
-                      </Badge>
-                      Alkaline
-                    </Text>
-                  </SimpleGrid>
-                </Box>
+                  </HStack>
 
-                {/* Production Summary */}
-                <Box p={4} bg="green.50" borderRadius="lg">
-                  <Text fontWeight="semibold" color="green.700" mb={3}>
-                    Production Summary:
-                  </Text>
-                  <SimpleGrid columns={2} spacing={2} fontSize="sm">
-                    <Text>Product: {selectedProduct?.label || 'Not selected'}</Text>
-                    <Text>Type: {watch('type') === 'OR' ? 'Organic' : 'General Agriculture'}</Text>
-                    <Text>Environment: {watch('isOutdoor') ? 'Outdoor' : 'Indoor/Greenhouse'}</Text>
-                    <Text>Start Date: {watch('date') || 'Not set'}</Text>
-                    <Text>Plants: {watch('numberOfPlants') || 0}</Text>
-                    <Text>Soil pH: {watch('soilPh') || 'Not measured'}</Text>
+                  <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+                    <VStack align="start" spacing={2}>
+                      <Text fontSize="sm" fontWeight="semibold" color="green.700">
+                        Production Method Impact:
+                      </Text>
+                      <Text fontSize="sm" color="green.600">
+                        {watch('productionMethod') === 'organic' ||
+                        watch('productionMethod') === 'biodynamic' ||
+                        watch('productionMethod') === 'regenerative'
+                          ? '🌟 Enhanced carbon sequestration potential'
+                          : '✅ Standard carbon tracking enabled'}
+                      </Text>
+                    </VStack>
+
+                    <VStack align="start" spacing={2}>
+                      <Text fontSize="sm" fontWeight="semibold" color="green.700">
+                        Water Efficiency:
+                      </Text>
+                      <Text fontSize="sm" color="green.600">
+                        {(() => {
+                          const selectedIrrigation = irrigationMethodOptions.find(
+                            (i) => i.value === watch('irrigationMethod')
+                          );
+                          return selectedIrrigation
+                            ? `${
+                                selectedIrrigation.efficiency
+                              } efficiency, ${selectedIrrigation.carbonImpact.toLowerCase()} carbon impact`
+                            : 'Select irrigation method for assessment';
+                        })()}
+                      </Text>
+                    </VStack>
                   </SimpleGrid>
 
-                  {/* Debug info */}
-                  {process.env.NODE_ENV === 'development' && (
-                    <Box mt={3} p={2} bg="yellow.100" borderRadius="md" fontSize="xs">
-                      <Text fontWeight="bold">Debug - Selected Product:</Text>
-                      <Text>Value: {selectedProduct?.value || 'undefined'}</Text>
-                      <Text>Label: {selectedProduct?.label || 'undefined'}</Text>
-                      <Text>Has Product: {selectedProduct ? 'Yes' : 'No'}</Text>
+                  {watch('enableBlockchain') && (
+                    <Box mt={4} p={3} bg="white" borderRadius="lg">
+                      <HStack>
+                        <Icon as={MdVerified} color="blue.500" />
+                        <Text fontSize="sm" color="blue.700">
+                          <Text as="span" fontWeight="semibold">
+                            Blockchain Enabled:
+                          </Text>{' '}
+                          All sustainability metrics will be recorded on-chain for transparent
+                          verification
+                        </Text>
+                      </HStack>
                     </Box>
                   )}
                 </Box>
@@ -659,8 +1205,9 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
                   <StandardButton
                     variant="outline"
                     leftIcon={<FaChevronLeft />}
-                    onClick={previousStep}>
-                    Back to Details
+                    onClick={previousStep}
+                  >
+                    Back to Enhanced Tracking
                   </StandardButton>
 
                   <HStack spacing={3}>
@@ -671,8 +1218,236 @@ export const StandardProductionForm: React.FC<StandardProductionFormProps> = ({
                       type="submit"
                       isLoading={isLoading}
                       loadingText={isEdit ? 'Updating...' : 'Creating...'}
-                      leftIcon={<FaCheckCircle />}>
-                      {isEdit ? 'Update Production' : 'Start Production'}
+                      leftIcon={<FaCheckCircle />}
+                    >
+                      {isEdit ? 'Update Production' : 'Start Blockchain-Verified Production'}
+                    </StandardButton>
+                  </HStack>
+                </HStack>
+              </VStack>
+            </StandardCard>
+          )}
+
+          {/* Step 3: Plant Details */}
+          {currentStep === 3 && (
+            <StandardCard
+              title="Additional Details"
+              subtitle="Optional information to improve tracking (can be updated later)"
+            >
+              <VStack spacing={6} align="stretch">
+                {/* Quick Setup vs Detailed Setup Toggle */}
+                <Alert status="info" borderRadius="lg">
+                  <AlertIcon />
+                  <VStack align="start" spacing={1}>
+                    <AlertTitle fontSize="sm">Optional Information</AlertTitle>
+                    <AlertDescription fontSize="sm">
+                      These fields help with better production tracking but can be filled later. You
+                      can start your production now and add details as you progress.
+                    </AlertDescription>
+                  </VStack>
+                </Alert>
+
+                {/* Plant Details with better defaults */}
+                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
+                  <StandardField
+                    label="Age of Plants (days)"
+                    error={errors.ageOfPlants?.message}
+                    helpText="How old are the plants? 0 for new plantings"
+                  >
+                    <NumberInput
+                      value={watch('ageOfPlants') || 0}
+                      onChange={(_, num) => setValue('ageOfPlants', num || 0)}
+                      min={0}
+                      max={1000}
+                    >
+                      <NumberInputField borderRadius="lg" placeholder="0 (new planting)" />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </StandardField>
+
+                  <StandardField
+                    label="Number of Plants"
+                    error={errors.numberOfPlants?.message}
+                    helpText="Approximate plant count (can be updated later)"
+                  >
+                    <NumberInput
+                      value={watch('numberOfPlants') || 0}
+                      onChange={(_, num) => setValue('numberOfPlants', num || 0)}
+                      min={0}
+                      max={100000}
+                    >
+                      <NumberInputField borderRadius="lg" placeholder="Enter approximate count" />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </StandardField>
+                </SimpleGrid>
+
+                {/* Soil pH with better guidance */}
+                <StandardField
+                  label="Soil pH"
+                  error={errors.soilPh?.message}
+                  helpText="Soil acidity/alkalinity level. 7.0 is neutral (default)"
+                >
+                  <HStack spacing={4}>
+                    <NumberInput
+                      value={watch('soilPh') || 7.0}
+                      onChange={(_, num) => setValue('soilPh', num || 7.0)}
+                      min={1}
+                      max={14}
+                      step={0.1}
+                      precision={1}
+                      flex={1}
+                    >
+                      <NumberInputField borderRadius="lg" />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+
+                    {/* pH Quick Buttons */}
+                    <HStack spacing={2}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setValue('soilPh', 6.0)}
+                        colorScheme={watch('soilPh') === 6.0 ? 'red' : 'gray'}
+                      >
+                        Acidic (6.0)
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setValue('soilPh', 7.0)}
+                        colorScheme={watch('soilPh') === 7.0 ? 'green' : 'gray'}
+                      >
+                        Neutral (7.0)
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setValue('soilPh', 8.0)}
+                        colorScheme={watch('soilPh') === 8.0 ? 'blue' : 'gray'}
+                      >
+                        Alkaline (8.0)
+                      </Button>
+                    </HStack>
+                  </HStack>
+                </StandardField>
+
+                {/* Smart Production Summary */}
+                <Box
+                  p={6}
+                  bg="green.50"
+                  borderRadius="xl"
+                  border="2px solid"
+                  borderColor="green.200"
+                >
+                  <HStack spacing={3} mb={4}>
+                    <Icon as={FaCheckCircle} color="green.500" boxSize={6} />
+                    <Text fontWeight="bold" color="green.700" fontSize="lg">
+                      Ready to Start Production!
+                    </Text>
+                  </HStack>
+
+                  <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} fontSize="sm">
+                    <HStack>
+                      <Icon
+                        as={categorizeCrop(selectedProduct?.label || '').icon}
+                        color="green.600"
+                      />
+                      <Text>
+                        <Text as="span" fontWeight="semibold">
+                          Crop:
+                        </Text>{' '}
+                        {selectedProduct?.label || 'Not selected'}
+                      </Text>
+                    </HStack>
+                    <HStack>
+                      <Icon as={watch('type') === 'OR' ? FaLeaf : FaTractor} color="green.600" />
+                      <Text>
+                        <Text as="span" fontWeight="semibold">
+                          Method:
+                        </Text>{' '}
+                        {watch('type') === 'OR' ? 'Organic' : 'General Agriculture'}
+                      </Text>
+                    </HStack>
+                    <HStack>
+                      <Icon as={watch('isOutdoor') ? MdLocalFlorist : MdHome} color="green.600" />
+                      <Text>
+                        <Text as="span" fontWeight="semibold">
+                          Environment:
+                        </Text>{' '}
+                        {watch('isOutdoor') ? 'Outdoor' : 'Indoor/Greenhouse'}
+                      </Text>
+                    </HStack>
+                    <HStack>
+                      <Icon as={FaCalendarAlt} color="green.600" />
+                      <Text>
+                        <Text as="span" fontWeight="semibold">
+                          Start:
+                        </Text>{' '}
+                        {watch('date') ? new Date(watch('date')).toLocaleDateString() : 'Not set'}
+                      </Text>
+                    </HStack>
+
+                    {selectedProduct && (
+                      <HStack>
+                        <Icon as={FaInfoCircle} color="green.600" />
+                        <Text>
+                          <Text as="span" fontWeight="semibold">
+                            Expected harvest:
+                          </Text>{' '}
+                          {getCropGrowthPeriod(selectedProduct.label).season}
+                        </Text>
+                      </HStack>
+                    )}
+
+                    <HStack>
+                      <Icon as={FaSeedling} color="green.600" />
+                      <Text>
+                        <Text as="span" fontWeight="semibold">
+                          Plants:
+                        </Text>{' '}
+                        {watch('numberOfPlants') || 'To be determined'}
+                      </Text>
+                    </HStack>
+                  </SimpleGrid>
+
+                  <Divider my={4} />
+
+                  <Text fontSize="sm" color="green.600" textAlign="center">
+                    🌱 Your production will be ready to track events and progress after creation
+                  </Text>
+                </Box>
+
+                {/* Navigation */}
+                <HStack spacing={3} justify="space-between" pt={4}>
+                  <StandardButton
+                    variant="outline"
+                    leftIcon={<FaChevronLeft />}
+                    onClick={previousStep}
+                  >
+                    Back to Enhanced Tracking
+                  </StandardButton>
+
+                  <HStack spacing={3}>
+                    <StandardButton variant="outline" onClick={onCancel}>
+                      Cancel
+                    </StandardButton>
+                    <StandardButton
+                      type="submit"
+                      isLoading={isLoading}
+                      loadingText={isEdit ? 'Updating...' : 'Creating...'}
+                      leftIcon={<FaCheckCircle />}
+                    >
+                      {isEdit ? 'Update Production' : 'Start Blockchain-Verified Production'}
                     </StandardButton>
                   </HStack>
                 </HStack>

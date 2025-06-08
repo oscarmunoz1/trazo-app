@@ -84,7 +84,8 @@ export const SustainabilityFeatures: React.FC<SustainabilityFeaturesProps> = ({
         boxShadow="lg"
         p={6}
         border="1px solid"
-        borderColor={borderColor}>
+        borderColor={borderColor}
+      >
         <VStack spacing={4}>
           <HStack spacing={2} justify="center">
             <Icon as={FaLeaf} color="green.500" boxSize={6} />
@@ -141,7 +142,8 @@ export const SustainabilityFeatures: React.FC<SustainabilityFeaturesProps> = ({
           boxShadow="lg"
           p={6}
           border="1px solid"
-          borderColor={borderColor}>
+          borderColor={borderColor}
+        >
           <VStack spacing={4}>
             <HStack spacing={2}>
               <Icon as={FaAward} color="yellow.500" boxSize={5} />
@@ -161,7 +163,8 @@ export const SustainabilityFeatures: React.FC<SustainabilityFeaturesProps> = ({
         boxShadow="lg"
         p={6}
         border="1px solid"
-        borderColor={borderColor}>
+        borderColor={borderColor}
+      >
         <VStack spacing={6}>
           <Heading as="h4" size="md" textAlign="center">
             {intl.formatMessage({ id: 'app.takeAction' }) || 'Take Action'}
@@ -174,7 +177,8 @@ export const SustainabilityFeatures: React.FC<SustainabilityFeaturesProps> = ({
             bg="green.50"
             borderRadius="lg"
             border="1px solid"
-            borderColor="green.200">
+            borderColor="green.200"
+          >
             <VStack spacing={3}>
               <HStack spacing={2}>
                 <Icon as={FaLeaf} color="green.500" />
@@ -209,7 +213,8 @@ export const SustainabilityFeatures: React.FC<SustainabilityFeaturesProps> = ({
             bg="blue.50"
             borderRadius="lg"
             border="1px solid"
-            borderColor="blue.200">
+            borderColor="blue.200"
+          >
             <VStack spacing={3}>
               <HStack justify="space-between" w="full">
                 <HStack spacing={2}>
@@ -245,7 +250,8 @@ export const SustainabilityFeatures: React.FC<SustainabilityFeaturesProps> = ({
               colorScheme="blue"
               variant="outline"
               onClick={onShare}
-              size="md">
+              size="md"
+            >
               {intl.formatMessage({ id: 'app.share' }) || 'Share'} (+3)
             </Button>
             <Button
@@ -253,7 +259,8 @@ export const SustainabilityFeatures: React.FC<SustainabilityFeaturesProps> = ({
               colorScheme="yellow"
               variant="outline"
               onClick={onRate}
-              size="md">
+              size="md"
+            >
               {intl.formatMessage({ id: 'app.rate' }) || 'Rate'} (+2)
             </Button>
           </SimpleGrid>

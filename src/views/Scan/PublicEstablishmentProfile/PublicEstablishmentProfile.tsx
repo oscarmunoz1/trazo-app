@@ -279,7 +279,8 @@ function PublicEstablishmentProfile() {
               px={4}
               py={2}
               borderRadius="full"
-              textTransform="none">
+              textTransform="none"
+            >
               <HStack spacing={2}>
                 <Icon as={FaBuilding} boxSize={4} />
                 <Text fontWeight="medium">
@@ -297,7 +298,8 @@ function PublicEstablishmentProfile() {
                 color={titleColor}
                 fontWeight="bold"
                 textAlign="center"
-                letterSpacing="-0.02em">
+                letterSpacing="-0.02em"
+              >
                 {establishmentData?.name || 'Loading...'}
               </Heading>
               <Text
@@ -306,7 +308,8 @@ function PublicEstablishmentProfile() {
                 fontWeight="normal"
                 maxW={{ base: '90%', sm: '70%', lg: '60%' }}
                 lineHeight="1.7"
-                textAlign="center">
+                textAlign="center"
+              >
                 {establishmentData?.description || 'Sustainable Agriculture'}
               </Text>
             </VStack>
@@ -380,13 +383,15 @@ function PublicEstablishmentProfile() {
         mb="60px"
         mt="-80px"
         position="relative"
-        zIndex={10}>
+        zIndex={10}
+      >
         <Card
           w={{ sm: '95%', md: '90%', lg: '85%' }}
           p={{ sm: '16px', md: '32px', lg: '48px' }}
           boxShadow="0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
           borderRadius="2xl"
-          bg={bgColor}>
+          bg={bgColor}
+        >
           {/* Header with Badges */}
           <CardHeader mb="24px">
             <HStack spacing={3}>
@@ -413,7 +418,8 @@ function PublicEstablishmentProfile() {
                 colorScheme="green"
                 variant="outline"
                 onClick={handleShare}
-                size="sm">
+                size="sm"
+              >
                 Share
               </Button>
             </HStack>
@@ -623,7 +629,8 @@ function PublicEstablishmentProfile() {
                           href={establishmentData.facebook}
                           isExternal
                           _hover={{ transform: 'scale(1.1)' }}
-                          transition="all 0.2s">
+                          transition="all 0.2s"
+                        >
                           <Circle size="50px" bg="blue.100" color="blue.600">
                             <Icon as={FaFacebook} boxSize={6} />
                           </Circle>
@@ -634,7 +641,8 @@ function PublicEstablishmentProfile() {
                           href={establishmentData.instagram}
                           isExternal
                           _hover={{ transform: 'scale(1.1)' }}
-                          transition="all 0.2s">
+                          transition="all 0.2s"
+                        >
                           <Circle size="50px" bg="pink.100" color="pink.600">
                             <Icon as={FaInstagram} boxSize={6} />
                           </Circle>

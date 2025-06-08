@@ -301,6 +301,35 @@ export const billingApi = baseApi.injectEndpoints({
         },
         credentials: 'include'
       })
+    }),
+
+    // Blockchain subscription endpoints
+    subscribeBlockchain: builder.mutation<{ checkout_url: string; session_id: string }, void>({
+      query: () => ({
+        url: 'billing/subscribe-blockchain/',
+        method: 'POST',
+        credentials: 'include'
+      }),
+      invalidatesTags: [
+        { type: 'Company', id: 'LIST' },
+        { type: 'Subscription', id: 'LIST' }
+      ]
+    }),
+
+    getBlockchainSubscriptionStatus: builder.query<
+      {
+        blockchainSubscribed: boolean;
+        company: { id: number; name: string };
+        mainSubscription: any;
+      },
+      void
+    >({
+      query: () => ({
+        url: 'billing/subscription-status/',
+        method: 'GET',
+        credentials: 'include'
+      }),
+      providesTags: [{ type: 'Company', id: 'LIST' }]
     })
   })
 });
@@ -319,5 +348,7 @@ export const {
   useSetDefaultPaymentMethodMutation,
   useRemovePaymentMethodMutation,
   useCreateCheckoutSessionMutation,
-  useCreateCustomerPortalSessionMutation
+  useCreateCustomerPortalSessionMutation,
+  useSubscribeBlockchainMutation,
+  useGetBlockchainSubscriptionStatusQuery
 } = billingApi;

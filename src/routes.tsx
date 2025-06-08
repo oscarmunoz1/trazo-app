@@ -19,7 +19,7 @@ import { BsFillClipboardCheckFill } from 'react-icons/bs';
 import { HomeIcon } from 'components/Icons/Icons';
 import { Route } from 'types/common';
 import { useIntl } from 'react-intl';
-import { FaChartBar, FaCreditCard } from 'react-icons/fa';
+import { FaChartBar, FaCreditCard, FaGraduationCap } from 'react-icons/fa';
 import { FaLeaf } from 'react-icons/fa';
 import { FaWifi } from 'react-icons/fa';
 
@@ -92,6 +92,17 @@ const dashRoutes: Route[] = [
     collapse: true,
     isCompanySettings: true,
     regex: /^\/admin\/dashboard\/account\/billing$/
+  },
+  {
+    id: 'education',
+    name: 'Educational Resources',
+    path: '/dashboard/education',
+    icon: <FaGraduationCap color="inherit" />,
+    authIcon: <FaGraduationCap color="inherit" />,
+    layout: '/admin',
+    collapse: true,
+    isCompanySettings: true,
+    regex: /^\/admin\/dashboard\/education(\/.*)?$/
   }
 ];
 

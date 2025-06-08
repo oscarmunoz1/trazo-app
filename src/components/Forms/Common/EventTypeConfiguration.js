@@ -4,10 +4,11 @@ import { SlChemistry } from 'react-icons/sl';
 import { FaEdit, FaTools, FaSeedling, FaBusinessTime, FaBug } from 'react-icons/fa';
 
 // Shared event type configuration for all forms
+// CRITICAL: These values MUST match the backend constants in trazo-back/history/constants.py
 export const EVENT_TYPE_CONFIG = [
   {
     id: 0,
-    value: 0,
+    value: 0, // WEATHER_EVENT_TYPE = 0
     name: 'weather',
     label: 'Weather',
     icon: BsFillCloudLightningRainFill,
@@ -16,7 +17,7 @@ export const EVENT_TYPE_CONFIG = [
   },
   {
     id: 1,
-    value: 1,
+    value: 2, // ✅ FIXED: PRODUCTION_EVENT_TYPE = 2 (was incorrectly 1)
     name: 'production',
     label: 'Production',
     icon: RocketIcon,
@@ -25,7 +26,7 @@ export const EVENT_TYPE_CONFIG = [
   },
   {
     id: 2,
-    value: 2,
+    value: 1, // ✅ FIXED: CHEMICAL_EVENT_TYPE = 1 (was incorrectly 2)
     name: 'chemical',
     label: 'Chemical',
     icon: SlChemistry,
@@ -34,7 +35,7 @@ export const EVENT_TYPE_CONFIG = [
   },
   {
     id: 3,
-    value: 3,
+    value: 3, // GENERAL_EVENT_TYPE = 3
     name: 'general',
     label: 'General',
     icon: FaEdit,
@@ -43,7 +44,7 @@ export const EVENT_TYPE_CONFIG = [
   },
   {
     id: 4,
-    value: 4,
+    value: 4, // EQUIPMENT_EVENT_TYPE = 4
     name: 'equipment',
     label: 'Equipment',
     icon: FaTools,
@@ -52,7 +53,7 @@ export const EVENT_TYPE_CONFIG = [
   },
   {
     id: 5,
-    value: 5,
+    value: 5, // SOIL_MANAGEMENT_EVENT_TYPE = 5
     name: 'soil_management',
     label: 'Soil Management',
     icon: FaSeedling,
@@ -61,7 +62,7 @@ export const EVENT_TYPE_CONFIG = [
   },
   {
     id: 6,
-    value: 6,
+    value: 6, // BUSINESS_EVENT_TYPE = 6
     name: 'business',
     label: 'Business',
     icon: FaBusinessTime,
@@ -70,7 +71,7 @@ export const EVENT_TYPE_CONFIG = [
   },
   {
     id: 7,
-    value: 7,
+    value: 7, // PEST_MANAGEMENT_EVENT_TYPE = 7
     name: 'pest_management',
     label: 'Pest Management',
     icon: FaBug,
@@ -79,6 +80,30 @@ export const EVENT_TYPE_CONFIG = [
   }
 ];
 
+// Reverse mapping for consistency (backend value -> frontend config)
+export const EVENT_TYPE_VALUE_TO_CONFIG = EVENT_TYPE_CONFIG.reduce((acc, config) => {
+  acc[config.value] = config;
+  return acc;
+}, {});
+
+// Event type mapping for backend (corrected to match backend constants)
+export const EVENT_TYPE_MAP = {
+  0: 'weather', // WEATHER_EVENT_TYPE = 0
+  1: 'chemical', // ✅ FIXED: CHEMICAL_EVENT_TYPE = 1
+  2: 'production', // ✅ FIXED: PRODUCTION_EVENT_TYPE = 2
+  3: 'general', // GENERAL_EVENT_TYPE = 3
+  4: 'equipment', // EQUIPMENT_EVENT_TYPE = 4
+  5: 'soil_management', // SOIL_MANAGEMENT_EVENT_TYPE = 5
+  6: 'business', // BUSINESS_EVENT_TYPE = 6
+  7: 'pest_management' // PEST_MANAGEMENT_EVENT_TYPE = 7
+};
+
+// Reverse mapping (name -> backend value)
+export const EVENT_NAME_TO_TYPE = Object.entries(EVENT_TYPE_MAP).reduce((acc, [value, name]) => {
+  acc[name] = parseInt(value);
+  return acc;
+}, {});
+
 // Step configuration for event forms
 export const EVENT_FORM_STEPS = [
   { title: 'Basic Info', description: 'Event type & date' },
@@ -86,18 +111,6 @@ export const EVENT_FORM_STEPS = [
   { title: 'Description', description: 'Notes & observations' },
   { title: 'Media', description: 'Photos & documentation' }
 ];
-
-// Event type mapping for backend
-export const EVENT_TYPE_MAP = {
-  0: 'weather',
-  1: 'production',
-  2: 'chemical',
-  3: 'general',
-  4: 'equipment',
-  5: 'soil_management',
-  6: 'business',
-  7: 'pest_management'
-};
 
 // Fallback carbon calculation scores
 export const FALLBACK_CARBON_SCORES = {

@@ -47,19 +47,22 @@ function SignIn() {
         mx="auto"
         justifyContent="space-between"
         mb="30px"
-        pt={{ sm: '100px', md: '0px' }}>
+        pt={{ sm: '100px', md: '0px' }}
+      >
         <Flex
           alignItems="center"
           justifyContent="start"
           style={{ userSelect: 'none' }}
           w={{ base: '100%', md: '50%', lg: '42%' }}
-          pt="10px">
+          pt="10px"
+        >
           <Flex
             direction="column"
             w="100%"
             background="transparent"
             p="48px"
-            mt={{ md: '150px', lg: '180px', '2xl': '80px' }}>
+            mt={{ md: '150px', lg: '180px', '2xl': '80px' }}
+          >
             <Heading color={titleColor} fontSize="32px" mb="10px">
               Welcome!
             </Heading>
@@ -125,7 +128,8 @@ function SignIn() {
                 }}
                 _active={{
                   bg: 'teal.400'
-                }}>
+                }}
+              >
                 SIGN UP
               </Button>
             </FormControl>
@@ -134,7 +138,8 @@ function SignIn() {
               justifyContent="center"
               alignItems="center"
               maxW="100%"
-              mt="0px">
+              mt="0px"
+            >
               <Text color={textColor} fontWeight="medium">
                 Already have an account?
                 <Link color={titleColor} as="span" ms="5px" fontWeight="bold">
@@ -150,7 +155,8 @@ function SignIn() {
           h="100%"
           w="40vw"
           position="absolute"
-          right="0px">
+          right="0px"
+        >
           <Box
             bgImage={cover}
             w="100%"
@@ -158,7 +164,8 @@ function SignIn() {
             bgSize="cover"
             bgPosition="50%"
             position="absolute"
-            borderBottomLeftRadius="20px"></Box>
+            borderBottomLeftRadius="20px"
+          ></Box>
         </Box>
       </Flex>
     </Flex>

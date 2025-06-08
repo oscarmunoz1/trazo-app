@@ -48,7 +48,20 @@ const companySchema = object({
   state: string().optional(),
   city: string().optional(),
   zipCode: string().optional(),
-  website: string().url('Invalid website URL').optional().or(string().length(0)),
+  website: string()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val || val.length === 0) return true;
+        try {
+          new URL(val);
+          return true;
+        } catch {
+          return false;
+        }
+      },
+      { message: 'Invalid website URL' }
+    ),
   description: string().optional(),
   employeeCount: number().optional(),
   isActive: boolean().default(true),
@@ -121,8 +134,12 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
   }, [initialData, reset, methods]);
 
   const onSubmitForm = (data: CompanyFormData) => {
+    console.log('📝 StandardizedCompanyForm: onSubmitForm called with data:', data);
+    console.log('📝 StandardizedCompanyForm: Calling parent onSubmit...');
+
     try {
       onSubmit(data);
+      console.log('📝 StandardizedCompanyForm: Parent onSubmit succeeded');
       toast({
         title: isEdit ? 'Company Updated' : 'Company Created',
         description: `Company "${data.name}" has been ${
@@ -133,6 +150,7 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
         isClosable: true
       });
     } catch (error) {
+      console.error('📝 StandardizedCompanyForm: Parent onSubmit failed:', error);
       toast({
         title: 'Error',
         description: 'Failed to save company. Please try again.',
@@ -145,10 +163,29 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
 
   // Step validation
   const isStepComplete = (step: number) => {
-    const formData = watch();
+    const name = watch('name');
+    const email = watch('email');
+    const hasErrors = Object.keys(errors).length > 0;
+
+    // Debug logging
+    console.log('Step validation debug:', {
+      step,
+      name,
+      email,
+      hasErrors,
+      errors
+    });
+
     switch (step) {
       case 0:
-        return formData.name && formData.email;
+        const isComplete = !!name && !!email && !hasErrors;
+        console.log('Step 0 validation:', {
+          name: !!name,
+          email: !!email,
+          hasErrors,
+          isComplete
+        });
+        return isComplete;
       case 1:
         return true; // Location is optional
       default:
@@ -191,7 +228,8 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
         <StandardButton variant="outline" onClick={() => navigate('/dashboard/companies')}>
           View All Companies
         </StandardButton>
-      }>
+      }
+    >
       {/* Modern Progress Stepper */}
       <StandardStepper
         steps={steps}
@@ -207,7 +245,8 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
           {currentStep === 0 && (
             <StandardCard
               title="Company Information"
-              subtitle="Basic details about your agricultural company">
+              subtitle="Basic details about your agricultural company"
+            >
               <VStack spacing={6} align="stretch">
                 {/* Company Name & Email */}
                 <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
@@ -215,7 +254,8 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
                     label="Company Name"
                     required
                     error={errors.name?.message}
-                    helpText="Enter your company's legal name">
+                    helpText="Enter your company's legal name"
+                  >
                     <StandardInput
                       {...methods.register('name')}
                       placeholder="e.g., Green Valley Farms LLC"
@@ -227,7 +267,8 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
                     label="Email Address"
                     required
                     error={errors.email?.message}
-                    helpText="Primary contact email for the company">
+                    helpText="Primary contact email for the company"
+                  >
                     <StandardInput
                       {...methods.register('email')}
                       type="email"
@@ -242,7 +283,8 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
                   <StandardField
                     label="Phone Number"
                     error={errors.phone?.message}
-                    helpText="Company contact phone number">
+                    helpText="Company contact phone number"
+                  >
                     <StandardInput
                       {...methods.register('phone')}
                       type="tel"
@@ -254,7 +296,8 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
                   <StandardField
                     label="Website"
                     error={errors.website?.message}
-                    helpText="Company website URL">
+                    helpText="Company website URL"
+                  >
                     <StandardInput
                       {...methods.register('website')}
                       type="url"
@@ -268,7 +311,8 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
                   <StandardField
                     label="Industry Type"
                     error={errors.industry?.message}
-                    helpText="Primary agricultural focus">
+                    helpText="Primary agricultural focus"
+                  >
                     <StandardSelect {...methods.register('industry')}>
                       <option value="">Select industry...</option>
                       <option value="fruits">Fruit Production</option>
@@ -284,10 +328,12 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
                   <StandardField
                     label="Employee Count"
                     error={errors.employeeCount?.message}
-                    helpText="Approximate number of employees">
+                    helpText="Approximate number of employees"
+                  >
                     <NumberInput
                       value={watch('employeeCount') || 0}
-                      onChange={(_, num) => methods.setValue('employeeCount', num || 0)}>
+                      onChange={(_, num) => methods.setValue('employeeCount', num || 0)}
+                    >
                       <NumberInputField borderRadius="lg" />
                       <NumberInputStepper>
                         <NumberIncrementStepper />
@@ -301,7 +347,8 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
                 <StandardField
                   label="Company Description"
                   error={errors.description?.message}
-                  helpText="Describe your agricultural operations, products, and mission">
+                  helpText="Describe your agricultural operations, products, and mission"
+                >
                   <StandardTextarea
                     {...methods.register('description')}
                     placeholder="Tell us about your agricultural company, what you produce, your farming practices, and your sustainability goals..."
@@ -311,7 +358,8 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
                 {/* Active Status */}
                 <StandardField
                   label="Company Status"
-                  helpText="Activate the company to start using Trazo services">
+                  helpText="Activate the company to start using Trazo services"
+                >
                   <HStack>
                     <Switch {...methods.register('isActive')} colorScheme="green" size="md" />
                     <Text fontSize="sm" color="gray.600">
@@ -328,7 +376,8 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
                   <StandardButton
                     onClick={nextStep}
                     rightIcon={<FaChevronRight />}
-                    disabled={!isStepComplete(0)}>
+                    disabled={!isStepComplete(0)}
+                  >
                     Continue to Location
                   </StandardButton>
                 </HStack>
@@ -340,13 +389,15 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
           {currentStep === 1 && (
             <StandardCard
               title="Location Details"
-              subtitle="Where is your agricultural operation based?">
+              subtitle="Where is your agricultural operation based?"
+            >
               <VStack spacing={6} align="stretch">
                 {/* Address */}
                 <StandardField
                   label="Street Address"
                   error={errors.address?.message}
-                  helpText="Physical address of your main operation">
+                  helpText="Physical address of your main operation"
+                >
                   <StandardInput
                     {...methods.register('address')}
                     placeholder="123 Farm Road"
@@ -394,7 +445,8 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
                   <StandardButton
                     variant="outline"
                     leftIcon={<FaChevronLeft />}
-                    onClick={previousStep}>
+                    onClick={previousStep}
+                  >
                     Back to Company Info
                   </StandardButton>
 
@@ -405,7 +457,8 @@ export const StandardizedCompanyForm: React.FC<StandardizedCompanyFormProps> = (
                     <StandardButton
                       type="submit"
                       isLoading={isLoading}
-                      loadingText={isEdit ? 'Updating...' : 'Creating...'}>
+                      loadingText={isEdit ? 'Updating...' : 'Creating...'}
+                    >
                       {isEdit ? 'Update Company' : 'Create Company'}
                     </StandardButton>
                   </HStack>

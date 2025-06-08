@@ -44,7 +44,8 @@ import {
   FaBuilding,
   FaRegCommentDots,
   FaRegListAlt,
-  FaCalendar
+  FaCalendar,
+  FaLeaf
 } from 'react-icons/fa';
 import { MdLocationOn, MdBusiness, MdEco, MdMoreVert } from 'react-icons/md';
 import React, { useEffect, useState } from 'react';
@@ -57,6 +58,19 @@ import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import defaultParcelImage from 'assets/img/BgMusicCard.png';
 
+// Add progressive loading imports at the top after existing imports
+import {
+  ProgressiveLoader,
+  FormSkeleton,
+  MobileListSkeleton
+} from 'components/Loading/ProgressiveLoader';
+import {
+  usePerformanceMonitor,
+  useProgressiveLoading,
+  useMobileOptimization
+} from 'hooks/usePerformanceMonitor';
+import { PerformanceSummary } from 'components/Performance/PerformanceSummary';
+
 function ProfileParcel() {
   const intl = useIntl();
   const titleColor = useColorModeValue('green.500', 'green.400');
@@ -68,11 +82,25 @@ function ProfileParcel() {
   const { establishmentId, parcelId } = useParams();
   const [establishment, setEstablishment] = useState(null);
 
-  // Mobile-first responsive utilities
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  // Step 5: Progressive Loading Implementation for Parcel Dashboard
+  const { metrics, markStageComplete, resetTimer } = usePerformanceMonitor();
+  const { isMobile, optimizationStrategy } = useMobileOptimization();
+
+  // Parcel-specific progressive loading configuration
+  const progressiveConfig = {
+    primaryQueries: ['parcel-data', 'parcel-map'], // Critical parcel info
+    secondaryQueries: ['parcel-history', 'parcel-analytics', 'weather-data'], // Enhanced features
+    enableCache: true,
+    targetTime: 3000 // 3-second target for parcel management
+  };
+
+  const { stage, registerQueryLoad, isLoading, primaryLoaded } =
+    useProgressiveLoading(progressiveConfig);
+
+  // Mobile-first responsive design
   const containerPadding = useBreakpointValue({ base: 4, md: 8 });
-  const cardPadding = useBreakpointValue({ base: 4, md: 6 });
-  const headerFontSize = useBreakpointValue({ base: 'xl', md: '3xl' });
+  const cardSpacing = useBreakpointValue({ base: 4, md: 6 });
+  const headerFontSize = useBreakpointValue({ base: 'xl', md: '2xl' });
 
   const establishments = useSelector((state) => state.company.currentCompany?.establishments);
   const currentCompany = useSelector((state) => state.company.currentCompany);
@@ -81,7 +109,7 @@ function ProfileParcel() {
   const {
     data: parcelData,
     error,
-    isLoading,
+    isLoading: isParcelLoading,
     isFetching,
     refetch
   } = useGetParcelQuery(
@@ -105,6 +133,28 @@ function ProfileParcel() {
     }
   }, [establishmentId, establishments]);
 
+  useEffect(() => {
+    resetTimer(); // Reset performance timer
+
+    // Register query loads for performance tracking when data is available
+    if (parcelData && !isParcelLoading) {
+      registerQueryLoad('parcel-data', false, parcelData);
+    }
+
+    // Register map data loading
+    if (parcelData?.polygon && parcelData?.map_metadata) {
+      registerQueryLoad('parcel-map', false, {
+        polygon: parcelData.polygon,
+        metadata: parcelData.map_metadata
+      });
+    }
+
+    // Register secondary data
+    if (parcelData?.history) {
+      registerQueryLoad('parcel-history', false, parcelData.history);
+    }
+  }, [parcelData, isParcelLoading, resetTimer, registerQueryLoad]);
+
   const handleShare = async () => {
     try {
       await navigator.share({
@@ -125,17 +175,34 @@ function ProfileParcel() {
     }
   };
 
-  if (isLoading) {
+  if (stage === 'initial' || isParcelLoading) {
     return (
-      <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden" w="100%">
-        <Box bg="linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 100%)" pt="150px" pb="120px" px={4}>
-          <Container maxW="6xl" mx="auto">
-            <VStack spacing={6} textAlign="center">
-              <Text>Loading parcel data...</Text>
-            </VStack>
-          </Container>
-        </Box>
-      </Flex>
+      <Container maxW="7xl" mx="auto" pt={containerPadding}>
+        <VStack spacing={cardSpacing}>
+          {/* Performance monitoring for development */}
+          {process.env.NODE_ENV === 'development' && <PerformanceSummary compact />}
+
+          <ProgressiveLoader stage={stage} type={isMobile ? 'mobile-list' : 'form'} />
+
+          {/* Mobile optimization badges */}
+          {isMobile && (
+            <HStack spacing={2} justify="center">
+              <Badge colorScheme="green" fontSize="xs">
+                <HStack spacing={1}>
+                  <Icon as={FaMapMarkerAlt} boxSize={3} />
+                  <Text>Farm Optimized</Text>
+                </HStack>
+              </Badge>
+              <Badge colorScheme="blue" fontSize="xs">
+                <HStack spacing={1}>
+                  <Icon as={FaLeaf} boxSize={3} />
+                  <Text>Parcel Ready</Text>
+                </HStack>
+              </Badge>
+            </HStack>
+          )}
+        </VStack>
+      </Container>
     );
   }
 
@@ -167,7 +234,8 @@ function ProfileParcel() {
               px={4}
               py={2}
               borderRadius="full"
-              textTransform="none">
+              textTransform="none"
+            >
               <HStack spacing={2}>
                 <Icon as={FaTractor} boxSize={4} />
                 <Text fontWeight="medium">
@@ -184,7 +252,8 @@ function ProfileParcel() {
                 color={titleColor}
                 fontWeight="bold"
                 textAlign="center"
-                letterSpacing="-0.02em">
+                letterSpacing="-0.02em"
+              >
                 {parcelData?.name || 'Loading...'}
               </Heading>
               <Text
@@ -193,7 +262,8 @@ function ProfileParcel() {
                 fontWeight="normal"
                 maxW={{ base: '90%', sm: '70%', lg: '60%' }}
                 lineHeight="1.7"
-                textAlign="center">
+                textAlign="center"
+              >
                 {establishment?.name || 'Sustainable Agriculture'}
               </Text>
             </VStack>
@@ -267,13 +337,15 @@ function ProfileParcel() {
         mb="60px"
         mt="-80px"
         position="relative"
-        zIndex={10}>
+        zIndex={10}
+      >
         <Card
           w={{ sm: '95%', md: '90%', lg: '85%' }}
           p={{ sm: '16px', md: '32px', lg: '48px' }}
           boxShadow="0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
           borderRadius="2xl"
-          bg={bgColor}>
+          bg={bgColor}
+        >
           {/* Header with Actions */}
           <CardHeader mb="24px">
             <HStack spacing={3}>
@@ -305,7 +377,8 @@ function ProfileParcel() {
                         `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/change`
                       )
                     }
-                    icon={<FaEdit />}>
+                    icon={<FaEdit />}
+                  >
                     <Text fontSize="sm" fontWeight="500">
                       {intl.formatMessage({ id: 'app.edit' }) || 'Edit'}
                     </Text>

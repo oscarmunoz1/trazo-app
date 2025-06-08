@@ -37,7 +37,8 @@ Replace the background Box component in `ProductDetail.tsx` around line 398:
   }}
   bgSize="cover"
   mx={{ md: 'auto' }}
-  mt={{ md: '14px' }}></Box>
+  mt={{ md: '14px' }}
+></Box>
 ```
 
 ### New Code (REPLACE WITH):
@@ -53,7 +54,8 @@ Replace the background Box component in `ProductDetail.tsx` around line 398:
     justifyContent="center"
     align="center"
     maxW="6xl"
-    mx="auto">
+    mx="auto"
+  >
     <Heading as="h1" size="2xl" color={titleColor} fontWeight="bold" mb={3}>
       {intl.formatMessage({ id: 'app.welcome' })}
     </Heading>
@@ -62,7 +64,8 @@ Replace the background Box component in `ProductDetail.tsx` around line 398:
       color={textColor}
       fontWeight="normal"
       maxW={{ base: '90%', sm: '60%', lg: '50%' }}
-      lineHeight="1.6">
+      lineHeight="1.6"
+    >
       {intl.formatMessage({ id: 'app.welcomeMessage' })}
     </Text>
   </Flex>

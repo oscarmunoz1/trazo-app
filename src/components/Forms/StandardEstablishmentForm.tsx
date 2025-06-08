@@ -534,7 +534,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
         companyName ? ` under ${companyName}` : ''
       }`}
       showBackButton
-      onBack={onCancel}>
+      onBack={onCancel}
+    >
       {/* Modern Progress Stepper */}
       <StandardStepper
         steps={steps}
@@ -550,7 +551,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
           {currentStep === 0 && (
             <StandardCard
               title="Establishment Information"
-              subtitle="Basic details, contact information, and social media presence">
+              subtitle="Basic details, contact information, and social media presence"
+            >
               <VStack spacing={6} align="stretch">
                 {/* Name & Type */}
                 <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
@@ -558,7 +560,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                     label="Establishment Name"
                     required
                     error={errors.name?.message}
-                    helpText="Farm, ranch, or facility name">
+                    helpText="Farm, ranch, or facility name"
+                  >
                     <Controller
                       name="name"
                       control={methods.control}
@@ -579,7 +582,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                   <StandardField
                     label="Establishment Type"
                     error={errors.establishmentType?.message}
-                    helpText="Primary type of agricultural operation">
+                    helpText="Primary type of agricultural operation"
+                  >
                     <Controller
                       name="establishmentType"
                       control={methods.control}
@@ -591,7 +595,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                           borderColor="gray.300"
                           _hover={{ borderColor: 'green.400' }}
                           _focus={{ borderColor: 'green.500', boxShadow: '0 0 0 1px #38A169' }}
-                          size="lg">
+                          size="lg"
+                        >
                           <option value="crop_farm">Crop Farm</option>
                           <option value="livestock_ranch">Livestock Ranch</option>
                           <option value="dairy_farm">Dairy Farm</option>
@@ -611,7 +616,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                   <StandardField
                     label="Email Address"
                     error={errors.email?.message}
-                    helpText="Primary contact email">
+                    helpText="Primary contact email"
+                  >
                     <Controller
                       name="email"
                       control={methods.control}
@@ -633,7 +639,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                   <StandardField
                     label="Phone Number"
                     error={errors.phone?.message}
-                    helpText="Contact phone number">
+                    helpText="Contact phone number"
+                  >
                     <Controller
                       name="phone"
                       control={methods.control}
@@ -662,7 +669,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                   <StandardField
                     label="Facebook Page"
                     error={errors.facebook?.message}
-                    helpText="Facebook page URL">
+                    helpText="Facebook page URL"
+                  >
                     <Controller
                       name="facebook"
                       control={methods.control}
@@ -683,7 +691,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                   <StandardField
                     label="Instagram Profile"
                     error={errors.instagram?.message}
-                    helpText="Instagram profile URL">
+                    helpText="Instagram profile URL"
+                  >
                     <Controller
                       name="instagram"
                       control={methods.control}
@@ -706,7 +715,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                 <StandardField
                   label="Description"
                   error={errors.description?.message}
-                  helpText="Describe your establishment, its history, and mission">
+                  helpText="Describe your establishment, its history, and mission"
+                >
                   <Controller
                     name="description"
                     control={methods.control}
@@ -728,7 +738,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                 {/* Active Status */}
                 <StandardField
                   label="Establishment Status"
-                  helpText="Activate the establishment to start managing parcels and production">
+                  helpText="Activate the establishment to start managing parcels and production"
+                >
                   <Controller
                     name="isActive"
                     control={methods.control}
@@ -756,7 +767,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                   <StandardButton
                     onClick={nextStep}
                     rightIcon={<FaChevronRight />}
-                    disabled={!isStepComplete(0)}>
+                    disabled={!isStepComplete(0)}
+                  >
                     Continue to Location
                   </StandardButton>
                 </HStack>
@@ -768,13 +780,15 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
           {currentStep === 1 && (
             <StandardCard
               title="Location Details"
-              subtitle="Physical address and geographic coordinates">
+              subtitle="Physical address and geographic coordinates"
+            >
               <VStack spacing={6} align="stretch">
                 {/* Address */}
                 <StandardField
                   label="Street Address"
                   error={errors.address?.message}
-                  helpText="Physical address of your establishment">
+                  helpText="Physical address of your establishment"
+                >
                   <Controller
                     name="address"
                     control={methods.control}
@@ -845,7 +859,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                           borderColor="gray.300"
                           _hover={{ borderColor: 'green.400' }}
                           _focus={{ borderColor: 'green.500', boxShadow: '0 0 0 1px #38A169' }}
-                          size="lg">
+                          size="lg"
+                        >
                           <option value="US">United States</option>
                           <option value="CA">Canada</option>
                           <option value="MX">Mexico</option>
@@ -878,7 +893,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                 <StandardField
                   label="Zone/Area"
                   error={errors.zone?.message}
-                  helpText="Geographic zone or area designation">
+                  helpText="Geographic zone or area designation"
+                >
                   <Controller
                     name="zone"
                     control={methods.control}
@@ -910,7 +926,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                     <StandardField
                       label="Latitude"
                       error={errors.latitude?.message}
-                      helpText="Decimal degrees (e.g., 40.7128)">
+                      helpText="Decimal degrees (e.g., 40.7128)"
+                    >
                       <Controller
                         name="latitude"
                         control={methods.control}
@@ -918,7 +935,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                           <NumberInput
                             value={field.value || ''}
                             onChange={(_, num) => field.onChange(num)}
-                            precision={6}>
+                            precision={6}
+                          >
                             <NumberInputField borderRadius="lg" placeholder="40.7128" />
                             <NumberInputStepper>
                               <NumberIncrementStepper />
@@ -932,7 +950,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                     <StandardField
                       label="Longitude"
                       error={errors.longitude?.message}
-                      helpText="Decimal degrees (e.g., -74.0060)">
+                      helpText="Decimal degrees (e.g., -74.0060)"
+                    >
                       <Controller
                         name="longitude"
                         control={methods.control}
@@ -940,7 +959,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                           <NumberInput
                             value={field.value || ''}
                             onChange={(_, num) => field.onChange(num)}
-                            precision={6}>
+                            precision={6}
+                          >
                             <NumberInputField borderRadius="lg" placeholder="-74.0060" />
                             <NumberInputStepper>
                               <NumberIncrementStepper />
@@ -958,7 +978,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                   <StandardButton
                     variant="outline"
                     leftIcon={<FaChevronLeft />}
-                    onClick={previousStep}>
+                    onClick={previousStep}
+                  >
                     Back to Basic Info
                   </StandardButton>
 
@@ -979,14 +1000,16 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
           {currentStep === 2 && (
             <StandardCard
               title="Operations & Practices"
-              subtitle="Details about your farming operations">
+              subtitle="Details about your farming operations"
+            >
               <VStack spacing={6} align="stretch">
                 {/* Farming Method & Acreage */}
                 <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
                   <StandardField
                     label="Farming Method"
                     error={errors.farmingMethod?.message}
-                    helpText="Primary farming approach">
+                    helpText="Primary farming approach"
+                  >
                     <Controller
                       name="farmingMethod"
                       control={methods.control}
@@ -998,7 +1021,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                           borderColor="gray.300"
                           _hover={{ borderColor: 'green.400' }}
                           _focus={{ borderColor: 'green.500', boxShadow: '0 0 0 1px #38A169' }}
-                          size="lg">
+                          size="lg"
+                        >
                           <option value="conventional">Conventional</option>
                           <option value="organic">Organic</option>
                           <option value="sustainable">Sustainable</option>
@@ -1013,14 +1037,16 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                   <StandardField
                     label="Total Acreage"
                     error={errors.totalAcreage?.message}
-                    helpText="Total land area in acres">
+                    helpText="Total land area in acres"
+                  >
                     <Controller
                       name="totalAcreage"
                       control={methods.control}
                       render={({ field }) => (
                         <NumberInput
                           value={field.value || 0}
-                          onChange={(_, num) => field.onChange(num || 0)}>
+                          onChange={(_, num) => field.onChange(num || 0)}
+                        >
                           <NumberInputField borderRadius="lg" />
                           <NumberInputStepper>
                             <NumberIncrementStepper />
@@ -1037,14 +1063,16 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                   <StandardField
                     label="Employee Count"
                     error={errors.employeeCount?.message}
-                    helpText="Number of employees">
+                    helpText="Number of employees"
+                  >
                     <Controller
                       name="employeeCount"
                       control={methods.control}
                       render={({ field }) => (
                         <NumberInput
                           value={field.value || 0}
-                          onChange={(_, num) => field.onChange(num || 0)}>
+                          onChange={(_, num) => field.onChange(num || 0)}
+                        >
                           <NumberInputField borderRadius="lg" />
                           <NumberInputStepper>
                             <NumberIncrementStepper />
@@ -1058,7 +1086,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                   <StandardField
                     label="Year Established"
                     error={errors.yearEstablished?.message}
-                    helpText="When was the establishment founded">
+                    helpText="When was the establishment founded"
+                  >
                     <Controller
                       name="yearEstablished"
                       control={methods.control}
@@ -1067,7 +1096,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                           value={field.value || ''}
                           onChange={(_, num) => field.onChange(num)}
                           min={1800}
-                          max={new Date().getFullYear()}>
+                          max={new Date().getFullYear()}
+                        >
                           <NumberInputField borderRadius="lg" placeholder="e.g., 1995" />
                           <NumberInputStepper>
                             <NumberIncrementStepper />
@@ -1116,7 +1146,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                               }
                             }}
                             leftIcon={<FaPlus />}
-                            size="sm">
+                            size="sm"
+                          >
                             Add
                           </StandardButton>
                         </HStack>
@@ -1143,7 +1174,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                 {/* Sustainability Practices */}
                 <StandardField
                   label="Sustainability Practices"
-                  helpText="Environmental and sustainability practices you follow">
+                  helpText="Environmental and sustainability practices you follow"
+                >
                   <Controller
                     name="sustainabilityPractices"
                     control={methods.control}
@@ -1180,7 +1212,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                               }
                             }}
                             leftIcon={<FaPlus />}
-                            size="sm">
+                            size="sm"
+                          >
                             Add
                           </StandardButton>
                         </HStack>
@@ -1207,7 +1240,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                 {/* Certifications */}
                 <StandardField
                   label="Certifications"
-                  helpText="Agricultural certifications and standards">
+                  helpText="Agricultural certifications and standards"
+                >
                   <Controller
                     name="certifications"
                     control={methods.control}
@@ -1243,7 +1277,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                               }
                             }}
                             leftIcon={<FaPlus />}
-                            size="sm">
+                            size="sm"
+                          >
                             Add
                           </StandardButton>
                         </HStack>
@@ -1278,7 +1313,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                 <StandardField
                   label="About the Establishment"
                   error={errors.about?.message}
-                  helpText="General information about your establishment">
+                  helpText="General information about your establishment"
+                >
                   <Controller
                     name="about"
                     control={methods.control}
@@ -1300,7 +1336,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                 <StandardField
                   label="Main Activities"
                   error={errors.main_activities?.message}
-                  helpText="Primary activities and operations">
+                  helpText="Primary activities and operations"
+                >
                   <Controller
                     name="main_activities"
                     control={methods.control}
@@ -1322,7 +1359,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                 <StandardField
                   label="Location Highlights"
                   error={errors.location_highlights?.message}
-                  helpText="Notable features of your location">
+                  helpText="Notable features of your location"
+                >
                   <Controller
                     name="location_highlights"
                     control={methods.control}
@@ -1344,7 +1382,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                 <StandardField
                   label="Custom Message"
                   error={errors.custom_message?.message}
-                  helpText="Special message for customers or visitors">
+                  helpText="Special message for customers or visitors"
+                >
                   <Controller
                     name="custom_message"
                     control={methods.control}
@@ -1375,7 +1414,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                   <StandardButton
                     variant="outline"
                     leftIcon={<FaChevronLeft />}
-                    onClick={previousStep}>
+                    onClick={previousStep}
+                  >
                     Back to Location
                   </StandardButton>
 
@@ -1387,7 +1427,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                       type="submit"
                       isLoading={isLoading}
                       loadingText={isEdit ? 'Updating...' : 'Creating...'}
-                      leftIcon={<FaCheckCircle />}>
+                      leftIcon={<FaCheckCircle />}
+                    >
                       {isEdit ? 'Update Establishment' : 'Create Establishment'}
                     </StandardButton>
                   </HStack>
@@ -1400,12 +1441,14 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
           {currentStep === 3 && (
             <StandardCard
               title="Establishment Images"
-              subtitle="Upload images to showcase your establishment">
+              subtitle="Upload images to showcase your establishment"
+            >
               <VStack spacing={8} align="stretch">
                 {/* Image Upload Section */}
                 <StandardField
                   label="Images"
-                  helpText="Upload up to 5 high-quality images (JPG, PNG, GIF - max 5MB each)">
+                  helpText="Upload up to 5 high-quality images (JPG, PNG, GIF - max 5MB each)"
+                >
                   <VStack spacing={4}>
                     {/* Dropzone with simplified design matching old form */}
                     <Box
@@ -1420,7 +1463,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                       _hover={{ borderColor: 'blue.400', bg: 'gray.100' }}
                       position="relative"
                       transition="all 0.2s"
-                      w="full">
+                      w="full"
+                    >
                       <input {...getInputProps()} />
 
                       {/* Image Previews AT THE TOP of the dropzone like old form */}
@@ -1522,7 +1566,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                         loadingText="Uploading..."
                         colorScheme="green"
                         leftIcon={<FaCloudUploadAlt />}
-                        size="lg">
+                        size="lg"
+                      >
                         Upload {newImages.length} Image{newImages.length > 1 ? 's' : ''}
                       </Button>
                     )}
@@ -1534,7 +1579,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                   <StandardButton
                     variant="outline"
                     leftIcon={<FaChevronLeft />}
-                    onClick={previousStep}>
+                    onClick={previousStep}
+                  >
                     Back to Operations
                   </StandardButton>
 
@@ -1546,7 +1592,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                       type="submit"
                       isLoading={isLoading}
                       loadingText={isEdit ? 'Updating...' : 'Creating...'}
-                      leftIcon={<FaCheckCircle />}>
+                      leftIcon={<FaCheckCircle />}
+                    >
                       {isEdit ? 'Update Establishment' : 'Create Establishment'}
                     </StandardButton>
                   </HStack>

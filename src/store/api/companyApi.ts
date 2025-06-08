@@ -295,6 +295,43 @@ const companyApi = baseApi.injectEndpoints({
       providesTags: (result, error, establishmentId) => [
         { type: 'Establishment', id: establishmentId }
       ]
+    }),
+    // Enhanced Production Start - Create new production with crop selection and blockchain
+    startProduction: build.mutation<
+      any,
+      {
+        name: string;
+        parcel_id: number;
+        crop_type: string;
+        start_date: string;
+        expected_harvest?: string;
+        description?: string;
+        production_method?: string;
+        estimated_yield?: number;
+        irrigation_method?: string;
+        age_of_plants?: string;
+        number_of_plants?: number;
+        soil_ph?: number;
+        is_outdoor?: boolean;
+        type?: string;
+        notes?: string;
+      }
+    >({
+      query: (productionData) => ({
+        url: 'histories/start-production/',
+        method: 'POST',
+        body: productionData,
+        credentials: 'include'
+      }),
+      invalidatesTags: ['History', 'Company', 'Parcel']
+    }),
+    // Get crop types for the production form
+    getCropTypes: build.query<any[], void>({
+      query: () => ({
+        url: '/products/crop-types/',
+        method: 'GET',
+        credentials: 'include'
+      })
     })
   }),
   overrideExisting: false
@@ -323,5 +360,7 @@ export const {
   useGenerateCarbonReportMutation,
   useGetProductionsByEstablishmentQuery,
   useGetCarbonEntriesQuery,
-  useGetPublicEstablishmentQuery
+  useGetPublicEstablishmentQuery,
+  useStartProductionMutation,
+  useGetCropTypesQuery
 } = companyApi;

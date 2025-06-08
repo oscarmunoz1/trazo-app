@@ -34,6 +34,7 @@ import SignUp from 'views/Authentication/SignUp/SignUpBasic';
 import Unauthorized from './views/Applications/DataTables/index';
 import UpdateEvent from 'views/Dashboard/Dashboard/Event/UpdateEvent';
 import UpdateProduction from 'views/Dashboard/Dashboard/Production/UpdateProduction';
+import UpdateUser from 'views/Dashboard/Dashboard/User/UpdateUser';
 import VerifyEmail from './views/Authentication/SignUp/VerifyEmail';
 import { useSelector } from 'react-redux';
 import VerifyEmailConsumer from 'views/Authentication/SignUp/VerifyEmailConsumer';
@@ -55,6 +56,9 @@ import NewProduction from 'views/Dashboard/Dashboard/components/forms/NewProduct
 import CarbonDashboard from 'views/Dashboard/Dashboard/Establishment/CarbonDashboard';
 import IoTDashboard from 'views/Dashboard/Dashboard/Establishment/IoTDashboard';
 import PublicEstablishmentProfile from 'views/Scan/PublicEstablishmentProfile/PublicEstablishmentProfile';
+import { usePointsStore } from './store/pointsStore';
+import EducationDashboard from 'views/Dashboard/Education';
+import EducationFAQ from 'views/Dashboard/Education/EducationFAQ';
 
 const App = () => {
   const location = useLocation();
@@ -242,6 +246,8 @@ const App = () => {
                     </NoSubscriptionRedirect>
                   }
                 />
+                <Route path="education" element={<EducationDashboard />} />
+                <Route path="education/faq" element={<EducationFAQ />} />
               </Route>
             </Route>
           </Route>

@@ -175,7 +175,8 @@ export const EnhancedProductDetail: React.FC<EnhancedProductDetailProps> = ({
           justifyContent="center"
           textAlign="center"
           height="300px"
-          borderRadius="xl">
+          borderRadius="xl"
+        >
           <AlertIcon boxSize="40px" mr={0} />
           <AlertTitle mt={4} mb={1} fontSize="lg">
             {intl.formatMessage({ id: 'app.error' }) || 'Error'}
@@ -226,7 +227,8 @@ export const EnhancedProductDetail: React.FC<EnhancedProductDetailProps> = ({
                 background:
                   'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="7" cy="7" r="7"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
                 opacity: 0.3
-              }}>
+              }}
+            >
               <VStack spacing={3} position="relative" zIndex={1}>
                 <Heading as="h1" size="xl" fontWeight="bold">
                   ¡{intl.formatMessage({ id: 'app.welcome' }) || 'Bienvenido'}!
@@ -293,7 +295,8 @@ export const EnhancedProductDetail: React.FC<EnhancedProductDetailProps> = ({
                     boxShadow="lg"
                     p={6}
                     border="1px solid"
-                    borderColor="gray.200">
+                    borderColor="gray.200"
+                  >
                     <HStack spacing={3} mb={4}>
                       <Icon as={FaMapMarkerAlt} color="blue.500" boxSize={6} />
                       <Heading as="h3" size="lg">
@@ -321,7 +324,8 @@ export const EnhancedProductDetail: React.FC<EnhancedProductDetailProps> = ({
               boxShadow="lg"
               p={8}
               border="1px solid"
-              borderColor="gray.200">
+              borderColor="gray.200"
+            >
               <VStack spacing={6} align="stretch">
                 <HStack spacing={3} justify="center">
                   <Icon as={FaGlobeAmericas} color="green.500" boxSize={8} />
@@ -349,7 +353,8 @@ export const EnhancedProductDetail: React.FC<EnhancedProductDetailProps> = ({
               color="white"
               p={6}
               borderRadius="xl"
-              textAlign="center">
+              textAlign="center"
+            >
               <VStack spacing={4}>
                 <Heading as="h3" size="lg">
                   {intl.formatMessage({ id: 'app.makeDifference' }) || 'Make a Difference'}

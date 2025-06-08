@@ -282,7 +282,8 @@ function ProfileProduction() {
               px={4}
               py={2}
               borderRadius="full"
-              textTransform="none">
+              textTransform="none"
+            >
               <HStack spacing={2}>
                 <Icon as={FaSeedling} boxSize={4} />
                 <Text fontWeight="medium">
@@ -299,7 +300,8 @@ function ProfileProduction() {
                 color={titleColor}
                 fontWeight="bold"
                 textAlign="center"
-                letterSpacing="-0.02em">
+                letterSpacing="-0.02em"
+              >
                 {historyData?.product?.name || historyData?.name || 'Loading...'}
               </Heading>
               <Text
@@ -308,7 +310,8 @@ function ProfileProduction() {
                 fontWeight="normal"
                 maxW={{ base: '90%', sm: '70%', lg: '60%' }}
                 lineHeight="1.7"
-                textAlign="center">
+                textAlign="center"
+              >
                 {`${formatDate(historyData?.start_date)} - ${formatDate(historyData?.finish_date)}`}
               </Text>
             </VStack>
@@ -385,7 +388,8 @@ function ProfileProduction() {
           borderRadius="2xl"
           bg={bgColor}
           position="relative"
-          zIndex={10}>
+          zIndex={10}
+        >
           {/* Header with Actions */}
           <CardHeader mb="24px">
             <HStack justify="space-between" align="flex-start" mb={6}>
@@ -414,7 +418,8 @@ function ProfileProduction() {
                       navigate(
                         `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${productionId}/change`
                       )
-                    }>
+                    }
+                  >
                     {intl.formatMessage({ id: 'app.edit' })}
                   </MenuItem>
                   <MenuItem icon={<Icon as={FaQrcode} />} onClick={downloadQRCode}>
@@ -456,7 +461,8 @@ function ProfileProduction() {
                         height="250px"
                         display="flex"
                         alignItems="center"
-                        justifyContent="center">
+                        justifyContent="center"
+                      >
                         <VStack spacing={2}>
                           <Icon as={FaSeedling} boxSize={12} color="gray.400" />
                           <Text color="gray.500">No images available</Text>
@@ -530,7 +536,8 @@ function ProfileProduction() {
                             navigate(`/admin/dashboard/establishment/${establishmentId}`)
                           }
                           cursor="pointer"
-                          _hover={{ textDecoration: 'underline' }}>
+                          _hover={{ textDecoration: 'underline' }}
+                        >
                           {historyData?.parcel?.establishment?.name || 'Unknown'}
                         </Link>
                       </HStack>
@@ -545,7 +552,8 @@ function ProfileProduction() {
                             )
                           }
                           cursor="pointer"
-                          _hover={{ textDecoration: 'underline' }}>
+                          _hover={{ textDecoration: 'underline' }}
+                        >
                           {historyData?.parcel?.name || 'Unknown'}
                         </Link>
                       </HStack>
@@ -585,7 +593,8 @@ function ProfileProduction() {
                           justifyContent="center"
                           border="2px solid"
                           borderColor="gray.200"
-                          overflow="hidden">
+                          overflow="hidden"
+                        >
                           {historyData?.qr_code ? (
                             <Image
                               src={historyData.qr_code}
@@ -621,7 +630,8 @@ function ProfileProduction() {
                         leftIcon={<Icon as={FaDownload} />}
                         onClick={downloadQRCode}
                         variant={historyData?.qr_code ? 'solid' : 'outline'}
-                        isDisabled={!historyData?.qr_code && !historyData?.history_scan}>
+                        isDisabled={!historyData?.qr_code && !historyData?.history_scan}
+                      >
                         {historyData?.qr_code ? 'Download QR Code' : 'Generate QR Code'}
                       </Button>
                     </VStack>

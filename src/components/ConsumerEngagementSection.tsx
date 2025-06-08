@@ -107,7 +107,8 @@ export const ConsumerEngagementSection: React.FC<ConsumerEngagementSectionProps>
                 leftIcon={<Icon as={FaShare} />}
                 onClick={onShare}
                 colorScheme="blue"
-                variant="outline">
+                variant="outline"
+              >
                 Share (+3)
               </Button>
               <Button
@@ -115,7 +116,8 @@ export const ConsumerEngagementSection: React.FC<ConsumerEngagementSectionProps>
                 leftIcon={<Icon as={MdStar} />}
                 onClick={onFeedback}
                 colorScheme="yellow"
-                variant="outline">
+                variant="outline"
+              >
                 Rate (+2)
               </Button>
               <Button
@@ -123,7 +125,8 @@ export const ConsumerEngagementSection: React.FC<ConsumerEngagementSectionProps>
                 leftIcon={<Icon as={FaTree} />}
                 onClick={onOffset}
                 colorScheme="green"
-                variant="outline">
+                variant="outline"
+              >
                 Offset (+5)
               </Button>
             </SimpleGrid>
@@ -171,7 +174,8 @@ export const ConsumerEngagementSection: React.FC<ConsumerEngagementSectionProps>
               colorScheme="blue"
               variant="outline"
               size="sm"
-              w="100%">
+              w="100%"
+            >
               Learn Their Sustainability Story (+2 points)
             </Button>
           </VStack>

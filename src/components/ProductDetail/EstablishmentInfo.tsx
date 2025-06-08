@@ -43,7 +43,8 @@ export const EstablishmentInfo: React.FC<EstablishmentInfoProps> = ({ establishm
       boxShadow="lg"
       p={6}
       border="1px solid"
-      borderColor={borderColor}>
+      borderColor={borderColor}
+    >
       {/* Header */}
       <HStack spacing={3} mb={6}>
         <Icon as={MdBusiness} color="green.500" boxSize={6} />
@@ -123,7 +124,8 @@ export const EstablishmentInfo: React.FC<EstablishmentInfoProps> = ({ establishm
                 background: 'gray.300',
                 borderRadius: '24px'
               }
-            }}>
+            }}
+          >
             <HTMLRenderer htmlString={establishment.description || ''} />
           </Box>
         </Box>
@@ -162,7 +164,8 @@ export const EstablishmentInfo: React.FC<EstablishmentInfoProps> = ({ establishm
           bg="green.50"
           borderRadius="md"
           border="1px solid"
-          borderColor="green.200">
+          borderColor="green.200"
+        >
           <HStack spacing={2}>
             <Icon as={MdVerifiedUser} color="green.500" boxSize={5} />
             <Text fontSize="sm" fontWeight="medium" color="green.700">

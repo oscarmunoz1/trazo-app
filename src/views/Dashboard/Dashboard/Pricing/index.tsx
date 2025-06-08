@@ -27,9 +27,11 @@ function DashboardPricing() {
       console.log('Using company ID from URL parameters:', urlCompanyId);
       setCompanyId(urlCompanyId);
 
-      // Remove company ID from URL without adding to history
+      // Remove only company_id from URL, preserve other parameters like new_company
       if (window.history.replaceState) {
-        const newUrl = window.location.pathname;
+        params.delete('company_id'); // Only remove company_id
+        const newSearch = params.toString();
+        const newUrl = window.location.pathname + (newSearch ? `?${newSearch}` : '');
         window.history.replaceState({ path: newUrl }, '', newUrl);
       }
 

@@ -219,7 +219,8 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
       title="Chemical Application"
       description={`Record chemical application details${parcelName ? ` for ${parcelName}` : ''}`}
       showBackButton
-      onBack={onCancel}>
+      onBack={onCancel}
+    >
       {/* Modern Progress Stepper */}
       <StandardStepper
         steps={steps}
@@ -235,14 +236,16 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
           {currentStep === 0 && (
             <StandardCard
               title="Chemical Information"
-              subtitle="What chemical product are you applying?">
+              subtitle="What chemical product are you applying?"
+            >
               <VStack spacing={6} align="stretch">
                 {/* Chemical Type */}
                 <StandardField
                   label="Chemical Type"
                   required
                   error={errors.type?.message}
-                  helpText="Select the primary category of chemical">
+                  helpText="Select the primary category of chemical"
+                >
                   <StandardSelect {...methods.register('type')}>
                     <option value="">Select chemical type...</option>
                     <option value="fertilizer">Fertilizer</option>
@@ -260,7 +263,8 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                     label="Commercial Name"
                     required
                     error={errors.commercialName?.message}
-                    helpText="Brand name of the product">
+                    helpText="Brand name of the product"
+                  >
                     <StandardInput
                       {...methods.register('commercialName')}
                       placeholder="e.g., Roundup WeatherMAX"
@@ -271,7 +275,8 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                   <StandardField
                     label="Active Ingredient"
                     error={errors.activeIngredient?.message}
-                    helpText="Main active component">
+                    helpText="Main active component"
+                  >
                     <StandardInput
                       {...methods.register('activeIngredient')}
                       placeholder="e.g., Glyphosate"
@@ -286,10 +291,12 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                     label="Volume Applied"
                     required
                     error={errors.volume?.message}
-                    helpText="Total volume of product used (gallons)">
+                    helpText="Total volume of product used (gallons)"
+                  >
                     <NumberInput
                       value={watch('volume') || 0}
-                      onChange={(_, num) => methods.setValue('volume', num || 0)}>
+                      onChange={(_, num) => methods.setValue('volume', num || 0)}
+                    >
                       <NumberInputField borderRadius="lg" />
                       <NumberInputStepper>
                         <NumberIncrementStepper />
@@ -302,10 +309,12 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                     label="Area Treated"
                     required
                     error={errors.area?.message}
-                    helpText="Acres treated with this application">
+                    helpText="Acres treated with this application"
+                  >
                     <NumberInput
                       value={watch('area') || 0}
-                      onChange={(_, num) => methods.setValue('area', num || 0)}>
+                      onChange={(_, num) => methods.setValue('area', num || 0)}
+                    >
                       <NumberInputField borderRadius="lg" />
                       <NumberInputStepper>
                         <NumberIncrementStepper />
@@ -320,12 +329,14 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                   <StandardField
                     label="Concentration %"
                     error={errors.concentration?.message}
-                    helpText="Active ingredient concentration">
+                    helpText="Active ingredient concentration"
+                  >
                     <NumberInput
                       value={watch('concentration') || 0}
                       onChange={(_, num) => methods.setValue('concentration', num || 0)}
                       max={100}
-                      min={0}>
+                      min={0}
+                    >
                       <NumberInputField borderRadius="lg" />
                       <NumberInputStepper>
                         <NumberIncrementStepper />
@@ -337,7 +348,8 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                   <StandardField
                     label="Target Pest/Weed"
                     error={errors.targetPest?.message}
-                    helpText="What are you targeting?">
+                    helpText="What are you targeting?"
+                  >
                     <StandardInput
                       {...methods.register('targetPest')}
                       placeholder="e.g., Aphids, Broadleaf weeds"
@@ -365,7 +377,8 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                   <StandardButton
                     onClick={nextStep}
                     rightIcon={<FaChevronRight />}
-                    disabled={!isStepComplete(0)}>
+                    disabled={!isStepComplete(0)}
+                  >
                     Continue to Application
                   </StandardButton>
                 </HStack>
@@ -383,7 +396,8 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                     label="Application Rate"
                     required
                     error={errors.applicationRate?.message}
-                    helpText="Rate per acre (e.g., 2 gallons/acre)">
+                    helpText="Rate per acre (e.g., 2 gallons/acre)"
+                  >
                     <StandardInput
                       {...methods.register('applicationRate')}
                       placeholder="e.g., 2 gallons/acre"
@@ -394,7 +408,8 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                     label="Application Method"
                     required
                     error={errors.wayOfApplication?.message}
-                    helpText="How was it applied?">
+                    helpText="How was it applied?"
+                  >
                     <StandardSelect {...methods.register('wayOfApplication')}>
                       <option value="">Select method...</option>
                       <option value="spray">Spray Application</option>
@@ -411,7 +426,8 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                 <StandardField
                   label="Weather Conditions"
                   error={errors.weatherConditions?.message}
-                  helpText="Describe weather during application">
+                  helpText="Describe weather during application"
+                >
                   <StandardInput
                     {...methods.register('weatherConditions')}
                     placeholder="e.g., Calm, 70°F, 65% humidity, no wind"
@@ -423,10 +439,12 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                   <StandardField
                     label="Pre-Harvest Interval (days)"
                     error={errors.preHarvestInterval?.message}
-                    helpText="Days before harvest allowed">
+                    helpText="Days before harvest allowed"
+                  >
                     <NumberInput
                       value={watch('preHarvestInterval') || 0}
-                      onChange={(_, num) => methods.setValue('preHarvestInterval', num || 0)}>
+                      onChange={(_, num) => methods.setValue('preHarvestInterval', num || 0)}
+                    >
                       <NumberInputField borderRadius="lg" />
                       <NumberInputStepper>
                         <NumberIncrementStepper />
@@ -438,10 +456,12 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                   <StandardField
                     label="Re-entry Interval (hours)"
                     error={errors.reentryInterval?.message}
-                    helpText="Hours before safe re-entry">
+                    helpText="Hours before safe re-entry"
+                  >
                     <NumberInput
                       value={watch('reentryInterval') || 0}
-                      onChange={(_, num) => methods.setValue('reentryInterval', num || 0)}>
+                      onChange={(_, num) => methods.setValue('reentryInterval', num || 0)}
+                    >
                       <NumberInputField borderRadius="lg" />
                       <NumberInputStepper>
                         <NumberIncrementStepper />
@@ -456,7 +476,8 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                   <StandardButton
                     variant="outline"
                     leftIcon={<FaChevronLeft />}
-                    onClick={previousStep}>
+                    onClick={previousStep}
+                  >
                     Back to Chemical Info
                   </StandardButton>
 
@@ -467,7 +488,8 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                     <StandardButton
                       onClick={nextStep}
                       rightIcon={<FaChevronRight />}
-                      disabled={!isStepComplete(1)}>
+                      disabled={!isStepComplete(1)}
+                    >
                       Continue to Safety
                     </StandardButton>
                   </HStack>
@@ -480,14 +502,16 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
           {currentStep === 2 && (
             <StandardCard
               title="Safety & Additional Notes"
-              subtitle="Record safety measures and observations">
+              subtitle="Record safety measures and observations"
+            >
               <VStack spacing={6} align="stretch">
                 {/* PPE & Applicator */}
                 <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
                   <StandardField
                     label="PPE Used"
                     error={errors.ppeUsed?.message}
-                    helpText="Personal protective equipment worn">
+                    helpText="Personal protective equipment worn"
+                  >
                     <StandardInput
                       {...methods.register('ppeUsed')}
                       placeholder="e.g., Gloves, goggles, respirator"
@@ -497,7 +521,8 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                   <StandardField
                     label="Applicator Name"
                     error={errors.applicatorName?.message}
-                    helpText="Person who applied the chemical">
+                    helpText="Person who applied the chemical"
+                  >
                     <StandardInput
                       {...methods.register('applicatorName')}
                       placeholder="e.g., John Smith"
@@ -509,7 +534,8 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                 <StandardField
                   label="Observations & Notes"
                   error={errors.observation?.message}
-                  helpText="Any additional notes, conditions, or observations">
+                  helpText="Any additional notes, conditions, or observations"
+                >
                   <StandardTextarea
                     {...methods.register('observation')}
                     placeholder="Record any relevant observations, application challenges, or special conditions..."
@@ -541,7 +567,8 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                   <StandardButton
                     variant="outline"
                     leftIcon={<FaChevronLeft />}
-                    onClick={previousStep}>
+                    onClick={previousStep}
+                  >
                     Back to Application
                   </StandardButton>
 
@@ -553,7 +580,8 @@ export const StandardChemicalForm: React.FC<StandardChemicalFormProps> = ({
                       type="submit"
                       isLoading={isLoading}
                       loadingText="Recording..."
-                      leftIcon={<FaCheckCircle />}>
+                      leftIcon={<FaCheckCircle />}
+                    >
                       Record Application
                     </StandardButton>
                   </HStack>

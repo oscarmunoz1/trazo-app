@@ -1,303 +1,513 @@
-/*!
-
-=========================================================
-* Purity UI Dashboard PRO - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/purity-ui-dashboard-pro
-* Copyright 2021 Creative Tim (https://www.creative-tim.com/)
-
-* Design by Creative Tim & Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-// Chakra imports
+import React, { useState, useEffect } from 'react';
 import {
+  VStack,
+  HStack,
+  SimpleGrid,
   Box,
-  Button,
-  Select as ChakraSelect,
-  Checkbox,
-  CircularProgress,
-  Flex,
-  FormControl,
-  FormLabel,
-  Icon,
-  Input,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Stack,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Tag,
-  TagCloseButton,
-  TagLabel,
   Text,
+  Icon,
+  Badge,
+  useToast,
+  Input as ChakraInput,
+  Image,
+  IconButton,
+  Flex,
   Textarea,
-  useColorModeValue
+  FormLabel,
+  Input,
+  Button,
+  CircularProgress,
+  useColorModeValue,
+  Tabs,
+  TabPanels,
+  TabPanel
 } from '@chakra-ui/react';
-import { BsCircleFill, BsFillCloudLightningRainFill } from 'react-icons/bs';
-import { FormProvider, useForm } from 'react-hook-form';
-import React, { useEffect, useReducer, useRef, useState } from 'react';
-import { clearForm, setForm } from 'store/features/formSlice';
-import { object, string } from 'zod';
+import {
+  StandardPage,
+  StandardCard,
+  StandardField,
+  StandardInput,
+  StandardTextarea,
+  StandardButton,
+  StandardAlert,
+  StandardStepper
+} from '../../../../../components/Design/StandardComponents';
+import { FaLeaf, FaCalendarAlt, FaCamera, FaUpload, FaImage, FaTrash } from 'react-icons/fa';
+import { MdDescription, MdInventory, MdNumbers } from 'react-icons/md';
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useDropzone } from 'react-dropzone';
+import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-
+import { useFinishCurrentHistoryMutation } from 'store/api/historyApi.js';
 import Card from 'components/Card/Card';
 import CardBody from 'components/Card/CardBody';
 import CardHeader from 'components/Card/CardHeader';
-import CardWithMap from '../CardWithMap';
-import CreatableSelect from 'react-select/creatable';
-import Editor from 'components/Editor/Editor';
 import FormInput from 'components/Forms/FormInput';
-import Header from 'views/Pages/Profile/Overview/components/Header';
-import ProfileBgImage from 'assets/img/ProfileBackground.png';
-import { RocketIcon } from 'components/Icons/Icons';
-import Select from 'react-select';
-import { SlChemistry } from 'react-icons/sl';
-import { addCompanyEstablishment } from 'store/features/companySlice';
-import avatar4 from 'assets/img/avatars/avatar4.png';
-import imageMap from 'assets/img/imageMap.png';
-import { set } from 'date-fns';
-import { useDropzone } from 'react-dropzone';
-import { useFinishCurrentHistoryMutation } from 'store/api/historyApi.js';
-import { useGoogleMap } from '@react-google-maps/api';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useIntl } from 'react-intl';
 
-const formSchemaBasic = object({
-  production_amount: string()
+// Enhanced form schema with better validation
+const finishProductionSchema = z.object({
+  production_amount: z
+    .string()
     .min(1, 'Production amount is required')
-    .transform((val) => Number(val)),
-  lot_id: string().min(1, 'Lot ID is required'),
-  finish_date: string().min(1, 'Lot ID is required'),
-  observation: string().optional()
+    .transform((val) => Number(val))
+    .refine((val) => val > 0, 'Production amount must be greater than 0'),
+  lot_id: z.string().min(1, 'Lot number is required').max(50, 'Lot number is too long'),
+  finish_date: z.string().min(1, 'Finish date is required'),
+  observation: z.string().optional()
 });
 
 function FinishProduction() {
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const [previewUrls, setPreviewUrls] = useState([]);
+  const [currentStep, setCurrentStep] = useState(0);
   const intl = useIntl();
-  // Chakra color mode
-  const textColor = useColorModeValue('gray.700', 'white');
-  const bgPrevButton = useColorModeValue('gray.100', 'gray.100');
-  const bgProfile = useColorModeValue(
-    'hsla(0,0%,100%,.8)',
-    'linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)'
-  );
-  const bgColor = useColorModeValue('white', 'gray.700');
-  const iconColor = useColorModeValue('gray.300', 'gray.700');
-  const bgActiveButton = useColorModeValue('gray.200', 'gray.700');
-  const bgButtonGroup = useColorModeValue('gray.50', 'gray.600');
-  const bgTimesIcon = useColorModeValue('gray.700', 'gray.500');
-  // const [options, setOptions] = useState([]);
-  const [value, setValue] = useState(null);
-  const [productValueError, setProductValueError] = useState(null);
-  const [activeButton, setActiveButton] = useState(0);
-  const dispatch = useDispatch();
-  const [checkBox, setCheckBox] = useState(null);
-  const [productsOptions, setProductsOptions] = useState([]);
-
+  const toast = useToast();
   const navigate = useNavigate();
-
+  const { parcelId, establishmentId } = useParams();
   const currentCompany = useSelector((state) => state.company.currentCompany);
 
-  const { parcelId, establishmentId } = useParams();
+  // Chakra color mode (keep for compatibility with old UI)
+  const textColor = useColorModeValue('gray.700', 'white');
+  const bgColor = useColorModeValue('white', 'gray.700');
 
-  const [finishCurrentHistory, { data, error, isSuccess, isLoading }] =
-    useFinishCurrentHistoryMutation();
+  // Define steps for the finish production process
+  const steps = [
+    {
+      title: 'Production Info',
+      description: 'Final details',
+      icon: MdInventory
+    },
+    {
+      title: 'Media Upload',
+      description: 'Documentation',
+      icon: FaCamera
+    }
+  ];
 
-  const basicMethods = useForm({
-    resolver: zodResolver(formSchemaBasic)
+  const [finishCurrentHistory, { isLoading, isSuccess }] = useFinishCurrentHistoryMutation();
+
+  const methods = useForm({
+    resolver: zodResolver(finishProductionSchema),
+    defaultValues: {
+      production_amount: '',
+      lot_id: '',
+      finish_date: '',
+      observation: ''
+    }
   });
 
   const {
-    reset,
     handleSubmit,
-    formState: { errors, isSubmitSuccessful },
-    register
-  } = basicMethods;
+    register,
+    formState: { errors }
+  } = methods;
 
-  const onSubmitBasic = (data) => {
-    finishCurrentHistory({
-      companyId: currentCompany?.id,
-      establishmentId,
-      parcelId: parcelId,
-      historyData: { ...data, album: { images: acceptedFiles } }
-    });
-  };
+  // Dropzone configuration
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.webp']
+    },
+    maxFiles: 5,
+    maxSize: 5 * 1024 * 1024, // 5MB
+    onDrop: (files) => {
+      const newImages = [...uploadedImages, ...files].slice(0, 5);
+      setUploadedImages(newImages);
 
-  useEffect(() => {
-    if (isSuccess) {
-      // dispatch(addCompanyEstablishment(dataEstablishment));
-      navigate(`/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/`);
+      // Create preview URLs
+      const newUrls = newImages.map((file) => URL.createObjectURL(file));
+      setPreviewUrls((current) => {
+        // Clean up old URLs
+        current.forEach((url) => URL.revokeObjectURL(url));
+        return newUrls;
+      });
+
+      toast({
+        title: 'Images uploaded',
+        description: `${files.length} image(s) added successfully`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true
+      });
+    },
+    onDropRejected: (rejectedFiles) => {
+      const reasons = rejectedFiles.map((file) => file.errors[0]?.message).join(', ');
+      toast({
+        title: 'Upload failed',
+        description: reasons,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
     }
-  }, [isSuccess]);
-
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    // onDrop,
-    // accept: "image/*", // Accepted file types
-    maxFiles: 5 // Maximum number of files
-    // maxSize: 1024 * 1024 * 5, // Maximum file size (5 MB)
   });
 
-  return (
-    <Flex
-      direction="column"
-      bg={bgColor}
-      boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
-      borderRadius="15px"
-    >
-      <Tabs variant="unstyled" mt="24px" alignSelf="center">
-        <TabPanels mt="24px" maxW={{ md: '90%', lg: '100%' }} mx="auto">
-          <TabPanel maxW="800px" width={'600px'}>
-            <Card>
-              <CardHeader mb="32px">
-                <Text fontSize="lg" color={textColor} fontWeight="bold">
-                  {intl.formatMessage({ id: 'app.mainInfo' })}
-                </Text>
-              </CardHeader>
+  // Remove image handler
+  const removeImage = (index) => {
+    const newImages = uploadedImages.filter((_, i) => i !== index);
+    const newUrls = previewUrls.filter((_, i) => i !== index);
 
-              <CardBody>
-                <FormProvider {...basicMethods}>
-                  <form onSubmit={handleSubmit(onSubmitBasic)} style={{ width: '100%' }}>
-                    <Flex gap={'20px'}>
-                      <Flex flexDir={'column'} flexGrow={1}>
-                        <FormInput
-                          fontSize="xs"
-                          label={intl.formatMessage({ id: 'app.productionAmount' })}
-                          ms="4px"
-                          borderRadius="15px"
-                          type="text"
-                          placeholder={intl.formatMessage({ id: 'app.volumeOfTheProduct' })}
-                          mb="24px"
-                          name="production_amount"
-                        />
-                      </Flex>
-                      <Flex flexDir={'column'} flexGrow={1}>
-                        <FormInput
-                          fontSize="xs"
-                          label={intl.formatMessage({ id: 'app.lotNumber' })}
-                          ms="4px"
-                          borderRadius="15px"
-                          type="text"
-                          placeholder={intl.formatMessage({ id: 'app.lotNumber' })}
-                          mb="24px"
-                          name="lot_id"
-                        />
-                      </Flex>
-                    </Flex>
-                    <Flex flexDir={'column'}>
-                      <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-                        {intl.formatMessage({ id: 'app.finishDate' })}
-                      </FormLabel>
-                      <FormInput
-                        fontSize="xs"
-                        ms="4px"
-                        borderRadius="15px"
-                        type="datetime-local"
-                        name="finish_date"
-                        placeholder="Select date and time"
-                        mb="24px"
-                      />
-                    </Flex>
-                    <FormLabel ms="4px" fontSize="xs" fontWeight="bold">
-                      {intl.formatMessage({ id: 'app.observations' })}
-                    </FormLabel>
-                    <Textarea
-                      fontSize="xs"
-                      ms="4px"
-                      borderRadius="15px"
-                      type="text"
-                      placeholder={intl.formatMessage({ id: 'app.descriptionOfTheEvent' })}
-                      mb="24px"
-                      {...register('observation')}
-                    />
-                    <Text color={textColor} fontSize="sm" fontWeight="bold" mb="12px">
-                      {intl.formatMessage({ id: 'app.productionImages' })}
-                    </Text>
-                    <Flex
-                      align="center"
-                      justify="center"
-                      border="1px dashed #E2E8F0"
-                      borderRadius="15px"
-                      w="100%"
-                      maxWidth={'980px'}
-                      cursor="pointer"
-                      overflowY={'auto'}
-                      minH={'175px'}
-                      {...getRootProps({ className: 'dropzone' })}
+    // Clean up removed URL
+    URL.revokeObjectURL(previewUrls[index]);
+
+    setUploadedImages(newImages);
+    setPreviewUrls(newUrls);
+  };
+
+  // Form submission handler
+  const onSubmitForm = (data) => {
+    try {
+      const finalData = {
+        ...data,
+        production_amount: Number(data.production_amount),
+        album: { images: uploadedImages }
+      };
+
+      finishCurrentHistory({
+        companyId: currentCompany?.id,
+        establishmentId,
+        parcelId: parcelId,
+        historyData: finalData
+      });
+
+      toast({
+        title: 'Production Completed',
+        description: 'Production has been finished successfully.',
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    } catch (error) {
+      console.error('Submit error:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to save production. Please try again.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  };
+
+  const handleCancel = () => {
+    navigate(`/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/`);
+  };
+
+  // Handle successful submission
+  useEffect(() => {
+    if (isSuccess) {
+      navigate(`/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/`);
+    }
+  }, [isSuccess, navigate, establishmentId, parcelId]);
+
+  // Cleanup preview URLs on unmount
+  useEffect(() => {
+    return () => {
+      previewUrls.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, []);
+
+  // Step progression logic
+  const nextStep = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const previousStep = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const goToStep = (step) => {
+    setCurrentStep(step);
+  };
+
+  // Check if current step is valid
+  const isStepValid = (step) => {
+    if (step === 0) {
+      // Production info step - check required fields
+      const formData = methods.getValues();
+      return formData.production_amount && formData.lot_id && formData.finish_date;
+    }
+    if (step === 1) {
+      // Media step - no required validation
+      return true;
+    }
+    return false;
+  };
+
+  // Get completed steps
+  const getCompletedSteps = () => {
+    const completed = [];
+    for (let i = 0; i < currentStep; i++) {
+      if (isStepValid(i)) {
+        completed.push(i);
+      }
+    }
+    return completed;
+  };
+
+  return (
+    <StandardPage
+      title="Finish Production"
+      description="Complete the production cycle by entering final details and uploading documentation"
+      showBackButton
+      onBack={handleCancel}
+      rightAction={
+        <Badge colorScheme="green" variant="subtle" px={3} py={1} borderRadius="full">
+          <HStack spacing={1}>
+            <Icon as={FaLeaf} boxSize={3} />
+            <Text fontSize="sm">Final Step</Text>
+          </HStack>
+        </Badge>
+      }
+    >
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmitForm)}>
+          <VStack spacing={8} align="stretch">
+            {/* Progress Stepper */}
+            <StandardStepper
+              steps={steps}
+              currentStep={currentStep}
+              completedSteps={getCompletedSteps()}
+              allowStepClick={true}
+              onStepClick={goToStep}
+            />
+
+            {/* Step 1: Production Information */}
+            {currentStep === 0 && (
+              <StandardCard
+                title="Production Information"
+                subtitle="Enter the final details for this production cycle"
+              >
+                <VStack spacing={6} align="stretch">
+                  {/* Production Amount & Lot Number */}
+                  <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
+                    <StandardField
+                      label={
+                        intl.formatMessage({ id: 'app.productionAmount' }) || 'Production Amount'
+                      }
+                      error={errors.production_amount?.message}
+                      helpText="Total volume or quantity produced"
+                      required
                     >
-                      <Input {...getInputProps()} />
-                      <Button variant="no-hover">
-                        {acceptedFiles.length > 0 ? (
-                          <Flex gap="20px" p="20px" flexWrap={'wrap'}>
-                            {acceptedFiles.map((file, index) => (
-                              <Box key={index}>
-                                <img
-                                  src={URL.createObjectURL(file)} // Create a preview URL for the image
-                                  alt={file.name}
-                                  style={{
-                                    width: '150px',
-                                    height: '100px',
-                                    borderRadius: '15px',
-                                    objectFit: 'contain'
-                                  }}
-                                />
-                                <Text
-                                  color="gray.400"
-                                  fontWeight="normal"
-                                  maxWidth="150px"
-                                  textOverflow={'ellipsis'}
-                                  overflow={'hidden'}
-                                >
-                                  {file.name}
-                                </Text>
-                              </Box>
-                            ))}
-                          </Flex>
-                        ) : (
-                          <Text color="gray.400" fontWeight="normal">
-                            {intl.formatMessage({ id: 'app.dropFilesHereToUpload' })}
-                          </Text>
-                        )}
-                      </Button>
-                    </Flex>
-                    <Flex justifyContent={'flex-end'}>
-                      <Button
-                        variant="no-hover"
-                        bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
-                        alignSelf="flex-end"
-                        mt="24px"
-                        w={{ sm: '75px', lg: '100px' }}
-                        h="35px"
-                        type="submit"
+                      <StandardInput
+                        {...methods.register('production_amount')}
+                        placeholder={
+                          intl.formatMessage({ id: 'app.volumeOfTheProduct' }) ||
+                          'Enter production volume'
+                        }
+                        leftElement={<Icon as={MdInventory} color="gray.400" />}
+                        type="number"
+                        min="0"
+                        step="0.01"
+                      />
+                    </StandardField>
+
+                    <StandardField
+                      label={intl.formatMessage({ id: 'app.lotNumber' }) || 'Lot Number'}
+                      error={errors.lot_id?.message}
+                      helpText="Unique identifier for this batch"
+                      required
+                    >
+                      <StandardInput
+                        {...methods.register('lot_id')}
+                        placeholder={
+                          intl.formatMessage({ id: 'app.lotNumber' }) || 'Enter lot number'
+                        }
+                        leftElement={<Icon as={MdNumbers} color="gray.400" />}
+                        maxLength={50}
+                      />
+                    </StandardField>
+                  </SimpleGrid>
+
+                  {/* Finish Date */}
+                  <StandardField
+                    label={intl.formatMessage({ id: 'app.finishDate' }) || 'Completion Date'}
+                    error={errors.finish_date?.message}
+                    helpText="When was this production cycle completed?"
+                    required
+                  >
+                    <StandardInput
+                      {...methods.register('finish_date')}
+                      placeholder="Select completion date and time"
+                      leftElement={<Icon as={FaCalendarAlt} color="gray.400" />}
+                      type="datetime-local"
+                    />
+                  </StandardField>
+
+                  {/* Observations */}
+                  <StandardField
+                    label={intl.formatMessage({ id: 'app.observations' }) || 'Observations'}
+                    error={errors.observation?.message}
+                    helpText="Additional notes about this production cycle (optional)"
+                  >
+                    <StandardTextarea
+                      {...methods.register('observation')}
+                      placeholder={
+                        intl.formatMessage({ id: 'app.descriptionOfTheEvent' }) ||
+                        'Enter any observations or notes'
+                      }
+                      rows={4}
+                      leftElement={<Icon as={MdDescription} color="gray.400" />}
+                    />
+                  </StandardField>
+
+                  {/* Step Navigation */}
+                  <HStack spacing={4} justify="flex-end" pt={4}>
+                    <StandardButton variant="outline" onClick={handleCancel} isDisabled={isLoading}>
+                      Cancel
+                    </StandardButton>
+
+                    <StandardButton onClick={nextStep} isDisabled={!isStepValid(0)}>
+                      Continue to Media
+                    </StandardButton>
+                  </HStack>
+                </VStack>
+              </StandardCard>
+            )}
+
+            {/* Step 2: Media Upload */}
+            {currentStep === 1 && (
+              <StandardCard
+                title="Production Images"
+                subtitle="Upload photos documenting the completed production"
+              >
+                <VStack spacing={6} align="stretch">
+                  {/* Image Upload Dropzone */}
+                  <StandardField
+                    label={
+                      intl.formatMessage({ id: 'app.productionImages' }) || 'Production Images'
+                    }
+                    helpText="Upload up to 5 high-quality images (JPG, PNG, GIF - max 5MB each)"
+                  >
+                    {/* Current Images Preview */}
+                    {previewUrls.length > 0 && (
+                      <Box mb={4}>
+                        <Text fontSize="sm" fontWeight="medium" mb={3} color="gray.600">
+                          Uploaded Images ({previewUrls.length}/5)
+                        </Text>
+                        <SimpleGrid columns={{ base: 2, md: 3, lg: 5 }} spacing={3}>
+                          {previewUrls.map((url, index) => (
+                            <Box
+                              key={index}
+                              position="relative"
+                              borderRadius="md"
+                              overflow="hidden"
+                            >
+                              <Image
+                                src={url}
+                                alt={`Production image ${index + 1}`}
+                                objectFit="cover"
+                                h="80px"
+                                w="100%"
+                                borderRadius="md"
+                              />
+                              <IconButton
+                                aria-label="Remove image"
+                                icon={<FaTrash />}
+                                size="xs"
+                                colorScheme="red"
+                                position="absolute"
+                                top={1}
+                                right={1}
+                                onClick={() => removeImage(index)}
+                              />
+                            </Box>
+                          ))}
+                        </SimpleGrid>
+                      </Box>
+                    )}
+
+                    {/* Dropzone */}
+                    {uploadedImages.length < 5 && (
+                      <Box
+                        {...getRootProps()}
+                        border="2px dashed"
+                        borderColor={isDragActive ? 'green.400' : 'gray.300'}
+                        borderRadius="lg"
+                        p={8}
+                        textAlign="center"
+                        cursor="pointer"
+                        transition="all 0.3s ease"
+                        bg={isDragActive ? 'green.50' : 'gray.50'}
+                        _hover={{
+                          borderColor: 'green.400',
+                          bg: 'green.50',
+                          transform: 'translateY(-2px)',
+                          boxShadow: 'lg'
+                        }}
                       >
-                        {isLoading ? (
-                          <CircularProgress isIndeterminate value={1} color="#313860" size="25px" />
-                        ) : (
-                          <Text fontSize="xs" color="#fff" fontWeight="bold">
-                            {intl.formatMessage({ id: 'app.send' })}
-                          </Text>
-                        )}
-                      </Button>
-                    </Flex>
-                  </form>
-                </FormProvider>
-              </CardBody>
-            </Card>
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-    </Flex>
+                        <ChakraInput {...getInputProps()} />
+
+                        <VStack spacing={4}>
+                          <Icon
+                            as={isDragActive ? FaUpload : FaCamera}
+                            boxSize={8}
+                            color={isDragActive ? 'green.500' : 'gray.400'}
+                          />
+                          <VStack spacing={1}>
+                            <Text fontWeight="medium" color="gray.700">
+                              {isDragActive
+                                ? intl.formatMessage({ id: 'app.dropFilesHere' }) ||
+                                  'Drop files here'
+                                : intl.formatMessage({ id: 'app.dragDropOrClick' }) ||
+                                  'Drag & drop images here, or click to select'}
+                            </Text>
+                            <Text fontSize="sm" color="gray.500">
+                              {uploadedImages.length === 0
+                                ? 'Up to 5 images, max 5MB each'
+                                : `${5 - uploadedImages.length} more images allowed`}
+                            </Text>
+                          </VStack>
+
+                          <Badge colorScheme="blue" variant="subtle">
+                            <HStack spacing={1}>
+                              <Icon as={FaImage} boxSize={3} />
+                              <Text fontSize="xs">JPG, PNG, GIF, WEBP</Text>
+                            </HStack>
+                          </Badge>
+                        </VStack>
+                      </Box>
+                    )}
+                  </StandardField>
+
+                  {/* Upload Limit Notice */}
+                  {uploadedImages.length >= 5 && (
+                    <StandardAlert
+                      status="info"
+                      title="Upload Limit Reached"
+                      description="Maximum of 5 images allowed. Remove an image to add a new one."
+                    />
+                  )}
+
+                  {/* Step Navigation */}
+                  <HStack spacing={4} justify="space-between" pt={4}>
+                    <StandardButton variant="outline" onClick={previousStep}>
+                      Back to Production Info
+                    </StandardButton>
+
+                    <StandardButton
+                      type="submit"
+                      isLoading={isLoading}
+                      loadingText="Finishing Production..."
+                      size="lg"
+                      px={8}
+                    >
+                      {intl.formatMessage({ id: 'app.finishProduction' }) || 'Finish Production'}
+                    </StandardButton>
+                  </HStack>
+                </VStack>
+              </StandardCard>
+            )}
+          </VStack>
+        </form>
+      </FormProvider>
+    </StandardPage>
   );
 }
 
