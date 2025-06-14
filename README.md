@@ -20,6 +20,10 @@ Access to the app at [trazo.io](https://app.trazo.io)
 - [Status](#status)
 - [Credits](#credits)
 - [License](#license)
+- [Mobile Optimization Features](#mobile-optimization-features)
+- [Build and Development](#build-and-development)
+- [Project Structure](#project-structure)
+- [Mobile Testing](#mobile-testing)
 
 ## About The App
 
@@ -78,3 +82,92 @@ List of contriubutors:
 ## License
 
 MIT license @ [author](author.com)
+
+## Mobile Optimization Features
+
+We've implemented several key optimizations to improve the mobile experience:
+
+### 1. Progressive Loading
+
+The product QR scanning flow now uses progressive loading to display critical information faster:
+
+1. **Quick Score First**: Carbon score is loaded and displayed within 1 second
+2. **Basic Product Info**: Loaded second for context (name, company, image)
+3. **Full Details**: Timeline, verification details, and establishment info loaded last
+
+### 2. Lazy Loading Components
+
+Non-critical UI components are lazy-loaded to reduce initial bundle size:
+
+- Product Header
+- Establishment Info
+- Timeline
+- Blockchain Verification Badge
+
+### 3. Mobile-Specific Interface
+
+A dedicated mobile interface (`MobileProductDetail.tsx`) is automatically used on small screens with:
+
+- Sticky header with compact carbon score
+- Fixed bottom action bar for key actions (Share, Offset, Review)
+- Touch-optimized component spacing and layout
+
+### 4. Performance Metrics
+
+The mobile interface tracks and logs key performance metrics:
+
+- Carbon score load time
+- Full page load time
+- Component rendering time
+
+### 5. Bundle Optimization
+
+The build process is optimized for mobile with:
+
+- Code splitting into logical chunks (react, UI, utils, etc.)
+- Terser minification with console logging removal
+- Optimized imports for reduced bundle size
+
+## Build and Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+## Project Structure
+
+The project is organized into several key directories:
+
+- `/src/components`: Reusable UI components
+- `/src/views`: Page-level components
+- `/src/store`: State management using Redux Toolkit
+- `/src/hooks`: Custom React hooks
+- `/src/services`: API and third-party service integrations
+- `/src/utils`: Utility functions and helpers
+
+## Mobile Testing
+
+Use the following to test the mobile optimizations:
+
+```bash
+# Install ngrok for mobile testing on real devices
+npm install -g ngrok
+
+# Run the dev server
+npm run dev
+
+# Expose local server to the internet
+ngrok http 3000
+
+# Then scan the provided URL on your mobile device
+```

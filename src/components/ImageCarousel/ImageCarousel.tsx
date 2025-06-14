@@ -18,16 +18,17 @@ const ImageCarousel = (props: ImageCarouselProps) => {
     }
   }, [imagesList]);
 
+  console.log('currentImage', currentImage);
+
   return (
     <Flex direction="column" me={{ lg: '48px', xl: '48px' }} mb={{ sm: '24px', lg: '0px' }}>
       <Box
         w={{ sm: '80%', md: '60%', lg: '380px', xl: '100%' }}
         h={{ sm: '80%', md: '60%', lg: '230px', xl: '300px' }}
         mb="26px"
-        mx={{ sm: 'auto', lg: '0px' }}
-      >
+        mx={{ sm: 'auto', lg: '0px' }}>
         <Image
-          src={currentImage}
+          src={currentImage.image as string}
           w="100%"
           h="100%"
           borderRadius="15px"
@@ -39,22 +40,20 @@ const ImageCarousel = (props: ImageCarouselProps) => {
         direction="row"
         spacing={{ sm: '20px', md: '35px', lg: '20px' }}
         mx="auto"
-        mb={{ sm: '24px', lg: '0px' }}
-      >
+        mb={{ sm: '24px', lg: '0px' }}>
         {imagesList &&
           imagesList.length > 0 &&
           imagesList.map((image) => (
             <Box
               w={{ sm: '36px', md: '90px', lg: '60px' }}
-              h={{ sm: '36px', md: '90px', lg: '60px' }}
-            >
+              h={{ sm: '36px', md: '90px', lg: '60px' }}>
               <Image
-                src={image}
+                src={image.image as string}
                 w="100%"
                 h="100%"
                 borderRadius="15px"
                 cursor="pointer"
-                onClick={(e) => setCurrentImage(e.target.src)}
+                onClick={(e) => setCurrentImage(e.target.src as string)}
               />
             </Box>
           ))}

@@ -101,7 +101,11 @@
     "jsdom": "^22.1.0",
     "knip": "^2.27.1",
     "prettier": "^2.2.1",
-    "vitest": "^0.34.6"
+    "rollup-plugin-visualizer": "^6.0.3",
+    "terser": "^5.42.0",
+    "vite-plugin-compression2": "^2.0.1",
+    "vitest": "^0.34.6",
+    "webpack-bundle-analyzer": "^4.10.2"
   },
   "browserslist": {
     "production": [

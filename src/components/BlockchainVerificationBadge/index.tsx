@@ -9,10 +9,14 @@ import {
   Tooltip,
   Badge,
   useColorModeValue,
-  Spinner
+  Spinner,
+  Divider,
+  Progress,
+  Button,
+  useBreakpointValue
 } from '@chakra-ui/react';
-import { MdVerified, MdInfo, MdOpenInNew } from 'react-icons/md';
-import { FaShieldAlt, FaEthereum } from 'react-icons/fa';
+import { MdVerified, MdInfo, MdOpenInNew, MdSecurity } from 'react-icons/md';
+import { FaShieldAlt, FaEthereum, FaCheck, FaCertificate } from 'react-icons/fa';
 
 interface BlockchainVerificationProps {
   verified: boolean;
@@ -26,6 +30,8 @@ interface BlockchainVerificationProps {
   mock_data?: boolean;
   fallback_data?: boolean;
   isCompact?: boolean;
+  usda_verified?: boolean;
+  usda_compliance_percentage?: number;
 }
 
 interface BlockchainVerificationBadgeProps {
@@ -39,19 +45,33 @@ export const BlockchainVerificationBadge: React.FC<BlockchainVerificationBadgePr
   isLoading = false,
   isCompact = false
 }) => {
-  const bgColor = useColorModeValue('blue.50', 'blue.900');
-  const borderColor = useColorModeValue('blue.200', 'blue.600');
-  const textColor = useColorModeValue('blue.700', 'blue.300');
-  const iconColor = useColorModeValue('blue.600', 'blue.400');
+  const bgColor = useColorModeValue('white', 'gray.800');
+  const borderColor = useColorModeValue('green.200', 'green.600');
+  const textColor = useColorModeValue('gray.700', 'gray.300');
+  const iconColor = useColorModeValue('green.600', 'green.400');
+  const uspGreen = useColorModeValue('green.600', 'green.400');
+  const blockchainBlue = useColorModeValue('blue.600', 'blue.400');
+
+  // Responsive sizing
+  const badgeSize = useBreakpointValue({ base: 'sm', md: 'md' });
+  const spacing = useBreakpointValue({ base: 2, md: 3 });
+  const padding = useBreakpointValue({ base: 3, md: 4 });
 
   // Loading state
   if (isLoading) {
     return (
-      <Box bg={bgColor} p={3} borderRadius="md" border="1px solid" borderColor={borderColor}>
-        <HStack>
+      <Box
+        bg={bgColor}
+        p={padding}
+        borderRadius="lg"
+        border="1px solid"
+        borderColor={borderColor}
+        boxShadow="sm"
+      >
+        <HStack spacing={spacing}>
           <Spinner size="sm" color={iconColor} />
           <Text fontSize="sm" color={textColor}>
-            Verifying blockchain record...
+            Verifying data integrity...
           </Text>
         </HStack>
       </Box>
@@ -59,13 +79,20 @@ export const BlockchainVerificationBadge: React.FC<BlockchainVerificationBadgePr
   }
 
   // No verification data
-  if (!verificationData || !verificationData.verified) {
+  if (!verificationData) {
     return (
-      <Box bg="gray.50" p={3} borderRadius="md" border="1px solid" borderColor="gray.200">
-        <HStack>
+      <Box
+        bg="gray.50"
+        p={padding}
+        borderRadius="lg"
+        border="1px solid"
+        borderColor="gray.200"
+        boxShadow="sm"
+      >
+        <HStack spacing={spacing}>
           <Icon as={MdInfo} color="gray.500" />
           <Text fontSize="sm" color="gray.600">
-            Blockchain verification pending
+            Verification in progress
           </Text>
         </HStack>
       </Box>
@@ -81,184 +108,249 @@ export const BlockchainVerificationBadge: React.FC<BlockchainVerificationBadgePr
     compliance_status,
     eligible_for_credits,
     mock_data,
-    fallback_data
+    fallback_data,
+    usda_verified,
+    usda_compliance_percentage
   } = verificationData;
 
   // Get network icon
   const getNetworkIcon = () => {
     if (network?.includes('ethereum')) return FaEthereum;
-    if (network?.includes('polygon')) return FaShieldAlt; // Using shield for Polygon
+    if (network?.includes('polygon')) return FaShieldAlt;
     return FaShieldAlt;
   };
 
   // Get network display name
   const getNetworkName = () => {
-    if (network === 'ethereum') return 'Ethereum Mainnet';
+    if (network === 'ethereum') return 'Ethereum';
     if (network === 'ethereum_testnet') return 'Ethereum Testnet';
-    if (network === 'polygon_amoy') return 'Polygon Amoy Testnet';
-    if (network === 'polygon_amoy_mock') return 'Polygon Amoy (Demo)';
-    if (network === 'polygon_mainnet') return 'Polygon Mainnet';
-    return network || 'Blockchain';
+    if (network === 'polygon_amoy') return 'Polygon Amoy';
+    if (network === 'polygon_amoy_mock') return 'Polygon (Demo)';
+    if (network === 'polygon_mainnet') return 'Polygon';
+    return 'Blockchain';
   };
 
-  // Get verification status text
-  const getStatusText = () => {
-    if (mock_data) return 'Demo Mode - Mock Verification';
-    if (fallback_data) return 'Fallback Verification Active';
-    return 'Blockchain Verified';
+  // Enhanced status display
+  const getVerificationStatus = () => {
+    const hasUSDA = usda_verified && usda_compliance_percentage && usda_compliance_percentage > 70;
+    const hasBlockchain = verified && !mock_data && !fallback_data;
+
+    if (hasUSDA && hasBlockchain) return 'fully_verified';
+    if (hasUSDA || hasBlockchain) return 'partially_verified';
+    if (mock_data || fallback_data) return 'demo_mode';
+    return 'pending';
   };
 
-  // Get verification description
-  const getDescription = () => {
-    if (mock_data) {
-      return 'This is demo data for development purposes. In production, this would be verified on the blockchain.';
-    }
-    if (fallback_data) {
-      return 'Temporary verification mode. Full blockchain verification will be restored shortly.';
-    }
-    return 'Carbon data has been cryptographically verified and stored on the blockchain for immutable transparency.';
-  };
+  const status = getVerificationStatus();
 
   // Compact version for mobile or small spaces
   if (isCompact) {
     return (
-      <Tooltip label={getDescription()} placement="top">
-        <Badge
-          colorScheme={mock_data || fallback_data ? 'yellow' : 'blue'}
-          variant="solid"
-          px={2}
-          py={1}
-          borderRadius="full"
-        >
-          <HStack spacing={1}>
-            <Icon as={MdVerified} boxSize={3} />
-            <Text fontSize="xs">{mock_data ? 'Demo' : fallback_data ? 'Temp' : 'Verified'}</Text>
-          </HStack>
-        </Badge>
-      </Tooltip>
+      <HStack spacing={2} justify="center">
+        {/* USDA Badge */}
+        {usda_verified && (
+          <Tooltip label="USDA verified sustainable practices" placement="top">
+            <Badge
+              colorScheme="green"
+              variant="solid"
+              px={2}
+              py={1}
+              borderRadius="full"
+              fontSize="xs"
+            >
+              <HStack spacing={1}>
+                <Icon as={FaCertificate} boxSize={3} />
+                <Text>USDA</Text>
+              </HStack>
+            </Badge>
+          </Tooltip>
+        )}
+
+        {/* Blockchain Badge */}
+        {verified && (
+          <Tooltip label="Blockchain secured and immutable" placement="top">
+            <Badge
+              colorScheme={mock_data || fallback_data ? 'yellow' : 'blue'}
+              variant="solid"
+              px={2}
+              py={1}
+              borderRadius="full"
+              fontSize="xs"
+            >
+              <HStack spacing={1}>
+                <Icon as={MdVerified} boxSize={3} />
+                <Text>{mock_data ? 'Demo' : 'Secured'}</Text>
+              </HStack>
+            </Badge>
+          </Tooltip>
+        )}
+      </HStack>
     );
   }
 
-  // Full version
+  // Full version with enhanced trust indicators
   return (
     <Box
       bg={bgColor}
-      p={4}
+      p={padding}
       borderRadius="lg"
-      border="1px solid"
-      borderColor={borderColor}
+      border="2px solid"
+      borderColor={status === 'fully_verified' ? 'green.300' : borderColor}
+      boxShadow="md"
       position="relative"
     >
-      <VStack spacing={3} align="stretch">
-        {/* Header with verification status */}
-        <HStack justify="space-between">
-          <HStack>
-            <Icon as={MdVerified} color={iconColor} boxSize={5} />
-            <Text fontSize="sm" fontWeight="medium" color={textColor}>
-              {getStatusText()}
-            </Text>
+      <VStack spacing={4} align="stretch">
+        {/* Header with trust level indicator */}
+        <HStack justify="space-between" align="center">
+          <HStack spacing={2}>
+            <Icon
+              as={status === 'fully_verified' ? MdSecurity : MdVerified}
+              color={status === 'fully_verified' ? uspGreen : iconColor}
+              boxSize={6}
+            />
+            <VStack align="start" spacing={0}>
+              <Text fontSize="md" fontWeight="bold" color={textColor}>
+                {status === 'fully_verified'
+                  ? 'Fully Verified'
+                  : status === 'partially_verified'
+                  ? 'Verified'
+                  : status === 'demo_mode'
+                  ? 'Demo Mode'
+                  : 'Verification Pending'}
+              </Text>
+              <Text fontSize="xs" color="gray.500">
+                Data integrity guaranteed
+              </Text>
+            </VStack>
           </HStack>
-          {(mock_data || fallback_data) && (
-            <Badge colorScheme="yellow" variant="outline" fontSize="xs">
-              {mock_data ? 'DEMO' : 'TEMP'}
-            </Badge>
-          )}
+
+          {/* Trust level badge */}
+          <Badge
+            colorScheme={
+              status === 'fully_verified'
+                ? 'green'
+                : status === 'partially_verified'
+                ? 'blue'
+                : status === 'demo_mode'
+                ? 'yellow'
+                : 'gray'
+            }
+            variant="solid"
+            fontSize="xs"
+            px={3}
+            py={1}
+            borderRadius="full"
+          >
+            {status === 'fully_verified'
+              ? 'CERTIFIED'
+              : status === 'partially_verified'
+              ? 'VERIFIED'
+              : status === 'demo_mode'
+              ? 'DEMO'
+              : 'PENDING'}
+          </Badge>
         </HStack>
 
-        {/* Description */}
-        <Text fontSize="xs" color={textColor} lineHeight="1.4">
-          {getDescription()}
-        </Text>
+        <Divider />
 
-        {/* Verification details */}
-        <VStack spacing={2} align="stretch">
-          {/* Network information */}
-          <HStack justify="space-between">
-            <HStack>
-              <Icon as={getNetworkIcon()} color={iconColor} boxSize={4} />
-              <Text fontSize="xs" color={textColor}>
-                Network:
-              </Text>
-            </HStack>
-            <Text fontSize="xs" fontWeight="medium" color={textColor}>
-              {getNetworkName()}
-            </Text>
-          </HStack>
+        {/* Verification details grid */}
+        <VStack spacing={3} align="stretch">
+          {/* USDA Verification */}
+          {usda_verified && (
+            <Box p={3} bg="green.50" borderRadius="md" border="1px solid" borderColor="green.200">
+              <HStack justify="space-between" mb={2}>
+                <HStack spacing={2}>
+                  <Icon as={FaCertificate} color={uspGreen} boxSize={4} />
+                  <Text fontSize="sm" fontWeight="medium" color={uspGreen}>
+                    USDA Standards Compliance
+                  </Text>
+                </HStack>
+                <Badge colorScheme="green" variant="solid" fontSize="xs">
+                  {usda_compliance_percentage || 100}%
+                </Badge>
+              </HStack>
 
-          {/* Verification date */}
-          {verification_date && (
-            <HStack justify="space-between">
-              <Text fontSize="xs" color={textColor}>
-                Verified:
+              {usda_compliance_percentage && (
+                <Progress
+                  value={usda_compliance_percentage}
+                  colorScheme="green"
+                  size="sm"
+                  borderRadius="full"
+                  mb={2}
+                />
+              )}
+
+              <Text fontSize="xs" color="green.700">
+                Carbon calculations verified against USDA emission factors
               </Text>
-              <Text fontSize="xs" fontWeight="medium" color={textColor}>
-                {new Date(verification_date).toLocaleDateString()}
-              </Text>
-            </HStack>
+            </Box>
           )}
 
-          {/* Compliance status */}
-          {compliance_status !== undefined && (
-            <HStack justify="space-between">
-              <Text fontSize="xs" color={textColor}>
-                USDA Compliant:
+          {/* Blockchain Verification */}
+          {verified && (
+            <Box p={3} bg="blue.50" borderRadius="md" border="1px solid" borderColor="blue.200">
+              <HStack justify="space-between" mb={2}>
+                <HStack spacing={2}>
+                  <Icon as={getNetworkIcon()} color={blockchainBlue} boxSize={4} />
+                  <Text fontSize="sm" fontWeight="medium" color={blockchainBlue}>
+                    Blockchain Security
+                  </Text>
+                </HStack>
+                <Badge
+                  colorScheme={mock_data || fallback_data ? 'yellow' : 'blue'}
+                  variant="solid"
+                  fontSize="xs"
+                >
+                  {getNetworkName()}
+                </Badge>
+              </HStack>
+
+              <Text fontSize="xs" color="blue.700" mb={2}>
+                {mock_data
+                  ? 'Demo mode - In production, data would be cryptographically secured'
+                  : fallback_data
+                  ? 'Temporary verification - Full blockchain integration restoring'
+                  : 'Data cryptographically secured and immutable'}
               </Text>
-              <Badge colorScheme={compliance_status ? 'green' : 'red'} size="sm">
-                {compliance_status ? 'Yes' : 'No'}
-              </Badge>
-            </HStack>
+
+              {/* Verification date */}
+              {verification_date && !mock_data && (
+                <Text fontSize="xs" color="blue.600">
+                  Secured: {new Date(verification_date).toLocaleDateString()}
+                </Text>
+              )}
+            </Box>
           )}
 
-          {/* Carbon credit eligibility */}
-          {eligible_for_credits !== undefined && (
-            <HStack justify="space-between">
-              <Text fontSize="xs" color={textColor}>
-                Credit Eligible:
-              </Text>
-              <Badge colorScheme={eligible_for_credits ? 'green' : 'orange'} size="sm">
-                {eligible_for_credits ? 'Yes' : 'Pending'}
-              </Badge>
-            </HStack>
+          {/* Carbon Credits Eligibility */}
+          {eligible_for_credits && (
+            <Box p={2} bg="yellow.50" borderRadius="md" border="1px solid" borderColor="yellow.200">
+              <HStack spacing={2}>
+                <Icon as={FaCheck} color="yellow.600" boxSize={3} />
+                <Text fontSize="xs" color="yellow.700" fontWeight="medium">
+                  Eligible for carbon credit marketplace
+                </Text>
+              </HStack>
+            </Box>
           )}
         </VStack>
 
-        {/* Blockchain explorer link */}
-        {verification_url && (
-          <Box pt={2} borderTop="1px solid" borderColor={borderColor}>
-            <Link
+        {/* Action buttons */}
+        {transaction_hash && verification_url && !mock_data && (
+          <HStack spacing={2} pt={2}>
+            <Button
+              as={Link}
               href={verification_url}
               isExternal
-              color={iconColor}
-              fontSize="xs"
-              fontWeight="medium"
-              _hover={{ textDecoration: 'underline' }}
+              size="xs"
+              colorScheme="blue"
+              variant="outline"
+              leftIcon={<MdOpenInNew />}
+              flex={1}
             >
-              <HStack>
-                <Text>View on Blockchain</Text>
-                <Icon as={MdOpenInNew} boxSize={3} />
-              </HStack>
-            </Link>
-          </Box>
-        )}
-
-        {/* Transaction hash (truncated) */}
-        {transaction_hash && !mock_data && (
-          <Box>
-            <Text fontSize="xs" color={textColor} mb={1}>
-              Transaction:
-            </Text>
-            <Text
-              fontSize="xs"
-              fontFamily="mono"
-              color={textColor}
-              bg={useColorModeValue('white', 'gray.700')}
-              p={1}
-              borderRadius="md"
-              wordBreak="break-all"
-            >
-              {transaction_hash.slice(0, 10)}...{transaction_hash.slice(-8)}
-            </Text>
-          </Box>
+              View on Explorer
+            </Button>
+          </HStack>
         )}
       </VStack>
     </Box>

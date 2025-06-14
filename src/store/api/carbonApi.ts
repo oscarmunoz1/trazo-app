@@ -488,6 +488,18 @@ export const carbonApi = baseApi.injectEndpoints({
       providesTags: ['CarbonBenchmarks']
     }),
 
+    // Phase 1 Optimization: Quick carbon score for progressive loading
+    getQRCodeQuickScore: builder.query<
+      { carbonScore: number; totalEmissions: number; totalOffsets: number; cache_hit?: boolean },
+      string
+    >({
+      query: (productionId) => ({
+        url: `carbon/public/productions/${productionId}/qr-summary/?quick=true`,
+        method: 'GET'
+      }),
+      providesTags: ['CarbonSummary']
+    }),
+
     // Consumer endpoints
     getQRCodeSummary: builder.query<QRCodeSummary, string>({
       query: (productionId) => ({
@@ -778,6 +790,7 @@ export const {
   useGetEstablishmentCarbonSummaryQuery,
   useGetProductionCarbonSummaryQuery,
   useGetCarbonBenchmarksQuery,
+  useGetQRCodeQuickScoreQuery,
   useGetQRCodeSummaryQuery,
   useGetPublicCarbonSummaryQuery,
   useGetProductionTimelineQuery,

@@ -2,4 +2,35 @@ node_modules
 package-lock.json
 yarn.lock
 build
+dist
 .DS_Store
+
+# Build artifacts and generated files
+*.log
+*.tgz
+*.tar.gz
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+Thumbs.db
+
+# Performance and analysis files
+bundle-analysis.html
+lighthouse-*.json
+stats.html
+
+# Temporary files
+.tmp/
+.cache/
