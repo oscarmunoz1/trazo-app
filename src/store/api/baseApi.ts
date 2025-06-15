@@ -19,17 +19,13 @@ export const baseApi = createApi({
     'CarbonSummary',
     'CarbonBenchmarks',
     'CarbonRecommendations',
-    'ROISavings',
-    'Equipment',
-    'EquipmentMarketplace',
-    'BulkPurchasing',
-    'GovernmentIncentives',
     'IoTDevice',
     'IoTData',
     'AutomationRule',
     'PendingEvent',
     'Weather',
-    'Education'
+    'Education',
+    'CropTemplate'
   ]
 });
 

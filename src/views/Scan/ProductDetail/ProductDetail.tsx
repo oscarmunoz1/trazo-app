@@ -56,7 +56,9 @@ import {
   AlertTitle,
   AlertDescription,
   Spinner,
-  Container
+  Container,
+  AspectRatio,
+  Center
 } from '@chakra-ui/react';
 import { BsStar, BsStarFill, BsStarHalf } from 'react-icons/bs';
 import {
@@ -105,7 +107,11 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { object, string } from 'zod';
 import { useCommentHistoryMutation, useGetPublicHistoryQuery } from 'store/api/historyApi';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useGetQRCodeSummaryQuery, useGetQRCodeQuickScoreQuery } from 'store/api/carbonApi';
+import {
+  useGetQRCodeSummaryQuery,
+  useGetQRCodeQuickScoreQuery,
+  useGetCompleteSummaryQuery
+} from 'store/api/carbonApi';
 import { useAddEstablishmentCarbonFootprintMutation } from 'store/api/companyApi';
 import { StarIcon, DownloadIcon } from '@chakra-ui/icons';
 
@@ -128,6 +134,7 @@ import { BlockchainVerificationBadge } from '../../../components/BlockchainVerif
 import { EnhancedProductTimeline } from '../../../components/ProductDetail';
 import PerformanceLoading from './components/PerformanceLoading';
 import { CleanLoadingScreen } from './components/CleanLoadingScreen';
+import { ProgressiveQRLoader } from './components/ProgressiveQRLoader';
 
 const options = {
   googleMapApiKey: 'AIzaSyCLHij6DjbLLkhTsTvrRhwuKf8ZGXrx-Q8'
@@ -159,7 +166,9 @@ function ProductDetail() {
 
   const safeEstablishmentData = (path: string[], fallback: any = null) => {
     try {
-      let current: any = historyData?.parcel?.establishment;
+      // Access establishment data from unified response
+      if (!completeData) return fallback;
+      let current: any = completeData?.establishment || completeData?.farmer;
       for (const key of path) {
         if (!current || !current[key]) return fallback;
         current = current[key];
@@ -170,38 +179,37 @@ function ProductDetail() {
     }
   };
 
-  // Phase 1 Optimization: Conditional data loading for performance
-  const [activeTab, setActiveTab] = useState<'carbon' | 'journey' | 'details'>('carbon');
-
-  // Always load history data on first load - removed conditional loading
-  const {
-    data: historyData,
-    error,
-    isLoading,
-    isFetching,
-    refetch
-  } = useGetPublicHistoryQuery(productionId || '', {
-    skip: productionId === undefined
-  });
-
   const toast = useToast();
-  // Phase 1 Optimization: Progressive loading for QR performance
-  // Load carbon score first (quick), then full data
-  const { data: carbonQuickData, isLoading: isCarbonQuickLoading } = useGetQRCodeQuickScoreQuery(
-    productionId || '',
-    {
-      skip: productionId === undefined
-    }
-  );
 
+  // Phase 3 Optimization: Single unified API call for all data
   const {
-    data: carbonData,
-    error: carbonError,
-    isLoading: isCarbonDataLoading,
-    isError: isCarbonDataError
-  } = useGetQRCodeSummaryQuery(productionId || '', {
-    skip: productionId === undefined || !carbonQuickData // Wait for quick data first
+    data: completeData,
+    error: completeError,
+    isLoading: isCompleteLoading,
+    isFetching: isCompleteFetching,
+    refetch: refetchComplete
+  } = useGetCompleteSummaryQuery(productionId || '', {
+    skip: !productionId
   });
+
+  // Extract data from unified response with backward compatibility
+  const carbonData = completeData;
+  const historyData = completeData;
+
+  // Unified error and loading states
+  const carbonError = completeError;
+  const historyError = completeError;
+  const isCarbonDataLoading = isCompleteLoading;
+  const isHistoryLoading = false; // No separate history loading needed
+  const isCarbonFetching = isCompleteFetching;
+  const isHistoryFetching = false; // No separate history fetching needed
+
+  // Refetch functions for backward compatibility
+  const refetchCarbon = refetchComplete;
+  const refetchHistory = refetchComplete;
+
+  // Map data is now always available (no conditional loading needed)
+  const [needsMapData, setNeedsMapData] = useState(true); // Always true since data is unified
 
   const {
     isOpen: isOffsetModalOpen,
@@ -233,9 +241,8 @@ function ProductDetail() {
     }
   ] = useCommentHistoryMutation();
 
-  // Add user analytics state
-  const [userTotalOffset, setUserTotalOffset] = useState(15.5); // For demo purposes
-  const [userLevel, setUserLevel] = useState(2); // For demo purposes
+  // User analytics state
+  const [userTotalOffset, setUserTotalOffset] = useState(15.5);
 
   // Mobile-first responsive utilities
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -245,31 +252,29 @@ function ProductDetail() {
   const carbonScoreSize = useBreakpointValue({ base: 'sm', md: 'md' });
 
   // Progressive loading states
-  const [loadingStage, setLoadingStage] = useState<'initial' | 'carbon' | 'timeline' | 'complete'>(
-    'initial'
+  const [loadingStage, setLoadingStage] = useState<'scanning' | 'carbon' | 'details' | 'complete'>(
+    'scanning'
   );
 
-  // Enhanced gamification state
+  // Points system
   const { points, addPoints } = usePointsStore();
-  const [hasScanned, setHasScanned] = useState(false);
+  const [hasAwardedCarbonPoints, setHasAwardedCarbonPoints] = useState(false);
 
-  // Phase 1 Optimization: Enhanced error handling and progressive display
-  const showProgressiveLoading = isCarbonQuickLoading || (carbonQuickData && isCarbonDataLoading);
-  const hasMinimalData = carbonQuickData || carbonData;
-  const isInitialLoad = !carbonQuickData && !carbonData && isCarbonQuickLoading;
+  // Phase 3 Optimization: Enhanced loading states for unified data
+  const showProgressiveLoading = isCompleteLoading;
+  const hasMinimalData = completeData;
+  const isInitialLoad = !completeData && isCompleteLoading;
 
-  // Enhanced image availability check
-  const hasImages =
-    (carbonData as any)?.images?.length > 0 ||
-    (historyData?.images && historyData.images.length > 0);
-  const productImages = (carbonData as any)?.images || historyData?.images || [];
+  // Enhanced image availability check - Use unified data
+  const hasImages = completeData?.images && completeData.images.length > 0;
+  const productImages = completeData?.images?.map((img) => img.image) || [];
 
-  // Phase 1 Optimization: Enhanced error handling with user-friendly messages
+  // Phase 3 Optimization: Enhanced error handling with unified error state
   useEffect(() => {
-    if (carbonError) {
+    if (completeError) {
       const errorMessage = (() => {
-        if ('status' in carbonError) {
-          switch (carbonError.status) {
+        if ('status' in completeError) {
+          switch (completeError.status) {
             case 404:
               return 'This product information is not available. Please scan a different product.';
             case 429:
@@ -291,35 +296,35 @@ function ProductDetail() {
         isClosable: true,
         position: 'top'
       });
-    } else if (carbonData || carbonQuickData) {
-      // Progressive rewards: Quick data gives fewer points than full data
-      if (carbonQuickData && pointsStore.points === 0) {
-        pointsStore.addPoints(2);
-        toast({
-          title: 'Initial Scan Reward',
-          description: 'You earned 2 Green Points! Full sustainability report loading...',
-          status: 'success',
-          duration: 3000,
-          isClosable: true
-        });
-      } else if (carbonData && !carbonQuickData && pointsStore.points < 5) {
-        pointsStore.addPoints(5);
-        toast({
-          title: 'Complete Scan Reward',
-          description: 'You earned 5 Green Points for viewing the complete sustainability report!',
-          status: 'success',
-          duration: 5000,
-          isClosable: true
-        });
-      }
+    } else if (completeData && pointsStore.points < 5) {
+      // Award points for successful data load
+      pointsStore.addPoints(5);
+      toast({
+        title: 'Scan Reward',
+        description: 'You earned 5 Green Points for viewing the sustainability report!',
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
     }
-  }, [carbonError, carbonData, carbonQuickData, toast, pointsStore]);
+  }, [completeError, completeData, toast, pointsStore]);
 
   const onSubmitHandler = () => {
-    if (commentValue && ((carbonData as any)?.history_scan || historyData?.history_scan)) {
+    // Use scan ID from unified API
+    const scanId = completeData?.history_scan;
+    if (commentValue && scanId) {
       createComment({
         comment: commentValue,
-        scanId: (carbonData as any)?.history_scan || historyData?.history_scan
+        scanId: scanId
+      });
+    } else if (commentValue && !scanId) {
+      // Show error if scan ID not available
+      toast({
+        title: 'Unable to submit comment',
+        description: 'Comment system temporarily unavailable. Please try again later.',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true
       });
     }
   };
@@ -379,11 +384,10 @@ function ProductDetail() {
         title: intl.formatMessage({ id: 'app.offsetError' }) || 'Offset Failed',
         description:
           intl.formatMessage({ id: 'app.offsetErrorDetail' }) ||
-          'There was a problem processing your payment. Please try again.',
+          'There was an error processing your offset. Please try again.',
         status: 'error',
         duration: 5000,
-        isClosable: true,
-        position: 'top'
+        isClosable: true
       });
     } finally {
       setOffsetLoading(false);
@@ -391,14 +395,17 @@ function ProductDetail() {
   };
 
   const handleFeedback = () => {
-    pointsStore.addPoints(2);
+    // Award points for feedback
+    pointsStore.addPoints(3);
+
     toast({
-      title: 'Feedback Submitted',
-      description: 'Thank you for your feedback!',
+      title: 'Thank you for your feedback!',
+      description: 'You earned 3 Green Points for helping us improve.',
       status: 'success',
-      duration: 5000,
+      duration: 3000,
       isClosable: true
     });
+
     onFeedbackModalClose();
   };
 
@@ -406,9 +413,9 @@ function ProductDetail() {
     try {
       await navigator.share({
         title: `${
-          (carbonData as any)?.farmer?.name || historyData?.product?.name || 'Product'
+          completeData?.farmer?.name || completeData?.product?.name || 'Product'
         }'s Sustainable Product`,
-        text: `${carbonData?.carbonScore}/100 carbon score! #Trazo`,
+        text: `${completeData?.carbonScore}/100 carbon score! #Trazo`,
         url: window.location.href
       });
       pointsStore.addPoints(3);
@@ -418,59 +425,75 @@ function ProductDetail() {
   };
 
   const fetchProductData = async () => {
-    const productionId = (carbonData as any)?.product?.id || historyData?.id;
+    const productionId = completeData?.product?.id;
     if (productionId) {
-      // Refresh data by refetching the relevant queries
-      void refetch();
+      // Refresh data by refetching the unified query
+      void refetchComplete();
     }
   };
 
-  // Fix places where reputation is used - use carbon API first, fallback to history
-  const safeReputation = (carbonData as any)?.product?.reputation || historyData?.reputation || 0;
+  // Fix places where reputation is used - use unified API data
+  const safeReputation = completeData?.product?.reputation || 0;
 
   // Define optimization variables after API data is available
-  const hasTimelineFromCarbon = carbonData?.timeline && carbonData.timeline.length > 0;
-  const hasLocationFromCarbon =
-    (carbonData as any)?.farmer?.location || (carbonData as any)?.parcel?.location;
-  // Only need history data if we don't have essential data from carbon API
-  const needsHistoryData =
-    (activeTab === 'journey' || activeTab === 'details') &&
-    (!hasTimelineFromCarbon || !hasLocationFromCarbon);
+  const hasTimelineFromComplete = completeData?.timeline && completeData.timeline.length > 0;
+  const hasLocationFromComplete = completeData?.farmer?.location || completeData?.parcel?.name;
+  // All essential data comes from unified API
+  const hasEssentialData = hasTimelineFromComplete && hasLocationFromComplete;
 
   useEffect(() => {
-    // Add points when QR code is scanned for the first time
-    if (carbonQuickData && !hasScanned) {
-      addPoints(5);
-      setHasScanned(true);
-    }
-  }, [carbonQuickData, hasScanned, addPoints]);
-
-  useEffect(() => {
-    // Progressive loading stages
-    if (isCarbonQuickLoading) {
-      setLoadingStage('initial');
-    } else if (carbonQuickData && isCarbonDataLoading) {
-      setLoadingStage('carbon');
-    } else if (carbonData && isLoading) {
-      setLoadingStage('timeline');
-    } else if (carbonData && historyData) {
-      setLoadingStage('complete');
-    }
-  }, [
-    isCarbonQuickLoading,
-    carbonQuickData,
-    isCarbonDataLoading,
-    carbonData,
-    isLoading,
-    historyData
-  ]);
-
-  useEffect(() => {
-    // Auto-refetch for real-time updates
+    // Reset points flag for new product
     if (productionId) {
-      refetch();
+      setHasAwardedCarbonPoints(false);
     }
-  }, [productionId, refetch]);
+  }, [productionId]);
+
+  // Progressive loading callback for points system
+  const onStageComplete = (stage: string) => {
+    if (stage === 'carbon' && !hasAwardedCarbonPoints && completeData) {
+      pointsStore.addPoints(2);
+      setHasAwardedCarbonPoints(true);
+    }
+  };
+
+  // Early return for loading state
+  if (isCompleteLoading) {
+    return <ProgressiveQRLoader loadingStage={loadingStage} onStageComplete={onStageComplete} />;
+  }
+
+  // Early return for error state
+  if (completeError) {
+    return (
+      <Container maxW="container.lg" py={8}>
+        <Alert status="error" borderRadius="md">
+          <AlertIcon />
+          <Box>
+            <AlertTitle>Unable to load product information</AlertTitle>
+            <AlertDescription>
+              Please check your connection and try again, or scan a different product.
+            </AlertDescription>
+          </Box>
+        </Alert>
+      </Container>
+    );
+  }
+
+  // Early return if no data
+  if (!completeData) {
+    return (
+      <Container maxW="container.lg" py={8}>
+        <Alert status="info" borderRadius="md">
+          <AlertIcon />
+          <Box>
+            <AlertTitle>No product data available</AlertTitle>
+            <AlertDescription>
+              Please scan a valid QR code to view product information.
+            </AlertDescription>
+          </Box>
+        </Alert>
+      </Container>
+    );
+  }
 
   return (
     <Flex direction="column" alignSelf="center" justifySelf="center" overflow="hidden" w="100%">
@@ -486,7 +509,8 @@ function ProductDetail() {
               px={4}
               py={2}
               borderRadius="full"
-              textTransform="none">
+              textTransform="none"
+            >
               <HStack spacing={2}>
                 <Icon as={FaLeaf} boxSize={4} />
                 <Text fontWeight="medium">
@@ -504,7 +528,8 @@ function ProductDetail() {
                 color={titleColor}
                 fontWeight="bold"
                 textAlign="center"
-                letterSpacing="-0.02em">
+                letterSpacing="-0.02em"
+              >
                 {intl.formatMessage({ id: 'app.welcome' })}
               </Heading>
               <Text
@@ -513,7 +538,8 @@ function ProductDetail() {
                 fontWeight="normal"
                 maxW={{ base: '90%', sm: '70%', lg: '60%' }}
                 lineHeight="1.7"
-                textAlign="center">
+                textAlign="center"
+              >
                 {intl.formatMessage({ id: 'app.welcomeMessage' })}
               </Text>
             </VStack>
@@ -573,13 +599,15 @@ function ProductDetail() {
         mb="60px"
         mt="-80px"
         position="relative"
-        zIndex={10}>
+        zIndex={10}
+      >
         <Card
           w={{ sm: '95%', md: '90%', lg: '85%' }}
           p={{ sm: '16px', md: '32px', lg: '48px' }}
           boxShadow="0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
           borderRadius="2xl"
-          bg={bgColor}>
+          bg={bgColor}
+        >
           <CardHeader mb="24px">
             <HStack spacing={3}>
               <Badge colorScheme="green" fontSize="md" px={3} py={1} borderRadius="full">
@@ -593,7 +621,9 @@ function ProductDetail() {
             </HStack>
             <HStack mt={4} spacing={4} align="center">
               <Heading color={textColor} fontSize={headerFontSize} fontWeight="bold">
-                {(carbonData as any)?.farmer?.name || historyData?.product?.name || 'Product'}
+                {(carbonData as any)?.farmer?.name ||
+                  (carbonData as any)?.product?.name ||
+                  'Product'}
               </Heading>
               <Stack direction="row" spacing="6px" color="orange.300">
                 <Icon
@@ -626,7 +656,9 @@ function ProductDetail() {
               </Stack>
             </HStack>
             <Text color="gray.500" fontSize="lg" mt={1}>
-              {(carbonData as any)?.farmer?.location || historyData?.company || 'Farm Location'}
+              {(carbonData as any)?.farmer?.location ||
+                (carbonData as any)?.parcel?.location ||
+                'Farm Location'}
             </Text>
             {carbonData &&
               carbonData.industryPercentile !== undefined &&
@@ -641,36 +673,42 @@ function ProductDetail() {
           </CardHeader>
 
           <CardBody>
+            {/* Phase 2: Enhanced Progressive QR Loading Experience */}
+            {isInitialLoad && (
+              <ProgressiveQRLoader
+                loadingStage={
+                  isInitialLoad
+                    ? 'scanning'
+                    : carbonData && isHistoryLoading
+                    ? 'details'
+                    : 'complete'
+                }
+                carbonScore={(carbonData as any)?.carbonScore}
+                productName={
+                  (carbonData as any)?.farmer?.name ||
+                  (carbonData as any)?.product?.name ||
+                  'Product'
+                }
+                isVerified={(carbonData as any)?.isUsdaVerified || false}
+                onStageComplete={(stage) => {
+                  if (stage === 'carbon' && !hasAwardedCarbonPoints) {
+                    setHasAwardedCarbonPoints(true);
+                    pointsStore.addPoints(2);
+                  }
+                }}
+              />
+            )}
+
+            {/* Development Performance Monitoring */}
             {process.env.NODE_ENV === 'development' && isInitialLoad && (
               <PerformanceLoading
-                isLoading={isCarbonQuickLoading}
+                isLoading={isCarbonDataLoading}
                 loadingStage="initial"
-                carbonQuickLoading={isCarbonQuickLoading}
+                carbonQuickLoading={isCarbonDataLoading}
               />
             )}
 
-            {isInitialLoad && (
-              <CleanLoadingScreen
-                loadingStage="scanning"
-                isMobile={isMobile}
-                showProgressBar={true}
-              />
-            )}
-
-            {carbonQuickData && isCarbonDataLoading && (
-              <CleanLoadingScreen
-                loadingStage="carbon-score"
-                quickCarbonData={{
-                  carbonScore: carbonQuickData.carbonScore,
-                  productName:
-                    (carbonData as any)?.farmer?.name || historyData?.product?.name || 'Product'
-                }}
-                isMobile={isMobile}
-                showProgressBar={true}
-              />
-            )}
-
-            {(carbonData || (carbonQuickData && !isCarbonDataLoading)) && (
+            {carbonData && (
               <>
                 <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={8} mb={10}>
                   <Box>
@@ -707,7 +745,8 @@ function ProductDetail() {
                           borderRadius="md"
                           borderLeft="3px solid"
                           borderColor="blue.400"
-                          bg="blue.50">
+                          bg="blue.50"
+                        >
                           <HStack>
                             <Icon as={FaInfoCircle} color="blue.500" />
                             <Text fontSize="sm" color="blue.700">
@@ -728,7 +767,9 @@ function ProductDetail() {
                     <Box mb={6}>
                       <ConsumerSustainabilityInfo
                         productName={
-                          (carbonData as any)?.farmer?.name || historyData?.product?.name || ''
+                          (carbonData as any)?.farmer?.name ||
+                          (carbonData as any)?.product?.name ||
+                          ''
                         }
                         carbonScore={carbonData?.carbonScore || 0}
                         sustainabilityPractices={
@@ -795,7 +836,8 @@ function ProductDetail() {
                               onClick={() => {
                                 setOffsetAmount(0.05);
                                 onOffsetModalOpen();
-                              }}>
+                              }}
+                            >
                               $0.05
                             </Button>
                             <Button
@@ -805,7 +847,8 @@ function ProductDetail() {
                               onClick={() => {
                                 setOffsetAmount(0.1);
                                 onOffsetModalOpen();
-                              }}>
+                              }}
+                            >
                               $0.10
                             </Button>
                             <Button
@@ -815,7 +858,8 @@ function ProductDetail() {
                               onClick={() => {
                                 setOffsetAmount(0.25);
                                 onOffsetModalOpen();
-                              }}>
+                              }}
+                            >
                               $0.25
                             </Button>
                           </HStack>
@@ -855,7 +899,8 @@ function ProductDetail() {
                             colorScheme="blue"
                             onClick={handleShare}
                             flex={1}
-                            size="md">
+                            size="md"
+                          >
                             {intl.formatMessage({ id: 'app.share' }) || 'Share'} (+3)
                           </Button>
                           <Button
@@ -863,7 +908,8 @@ function ProductDetail() {
                             colorScheme="yellow"
                             onClick={onFeedbackModalOpen}
                             flex={1}
-                            size="md">
+                            size="md"
+                          >
                             {intl.formatMessage({ id: 'app.rate' }) || 'Rate'} (+2)
                           </Button>
                         </HStack>
@@ -880,11 +926,19 @@ function ProductDetail() {
                         </Heading>
                       </HStack>
                       <VStack spacing={4} align="stretch">
-                        {safeEstablishmentData(['photo']) && (
+                        {((carbonData as any)?.farmer?.image ||
+                          safeEstablishmentData(['photo'])) && (
                           <Flex justify="center">
                             <Image
-                              src={safeEstablishmentData(['photo'])}
-                              alt={historyData?.parcel?.establishment?.name || 'Establishment'}
+                              src={
+                                (carbonData as any)?.farmer?.image ||
+                                safeEstablishmentData(['photo'])
+                              }
+                              alt={
+                                (carbonData as any)?.farmer?.name ||
+                                (historyData ? historyData?.parcel?.establishment?.name : null) ||
+                                'Establishment'
+                              }
                               boxSize="150px"
                               objectFit="cover"
                               borderRadius="full"
@@ -894,14 +948,20 @@ function ProductDetail() {
 
                         <HStack>
                           <Text fontWeight="bold">{intl.formatMessage({ id: 'app.name' })}:</Text>
-                          <Text>{historyData?.parcel?.establishment?.name}</Text>
+                          <Text>
+                            {(carbonData as any)?.farmer?.name ||
+                              (historyData ? historyData?.parcel?.establishment?.name : null)}
+                          </Text>
                         </HStack>
 
                         <HStack>
                           <Text fontWeight="bold">
                             {intl.formatMessage({ id: 'app.location' })}:
                           </Text>
-                          <Text>{historyData?.parcel?.establishment?.location}</Text>
+                          <Text>
+                            {(carbonData as any)?.farmer?.location ||
+                              (historyData ? historyData?.parcel?.establishment?.location : null)}
+                          </Text>
                         </HStack>
 
                         {safeEstablishmentData(['certifications']) &&
@@ -929,7 +989,13 @@ function ProductDetail() {
                           </Text>
                           <Box maxH="150px" overflowY="auto" pr={2}>
                             <HTMLRenderer
-                              htmlString={historyData?.parcel?.establishment?.description || ''}
+                              htmlString={
+                                (carbonData as any)?.farmer?.description ||
+                                (historyData
+                                  ? historyData?.parcel?.establishment?.description
+                                  : null) ||
+                                ''
+                              }
                             />
                           </Box>
                         </Box>
@@ -970,7 +1036,9 @@ function ProductDetail() {
                             {intl.formatMessage({ id: 'app.establishment' })}
                           </Text>
                           <Link textDecoration="underline" color="green.500">
-                            {historyData?.parcel.establishment.name}
+                            {(carbonData as any)?.farmer?.name ||
+                              (historyData ? historyData?.parcel?.establishment?.name : null) ||
+                              'Farm'}
                           </Link>
                         </Box>
 
@@ -978,7 +1046,11 @@ function ProductDetail() {
                           <Text fontWeight="bold" color={textColor}>
                             {intl.formatMessage({ id: 'app.location' })}
                           </Text>
-                          <Text color="gray.600">{historyData?.parcel.establishment.location}</Text>
+                          <Text color="gray.600">
+                            {(carbonData as any)?.farmer?.location ||
+                              (historyData ? historyData?.parcel?.establishment?.location : null) ||
+                              'Location available soon'}
+                          </Text>
                         </Box>
 
                         <Box>
@@ -986,7 +1058,9 @@ function ProductDetail() {
                             {intl.formatMessage({ id: 'app.parcel' })}
                           </Text>
                           <Link textDecoration="underline" color="green.500">
-                            {historyData?.parcel.name}
+                            {(carbonData as any)?.parcel?.name ||
+                              (historyData ? historyData?.parcel?.name : null) ||
+                              'Field'}
                           </Link>
                         </Box>
 
@@ -995,9 +1069,11 @@ function ProductDetail() {
                             {intl.formatMessage({ id: 'app.production' })}
                           </Text>
                           <Text color="gray.600">
-                            {`${safeDate(historyData?.start_date)} - ${safeDate(
-                              historyData?.finish_date
-                            )}`}
+                            {historyData
+                              ? `${safeDate(historyData?.start_date)} - ${safeDate(
+                                  historyData?.finish_date
+                                )}`
+                              : 'Production dates available soon'}
                           </Text>
                         </Box>
 
@@ -1022,13 +1098,37 @@ function ProductDetail() {
                           <Text fontWeight="bold" color={textColor}>
                             {intl.formatMessage({ id: 'app.harvestDate' })}
                           </Text>
-                          <Text color="gray.600">{safeDate(historyData?.finish_date)}</Text>
+                          <Text color="gray.600">
+                            {historyData?.finish_date
+                              ? safeDate(historyData.finish_date)
+                              : 'Harvest date available soon'}
+                          </Text>
                         </Box>
                       </SimpleGrid>
                     </Box>
 
                     <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} mb={6}>
-                      <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6}>
+                      <Box
+                        bg={bgColor}
+                        borderRadius="lg"
+                        boxShadow="md"
+                        p={6}
+                        onMouseEnter={() => {
+                          // Trigger history data loading when map section is hovered
+                          if (!needsMapData && productionId) {
+                            setNeedsMapData(true);
+                            refetchHistory();
+                          }
+                        }}
+                        onClick={() => {
+                          // Also trigger on click for mobile users
+                          if (!needsMapData && productionId) {
+                            setNeedsMapData(true);
+                            refetchHistory();
+                          }
+                        }}
+                        cursor="pointer"
+                      >
                         <HStack spacing={2} mb={3}>
                           <Icon as={FaMapMarkerAlt} color="green.500" />
                           <Text fontSize="lg" fontWeight="bold">
@@ -1040,12 +1140,12 @@ function ProductDetail() {
                           <Box>
                             <Text fontWeight="semibold" color="gray.700">
                               {(carbonData as any)?.farmer?.name ||
-                                historyData?.parcel?.establishment?.name ||
+                                (carbonData as any)?.parcel?.name ||
                                 'Farm'}
                             </Text>
                             <Text color="gray.600">
                               {(carbonData as any)?.farmer?.location ||
-                                historyData?.parcel?.establishment?.location ||
+                                (carbonData as any)?.parcel?.location ||
                                 'Location information available in details'}
                             </Text>
                           </Box>
@@ -1064,18 +1164,29 @@ function ProductDetail() {
                             </Box>
                           )}
 
-                          {!isLoaded && (
-                            <Box mt={3} p={3} bg="blue.50" borderRadius="md" w="full">
+                          {!needsMapData && (
+                            <Box mt={3} p={3} bg="green.50" borderRadius="md" w="full">
                               <HStack>
-                                <Icon as={FaMap} color="blue.500" />
-                                <Text fontSize="sm" color="blue.700">
-                                  Map view loading...
+                                <Icon as={FaMap} color="green.500" />
+                                <Text fontSize="sm" color="green.700">
+                                  Click or hover to load interactive map
                                 </Text>
                               </HStack>
                             </Box>
                           )}
 
-                          {isLoaded && historyData?.parcel?.polygon && (
+                          {needsMapData && (!isLoaded || isHistoryLoading) && (
+                            <Box mt={3} p={3} bg="blue.50" borderRadius="md" w="full">
+                              <HStack>
+                                <Icon as={FaMap} color="blue.500" />
+                                <Text fontSize="sm" color="blue.700">
+                                  {isHistoryLoading ? 'Loading map data...' : 'Map view loading...'}
+                                </Text>
+                              </HStack>
+                            </Box>
+                          )}
+
+                          {needsMapData && isLoaded && historyData?.parcel?.polygon && (
                             <Box mt={3} w="full" h="150px" borderRadius="md" overflow="hidden">
                               <GoogleMap
                                 mapContainerStyle={{
@@ -1086,7 +1197,8 @@ function ProductDetail() {
                                 center={
                                   historyData?.parcel?.map_metadata?.center || { lat: 0, lng: 0 }
                                 }
-                                mapTypeId="satellite">
+                                mapTypeId="satellite"
+                              >
                                 <Polygon
                                   path={historyData?.parcel?.polygon || []}
                                   options={{
@@ -1112,23 +1224,20 @@ function ProductDetail() {
                         </HStack>
 
                         <Box maxH="202px" overflowY="auto" pr={2}>
-                          {(carbonData as any)?.farmer?.description ||
-                            (historyData?.parcel?.establishment?.description && (
-                              <HTMLRenderer
-                                htmlString={
-                                  (carbonData as any)?.farmer?.description ||
-                                  historyData?.parcel?.establishment?.description ||
-                                  ''
-                                }
-                              />
-                            ))}
+                          <HTMLRenderer
+                            htmlString={
+                              (carbonData as any)?.farmer?.description ||
+                              historyData?.parcel?.establishment?.description ||
+                              'Farm description will be available soon.'
+                            }
+                          />
                         </Box>
                       </Box>
                     </SimpleGrid>
                   </Box>
                 </SimpleGrid>
 
-                {isLoading && (
+                {isHistoryLoading && (
                   <Box textAlign="center" py={8}>
                     <CleanLoadingScreen
                       loadingStage="product-details"
@@ -1140,15 +1249,17 @@ function ProductDetail() {
               </>
             )}
 
-            <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6} mb={6}>
-              <HStack spacing={2} mb={4}>
-                <Icon as={MdTimeline} color="green.500" boxSize={5} />
-                <Heading as="h3" size="md">
-                  {intl.formatMessage({ id: 'app.productionJourney' })}
-                </Heading>
-              </HStack>
-
-              <VStack spacing={6} align="stretch">
+            {/* Production Timeline - Using Enhanced Timeline Design */}
+            <Card bg={bgColor} borderRadius="lg" boxShadow="md" mb={6}>
+              <CardHeader>
+                <HStack spacing={2} justify="center">
+                  <Icon as={MdTimeline} color="green.500" boxSize={5} />
+                  <Heading as="h3" size="lg" color={textColor}>
+                    {intl.formatMessage({ id: 'app.productionJourney' }) || 'Production Timeline'}
+                  </Heading>
+                </HStack>
+              </CardHeader>
+              <CardBody>
                 {(() => {
                   const carbonTimeline = carbonData?.timeline || [];
                   const historyEvents =
@@ -1159,36 +1270,43 @@ function ProductDetail() {
 
                   let events = carbonTimeline.length > 0 ? carbonTimeline : historyEvents;
 
-                  if (Array.isArray(events)) {
-                    events = events.map((event, index) => ({
-                      id: event.id || `event_${index}`,
-                      type: event.type || 'production.general',
-                      date: event.date || new Date().toISOString(),
-                      description: event.description || event.title || 'Farm activity',
+                  if (Array.isArray(events) && events.length > 0) {
+                    // Transform events for EnhancedProductTimeline component
+                    const timelineEvents = events.map((event, index) => ({
+                      id: event.id?.toString() || `event_${index}`,
+                      type: event.type || 'general',
+                      description: event.description || event.title || 'Farm Activity',
                       observation: event.observation || '',
-                      certified: event.certified || false,
-                      index: event.index || index
+                      date: event.date || new Date().toISOString(),
+                      certified: event.certified || true,
+                      index: event.index || index,
+                      volume: event.volume ? parseFloat(event.volume) : undefined,
+                      concentration: event.concentration
+                        ? parseFloat(event.concentration)
+                        : undefined,
+                      area: event.area ? parseFloat(event.area) : undefined,
+                      equipment: event.commercial_name || event.equipment || undefined
                     }));
-                  }
 
-                  return Array.isArray(events) && events.length > 0 ? (
-                    <EnhancedProductTimeline events={events} />
-                  ) : (
-                    <Box p={8} textAlign="center" bg="gray.50" borderRadius="xl">
-                      <Icon as={MdTimeline} color="gray.400" boxSize={16} mb={4} />
-                      <Heading as="h3" size="md" color="gray.600" mb={2}>
-                        {intl.formatMessage({ id: 'app.noTimelineData' }) ||
-                          'Timeline data is being prepared'}
-                      </Heading>
-                      <Text color="gray.500" fontSize="md">
-                        {intl.formatMessage({ id: 'app.timelineComingSoon' }) ||
-                          'Production journey details will be available soon'}
-                      </Text>
-                    </Box>
-                  );
+                    return <EnhancedProductTimeline events={timelineEvents} />;
+                  } else {
+                    return (
+                      <VStack spacing={3} py={8}>
+                        <Icon as={MdTimeline} boxSize={16} color="gray.400" />
+                        <Heading as="h4" size="md" color="gray.600">
+                          {intl.formatMessage({ id: 'app.noTimelineData' }) ||
+                            'No events recorded yet'}
+                        </Heading>
+                        <Text fontSize="sm" color="gray.400" textAlign="center">
+                          {intl.formatMessage({ id: 'app.timelineComingSoon' }) ||
+                            'Production journey details will be available soon'}
+                        </Text>
+                      </VStack>
+                    );
+                  }
                 })()}
-              </VStack>
-            </Box>
+              </CardBody>
+            </Card>
 
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} mb={6}>
               <Box bg={bgColor} borderRadius="lg" boxShadow="md" p={6}>
@@ -1297,7 +1415,8 @@ function ProductDetail() {
                               variant="solid"
                               size="sm"
                               leftIcon={<DownloadIcon />}
-                              onClick={() => window.open(report.document!, '_blank')}>
+                              onClick={() => window.open(report.document!, '_blank')}
+                            >
                               {intl.formatMessage({ id: 'app.view' }) || 'View'}
                             </Button>
                           ) : (
@@ -1348,7 +1467,8 @@ function ProductDetail() {
                       cursor="pointer"
                       onClick={() => navigate(`/production/${history.id}`, { replace: true })}
                       transition="all 0.2s"
-                      _hover={{ transform: 'translateY(-2px)', boxShadow: 'md' }}>
+                      _hover={{ transform: 'translateY(-2px)', boxShadow: 'md' }}
+                    >
                       <Flex align="center" mb={3}>
                         <Image
                           src={history.image || defaultEstablishmentImage}
@@ -1417,7 +1537,8 @@ function ProductDetail() {
                         px={6}
                         isDisabled={isLoadingComment || !commentValue || isSuccessComment}
                         onClick={() => onSubmitHandler()}
-                        leftIcon={<Icon as={FaRegCheckCircle} />}>
+                        leftIcon={<Icon as={FaRegCheckCircle} />}
+                      >
                         {intl.formatMessage({ id: 'app.send' })}
                       </Button>
                     </Flex>
@@ -1470,21 +1591,24 @@ function ProductDetail() {
                   size="sm"
                   colorScheme="green"
                   variant={offsetAmount === 0.05 ? 'solid' : 'outline'}
-                  onClick={() => setOffsetAmount(0.05)}>
+                  onClick={() => setOffsetAmount(0.05)}
+                >
                   $0.05
                 </Button>
                 <Button
                   size="sm"
                   colorScheme="green"
                   variant={offsetAmount === 0.1 ? 'solid' : 'outline'}
-                  onClick={() => setOffsetAmount(0.1)}>
+                  onClick={() => setOffsetAmount(0.1)}
+                >
                   $0.10
                 </Button>
                 <Button
                   size="sm"
                   colorScheme="green"
                   variant={offsetAmount === 0.25 ? 'solid' : 'outline'}
-                  onClick={() => setOffsetAmount(0.25)}>
+                  onClick={() => setOffsetAmount(0.25)}
+                >
                   $0.25
                 </Button>
               </SimpleGrid>
@@ -1495,14 +1619,16 @@ function ProductDetail() {
               colorScheme="gray"
               mr={3}
               onClick={onOffsetModalClose}
-              isDisabled={offsetLoading}>
+              isDisabled={offsetLoading}
+            >
               {intl.formatMessage({ id: 'app.cancel' }) || 'Cancel'}
             </Button>
             <Button
               colorScheme="green"
               onClick={handleOffset}
               isLoading={offsetLoading}
-              leftIcon={<Icon as={FaLeaf} />}>
+              leftIcon={<Icon as={FaLeaf} />}
+            >
               {intl.formatMessage({ id: 'app.payAmount' }, { amount: offsetAmount.toFixed(2) }) ||
                 `Pay $${offsetAmount.toFixed(2)}`}
             </Button>

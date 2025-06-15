@@ -57,6 +57,25 @@ const SubscriptionRequired = () => {
 
   // Check subscription status and set loading/redirect state
   useEffect(() => {
+    // Enhanced Stripe success flow detection - check immediately
+    const params = new URLSearchParams(location.search);
+    const hasSessionId = params.get('session_id');
+    const isStripeSuccessPage = location.pathname.includes('/stripe-success');
+    const preventPricingPage = localStorage.getItem('prevent_pricing_page') === 'true';
+    const skipPricingRender = localStorage.getItem('skip_pricing_render') === 'true';
+
+    // If any Stripe success indicators are present, bypass completely
+    if (isStripeSuccessPage || hasSessionId || preventPricingPage || skipPricingRender) {
+      console.log('SubscriptionRequired: Bypassing due to Stripe success flow', {
+        isStripeSuccessPage,
+        hasSessionId,
+        preventPricingPage,
+        skipPricingRender,
+        url: window.location.href
+      });
+      return;
+    }
+
     // Skip check if we're in checkout flow
     if (stripeCheckoutStorage.inCheckoutFlow()) {
       console.log('In checkout flow, bypassing subscription check');
@@ -69,8 +88,7 @@ const SubscriptionRequired = () => {
       return;
     }
 
-    // Parse URL parameters
-    const params = new URLSearchParams(location.search);
+    // Parse URL parameters for other Stripe indicators
     const fromStripeSuccess = params.get('success') === 'true' && params.get('session_id');
     const justCompletedCheckout = params.get('stripe_checkout_completed') === 'true';
     const comingFromStripeRedirect =

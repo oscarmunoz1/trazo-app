@@ -58,7 +58,8 @@ import {
   FaRegListAlt,
   FaChartLine,
   FaClipboardList,
-  FaFlag
+  FaFlag,
+  FaMoneyBillWave
 } from 'react-icons/fa';
 import {
   MdLocationOn,
@@ -89,6 +90,12 @@ import {
   EnhancedProductTimeline
 } from 'components/ProductDetail';
 
+// Import Phase 1 Carbon Cost Intelligence component
+import { CarbonCostInsights } from 'components/Carbon/CarbonCostInsights';
+
+// Import Week 2 Voice & Mobile Components
+import QuickAddEvent from 'views/Dashboard/Dashboard/Production/QuickAddEvent';
+
 // Add interface for Redux state
 interface RootState {
   company: {
@@ -109,6 +116,11 @@ function ProfileProduction() {
   const { establishmentId, productionId, parcelId } = useParams();
   const [establishment, setEstablishment] = useState<any>(null);
   const { isOpen: isOpen1, onOpen: onOpen1, onClose: onClose1 } = useDisclosure();
+  const {
+    isOpen: isQuickAddOpen,
+    onOpen: onQuickAddOpen,
+    onClose: onQuickAddClose
+  } = useDisclosure();
 
   // Mobile-first responsive utilities
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -648,11 +660,13 @@ function ProfileProduction() {
             {/* Events Timeline - Use Enhanced Timeline */}
             <Card bg={bgColor} borderRadius="lg" boxShadow="md" mb={6}>
               <CardHeader>
-                <HStack spacing={2} justify="center">
-                  <Icon as={MdTimeline} color="green.500" boxSize={5} />
-                  <Heading as="h3" size="lg" color={textColor}>
-                    Production Timeline
-                  </Heading>
+                <HStack spacing={2} justify="space-between">
+                  <HStack spacing={2}>
+                    <Icon as={MdTimeline} color="green.500" boxSize={5} />
+                    <Heading as="h3" size="lg" color={textColor}>
+                      Production Timeline
+                    </Heading>
+                  </HStack>
                 </HStack>
               </CardHeader>
               <CardBody>
@@ -667,13 +681,54 @@ function ProfileProduction() {
                     <Text fontSize="sm" color="gray.400" textAlign="center">
                       Events will appear here as the production progresses
                     </Text>
+                    <Button
+                      leftIcon={<Icon as={FaSeedling} />}
+                      colorScheme="green"
+                      size="lg"
+                      onClick={onQuickAddOpen}
+                      mt={4}
+                    >
+                      🎤 Add Your First Event
+                    </Button>
                   </VStack>
                 )}
               </CardBody>
             </Card>
+
+            {/* Phase 1: Carbon Cost Intelligence Integration */}
+            {productionId && (
+              <Card bg={bgColor} borderRadius="lg" boxShadow="md" mb={6}>
+                <CardHeader>
+                  <HStack spacing={2} justify="center">
+                    <Icon as={FaMoneyBillWave} color="green.500" boxSize={5} />
+                    <Heading as="h3" size="lg" color={textColor}>
+                      💰 Carbon Economics
+                    </Heading>
+                  </HStack>
+                </CardHeader>
+                <CardBody>
+                  <CarbonCostInsights
+                    productionId={parseInt(productionId)}
+                    productionName={historyData?.name || historyData?.product?.name}
+                  />
+                </CardBody>
+              </Card>
+            )}
           </CardBody>
         </Card>
       </Container>
+
+      {/* Week 2 Task 2.1: Voice-to-Event System Integration */}
+      <QuickAddEvent
+        isOpen={isQuickAddOpen}
+        onClose={onQuickAddClose}
+        cropType={historyData?.product?.name || 'citrus'}
+        onEventAdded={(eventData) => {
+          console.log('New event added:', eventData);
+          // Refresh the timeline data
+          window.location.reload();
+        }}
+      />
     </Flex>
   );
 }

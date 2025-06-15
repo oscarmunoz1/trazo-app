@@ -10,9 +10,30 @@ import {
   MenuList,
   Text,
   useColorModeValue,
-  useDisclosure
+  useDisclosure,
+  VStack,
+  HStack,
+  Box,
+  Badge,
+  Divider,
+  Tooltip,
+  ButtonGroup
 } from '@chakra-ui/react';
-import { FaRegCheckCircle, FaRegDotCircle } from 'react-icons/fa';
+import {
+  FaRegCheckCircle,
+  FaRegDotCircle,
+  FaClock,
+  FaMicrophone,
+  FaPlus,
+  FaPlay,
+  FaFlag,
+  FaMobile,
+  FaSeedling,
+  FaChartLine,
+  FaChevronDown,
+  FaLeaf,
+  FaCamera
+} from 'react-icons/fa';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -21,8 +42,7 @@ import TimelineRow from 'components/Tables/TimelineRow';
 import { setCurrentHistory } from 'store/features/historySlice';
 import { useGetCurrentHistoryQuery } from 'store/api/historyApi';
 import { useIntl } from 'react-intl';
-import { QuickAddEventModal } from 'components/Events/QuickAddEventModal';
-import { FaClock } from 'react-icons/fa';
+import QuickAddEvent from 'views/Dashboard/Dashboard/Production/QuickAddEvent';
 
 // Custom components
 import Card from 'components/Card/Card';
@@ -51,6 +71,11 @@ const TrackList = ({ amount }) => {
     isOpen: isQuickAddOpen,
     onOpen: onQuickAddOpen,
     onClose: onQuickAddClose
+  } = useDisclosure();
+  const {
+    isOpen: isAddEventMenuOpen,
+    onOpen: onAddEventMenuOpen,
+    onClose: onAddEventMenuClose
   } = useDisclosure();
 
   const { data, error, isLoading, isFetching, refetch } = useGetCurrentHistoryQuery(
@@ -91,8 +116,7 @@ const TrackList = ({ amount }) => {
                 onClick={onOpen1}
                 alignSelf="flex-start"
                 disabled={!currentHistory?.product}
-                cursor={!currentHistory?.product ? 'default' : 'pointer'}
-              >
+                cursor={!currentHistory?.product ? 'default' : 'pointer'}>
                 <Icon as={IoEllipsisVerticalSharp} color="gray.400" w="20px" h="20px" />
               </MenuButton>
               <MenuList>
@@ -101,8 +125,7 @@ const TrackList = ({ amount }) => {
                     navigate(
                       `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${currentHistory?.id}/change`
                     )
-                  }
-                >
+                  }>
                   <Flex color={textColor} cursor="pointer" align="center" p="4px">
                     {/* <Icon as={FaPencilAlt} me="4px" /> */}
                     <Text fontSize="sm" fontWeight="500">
@@ -171,8 +194,7 @@ const TrackList = ({ amount }) => {
                     fontWeight={'300'}
                     justifyContent={'center'}
                     alignItems={'center'}
-                    textAlign={'center'}
-                  >
+                    textAlign={'center'}>
                     {currentHistory?.product
                       ? intl.formatMessage({ id: 'app.noEventsYet' })
                       : intl.formatMessage({ id: 'app.noProductionYet' })}
@@ -183,81 +205,237 @@ const TrackList = ({ amount }) => {
           )}
         </Flex>
       </CardBody>
-      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
-        {/* Quick Add Event Button - Only show if there's a current production */}
-        {currentHistory?.product && (
-          <Button
-            leftIcon={<Icon as={FaClock} />}
-            variant="outline"
-            colorScheme="blue"
-            fontSize="xs"
-            minW="110px"
-            h="36px"
-            onClick={onQuickAddOpen}
-          >
-            {intl.formatMessage({ id: 'app.quickAdd' }) || 'Quick Add'}
-          </Button>
-        )}
-
-        {/* Production Start Button - Single enhanced form */}
+      {/* Modern Action Buttons - Single Add Event Dropdown */}
+      <Flex
+        justify="flex-end"
+        gap={3}
+        p="20px"
+        borderTop="1px solid"
+        borderColor={useColorModeValue('gray.200', 'gray.600')}
+        bg={useColorModeValue('gray.50', 'gray.700')}>
         {!currentHistory?.product ? (
           <Button
             bg={bgButton}
             color="white"
-            fontSize="xs"
+            fontSize="sm"
+            fontWeight="bold"
             variant="no-hover"
-            minW="135px"
-            h="36px"
+            minW="160px"
+            h="44px"
+            borderRadius="12px"
+            _hover={{
+              transform: 'translateY(-1px)',
+              boxShadow: 'lg'
+            }}
+            transition="all 0.2s"
             onClick={() =>
               navigate(
                 `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/add`
               )
-            }
-          >
+            }>
             {intl.formatMessage({ id: 'app.startProduction' }).toUpperCase()}
           </Button>
         ) : (
-          <Button
-            bg={bgButton}
-            color="white"
-            fontSize="xs"
-            variant="no-hover"
-            minW="100px"
-            onClick={() =>
-              navigate(
-                `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/event/add`
-              )
-            }
-          >
-            {intl.formatMessage({ id: 'app.addEvent' }).toUpperCase()}
-          </Button>
-        )}
+          <Flex gap={3} justify="flex-end" align="center" w="100%" flexFlow={'wrap'}>
+            {/* Primary Add Event Dropdown Button */}
+            <Menu isOpen={isAddEventMenuOpen} onClose={onAddEventMenuClose}>
+              <MenuButton
+                as={Button}
+                leftIcon={<Icon as={FaPlus} />}
+                rightIcon={<Icon as={FaChevronDown} />}
+                bg={bgButton}
+                color="white"
+                fontSize="sm"
+                fontWeight="semibold"
+                variant="no-hover"
+                minW="140px"
+                h="44px"
+                borderRadius="12px"
+                _hover={{
+                  transform: 'translateY(-1px)',
+                  boxShadow: 'lg'
+                }}
+                _active={{
+                  transform: 'translateY(0px)',
+                  boxShadow: 'md'
+                }}
+                transition="all 0.2s"
+                onClick={onAddEventMenuOpen}>
+                {intl.formatMessage({ id: 'app.addEvent' })}
+              </MenuButton>
+              <MenuList
+                bg={useColorModeValue('white', 'gray.800')}
+                borderColor={useColorModeValue('gray.200', 'gray.600')}
+                borderRadius="12px"
+                boxShadow="xl"
+                py="8px"
+                minW="220px">
+                {/* Carbon Focus Header - NEW */}
+                <Box
+                  px="16px"
+                  py="8px"
+                  borderBottom="1px solid"
+                  borderColor={useColorModeValue('gray.100', 'gray.700')}>
+                  <HStack>
+                    <Icon as={FaLeaf} color="green.500" boxSize={3} />
+                    <Text fontSize="xs" fontWeight="bold" color="green.600">
+                      CARBON TRACKING
+                    </Text>
+                  </HStack>
+                  <Text fontSize="xs" color="gray.500" mt={1}>
+                    Events visible to consumers via QR
+                  </Text>
+                </Box>
 
-        {currentHistory?.events && currentHistory?.events.length > 0 && (
-          <Button
-            variant="outline"
-            colorScheme="green"
-            minW="120px"
-            h="36px"
-            fontSize="xs"
-            px="1.5rem"
-            onClick={() =>
-              navigate(
-                `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${currentHistory?.id}/finish`
-              )
-            }
-          >
-            {intl.formatMessage({ id: 'app.finishProduction' }).toUpperCase()}
-          </Button>
-        )}
-      </div>
+                <MenuItem
+                  icon={<Icon as={FaMicrophone} color="green.500" />}
+                  fontSize="sm"
+                  width={'96%'}
+                  fontWeight="medium"
+                  py="12px"
+                  px="16px"
+                  borderRadius="8px"
+                  mx="4px"
+                  mt="4px"
+                  _hover={{
+                    bg: useColorModeValue('green.50', 'green.900'),
+                    color: useColorModeValue('green.700', 'green.200')
+                  }}
+                  onClick={() => {
+                    onAddEventMenuClose();
+                    onQuickAddOpen();
+                  }}>
+                  <VStack align="start" spacing={0} flex={1}>
+                    <HStack justify="space-between" width="100%">
+                      <Text fontWeight="semibold">Voice Event</Text>
+                      <Badge colorScheme="green" size="xs">
+                        FASTEST
+                      </Badge>
+                    </HStack>
+                    <Text fontSize="xs" color="gray.500">
+                      "Applied fertilizer, 200 lbs/acre"
+                    </Text>
+                  </VStack>
+                </MenuItem>
 
-      {/* Quick Add Event Modal */}
-      <QuickAddEventModal
+                <MenuItem
+                  icon={<Icon as={FaMobile} color="blue.500" />}
+                  fontSize="sm"
+                  fontWeight="medium"
+                  width={'96%'}
+                  py="12px"
+                  px="16px"
+                  borderRadius="8px"
+                  mx="4px"
+                  _hover={{
+                    bg: useColorModeValue('blue.50', 'blue.900'),
+                    color: useColorModeValue('blue.700', 'blue.200')
+                  }}
+                  onClick={() => {
+                    onAddEventMenuClose();
+                    navigate(
+                      `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${currentHistory?.id}/mobile`
+                    );
+                  }}>
+                  <VStack align="start" spacing={0} flex={1}>
+                    <HStack justify="space-between" width="100%">
+                      <Text fontWeight="semibold">Mobile Interface</Text>
+                      <Badge colorScheme="blue" size="xs">
+                        FIELD
+                      </Badge>
+                    </HStack>
+                    <Text fontSize="xs" color="gray.500">
+                      Touch-friendly field interface
+                    </Text>
+                  </VStack>
+                </MenuItem>
+
+                <MenuItem
+                  icon={<Icon as={FaPlus} color="gray.600" />}
+                  fontSize="sm"
+                  fontWeight="medium"
+                  width={'96%'}
+                  py="12px"
+                  px="16px"
+                  borderRadius="8px"
+                  mx="4px"
+                  _hover={{
+                    bg: useColorModeValue('gray.50', 'gray.700'),
+                    color: useColorModeValue('gray.700', 'gray.200')
+                  }}
+                  onClick={() => {
+                    onAddEventMenuClose();
+                    navigate(
+                      `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/event/add`
+                    );
+                  }}>
+                  <VStack align="start" spacing={0} flex={1}>
+                    <HStack justify="space-between" width="100%">
+                      <Text fontWeight="semibold">Manual Entry</Text>
+                      <Badge colorScheme="gray" size="xs">
+                        DETAILED
+                      </Badge>
+                    </HStack>
+                    <Text fontSize="xs" color="gray.500">
+                      Full form with all details
+                    </Text>
+                  </VStack>
+                </MenuItem>
+
+                {/* Carbon Impact Footer - NEW */}
+                <Box
+                  px="16px"
+                  py="8px"
+                  mt="4px"
+                  borderTop="1px solid"
+                  borderColor={useColorModeValue('gray.100', 'gray.700')}>
+                  <HStack>
+                    <Icon as={FaCamera} color="blue.400" boxSize={3} />
+                    <Text fontSize="xs" color="gray.600">
+                      All events appear on consumer QR scans
+                    </Text>
+                  </HStack>
+                </Box>
+              </MenuList>
+            </Menu>
+
+            {/* Finish Production Button - Only show if there are events */}
+            {currentHistory?.events && currentHistory?.events.length > 0 && (
+              <Button
+                leftIcon={<Icon as={FaFlag} />}
+                variant="outline"
+                colorScheme="green"
+                fontSize="sm"
+                fontWeight="semibold"
+                minW="160px"
+                h="44px"
+                borderRadius="12px"
+                _hover={{
+                  transform: 'translateY(-1px)',
+                  boxShadow: 'md'
+                }}
+                transition="all 0.2s"
+                onClick={() =>
+                  navigate(
+                    `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${currentHistory?.id}/finish`
+                  )
+                }>
+                {intl.formatMessage({ id: 'app.finishProduction' })}
+              </Button>
+            )}
+          </Flex>
+        )}
+      </Flex>
+
+      {/* Week 2 Task 2.1: Voice-to-Event System Integration */}
+      <QuickAddEvent
         isOpen={isQuickAddOpen}
         onClose={onQuickAddClose}
-        parcelId={parseInt(parcelId)}
-        onEventCreated={handleEventCreated}
+        cropType={currentHistory?.product || 'citrus'}
+        onEventAdded={(eventData) => {
+          console.log('New event added from parcel dashboard:', eventData);
+          handleEventCreated();
+        }}
       />
     </Card>
   );

@@ -353,6 +353,142 @@ export interface QRCodeSummary {
   };
 }
 
+// Phase 2 Optimization: Unified Complete Summary Interface
+export interface CompleteSummary {
+  // Essential product info
+  product: {
+    id: string;
+    name: string;
+    reputation: number;
+  };
+
+  // Production dates
+  start_date?: string;
+  finish_date?: string;
+
+  // Carbon metrics (complete from qr-summary)
+  carbonScore: number;
+  totalEmissions: number;
+  totalOffsets: number;
+  netFootprint: number;
+  relatableFootprint: string;
+  industryPercentile: number;
+  industryAverage: number;
+  isUsdaVerified: boolean;
+  cropType: string;
+  benchmarkSource: string;
+
+  // Emissions breakdown
+  emissionsByCategory: Record<string, number>;
+  emissionsBySource: Record<string, number>;
+  offsetsByAction: Record<string, number>;
+
+  // Production timeline (combined events)
+  timeline: Array<{
+    id: string;
+    type: string;
+    description: string;
+    observation: string;
+    date: string;
+    certified: boolean;
+    index: number;
+    volume?: number;
+    concentration?: number;
+    area?: number;
+    equipment?: string;
+  }>;
+  production_events: Array<any>; // Alias for compatibility
+  events: Array<any>; // Alias for compatibility
+
+  // Establishment info (from history data)
+  farmer: {
+    id: string;
+    name: string;
+    description: string;
+    location: string;
+    photo?: string;
+    certifications: string[];
+    email: string;
+    phone: string;
+  };
+  establishment: any; // Alias for history API compatibility
+
+  // Map data (from history API)
+  parcel: {
+    id: string;
+    name: string;
+    area?: number;
+    polygon: any;
+    map_metadata: any;
+    establishment?: {
+      id: string;
+      name: string;
+      description: string;
+      location: string;
+      photo?: string;
+    };
+  } | null;
+
+  // Images
+  images?: Array<{
+    id: string;
+    image: string;
+    name: string;
+  }>;
+
+  // Similar products
+  similar_products: Array<{
+    id: string;
+    product: { name: string };
+    reputation: number;
+    image?: string;
+  }>;
+  similar_histories: Array<any>; // Alias for history API compatibility
+
+  // Scan tracking
+  history_scan: string;
+
+  // Sustainability features
+  recommendations: string[];
+  badges: Array<{
+    id: string;
+    name: string;
+    description: string;
+    icon: string;
+    color?: string;
+  }>;
+  reports?: Array<{
+    id: string;
+    period_start: string;
+    period_end: string;
+    total_emissions: number;
+    total_offsets: number;
+    net_footprint: number;
+    document: string | null;
+    report_type: string;
+  }>;
+  blockchainVerification: {
+    verified: boolean;
+    transaction_hash?: string;
+    verification_date: string;
+    certifying_body: string;
+    error?: string;
+  };
+  socialProof: {
+    totalScans: number;
+    totalOffsets: number;
+    totalUsers: number;
+    averageRating: number;
+    companyScans: number;
+  };
+
+  // Metadata
+  verificationDate: string;
+  cache_hit: boolean;
+  timestamp: string;
+  api_version: string;
+}
+
 // Weather API interfaces
 export interface WeatherConditions {
   temperature: number;
@@ -458,6 +594,91 @@ export interface WeatherAlertEventResponse {
   confidence: number;
   recommendations_count: number;
   error?: string;
+}
+
+export interface CropTemplate {
+  id: string;
+  name: string;
+  crop_type: string;
+  description: string;
+  events_count: number;
+  carbon_potential: number;
+  avg_revenue: number;
+  setup_time_minutes: number;
+  usage_count: number;
+  carbon_benchmark: {
+    emissions_range: string;
+    industry_average: number;
+    best_practice: number;
+  };
+  events_preview: Array<{
+    name: string;
+    type: string;
+    timing: string;
+    carbon_impact: number;
+  }>;
+  sustainability_practices: string[];
+  roi_projection: {
+    carbon_credits_value: number;
+    premium_pricing: string;
+    cost_savings: string;
+  };
+}
+
+export interface CropTemplatesResponse {
+  templates: CropTemplate[];
+  total_count: number;
+  categories: string[];
+  metadata: {
+    generated_at?: string;
+    version: string;
+    source: string;
+  };
+}
+
+export interface CropTemplateDetail {
+  id: string;
+  name: string;
+  description: string;
+  crop_type: string;
+  events: Array<{
+    name: string;
+    type: string;
+    timing: string;
+    frequency: string;
+    carbon_sources: string[];
+    typical_amount: number;
+    carbon_impact: number;
+    cost_estimate: number;
+    efficiency_tips: string;
+  }>;
+  carbon_sources: Array<{
+    id: number;
+    name: string;
+    category: string;
+    emission_factor: number;
+    unit: string;
+  }>;
+  benchmark?: {
+    crop_type: string;
+    region: string;
+    average_emissions: number;
+    percentile_25: number;
+    percentile_75: number;
+    usda_verified: boolean;
+  };
+  carbon_credit_potential: number;
+  estimated_revenue: number;
+  sustainability_opportunities: string[];
+  efficiency_tips: string;
+  premium_pricing_potential: string;
+  typical_costs: number;
+  roi_analysis: {
+    setup_time_saved: string;
+    carbon_credits_annual: number;
+    premium_pricing: string;
+    efficiency_savings: string;
+  };
 }
 
 export const carbonApi = baseApi.injectEndpoints({
@@ -782,6 +1003,34 @@ export const carbonApi = baseApi.injectEndpoints({
         credentials: 'include'
       }),
       invalidatesTags: ['Weather', 'IoTData', 'PendingEvent']
+    }),
+
+    // Phase 2 Optimization: Unified Complete Summary Endpoint
+    getCompleteSummary: builder.query<CompleteSummary, string>({
+      query: (productionId) => ({
+        url: `carbon/public/productions/${productionId}/complete/`,
+        method: 'GET',
+        credentials: 'include'
+      }),
+      providesTags: ['CarbonSummary']
+    }),
+
+    getCropTemplates: builder.query<CropTemplatesResponse, void>({
+      query: () => ({
+        url: '/carbon/crop-templates/',
+        method: 'GET',
+        credentials: 'include'
+      }),
+      providesTags: ['CropTemplate']
+    }),
+
+    getCropTemplateDetail: builder.query<CropTemplateDetail, string>({
+      query: (templateId) => ({
+        url: `/carbon/crop-templates/${templateId}/`,
+        method: 'GET',
+        credentials: 'include'
+      }),
+      providesTags: (result, error, templateId) => [{ type: 'CropTemplate', id: templateId }]
     })
   })
 });
@@ -814,5 +1063,9 @@ export const {
   useGetWeatherAlertsQuery,
   useGetWeatherRecommendationsQuery,
   useGetWeatherForecastQuery,
-  useCreateWeatherAlertEventMutation
+  useCreateWeatherAlertEventMutation,
+  // Phase 2 Optimization: Unified Complete Summary
+  useGetCompleteSummaryQuery,
+  useGetCropTemplatesQuery,
+  useGetCropTemplateDetailQuery
 } = carbonApi;

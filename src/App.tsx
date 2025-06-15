@@ -34,6 +34,7 @@ import SignUp from 'views/Authentication/SignUp/SignUpBasic';
 import Unauthorized from './views/Applications/DataTables/index';
 import UpdateEvent from 'views/Dashboard/Dashboard/Event/UpdateEvent';
 import UpdateProduction from 'views/Dashboard/Dashboard/Production/UpdateProduction';
+import QuickStartProduction from 'views/Dashboard/Dashboard/Production/QuickStartProduction';
 import UpdateUser from 'views/Dashboard/Dashboard/User/UpdateUser';
 import VerifyEmail from './views/Authentication/SignUp/VerifyEmail';
 import { useSelector } from 'react-redux';
@@ -59,6 +60,7 @@ import PublicEstablishmentProfile from 'views/Scan/PublicEstablishmentProfile/Pu
 import { usePointsStore } from './store/pointsStore';
 import EducationDashboard from 'views/Dashboard/Education';
 import EducationFAQ from 'views/Dashboard/Education/EducationFAQ';
+import FieldInterface from 'views/Dashboard/Mobile/FieldInterface';
 
 const App = () => {
   const location = useLocation();
@@ -193,12 +195,17 @@ const App = () => {
                 <Route
                   path="establishment/:establishmentId/parcel/:parcelId/production/add"
                   exact
-                  element={<UpdateProduction />}
+                  element={<QuickStartProduction />}
                 />
                 <Route
                   path="establishment/:establishmentId/parcel/:parcelId/production/:productionId"
                   exact
                   element={<ProfileProduction />}
+                />
+                <Route
+                  path="establishment/:establishmentId/parcel/:parcelId/production/:productionId/mobile"
+                  exact
+                  element={<FieldInterface productionId={0} cropType="citrus" />}
                 />
                 <Route
                   path="establishment/:establishmentId/parcel/:parcelId/production/:productionId/change"

@@ -247,6 +247,12 @@
   "event.weather.hailstorm": "Hailstorm",
   "event.weather.high_temperature": "High Temperature",
 
+  "event.equipment.fuel_consumption": "Fuel Consumption",
+  "event.equipment.tractor": "Tractor",
+  "event.equipment.harvester": "Harvester",
+  "event.equipment.pump": "Pump",
+  "event.equipment.other": "Other",
+
   "app.quickAddEvent": "Quick Add Event",
   "app.selectEventType": "Select Event Type",
   "app.quickNotes": "Quick Notes",
@@ -633,6 +639,7 @@
   "app.farmerStory": "Farmer Story",
   "app.productJourney": "Product Journey",
   "app.carbonScore": "Carbon Score",
+  "app.quickAdd": "Quick Add",
   "app.rateThisProduct": "Rate This Product",
   "app.rateSustainability": "Rate the sustainability of this product",
   "app.carbonNeutral": "Carbon Neutral",

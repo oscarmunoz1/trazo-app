@@ -474,7 +474,7 @@ export const QuickAddEventModal: React.FC<QuickAddEventModalProps> = ({
         ...selectedTemplate.defaultData,
         // Required for the backend
         album: { images: [] },
-        observations: notes
+        observation: notes
       };
 
       await createEvent(eventData).unwrap();
@@ -544,8 +544,7 @@ export const QuickAddEventModal: React.FC<QuickAddEventModalProps> = ({
                       transform: 'translateY(-2px)',
                       boxShadow: 'lg'
                     }}
-                    transition="all 0.2s"
-                  >
+                    transition="all 0.2s">
                     <Icon as={template.icon} boxSize={5} />
                     <Text fontSize="xs" textAlign="center" lineHeight={1.2}>
                       {template.name}
@@ -568,8 +567,7 @@ export const QuickAddEventModal: React.FC<QuickAddEventModalProps> = ({
                 borderColor={useColorModeValue(
                   `${selectedTemplate.color}.200`,
                   `${selectedTemplate.color}.700`
-                )}
-              >
+                )}>
                 <HStack spacing={3}>
                   <Icon
                     as={selectedTemplate.icon}
@@ -651,8 +649,7 @@ export const QuickAddEventModal: React.FC<QuickAddEventModalProps> = ({
                   bg: 'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)',
                   opacity: 0.9
                 }}
-                color="white"
-              >
+                color="white">
                 {intl.formatMessage({ id: 'app.addEvent' }) || 'Add Event'}
               </Button>
             </HStack>

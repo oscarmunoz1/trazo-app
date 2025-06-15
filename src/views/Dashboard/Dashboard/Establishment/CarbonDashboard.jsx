@@ -80,6 +80,9 @@ import CarbonFootprintTab from '../components/forms/CarbonFootprintTab';
 import { useGetCarbonFootprintSummaryQuery } from 'store/api/companyApi';
 import { useGetProductionsByEstablishmentQuery } from 'store/api/historyApi';
 
+// Import Phase 1 Carbon Cost Intelligence component
+import { CarbonCostInsights } from 'components/Carbon/CarbonCostInsights';
+
 const CarbonDashboard = () => {
   const { establishmentId } = useParams();
   const bg = useColorModeValue('gray.50', 'gray.800');
@@ -518,6 +521,41 @@ const CarbonDashboard = () => {
                         </CardBody>
                       </Card>
                     </SimpleGrid>
+
+                    {/* Phase 1: Carbon Cost Intelligence Integration */}
+                    {viewMode === 'production' && productionId && (
+                      <Box>
+                        <Divider my={6} />
+                        <Heading size="md" color={textColor} mb={4}>
+                          💰 Inteligencia de Costos de Carbono
+                        </Heading>
+                        <CarbonCostInsights
+                          productionId={parseInt(productionId)}
+                          productionName={
+                            productions?.find((p) => p.id === parseInt(productionId))?.name
+                          }
+                        />
+                      </Box>
+                    )}
+
+                    {viewMode === 'establishment' && (
+                      <Box>
+                        <Divider my={6} />
+                        <Alert status="info" borderRadius="md">
+                          <AlertIcon />
+                          <VStack align="start" spacing={1}>
+                            <Text fontSize="sm" fontWeight="bold">
+                              💡 Análisis de Costos de Carbono
+                            </Text>
+                            <Text fontSize="sm">
+                              Selecciona una producción específica arriba para ver análisis
+                              detallados de costos de carbono, potencial de créditos de carbono, y
+                              recomendaciones de eficiencia.
+                            </Text>
+                          </VStack>
+                        </Alert>
+                      </Box>
+                    )}
 
                     <Text color="gray.500" textAlign="center" py={8}>
                       Gráficos de tendencias y análisis comparativo próximamente...

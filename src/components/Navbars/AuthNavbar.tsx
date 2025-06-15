@@ -224,7 +224,8 @@ export default function AuthNavbar(props: AuthNavbarProps) {
                 ps="36px"
                 py="0px"
                 _hover={{ boxShadow: 'none', bg: 'none' }}
-                borderRadius="12px">
+                borderRadius="12px"
+              >
                 <Text color="gray.400" fontSize="sm" fontWeight="normal">
                   {link.name}
                 </Text>
@@ -246,7 +247,8 @@ export default function AuthNavbar(props: AuthNavbarProps) {
             ps="36px"
             py="0px"
             _hover={{ boxShadow: 'none', bg: 'none' }}
-            borderRadius="12px">
+            borderRadius="12px"
+          >
             <Text color="gray.400" fontSize="sm" fontWeight="normal">
               {link.name}
             </Text>
@@ -279,7 +281,8 @@ export default function AuthNavbar(props: AuthNavbarProps) {
               ps="36px"
               py="0px"
               _hover={{ boxShadow: 'none', bg: 'none' }}
-              borderRadius="12px">
+              borderRadius="12px"
+            >
               <Text color="gray.400" fontSize="sm" fontWeight="normal">
                 {link.name}
               </Text>
@@ -331,7 +334,8 @@ export default function AuthNavbar(props: AuthNavbarProps) {
                 ps="36px"
                 py="0px"
                 _hover={{ boxShadow: 'none', bg: 'none' }}
-                borderRadius="12px">
+                borderRadius="12px"
+              >
                 <Text color="gray.400" fontSize="sm" fontWeight="normal">
                   {link.name}
                 </Text>
@@ -354,7 +358,8 @@ export default function AuthNavbar(props: AuthNavbarProps) {
       fontWeight="bold"
       justifyContent="center"
       alignItems="center"
-      color={mainText}>
+      color={mainText}
+    >
       <Image src={logoTrazo} alt="trazo logo" height="45px" paddingRight="10px" href="" />
     </Link>
   );
@@ -377,7 +382,8 @@ export default function AuthNavbar(props: AuthNavbarProps) {
       width="1044px"
       maxW="90%"
       alignItems="center"
-      zIndex={1000}>
+      zIndex={1000}
+    >
       <Flex w="100%" justifyContent={{ sm: 'start', lg: 'space-between' }}>
         {brand}
         <Box ms={{ base: 'auto', lg: '0px' }} display={{ lg: 'none' }}>
@@ -405,7 +411,8 @@ export default function AuthNavbar(props: AuthNavbarProps) {
                 color={navbarIcon}
                 variant="transparent-with-icon"
                 leftIcon={<RiLogoutBoxRLine color={navbarIcon} w="22px" h="22px" me="0px" />}
-                onClick={handleLogout}>
+                onClick={handleLogout}
+              >
                 <Text display={{ sm: 'none', md: 'flex' }}>
                   {intl.formatMessage({ id: 'app.signOut' })}
                 </Text>

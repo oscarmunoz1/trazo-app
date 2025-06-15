@@ -226,7 +226,8 @@ const PerformanceLoading: React.FC<PerformanceLoadingProps> = ({
       borderRadius="lg"
       border="1px solid"
       borderColor={borderColor}
-      boxShadow="sm">
+      boxShadow="sm"
+    >
       <VStack spacing={4} align="stretch">
         {/* Main loading indicator */}
         <VStack spacing={3}>

@@ -111,7 +111,8 @@ export const ConsumerSustainabilityInfo: React.FC<ConsumerSustainabilityInfoProp
           align="center"
           justify="space-between"
           flexDirection={{ base: 'column', md: 'row' }}
-          gap={4}>
+          gap={4}
+        >
           <Heading size="md" color={accentColor}>
             {intl.formatMessage({ id: 'app.sustainabilityHighlights' })}
           </Heading>
@@ -129,7 +130,8 @@ export const ConsumerSustainabilityInfo: React.FC<ConsumerSustainabilityInfoProp
               fontSize="md"
               px={2}
               py={1}
-              borderRadius="full">
+              borderRadius="full"
+            >
               {carbonScore >= 80
                 ? intl.formatMessage({ id: 'app.excellentScore' })
                 : carbonScore >= 60
@@ -154,7 +156,8 @@ export const ConsumerSustainabilityInfo: React.FC<ConsumerSustainabilityInfoProp
               ? 'yellow.50'
               : 'orange.50'
           }
-          borderRadius="md">
+          borderRadius="md"
+        >
           <HStack spacing={3} mb={2}>
             <Circle
               size="40px"
@@ -166,7 +169,8 @@ export const ConsumerSustainabilityInfo: React.FC<ConsumerSustainabilityInfoProp
                   : carbonScore >= 40
                   ? 'yellow.100'
                   : 'orange.100'
-              }>
+              }
+            >
               <Icon
                 as={FaShoppingBasket}
                 color={
@@ -203,7 +207,8 @@ export const ConsumerSustainabilityInfo: React.FC<ConsumerSustainabilityInfoProp
               borderColor={borderColor}
               transition="all 0.3s"
               _hover={{ transform: 'translateY(-2px)', boxShadow: 'sm' }}
-              align="flex-start">
+              align="flex-start"
+            >
               <Circle size="40px" bg="green.50" mt={1}>
                 {practice.icon}
               </Circle>

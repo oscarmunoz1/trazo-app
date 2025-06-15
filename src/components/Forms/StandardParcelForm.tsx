@@ -880,6 +880,7 @@ export const StandardParcelForm: React.FC<StandardParcelFormProps> = ({
                       _hover={{ borderColor: 'green.400' }}
                       _focus={{ borderColor: 'green.500', boxShadow: '0 0 0 1px #38A169' }}
                       size="lg"
+                      flex={1}
                     />
                   </StandardField>
 
