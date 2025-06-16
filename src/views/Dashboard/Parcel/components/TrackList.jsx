@@ -34,7 +34,7 @@ import {
   FaLeaf,
   FaCamera
 } from 'react-icons/fa';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { IoEllipsisVerticalSharp } from 'react-icons/io5';
@@ -43,6 +43,7 @@ import { setCurrentHistory } from 'store/features/historySlice';
 import { useGetCurrentHistoryQuery } from 'store/api/historyApi';
 import { useIntl } from 'react-intl';
 import QuickAddEvent from 'views/Dashboard/Dashboard/Production/QuickAddEvent';
+import { EventDetailsModal } from 'components/Modals/EventDetailsModal';
 
 // Custom components
 import Card from 'components/Card/Card';
@@ -78,6 +79,14 @@ const TrackList = ({ amount }) => {
     onClose: onAddEventMenuClose
   } = useDisclosure();
 
+  // Event Details Modal state
+  const {
+    isOpen: isEventDetailsOpen,
+    onOpen: onEventDetailsOpen,
+    onClose: onEventDetailsClose
+  } = useDisclosure();
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
   const { data, error, isLoading, isFetching, refetch } = useGetCurrentHistoryQuery(
     {
       companyId: currentCompany?.id,
@@ -103,6 +112,21 @@ const TrackList = ({ amount }) => {
     refetch();
   };
 
+  const handleEventClick = (event) => {
+    setSelectedEvent(event);
+    onEventDetailsOpen();
+  };
+
+  const handleEventUpdated = () => {
+    refetch();
+    onEventDetailsClose();
+  };
+
+  const handleEventDeleted = () => {
+    refetch();
+    onEventDetailsClose();
+  };
+
   return (
     <Card maxH="100%" height={'fit-content;'}>
       <CardHeader p="0px 0px 35px 0px">
@@ -116,7 +140,8 @@ const TrackList = ({ amount }) => {
                 onClick={onOpen1}
                 alignSelf="flex-start"
                 disabled={!currentHistory?.product}
-                cursor={!currentHistory?.product ? 'default' : 'pointer'}>
+                cursor={!currentHistory?.product ? 'default' : 'pointer'}
+              >
                 <Icon as={IoEllipsisVerticalSharp} color="gray.400" w="20px" h="20px" />
               </MenuButton>
               <MenuList>
@@ -125,7 +150,8 @@ const TrackList = ({ amount }) => {
                     navigate(
                       `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${currentHistory?.id}/change`
                     )
-                  }>
+                  }
+                >
                   <Flex color={textColor} cursor="pointer" align="center" p="4px">
                     {/* <Icon as={FaPencilAlt} me="4px" /> */}
                     <Text fontSize="sm" fontWeight="500">
@@ -183,6 +209,10 @@ const TrackList = ({ amount }) => {
                     index={index}
                     arrLength={arr.length}
                     url={`/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/event/${event.id}?event_type=${event.event_type}`}
+                    event={event}
+                    members={currentHistory?.members || []}
+                    isLast={index === arr.length - 1}
+                    onEventClick={() => handleEventClick(event)}
                   />
                 );
               })}
@@ -194,7 +224,8 @@ const TrackList = ({ amount }) => {
                     fontWeight={'300'}
                     justifyContent={'center'}
                     alignItems={'center'}
-                    textAlign={'center'}>
+                    textAlign={'center'}
+                  >
                     {currentHistory?.product
                       ? intl.formatMessage({ id: 'app.noEventsYet' })
                       : intl.formatMessage({ id: 'app.noProductionYet' })}
@@ -212,7 +243,8 @@ const TrackList = ({ amount }) => {
         p="20px"
         borderTop="1px solid"
         borderColor={useColorModeValue('gray.200', 'gray.600')}
-        bg={useColorModeValue('gray.50', 'gray.700')}>
+        bg={useColorModeValue('gray.50', 'gray.700')}
+      >
         {!currentHistory?.product ? (
           <Button
             bg={bgButton}
@@ -232,7 +264,8 @@ const TrackList = ({ amount }) => {
               navigate(
                 `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/add`
               )
-            }>
+            }
+          >
             {intl.formatMessage({ id: 'app.startProduction' }).toUpperCase()}
           </Button>
         ) : (
@@ -260,7 +293,8 @@ const TrackList = ({ amount }) => {
                   boxShadow: 'md'
                 }}
                 transition="all 0.2s"
-                onClick={onAddEventMenuOpen}>
+                onClick={onAddEventMenuOpen}
+              >
                 {intl.formatMessage({ id: 'app.addEvent' })}
               </MenuButton>
               <MenuList
@@ -269,13 +303,15 @@ const TrackList = ({ amount }) => {
                 borderRadius="12px"
                 boxShadow="xl"
                 py="8px"
-                minW="220px">
+                minW="220px"
+              >
                 {/* Carbon Focus Header - NEW */}
                 <Box
                   px="16px"
                   py="8px"
                   borderBottom="1px solid"
-                  borderColor={useColorModeValue('gray.100', 'gray.700')}>
+                  borderColor={useColorModeValue('gray.100', 'gray.700')}
+                >
                   <HStack>
                     <Icon as={FaLeaf} color="green.500" boxSize={3} />
                     <Text fontSize="xs" fontWeight="bold" color="green.600">
@@ -304,7 +340,8 @@ const TrackList = ({ amount }) => {
                   onClick={() => {
                     onAddEventMenuClose();
                     onQuickAddOpen();
-                  }}>
+                  }}
+                >
                   <VStack align="start" spacing={0} flex={1}>
                     <HStack justify="space-between" width="100%">
                       <Text fontWeight="semibold">Voice Event</Text>
@@ -336,7 +373,8 @@ const TrackList = ({ amount }) => {
                     navigate(
                       `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${currentHistory?.id}/mobile`
                     );
-                  }}>
+                  }}
+                >
                   <VStack align="start" spacing={0} flex={1}>
                     <HStack justify="space-between" width="100%">
                       <Text fontWeight="semibold">Mobile Interface</Text>
@@ -368,7 +406,8 @@ const TrackList = ({ amount }) => {
                     navigate(
                       `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/event/add`
                     );
-                  }}>
+                  }}
+                >
                   <VStack align="start" spacing={0} flex={1}>
                     <HStack justify="space-between" width="100%">
                       <Text fontWeight="semibold">Manual Entry</Text>
@@ -388,7 +427,8 @@ const TrackList = ({ amount }) => {
                   py="8px"
                   mt="4px"
                   borderTop="1px solid"
-                  borderColor={useColorModeValue('gray.100', 'gray.700')}>
+                  borderColor={useColorModeValue('gray.100', 'gray.700')}
+                >
                   <HStack>
                     <Icon as={FaCamera} color="blue.400" boxSize={3} />
                     <Text fontSize="xs" color="gray.600">
@@ -419,7 +459,8 @@ const TrackList = ({ amount }) => {
                   navigate(
                     `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${currentHistory?.id}/finish`
                   )
-                }>
+                }
+              >
                 {intl.formatMessage({ id: 'app.finishProduction' })}
               </Button>
             )}
@@ -436,6 +477,16 @@ const TrackList = ({ amount }) => {
           console.log('New event added from parcel dashboard:', eventData);
           handleEventCreated();
         }}
+      />
+
+      {/* Event Details Modal */}
+      <EventDetailsModal
+        isOpen={isEventDetailsOpen}
+        onClose={onEventDetailsClose}
+        event={selectedEvent}
+        members={currentHistory?.members || []}
+        onEventUpdated={handleEventUpdated}
+        onEventDeleted={handleEventDeleted}
       />
     </Card>
   );

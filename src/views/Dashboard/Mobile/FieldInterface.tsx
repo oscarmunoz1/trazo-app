@@ -490,7 +490,8 @@ const FieldInterface: React.FC<FieldInterfaceProps> = ({
                 colorScheme={currentLocation ? 'green' : 'blue'}
                 leftIcon={isLoadingLocation ? <Spinner size="xs" /> : <FaMapMarkerAlt />}
                 onClick={getCurrentLocation}
-                isDisabled={isLoadingLocation}>
+                isDisabled={isLoadingLocation}
+              >
                 {isLoadingLocation ? 'Getting...' : currentLocation ? 'Update' : 'Get Location'}
               </Button>
             </HStack>
@@ -511,7 +512,8 @@ const FieldInterface: React.FC<FieldInterfaceProps> = ({
             transform: 'translateY(-2px)',
             boxShadow: 'lg'
           }}
-          transition="all 0.2s">
+          transition="all 0.2s"
+        >
           🎤 Voice Input (Fastest Method)
         </Button>
 
@@ -546,7 +548,8 @@ const FieldInterface: React.FC<FieldInterfaceProps> = ({
                     transform: 'translateY(0)',
                     shadow: 'md'
                   }}
-                  transition="all 0.2s">
+                  transition="all 0.2s"
+                >
                   <VStack spacing={2}>
                     <Icon as={eventType.icon} boxSize={6} />
                     <Text fontSize="sm" fontWeight="bold" textAlign="center">
@@ -579,7 +582,8 @@ const FieldInterface: React.FC<FieldInterfaceProps> = ({
             colorScheme="purple"
             variant="outline"
             onClick={takePhoto}
-            borderRadius="lg">
+            borderRadius="lg"
+          >
             Take Photo
           </Button>
 
@@ -620,7 +624,8 @@ const FieldInterface: React.FC<FieldInterfaceProps> = ({
           isOpen={showVoiceCapture}
           onClose={() => setShowVoiceCapture(false)}
           size="full"
-          motionPreset="slideInBottom">
+          motionPreset="slideInBottom"
+        >
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>

@@ -578,7 +578,8 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
                       leftIcon={<FaMicrophone />}
                       colorScheme="blue"
                       onClick={() => setShowVoiceCapture(true)}
-                      size="lg">
+                      size="lg"
+                    >
                       Start Voice Input
                     </Button>
                   </VStack>
@@ -623,7 +624,8 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
                         transform: 'translateY(-2px)',
                         boxShadow: 'md'
                       }}
-                      transition="all 0.2s">
+                      transition="all 0.2s"
+                    >
                       <VStack spacing={3} align="start">
                         <HStack justify="space-between" width="100%">
                           <HStack>
@@ -640,7 +642,8 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
                                 ? 'yellow'
                                 : 'green'
                             }
-                            size="sm">
+                            size="sm"
+                          >
                             {template.carbonImpact} kg CO₂
                           </Badge>
                         </HStack>
@@ -679,7 +682,8 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
                   bg="green.50"
                   borderRadius="lg"
                   borderWidth="1px"
-                  borderColor="green.200">
+                  borderColor="green.200"
+                >
                   <VStack spacing={3}>
                     <HStack justify="space-between" width="100%">
                       <Text fontWeight="bold" color="green.700">
@@ -694,7 +698,8 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
                         colorScheme="green"
                         onClick={handleTemplateCreate}
                         isLoading={isCreating}
-                        loadingText="Creating...">
+                        loadingText="Creating..."
+                      >
                         Quick Create Event
                       </Button>
                       <Button variant="outline" colorScheme="green" onClick={handleShowDetails}>
@@ -715,7 +720,8 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
                   bg={`${selectedTemplate.color}.50`}
                   borderRadius="lg"
                   borderWidth="1px"
-                  borderColor={`${selectedTemplate.color}.200`}>
+                  borderColor={`${selectedTemplate.color}.200`}
+                >
                   <HStack justify="space-between">
                     <HStack>
                       <Icon
@@ -814,7 +820,8 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
                 <Button
                   variant="outline"
                   onClick={handleBackToTemplates}
-                  leftIcon={<FaArrowLeft />}>
+                  leftIcon={<FaArrowLeft />}
+                >
                   Back to Templates
                 </Button>
                 <Button
@@ -822,7 +829,8 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
                   colorScheme="green"
                   onClick={handleDetailedCreate}
                   isLoading={isCreating}
-                  loadingText="Creating Detailed Event...">
+                  loadingText="Creating Detailed Event..."
+                >
                   Create Detailed Event
                 </Button>
               </HStack>

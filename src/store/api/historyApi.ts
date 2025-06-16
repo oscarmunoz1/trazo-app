@@ -111,6 +111,13 @@ export interface CommentHistoryResponse {
   created_at: string;
 }
 
+export interface DeleteEventRequest {
+  companyId: string;
+  establishmentId: string;
+  eventId: string;
+  eventType: string | number;
+}
+
 export const historyApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getPublicHistory: builder.query<PublicHistory, string>({
@@ -129,8 +136,19 @@ export const historyApi = baseApi.injectEndpoints({
         body: { comment }
       }),
       invalidatesTags: ['History']
+    }),
+
+    deleteEvent: builder.mutation<void, DeleteEventRequest>({
+      query: ({ companyId, establishmentId, eventId, eventType }) => ({
+        url: `companies/${companyId}/establishments/${establishmentId}/events/${eventId}/?event_type=${eventType}`,
+        method: 'DELETE',
+        credentials: 'include'
+      }),
+      invalidatesTags: (result, error, { eventId }) =>
+        result ? [{ type: 'Event', id: eventId }, 'History'] : []
     })
   })
 });
 
-export const { useGetPublicHistoryQuery, useCommentHistoryMutation } = historyApi;
+export const { useGetPublicHistoryQuery, useCommentHistoryMutation, useDeleteEventMutation } =
+  historyApi;

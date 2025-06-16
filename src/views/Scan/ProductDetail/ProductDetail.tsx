@@ -84,7 +84,8 @@ import {
   FaBolt,
   FaChartLine,
   FaMapMarkerAlt,
-  FaMap
+  FaMap,
+  FaBookOpen
 } from 'react-icons/fa';
 import {
   MdLocationOn,
@@ -131,10 +132,21 @@ import { EnhancedTimeline } from '../../../components/EnhancedTimeline';
 import { GamifiedOffset } from '../../../components/GamifiedOffset';
 import { ConsumerSustainabilityInfo } from '../../../components/ConsumerSustainabilityInfo';
 import { BlockchainVerificationBadge } from '../../../components/BlockchainVerificationBadge';
-import { EnhancedProductTimeline } from '../../../components/ProductDetail';
+import { EnhancedProductTimeline } from '../../../components/ProductDetail/EnhancedProductTimeline';
+import { ModernProductionJourney } from 'components/ProductDetail/ModernProductionJourney';
 import PerformanceLoading from './components/PerformanceLoading';
 import { CleanLoadingScreen } from './components/CleanLoadingScreen';
 import { ProgressiveQRLoader } from './components/ProgressiveQRLoader';
+import USDACredibilityBadge from '../../../components/Carbon/USDACredibilityBadge';
+import RegionalBenchmark from '../../../components/Carbon/RegionalBenchmark';
+
+// Import our new Week 2 Educational Components
+import {
+  EducationModal,
+  TrustComparisonWidget,
+  CarbonImpactVisualizer,
+  USDAMethodologyExplainer
+} from '../../../components/Education';
 
 const options = {
   googleMapApiKey: 'AIzaSyCLHij6DjbLLkhTsTvrRhwuKf8ZGXrx-Q8'
@@ -211,6 +223,7 @@ function ProductDetail() {
   // Map data is now always available (no conditional loading needed)
   const [needsMapData, setNeedsMapData] = useState(true); // Always true since data is unified
 
+  // Modal controls
   const {
     isOpen: isOffsetModalOpen,
     onOpen: onOffsetModalOpen,
@@ -221,11 +234,16 @@ function ProductDetail() {
     onOpen: onFeedbackModalOpen,
     onClose: onFeedbackModalClose
   } = useDisclosure();
+  const {
+    isOpen: isEducationModalOpen,
+    onOpen: onEducationModalOpen,
+    onClose: onEducationModalClose
+  } = useDisclosure();
   const pointsStore = usePointsStore();
   const [showMore, setShowMore] = useState(false);
   const [showAllTimeline, setShowAllTimeline] = useState(false);
   const [offsetLoading, setOffsetLoading] = useState(false);
-  const [offsetAmount, setOffsetAmount] = useState(0.05);
+  const [offsetAmount, setOffsetAmount] = useState(0.1);
   const [feedbackRating, setFeedbackRating] = useState(5);
   const [feedbackComment, setFeedbackComment] = useState('');
   const [addEstablishmentCarbonFootprint] = useAddEstablishmentCarbonFootprintMutation();
@@ -259,6 +277,12 @@ function ProductDetail() {
   // Points system
   const { points, addPoints } = usePointsStore();
   const [hasAwardedCarbonPoints, setHasAwardedCarbonPoints] = useState(false);
+  const [hasAwardedFeedbackPoints, setHasAwardedFeedbackPoints] = useState(false);
+
+  // Educational modal states - moved to top to fix hooks order
+  const [educationTopic, setEducationTopic] = useState<string | null>(null);
+  const [showTrustComparison, setShowTrustComparison] = useState(false);
+  const [showCarbonVisualizer, setShowCarbonVisualizer] = useState(false);
 
   // Phase 3 Optimization: Enhanced loading states for unified data
   const showProgressiveLoading = isCompleteLoading;
@@ -422,6 +446,17 @@ function ProductDetail() {
     } catch (error) {
       console.error('Error sharing:', error);
     }
+  };
+
+  // Educational modal handlers
+  const handleEducationOpen = (topic: string) => {
+    setEducationTopic(topic);
+    onEducationModalOpen();
+  };
+
+  const handleEducationClose = () => {
+    setEducationTopic(null);
+    onEducationModalClose();
   };
 
   const fetchProductData = async () => {
@@ -609,14 +644,28 @@ function ProductDetail() {
           bg={bgColor}
         >
           <CardHeader mb="24px">
-            <HStack spacing={3}>
+            <HStack spacing={3} flexWrap="wrap">
               <Badge colorScheme="green" fontSize="md" px={3} py={1} borderRadius="full">
                 {intl.formatMessage({ id: 'app.verified' })}
               </Badge>
-              {carbonData?.isUsdaVerified && (
-                <Badge colorScheme="blue" fontSize="md" px={3} py={1} borderRadius="full">
-                  USDA SOE Verified
-                </Badge>
+
+              {/* Enhanced USDA Credibility Badge */}
+              {(carbonData as any)?.establishment?.id && (
+                <VStack spacing={2}>
+                  <USDACredibilityBadge
+                    establishmentId={(carbonData as any).establishment.id}
+                    compact={true}
+                    showDetails={true}
+                  />
+                  <Button
+                    size="xs"
+                    variant="ghost"
+                    colorScheme="green"
+                    onClick={() => handleEducationOpen('usda-methodology')}
+                  >
+                    Learn about USDA standards
+                  </Button>
+                </VStack>
               )}
             </HStack>
             <HStack mt={4} spacing={4} align="center">
@@ -724,6 +773,89 @@ function ProductDetail() {
                           intl.formatMessage({ id: 'app.calculatingFootprint' })
                         }
                       />
+
+                      {/* Educational Enhancement: Learn More about Carbon Scoring */}
+                      <VStack spacing={4} mt={6}>
+                        {/* Educational Section Header */}
+                        <Box textAlign="center" mb={2}>
+                          <Text fontSize="sm" fontWeight="medium" color="gray.600" mb={2}>
+                            Learn More About This Data
+                          </Text>
+                          <Divider />
+                        </Box>
+
+                        {/* Primary Educational Buttons - Mobile Optimized */}
+                        <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={3} w="full" maxW="400px">
+                          <Button
+                            size={{ base: 'md', sm: 'sm' }}
+                            variant="outline"
+                            colorScheme="blue"
+                            leftIcon={<Icon as={FaInfo} />}
+                            onClick={() => handleEducationOpen('carbon-scoring')}
+                            minH="44px"
+                            fontSize={{ base: 'sm', sm: 'xs' }}
+                            px={4}
+                            _hover={{
+                              transform: 'translateY(-1px)',
+                              boxShadow: 'md',
+                              bg: 'blue.50'
+                            }}
+                            transition="all 0.2s"
+                          >
+                            How is this calculated?
+                          </Button>
+                          <Button
+                            size={{ base: 'md', sm: 'sm' }}
+                            variant="outline"
+                            colorScheme="green"
+                            leftIcon={<Icon as={FaChartLine} />}
+                            onClick={() => setShowTrustComparison(true)}
+                            minH="44px"
+                            fontSize={{ base: 'sm', sm: 'xs' }}
+                            px={4}
+                            _hover={{
+                              transform: 'translateY(-1px)',
+                              boxShadow: 'md',
+                              bg: 'green.50'
+                            }}
+                            transition="all 0.2s"
+                          >
+                            Why trust this data?
+                          </Button>
+                        </SimpleGrid>
+
+                        {/* Secondary Educational Actions */}
+                        <HStack spacing={2} justify="center" flexWrap="wrap">
+                          <Button
+                            size="xs"
+                            variant="ghost"
+                            colorScheme="blue"
+                            leftIcon={<Icon as={FaBookOpen} boxSize={3} />}
+                            onClick={() => handleEducationOpen('usda-methodology')}
+                            minH="32px"
+                            fontSize="xs"
+                            _hover={{ bg: 'blue.50' }}
+                          >
+                            USDA Standards
+                          </Button>
+                          <Text color="gray.400" fontSize="xs">
+                            •
+                          </Text>
+                          <Button
+                            size="xs"
+                            variant="ghost"
+                            colorScheme="green"
+                            leftIcon={<Icon as={FaMapMarkerAlt} boxSize={3} />}
+                            onClick={() => handleEducationOpen('regional-benchmarks')}
+                            minH="32px"
+                            fontSize="xs"
+                            _hover={{ bg: 'green.50' }}
+                          >
+                            Regional Data
+                          </Button>
+                        </HStack>
+                      </VStack>
+
                       {carbonData?.industryPercentile && carbonData.industryPercentile > 0 && (
                         <Box mt={4} p={3} bg="green.50" borderRadius="md">
                           <HStack>
@@ -738,6 +870,40 @@ function ProductDetail() {
                           </HStack>
                         </Box>
                       )}
+
+                      {/* Educational Enhancement: Carbon Impact Visualizer */}
+                      {carbonData?.netFootprint && (
+                        <Box
+                          mt={6}
+                          p={4}
+                          bg="gray.50"
+                          borderRadius="lg"
+                          border="1px solid"
+                          borderColor="gray.200"
+                        >
+                          <Text
+                            fontSize="sm"
+                            fontWeight="medium"
+                            color="gray.700"
+                            mb={3}
+                            textAlign="center"
+                          >
+                            Carbon Impact Examples
+                          </Text>
+                          <CarbonImpactVisualizer
+                            carbonValue={carbonData.netFootprint}
+                            carbonUnit="kg CO2e"
+                            contextData={{
+                              product_name: (carbonData as any)?.product?.name,
+                              farm_type: (carbonData as any)?.farmer?.name,
+                              region: (carbonData as any)?.farmer?.location
+                            }}
+                            compact={true}
+                            maxExamples={3}
+                          />
+                        </Box>
+                      )}
+
                       {carbonData?.relatableFootprint && (
                         <Box
                           mt={3}
@@ -747,11 +913,21 @@ function ProductDetail() {
                           borderColor="blue.400"
                           bg="blue.50"
                         >
-                          <HStack>
-                            <Icon as={FaInfoCircle} color="blue.500" />
-                            <Text fontSize="sm" color="blue.700">
-                              {`Carbon footprint: ${carbonData.relatableFootprint}`}
-                            </Text>
+                          <HStack justify="space-between">
+                            <HStack>
+                              <Icon as={FaInfoCircle} color="blue.500" />
+                              <Text fontSize="sm" color="blue.700">
+                                {`Carbon footprint: ${carbonData.relatableFootprint}`}
+                              </Text>
+                            </HStack>
+                            <Button
+                              size="xs"
+                              variant="ghost"
+                              colorScheme="blue"
+                              onClick={() => setShowCarbonVisualizer(true)}
+                            >
+                              See examples
+                            </Button>
                           </HStack>
                         </Box>
                       )}
@@ -1271,24 +1447,27 @@ function ProductDetail() {
                   let events = carbonTimeline.length > 0 ? carbonTimeline : historyEvents;
 
                   if (Array.isArray(events) && events.length > 0) {
-                    // Transform events for EnhancedProductTimeline component
-                    const timelineEvents = events.map((event, index) => ({
-                      id: event.id?.toString() || `event_${index}`,
-                      type: event.type || 'general',
-                      description: event.description || event.title || 'Farm Activity',
-                      observation: event.observation || '',
-                      date: event.date || new Date().toISOString(),
-                      certified: event.certified || true,
-                      index: event.index || index,
-                      volume: event.volume ? parseFloat(event.volume) : undefined,
-                      concentration: event.concentration
-                        ? parseFloat(event.concentration)
-                        : undefined,
-                      area: event.area ? parseFloat(event.area) : undefined,
-                      equipment: event.commercial_name || event.equipment || undefined
-                    }));
+                    // Enhanced mapping with carbon transparency focus
+                    const mapEventsToTimeline = (apiEvents: any[]) => {
+                      return apiEvents.map((event, index) => {
+                        return {
+                          id: event.id?.toString() || `event_${index}`,
+                          type: event.type || 'general',
+                          description: event.description || 'Farm Activity',
+                          observation: event.observation || '',
+                          date: event.date || new Date().toISOString(),
+                          certified: event.certified || false,
+                          index: event.index || index,
+                          volume: event.volume,
+                          concentration: event.concentration,
+                          area: event.area,
+                          equipment: event.equipment || event.commercial_name
+                        };
+                      });
+                    };
 
-                    return <EnhancedProductTimeline events={timelineEvents} />;
+                    const timelineEvents = mapEventsToTimeline(events);
+                    return <ModernProductionJourney events={timelineEvents} />;
                   } else {
                     return (
                       <VStack spacing={3} py={8}>
@@ -1546,6 +1725,101 @@ function ProductDetail() {
                 )}
               </FormControl>
             </Box>
+
+            {/* Enhanced USDA Regional Benchmark */}
+            {(carbonData as any)?.establishment?.id && (
+              <Box mb={6}>
+                <RegionalBenchmark
+                  establishmentId={(carbonData as any).establishment.id}
+                  carbonIntensity={carbonData?.netFootprint || 1.0}
+                  cropType={(carbonData as any)?.product?.name?.toLowerCase() || 'corn'}
+                  showTitle={true}
+                  compact={false}
+                />
+                {/* Regional Insights Educational Section */}
+                <VStack spacing={3} mt={4}>
+                  <Box textAlign="center">
+                    <Text fontSize="sm" fontWeight="medium" color="gray.600" mb={2}>
+                      Explore Regional Farming Data
+                    </Text>
+                    <Divider />
+                  </Box>
+
+                  <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={3} w="full" maxW="350px">
+                    <Button
+                      size={{ base: 'md', sm: 'sm' }}
+                      variant="outline"
+                      colorScheme="blue"
+                      leftIcon={<Icon as={FaMapMarkerAlt} />}
+                      onClick={() => handleEducationOpen('regional-benchmarks')}
+                      minH="44px"
+                      fontSize={{ base: 'sm', sm: 'xs' }}
+                      px={3}
+                      _hover={{
+                        transform: 'translateY(-1px)',
+                        boxShadow: 'md',
+                        bg: 'blue.50'
+                      }}
+                      transition="all 0.2s"
+                    >
+                      Regional insights
+                    </Button>
+                    <Button
+                      size={{ base: 'md', sm: 'sm' }}
+                      variant="outline"
+                      colorScheme="green"
+                      leftIcon={<Icon as={FaLeaf} />}
+                      onClick={() => handleEducationOpen('farming-practices')}
+                      minH="44px"
+                      fontSize={{ base: 'sm', sm: 'xs' }}
+                      px={3}
+                      _hover={{
+                        transform: 'translateY(-1px)',
+                        boxShadow: 'md',
+                        bg: 'green.50'
+                      }}
+                      transition="all 0.2s"
+                    >
+                      Farming practices
+                    </Button>
+                  </SimpleGrid>
+                </VStack>
+              </Box>
+            )}
+
+            <Box mb={6}>
+              <ConsumerSustainabilityInfo
+                productName={
+                  (carbonData as any)?.farmer?.name || (carbonData as any)?.product?.name || ''
+                }
+                carbonScore={carbonData?.carbonScore || 0}
+                sustainabilityPractices={
+                  carbonData?.recommendations
+                    ? carbonData.recommendations.map((rec, index) => ({
+                        icon: (
+                          <Icon
+                            as={
+                              index % 5 === 0
+                                ? FaWater
+                                : index % 5 === 1
+                                ? MdNoFood
+                                : index % 5 === 2
+                                ? FaSeedling
+                                : index % 5 === 3
+                                ? MdEco
+                                : FaLeaf
+                            }
+                            color="green.500"
+                            boxSize={5}
+                          />
+                        ),
+                        title: rec,
+                        description: rec
+                      }))
+                    : []
+                }
+              />
+            </Box>
           </CardBody>
         </Card>
       </Flex>
@@ -1704,6 +1978,68 @@ function ProductDetail() {
               {intl.formatMessage({ id: 'app.submitRating' })}
             </Button>
           </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* Educational Modals - Week 2 Consumer Education Enhancement */}
+      {educationTopic && (
+        <EducationModal
+          isOpen={isEducationModalOpen}
+          onClose={handleEducationClose}
+          topic={educationTopic as any}
+          contextData={{
+            establishment: (carbonData as any)?.establishment,
+            product: (carbonData as any)?.product,
+            farmer: (carbonData as any)?.farmer,
+            carbonScore: carbonData?.carbonScore,
+            netFootprint: carbonData?.netFootprint
+          }}
+          triggerSource="product-detail-page"
+        />
+      )}
+
+      {/* Trust Comparison Widget Modal */}
+      <Modal isOpen={showTrustComparison} onClose={() => setShowTrustComparison(false)} size="xl">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Data Trust & Accuracy</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <TrustComparisonWidget
+              establishmentData={(carbonData as any)?.establishment}
+              contextData={{
+                carbonScore: carbonData?.carbonScore,
+                netFootprint: carbonData?.netFootprint
+              }}
+              compact={false}
+              showDetails={true}
+            />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      {/* Carbon Impact Visualizer Modal */}
+      <Modal isOpen={showCarbonVisualizer} onClose={() => setShowCarbonVisualizer(false)} size="xl">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Carbon Impact Examples</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {carbonData?.netFootprint && (
+              <CarbonImpactVisualizer
+                carbonValue={carbonData.netFootprint}
+                carbonUnit="kg CO2e"
+                contextData={{
+                  product_name: (carbonData as any)?.product?.name,
+                  farm_type: (carbonData as any)?.farmer?.name,
+                  region: (carbonData as any)?.farmer?.location
+                }}
+                compact={false}
+                showComparisons={true}
+                maxExamples={6}
+              />
+            )}
+          </ModalBody>
         </ModalContent>
       </Modal>
     </Flex>

@@ -182,11 +182,11 @@ const App = () => {
                   exact
                   element={<UpdateEvent />}
                 />
-                <Route
+                {/* <Route
                   path="establishment/:establishmentId/parcel/:parcelId/event/:eventId"
                   exact
                   element={<DetailEvent />}
-                />
+                /> */}
                 <Route
                   path="establishment/:establishmentId/parcel/:parcelId/event/:eventId/change"
                   exact

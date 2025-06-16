@@ -681,6 +681,194 @@ export interface CropTemplateDetail {
   };
 }
 
+// Educational content interfaces
+export interface USDAMethodologyContent {
+  title: string;
+  subtitle?: string;
+  overview: string;
+  sections: Array<{
+    title: string;
+    content: string;
+    icon: string;
+    type: 'explanation' | 'example' | 'comparison' | 'process' | 'data';
+    key_takeaway?: string;
+    technical_detail?: string;
+    references?: string[];
+    statistical_detail?: string;
+  }>;
+  trust_indicators?: string[];
+  interactive_features: {
+    calculator_demo: boolean;
+    regional_comparison: boolean;
+    confidence_indicators: boolean;
+    technical_details: boolean;
+  };
+  quick_facts?: string[];
+  related_topics?: string[];
+  external_resources?: Array<{
+    title: string;
+    url: string;
+    type: 'article' | 'research' | 'government' | 'video';
+    description: string;
+  }>;
+  confidence_level?: number;
+  last_updated?: string;
+}
+
+export interface RegionalBenchmarkData {
+  level: 'excellent' | 'above_average' | 'good' | 'average' | 'below_average' | 'unknown';
+  percentile: number | null;
+  message: string;
+  regional_average: number | null;
+  improvement_vs_average?: number;
+  improvement_potential?: number;
+  establishment_name?: string;
+  crop_type?: string;
+  state?: string;
+  carbon_intensity?: number;
+}
+
+export interface USDACredibilityData {
+  usda_based: boolean;
+  data_source: string;
+  methodology: string;
+  confidence_level: 'high' | 'medium' | 'low';
+  regional_specificity: boolean;
+  compliance_statement: string;
+  credibility_score: number;
+  verification_details: {
+    factors_verified: boolean;
+    usda_compliant: boolean;
+    scientifically_validated: boolean;
+    peer_reviewed: boolean;
+  };
+  establishment_name?: string;
+  establishment_location?: string;
+  regional_optimization?: boolean;
+}
+
+export interface CarbonImpactData {
+  carbon_value: number;
+  carbon_unit: string;
+  examples: Array<{
+    category: string;
+    icon: string;
+    value: number;
+    unit: string;
+    description: string;
+    context: string;
+    visual_aid?: string;
+    comparison_type: 'equivalent' | 'offset' | 'saved';
+  }>;
+  context: {
+    farm_type?: string;
+    region?: string;
+    time_period?: string;
+  };
+  impact_level: 'low' | 'medium' | 'high';
+  positive_impact: boolean;
+  last_updated: string;
+}
+
+export interface TrustComparisonData {
+  title: string;
+  subtitle: string;
+  metrics: Array<{
+    label: string;
+    generic_value: number;
+    usda_value: number;
+    unit: string;
+    description: string;
+    confidence_level: number;
+  }>;
+  data_sources: {
+    generic: {
+      name: string;
+      type: 'generic' | 'government' | 'peer_reviewed' | 'industry';
+      reliability_score: number;
+      data_points: number;
+      regional_specificity: boolean;
+      last_updated: string;
+      verification_method: string;
+    };
+    usda: {
+      name: string;
+      type: 'generic' | 'government' | 'peer_reviewed' | 'industry';
+      reliability_score: number;
+      data_points: number;
+      regional_specificity: boolean;
+      last_updated: string;
+      verification_method: string;
+    };
+  };
+  trust_indicators: Array<{
+    category: string;
+    generic_score: number;
+    usda_score: number;
+    max_score: number;
+    description: string;
+    icon: string;
+  }>;
+  accuracy_improvement: number;
+  last_updated: string;
+}
+
+export interface RegionalFarmingPractices {
+  efficiency_rank: number | string;
+  key_practices: Array<{
+    name: string;
+    description: string;
+    carbon_benefit: string;
+    adoption_rate: string;
+  }>;
+  climate_advantages?: string[];
+  sustainability_story: string;
+  state_name?: string;
+  state_code?: string;
+}
+
+// General Education Content Interface (for EducationModal)
+export interface EducationContent {
+  title: string;
+  subtitle?: string;
+  overview: string;
+  sections: Array<{
+    title: string;
+    content: string;
+    icon: string;
+    type: 'explanation' | 'example' | 'comparison' | 'process' | 'data';
+    visual_aid?: {
+      type: 'chart' | 'diagram' | 'comparison' | 'timeline' | 'map';
+      data?: any;
+      description: string;
+    };
+    interactive_element?: {
+      type: 'calculator' | 'slider' | 'comparison' | 'quiz';
+      config: any;
+    };
+    key_takeaway?: string;
+  }>;
+  quick_facts?: string[];
+  related_topics?: Array<
+    | 'usda-methodology'
+    | 'carbon-scoring'
+    | 'regional-benchmarks'
+    | 'trust-indicators'
+    | 'farming-practices'
+    | 'carbon-examples'
+    | 'verification-process'
+    | 'sustainability-metrics'
+  >;
+  external_resources?: Array<{
+    title: string;
+    url: string;
+    type: 'article' | 'research' | 'government' | 'video';
+    description: string;
+  }>;
+  confidence_level?: number;
+  last_updated?: string;
+}
+
 export const carbonApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // Producer endpoints
@@ -1031,6 +1219,126 @@ export const carbonApi = baseApi.injectEndpoints({
         credentials: 'include'
       }),
       providesTags: (result, error, templateId) => [{ type: 'CropTemplate', id: templateId }]
+    }),
+
+    // Educational Content Endpoints
+    getUSDAMethodologyContent: builder.query<
+      USDAMethodologyContent,
+      { level?: 'beginner' | 'intermediate' | 'advanced'; context?: any; source?: string }
+    >({
+      query: ({ level = 'beginner', context, source }) => {
+        const params = new URLSearchParams({ level });
+        if (context) params.append('context', JSON.stringify(context));
+        if (source) params.append('source', source);
+
+        return {
+          url: `carbon/education/usda-methodology/?${params.toString()}`,
+          method: 'GET',
+          credentials: 'include'
+        };
+      },
+      providesTags: ['Education']
+    }),
+
+    getRegionalBenchmark: builder.query<
+      RegionalBenchmarkData,
+      { establishmentId: number; carbonIntensity?: number; cropType?: string }
+    >({
+      query: ({ establishmentId, carbonIntensity, cropType }) => {
+        const params = new URLSearchParams();
+        if (carbonIntensity) params.append('carbon_intensity', carbonIntensity.toString());
+        if (cropType) params.append('crop_type', cropType);
+
+        return {
+          url: `carbon/regional-benchmark/${establishmentId}/?${params.toString()}`,
+          method: 'GET',
+          credentials: 'include'
+        };
+      },
+      providesTags: ['Education']
+    }),
+
+    getUSDACredibilityInfo: builder.query<USDACredibilityData, number>({
+      query: (establishmentId) => ({
+        url: `carbon/usda-credibility/${establishmentId}/`,
+        method: 'GET',
+        credentials: 'include'
+      }),
+      providesTags: ['Education']
+    }),
+
+    getCarbonImpactExamples: builder.query<
+      CarbonImpactData,
+      { value: number; unit?: string; maxExamples?: number; context?: any }
+    >({
+      query: ({ value, unit = 'kg CO2e', maxExamples = 6, context }) => {
+        const params = new URLSearchParams({
+          value: value.toString(),
+          unit,
+          max_examples: maxExamples.toString()
+        });
+        if (context) params.append('context', JSON.stringify(context));
+
+        return {
+          url: `carbon/education/carbon-examples/?${params.toString()}`,
+          method: 'GET',
+          credentials: 'include'
+        };
+      },
+      providesTags: ['Education']
+    }),
+
+    getTrustComparisonData: builder.query<
+      TrustComparisonData,
+      { establishmentId?: number; context?: any }
+    >({
+      query: ({ establishmentId, context }) => {
+        const params = new URLSearchParams();
+        if (establishmentId) params.append('establishment_id', establishmentId.toString());
+        if (context) params.append('context', JSON.stringify(context));
+
+        return {
+          url: `carbon/education/trust-comparison/?${params.toString()}`,
+          method: 'GET',
+          credentials: 'include'
+        };
+      },
+      providesTags: ['Education']
+    }),
+
+    getRegionalFarmingPractices: builder.query<
+      RegionalFarmingPractices,
+      { state: string; cropType: string }
+    >({
+      query: ({ state, cropType }) => ({
+        url: `carbon/education/regional-farming-practices/${state}/${cropType}/`,
+        method: 'GET',
+        credentials: 'include'
+      }),
+      providesTags: ['Education']
+    }),
+
+    getEducationContent: builder.query<
+      EducationContent,
+      {
+        topic: string;
+        level?: 'beginner' | 'intermediate' | 'advanced';
+        context?: any;
+        source?: string;
+      }
+    >({
+      query: ({ topic, level = 'beginner', context, source }) => {
+        const params = new URLSearchParams({ level });
+        if (context) params.append('context', JSON.stringify(context));
+        if (source) params.append('source', source);
+
+        return {
+          url: `carbon/education/${topic}/?${params.toString()}`,
+          method: 'GET',
+          credentials: 'include'
+        };
+      },
+      providesTags: ['Education']
     })
   })
 });
@@ -1067,5 +1375,13 @@ export const {
   // Phase 2 Optimization: Unified Complete Summary
   useGetCompleteSummaryQuery,
   useGetCropTemplatesQuery,
-  useGetCropTemplateDetailQuery
+  useGetCropTemplateDetailQuery,
+  // Educational Content hooks
+  useGetUSDAMethodologyContentQuery,
+  useGetRegionalBenchmarkQuery,
+  useGetUSDACredibilityInfoQuery,
+  useGetCarbonImpactExamplesQuery,
+  useGetTrustComparisonDataQuery,
+  useGetRegionalFarmingPracticesQuery,
+  useGetEducationContentQuery
 } = carbonApi;

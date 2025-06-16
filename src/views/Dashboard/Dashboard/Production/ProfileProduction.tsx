@@ -89,6 +89,7 @@ import {
   EstablishmentInfo,
   EnhancedProductTimeline
 } from 'components/ProductDetail';
+import { ModernProductionJourney } from 'components/ProductDetail/ModernProductionJourney';
 
 // Import Phase 1 Carbon Cost Intelligence component
 import { CarbonCostInsights } from 'components/Carbon/CarbonCostInsights';
@@ -236,20 +237,21 @@ function ProfileProduction() {
 
   // Map API events to TimelineEvent format for EnhancedProductTimeline
   const mapEventsToTimeline = (apiEvents: any[]) => {
-    return apiEvents.map((event) => ({
-      id: event.id.toString(),
-      type: event.type || 'general',
-      description: event.description || '',
-      observation: event.observation || '',
-      date: event.date,
-      certified: true, // Assume all events are certified for now
-      index: event.index || 0,
-      // Map additional fields
-      volume: event.volume ? parseFloat(event.volume) : undefined,
-      concentration: event.concentration ? parseFloat(event.concentration) : undefined,
-      area: event.area ? parseFloat(event.area) : undefined,
-      equipment: event.commercial_name || undefined
-    }));
+    return apiEvents.map((event, index) => {
+      return {
+        id: event.id?.toString() || `event_${index}`,
+        type: event.type || 'general',
+        description: event.description || 'Farm Activity',
+        observation: event.observation || '',
+        date: event.date || new Date().toISOString(),
+        certified: event.certified || false,
+        index: event.index || index,
+        volume: event.volume,
+        concentration: event.concentration,
+        area: event.area,
+        equipment: event.equipment || event.commercial_name
+      };
+    });
   };
 
   if (isLoading) {
@@ -657,7 +659,7 @@ function ProfileProduction() {
               </VStack>
             </SimpleGrid>
 
-            {/* Events Timeline - Use Enhanced Timeline */}
+            {/* Events Timeline - Use Modern Production Journey */}
             <Card bg={bgColor} borderRadius="lg" boxShadow="md" mb={6}>
               <CardHeader>
                 <HStack spacing={2} justify="space-between">
@@ -671,7 +673,7 @@ function ProfileProduction() {
               </CardHeader>
               <CardBody>
                 {historyData?.events && historyData.events.length > 0 ? (
-                  <EnhancedProductTimeline events={mapEventsToTimeline(historyData.events)} />
+                  <ModernProductionJourney events={mapEventsToTimeline(historyData.events)} />
                 ) : (
                   <VStack spacing={3} py={8}>
                     <Icon as={MdTimeline} boxSize={16} color="gray.400" />

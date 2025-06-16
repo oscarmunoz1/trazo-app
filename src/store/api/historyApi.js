@@ -151,6 +151,15 @@ export const historyApi = baseApi.injectEndpoints({
       invalidatesTags: (result, error, { eventId }) =>
         result ? [{ type: 'Event', eventId }, 'History'] : []
     }),
+    deleteEvent: build.mutation({
+      query: ({ companyId, establishmentId, eventId, eventType }) => ({
+        url: EVENT_URL(companyId, establishmentId, eventId, eventType),
+        method: 'DELETE',
+        credentials: 'include'
+      }),
+      invalidatesTags: (result, error, { eventId }) =>
+        result ? [{ type: 'Event', eventId }, 'History'] : []
+    }),
     createProduction: build.mutation({
       query: (production) => ({
         url: PRODUCTION_URL(),
@@ -222,6 +231,7 @@ export const {
   useGetEventQuery,
   useCreateEventMutation,
   useUpdateEventMutation,
+  useDeleteEventMutation,
   useCreateProductionMutation,
   useUpdateProductionMutation,
   useFinishCurrentHistoryMutation,
