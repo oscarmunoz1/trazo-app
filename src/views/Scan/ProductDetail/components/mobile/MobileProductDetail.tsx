@@ -35,6 +35,8 @@ import { CarbonScore } from '../../../../../components/CarbonScore';
 import { useAddEstablishmentCarbonFootprintMutation } from 'store/api/companyApi';
 import { usePointsStore } from '../../../../../store/pointsStore';
 import { useIntl } from 'react-intl';
+import MobileEducationalSection from './MobileEducationalSection';
+import ImageCarousel from '../../../../../components/ImageCarousel/ImageCarousel';
 
 // Lazy loaded components for non-critical UI
 // Use dynamic imports with default exports
@@ -266,7 +268,7 @@ const MobileProductDetail: React.FC = () => {
 
   return (
     <Container maxW="container.sm" p={0}>
-      {/* Sticky Header with Carbon Score - This loads first */}
+      {/* Sticky Header with Carbon Score - Reduced Height for Mobile */}
       <Box
         position="sticky"
         top={0}
@@ -275,16 +277,16 @@ const MobileProductDetail: React.FC = () => {
         borderBottomWidth="1px"
         borderColor={borderColor}
         px={4}
-        py={3}
+        py={{ base: 2, md: 3 }}
         shadow="sm"
-      >
-        <HStack justify="space-between" align="center">
-          <Text fontSize="lg" fontWeight="bold">
+        minH={{ base: '60px', md: '80px' }}>
+        <HStack justify="space-between" align="center" h="full">
+          <Text fontSize={{ base: 'md', md: 'lg' }} fontWeight="bold" noOfLines={1}>
             {productBasicsData?.name || 'Product Details'}
           </Text>
 
           {isCarbonScoreLoading ? (
-            <Skeleton height="60px" width="120px" borderRadius="md" />
+            <Skeleton height={{ base: '50px', md: '60px' }} width="120px" borderRadius="md" />
           ) : (
             <CarbonScore
               score={carbonScoreData?.carbonScore || 0}
@@ -296,31 +298,9 @@ const MobileProductDetail: React.FC = () => {
         </HStack>
       </Box>
 
-      {/* Main Content Area - Progressively loaded */}
-      <VStack spacing={4} align="stretch" p={4} pb="80px">
-        {' '}
-        {/* Add padding bottom to account for fixed action bar */}
-        {/* Product Header - Only show when basic data is loaded */}
-        {productBasicsData && (
-          <Box
-            borderWidth="1px"
-            borderRadius="lg"
-            overflow="hidden"
-            borderColor={borderColor}
-            bg={bgColor}
-          >
-            <Suspense fallback={<ProductHeaderSkeleton />}>
-              <LazyProductHeader
-                productName={productBasicsData.name}
-                companyName={productBasicsData.company.name}
-                reputation={4.5} // Using a default value since we don't have this data
-                isUsdaVerified={productFullDetailsData?.isUsdaVerified}
-                industryPercentile={productFullDetailsData?.industryPercentile}
-              />
-            </Suspense>
-          </Box>
-        )}
-        {/* Carbon Score (Full Version) - Show as soon as data is available */}
+      {/* Main Content Area - Mobile-First Component Ordering */}
+      <VStack spacing={{ base: 3, md: 4 }} align="stretch" p={{ base: 3, md: 4 }} pb="90px">
+        {/* MOBILE PRIORITY 1: Carbon Score (Full Version) - Always First */}
         {carbonScoreData && (
           <Box
             borderWidth="1px"
@@ -328,23 +308,78 @@ const MobileProductDetail: React.FC = () => {
             overflow="hidden"
             borderColor={borderColor}
             bg={bgColor}
-          >
+            p={{ base: 3, md: 4 }}>
             <CarbonScore
               score={carbonScoreData.carbonScore}
               footprint={carbonScoreData.netFootprint}
               relatableFootprint={carbonScoreData.relatableFootprint}
             />
+
+            {/* Mobile Educational Section */}
+            <MobileEducationalSection
+              carbonData={carbonScoreData}
+              handleEducationOpen={(topic) => {
+                // Handle education modal opening
+                console.log('Opening education for:', topic);
+              }}
+              setShowTrustComparison={(show) => {
+                // Handle trust comparison
+                console.log('Show trust comparison:', show);
+              }}
+            />
           </Box>
         )}
-        {/* Verification Badge - Show when full details are available */}
+
+        {/* MOBILE PRIORITY 2: Product Header with Image - Second */}
+        {productBasicsData && (
+          <Box
+            borderWidth="1px"
+            borderRadius="lg"
+            overflow="hidden"
+            borderColor={borderColor}
+            bg={bgColor}>
+            {/* Add Image Carousel */}
+            <Box p={{ base: 3, md: 4 }}>
+              <ImageCarousel imagesList={productFullDetailsData?.images || []} />
+            </Box>
+
+            <Suspense fallback={<ProductHeaderSkeleton />}>
+              <LazyProductHeader
+                productName={productBasicsData.name}
+                companyName={productBasicsData.company.name}
+                reputation={4.5}
+                isUsdaVerified={productFullDetailsData?.isUsdaVerified}
+                industryPercentile={productFullDetailsData?.industryPercentile}
+              />
+            </Suspense>
+          </Box>
+        )}
+
+        {/* MOBILE PRIORITY 3: Production Timeline - Third */}
+        {productFullDetailsData?.timeline && productFullDetailsData.timeline.length > 0 && (
+          <Box
+            borderWidth="1px"
+            borderRadius="lg"
+            overflow="hidden"
+            borderColor={borderColor}
+            bg={bgColor}>
+            <Suspense fallback={<TimelineSkeleton />}>
+              <LazyEnhancedProductTimeline
+                events={productFullDetailsData.timeline}
+                isCompact={true}
+              />
+            </Suspense>
+          </Box>
+        )}
+
+        {/* MOBILE PRIORITY 4: Verification Badge - Fourth */}
         {productFullDetailsData?.blockchainVerification && (
           <Box
             borderWidth="1px"
             borderRadius="lg"
             overflow="hidden"
             borderColor={borderColor}
-            bg={bgColor}
-          >
+            bg={bgColor}>
             <Suspense fallback={<Skeleton height="60px" borderRadius="md" />}>
               <LazyBlockchainVerificationBadge
                 verificationData={{
@@ -358,15 +393,15 @@ const MobileProductDetail: React.FC = () => {
             </Suspense>
           </Box>
         )}
-        {/* Farmer/Establishment Info - Show when full details are available */}
+
+        {/* MOBILE PRIORITY 5: Establishment Info - Fifth */}
         {productFullDetailsData?.establishment && (
           <Box
             borderWidth="1px"
             borderRadius="lg"
             overflow="hidden"
             borderColor={borderColor}
-            bg={bgColor}
-          >
+            bg={bgColor}>
             <Suspense fallback={<EstablishmentInfoSkeleton />}>
               <LazyEstablishmentInfo
                 establishment={{
@@ -385,75 +420,82 @@ const MobileProductDetail: React.FC = () => {
             </Suspense>
           </Box>
         )}
-        {/* Timeline - Show when full details are available */}
-        {productFullDetailsData?.timeline && productFullDetailsData.timeline.length > 0 && (
-          <Box
-            borderWidth="1px"
-            borderRadius="lg"
-            overflow="hidden"
-            borderColor={borderColor}
-            bg={bgColor}
-          >
-            <Suspense fallback={<TimelineSkeleton />}>
-              <LazyEnhancedProductTimeline
-                events={productFullDetailsData.timeline.map((item) => ({
-                  id: item.date, // Using date as ID since we don't have a specific ID
-                  type: item.icon || 'general', // Using icon as type or fallback to general
-                  description: item.description,
-                  date: item.date,
-                  certified: true // Assuming all events are certified
-                }))}
-              />
-            </Suspense>
-          </Box>
-        )}
-        {/* Loading state for remaining content */}
-        {isProductFullDetailsLoading && (
-          <>
-            <EstablishmentInfoSkeleton />
-            <TimelineSkeleton />
-          </>
-        )}
       </VStack>
 
-      {/* Fixed Bottom Action Bar */}
+      {/* Fixed Bottom Action Bar - Enhanced Touch Targets */}
       <Box
         position="fixed"
         bottom={0}
         left={0}
         right={0}
-        p={3}
+        p={{ base: 3, md: 4 }}
         bg={bgColor}
         borderTopWidth="1px"
         borderColor={borderColor}
-        shadow="md"
-      >
-        <HStack spacing={4} justify="space-around">
+        shadow="lg"
+        zIndex={5}>
+        <HStack spacing={{ base: 2, md: 4 }} justify="space-around">
           <Button
             colorScheme="green"
-            leftIcon={<Icon as={FaLeaf} />}
+            leftIcon={<Icon as={FaLeaf} boxSize={{ base: 4, md: 5 }} />}
             onClick={onOffsetModalOpen}
             isDisabled={isCarbonScoreLoading}
             flex={1}
-          >
+            minH={{ base: '48px', md: '52px' }}
+            fontSize={{ base: 'sm', md: 'md' }}
+            fontWeight="medium"
+            borderRadius="lg"
+            _hover={{
+              transform: 'translateY(-1px)',
+              boxShadow: 'lg'
+            }}
+            _active={{
+              transform: 'translateY(0)',
+              boxShadow: 'md'
+            }}
+            transition="all 0.2s">
             Offset
           </Button>
 
           <Button
             colorScheme="blue"
-            leftIcon={<Icon as={FaShare} />}
+            leftIcon={<Icon as={FaShare} boxSize={{ base: 4, md: 5 }} />}
             onClick={handleShare}
             flex={1}
-          >
+            minH={{ base: '48px', md: '52px' }}
+            fontSize={{ base: 'sm', md: 'md' }}
+            fontWeight="medium"
+            borderRadius="lg"
+            _hover={{
+              transform: 'translateY(-1px)',
+              boxShadow: 'lg'
+            }}
+            _active={{
+              transform: 'translateY(0)',
+              boxShadow: 'md'
+            }}
+            transition="all 0.2s">
             Share
           </Button>
 
           <Button
             colorScheme="yellow"
-            leftIcon={<Icon as={FaStar} />}
+            leftIcon={<Icon as={FaStar} boxSize={{ base: 4, md: 5 }} />}
             onClick={onFeedbackModalOpen}
             flex={1}
-          >
+            minH={{ base: '48px', md: '52px' }}
+            fontSize={{ base: 'sm', md: 'md' }}
+            fontWeight="medium"
+            borderRadius="lg"
+            _hover={{
+              transform: 'translateY(-1px)',
+              boxShadow: 'lg'
+            }}
+            _active={{
+              transform: 'translateY(0)',
+              boxShadow: 'md'
+            }}
+            transition="all 0.2s">
             Review
           </Button>
         </HStack>

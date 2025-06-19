@@ -406,8 +406,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
           borderRadius="xl"
           maxH="90vh"
           display="flex"
-          flexDirection="column"
-        >
+          flexDirection="column">
           {/* Modern Minimalist Header */}
           <ModalHeader p={6} pb={4} borderBottom="1px" borderColor={borderColor} flexShrink={0}>
             <HStack justify="space-between" align="start">
@@ -419,8 +418,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                     bg={useColorModeValue(
                       `${eventConfig.color.split('.')[0]}.50`,
                       `${eventConfig.color.split('.')[0]}.900`
-                    )}
-                  >
+                    )}>
                     <Icon as={eventConfig.icon} boxSize={6} color={eventConfig.color} />
                   </Box>
                   <VStack align="start" spacing={1}>
@@ -435,8 +433,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                       fontSize="sm"
                       px={3}
                       py={1}
-                      borderRadius="full"
-                    >
+                      borderRadius="full">
                       {eventConfig.category}
                     </Badge>
                   </VStack>
@@ -534,8 +531,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                       p={4}
                       borderRadius="lg"
                       border="1px"
-                      borderColor={borderColor}
-                    >
+                      borderColor={borderColor}>
                       <StatLabel>Carbon Impact</StatLabel>
                       <StatNumber color={carbonData.co2e < 0 ? 'green.500' : 'orange.500'}>
                         {carbonData.co2e > 0 ? '+' : ''}
@@ -562,8 +558,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                         p={4}
                         borderRadius="lg"
                         border="1px"
-                        borderColor={borderColor}
-                      >
+                        borderColor={borderColor}>
                         <StatLabel>Efficiency Score</StatLabel>
                         <StatNumber>{carbonData.efficiency_score}/100</StatNumber>
                         <Progress
@@ -589,8 +584,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                         p={4}
                         borderRadius="lg"
                         border="1px"
-                        borderColor={borderColor}
-                      >
+                        borderColor={borderColor}>
                         <StatLabel>Estimated Cost</StatLabel>
                         <StatNumber>${carbonData.cost_analysis.estimated_cost}</StatNumber>
                         <StatHelpText>
@@ -656,8 +650,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                   <Tooltip
                     label="This indicates how relevant this event is to consumers scanning your product QR codes"
                     placement="top"
-                    hasArrow
-                  >
+                    hasArrow>
                     <Box cursor="help">
                       <Icon as={MdInfo} color="gray.400" boxSize={4} />
                     </Box>
@@ -693,8 +686,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                           : 'blue'
                       }
                       variant="subtle"
-                      fontSize="xs"
-                    >
+                      fontSize="xs">
                       {carbonData.verification_status === 'usda_certified'
                         ? '✓ USDA Certified'
                         : carbonData.verification_status === 'factors_verified' ||
@@ -752,16 +744,14 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
             p={6}
             flexShrink={0}
             bg={useColorModeValue('white', 'gray.800')}
-            borderBottomRadius="xl"
-          >
+            borderBottomRadius="xl">
             <HStack spacing={3} w="full" justify="space-between">
               <Button
                 variant="ghost"
                 onClick={onClose}
                 size="lg"
                 color="gray.600"
-                _hover={{ bg: 'gray.100' }}
-              >
+                _hover={{ bg: 'gray.100' }}>
                 Close
               </Button>
 
@@ -778,8 +768,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                     transform: 'translateY(-1px)',
                     boxShadow: 'lg'
                   }}
-                  transition="all 0.2s"
-                >
+                  transition="all 0.2s">
                   Edit Event
                 </Button>
 
@@ -797,8 +786,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                     bg: 'red.50',
                     color: 'red.600'
                   }}
-                  transition="all 0.2s"
-                >
+                  transition="all 0.2s">
                   Delete
                 </Button>
               </HStack>
@@ -812,8 +800,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
         isOpen={isDeleteOpen}
         leastDestructiveRef={cancelRef}
         onClose={onDeleteClose}
-        isCentered
-      >
+        isCentered>
         <AlertDialogOverlay bg="blackAlpha.300" backdropFilter="blur(10px)">
           <AlertDialogContent borderRadius="xl" p={2}>
             <AlertDialogHeader fontSize="lg" fontWeight="bold" pb={4}>
@@ -850,8 +837,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                   onClick={onDeleteClose}
                   variant="ghost"
                   size="lg"
-                  borderRadius="lg"
-                >
+                  borderRadius="lg">
                   Cancel
                 </Button>
                 <Button
@@ -866,8 +852,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                     transform: 'translateY(-1px)',
                     boxShadow: 'lg'
                   }}
-                  transition="all 0.2s"
-                >
+                  transition="all 0.2s">
                   Delete Event
                 </Button>
               </HStack>

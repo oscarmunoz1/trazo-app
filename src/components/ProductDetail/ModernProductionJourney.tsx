@@ -259,112 +259,91 @@ export const ModernProductionJourney: React.FC<ModernProductionJourneyProps> = (
                       borderColor={config.borderColor}>
                       <CardBody>
                         <VStack spacing={3} align="stretch">
-                          {/* Header */}
+                          {/* Event header */}
                           <HStack justify="space-between" align="start">
                             <VStack align="start" spacing={1} flex={1}>
                               <HStack spacing={2}>
                                 <Badge
+                                  size="sm"
                                   colorScheme={config.categoryColor}
-                                  variant="subtle"
-                                  size="sm">
+                                  variant="subtle">
                                   {config.category}
                                 </Badge>
                                 {event.certified && (
-                                  <Tooltip label="Verified Activity">
-                                    <Icon as={MdVerified} color="green.500" boxSize={4} />
-                                  </Tooltip>
+                                  <Badge size="sm" colorScheme="green" variant="solid">
+                                    <HStack spacing={1}>
+                                      <Icon as={MdVerified} boxSize={3} />
+                                      <Text fontSize="xs">Verified</Text>
+                                    </HStack>
+                                  </Badge>
                                 )}
                               </HStack>
                               <Text fontWeight="semibold" fontSize="md" color={textColor}>
                                 <HTMLRenderer htmlString={event.description} />
                               </Text>
-                              <HStack spacing={4} fontSize="sm" color={mutedColor}>
-                                <HStack spacing={1}>
-                                  <Icon as={FaCalendarAlt} boxSize={3} />
-                                  <Text>{format(parseISO(event.date), 'MMM dd, yyyy')}</Text>
-                                </HStack>
-                                {event.index && <Text>Step {event.index}</Text>}
-                              </HStack>
+                              {event.observation && (
+                                <Text fontSize="sm" color={mutedColor}>
+                                  {event.observation}
+                                </Text>
+                              )}
+                            </VStack>
+                            <VStack align="end" spacing={1}>
+                              <Text fontSize="xs" color={mutedColor}>
+                                {format(parseISO(event.date), 'MMM dd, yyyy')}
+                              </Text>
+                              <Text fontSize="xs" color={mutedColor}>
+                                {format(parseISO(event.date), 'h:mm a')}
+                              </Text>
                             </VStack>
                           </HStack>
 
-                          {/* Details */}
-                          {(event.observation || event.volume || event.area || event.equipment) && (
-                            <Box>
-                              <Divider mb={3} />
-                              <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3}>
-                                {event.observation && (
-                                  <Box>
-                                    <Text
-                                      fontSize="xs"
-                                      fontWeight="medium"
-                                      color={mutedColor}
-                                      mb={1}>
-                                      Notes
-                                    </Text>
-                                    <Text fontSize="sm" color={textColor}>
-                                      {event.observation}
-                                    </Text>
-                                  </Box>
-                                )}
-                                {event.volume && (
-                                  <Box>
-                                    <Text
-                                      fontSize="xs"
-                                      fontWeight="medium"
-                                      color={mutedColor}
-                                      mb={1}>
-                                      Volume
-                                    </Text>
-                                    <Text fontSize="sm" color={textColor}>
-                                      {event.volume}
-                                    </Text>
-                                  </Box>
-                                )}
-                                {event.area && (
-                                  <Box>
-                                    <Text
-                                      fontSize="xs"
-                                      fontWeight="medium"
-                                      color={mutedColor}
-                                      mb={1}>
-                                      Area
-                                    </Text>
-                                    <Text fontSize="sm" color={textColor}>
-                                      {event.area}
-                                    </Text>
-                                  </Box>
-                                )}
-                                {event.equipment && (
-                                  <Box>
-                                    <Text
-                                      fontSize="xs"
-                                      fontWeight="medium"
-                                      color={mutedColor}
-                                      mb={1}>
-                                      Equipment/Product
-                                    </Text>
-                                    <Text fontSize="sm" color={textColor}>
-                                      {event.equipment}
-                                    </Text>
-                                  </Box>
-                                )}
-                                {event.concentration && (
-                                  <Box>
-                                    <Text
-                                      fontSize="xs"
-                                      fontWeight="medium"
-                                      color={mutedColor}
-                                      mb={1}>
-                                      Concentration
-                                    </Text>
-                                    <Text fontSize="sm" color={textColor}>
-                                      {event.concentration}
-                                    </Text>
-                                  </Box>
-                                )}
-                              </SimpleGrid>
-                            </Box>
+                          {/* Event details */}
+                          {(event.volume ||
+                            event.concentration ||
+                            event.area ||
+                            event.equipment) && (
+                            <SimpleGrid columns={{ base: 2, md: 4 }} spacing={3}>
+                              {event.volume && (
+                                <VStack spacing={1}>
+                                  <Text fontSize="xs" color={mutedColor} fontWeight="medium">
+                                    Volume
+                                  </Text>
+                                  <Text fontSize="sm" fontWeight="semibold">
+                                    {event.volume}
+                                  </Text>
+                                </VStack>
+                              )}
+                              {event.concentration && (
+                                <VStack spacing={1}>
+                                  <Text fontSize="xs" color={mutedColor} fontWeight="medium">
+                                    Concentration
+                                  </Text>
+                                  <Text fontSize="sm" fontWeight="semibold">
+                                    {event.concentration}
+                                  </Text>
+                                </VStack>
+                              )}
+                              {event.area && (
+                                <VStack spacing={1}>
+                                  <Text fontSize="xs" color={mutedColor} fontWeight="medium">
+                                    Area
+                                  </Text>
+                                  <Text fontSize="sm" fontWeight="semibold">
+                                    {event.area}
+                                  </Text>
+                                </VStack>
+                              )}
+                              {event.equipment && (
+                                <VStack spacing={1}>
+                                  <Text fontSize="xs" color={mutedColor} fontWeight="medium">
+                                    Equipment
+                                  </Text>
+                                  <Text fontSize="sm" fontWeight="semibold">
+                                    {event.equipment}
+                                  </Text>
+                                </VStack>
+                              )}
+                            </SimpleGrid>
                           )}
                         </VStack>
                       </CardBody>
@@ -379,49 +358,52 @@ export const ModernProductionJourney: React.FC<ModernProductionJourneyProps> = (
           {filteredEvents.length > 4 && (
             <Box textAlign="center" pt={4}>
               <Button
-                variant="outline"
+                variant="ghost"
                 colorScheme="green"
+                size="sm"
                 onClick={() => setShowAll(!showAll)}
-                leftIcon={<Icon as={showAll ? FaChevronUp : FaChevronDown} />}
-                size="sm">
+                leftIcon={<Icon as={showAll ? FaChevronUp : FaChevronDown} />}>
                 {showAll ? `Show Less` : `Show ${filteredEvents.length - 4} More Activities`}
               </Button>
             </Box>
           )}
 
           {/* Summary stats */}
-          <Box bg={cardBg} p={4} borderRadius="lg" mt={4}>
+          <Box pt={4} borderTop="1px solid" borderColor={borderColor}>
             <SimpleGrid columns={{ base: 2, md: 4 }} spacing={4}>
-              <VStack spacing={1}>
+              <VStack>
                 <Text fontSize="lg" fontWeight="bold" color="green.500">
                   {events.filter((e) => e.certified).length}
                 </Text>
                 <Text fontSize="xs" color={mutedColor} textAlign="center">
-                  Verified Activities
+                  Verified Events
                 </Text>
               </VStack>
-              <VStack spacing={1}>
+              <VStack>
                 <Text fontSize="lg" fontWeight="bold" color="blue.500">
-                  {events.filter((e) => getEventConfig(e).category.includes('Chemical')).length}
+                  {new Set(events.map((e) => getEventConfig(e).category)).size}
                 </Text>
                 <Text fontSize="xs" color={mutedColor} textAlign="center">
-                  Chemical Applications
+                  Activity Types
                 </Text>
               </VStack>
-              <VStack spacing={1}>
-                <Text fontSize="lg" fontWeight="bold" color="cyan.500">
-                  {events.filter((e) => getEventConfig(e).category.includes('Water')).length}
-                </Text>
-                <Text fontSize="xs" color={mutedColor} textAlign="center">
-                  Water Management
-                </Text>
-              </VStack>
-              <VStack spacing={1}>
+              <VStack>
                 <Text fontSize="lg" fontWeight="bold" color="orange.500">
-                  {Math.round((events.length / 12) * 100)}%
+                  {Math.round(
+                    (new Date().getTime() - new Date(events[0]?.date || new Date()).getTime()) /
+                      (1000 * 60 * 60 * 24)
+                  )}
                 </Text>
                 <Text fontSize="xs" color={mutedColor} textAlign="center">
-                  Season Progress
+                  Days Tracked
+                </Text>
+              </VStack>
+              <VStack>
+                <Text fontSize="lg" fontWeight="bold" color="purple.500">
+                  100%
+                </Text>
+                <Text fontSize="xs" color={mutedColor} textAlign="center">
+                  Transparency
                 </Text>
               </VStack>
             </SimpleGrid>

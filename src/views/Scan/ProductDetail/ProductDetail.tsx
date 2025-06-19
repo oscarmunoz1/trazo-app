@@ -291,7 +291,7 @@ function ProductDetail() {
 
   // Enhanced image availability check - Use unified data
   const hasImages = completeData?.images && completeData.images.length > 0;
-  const productImages = completeData?.images?.map((img) => img.image) || [];
+  const productImages = completeData?.images?.map((img) => img) || [];
 
   // Phase 3 Optimization: Enhanced error handling with unified error state
   useEffect(() => {
@@ -544,8 +544,7 @@ function ProductDetail() {
               px={4}
               py={2}
               borderRadius="full"
-              textTransform="none"
-            >
+              textTransform="none">
               <HStack spacing={2}>
                 <Icon as={FaLeaf} boxSize={4} />
                 <Text fontWeight="medium">
@@ -563,8 +562,7 @@ function ProductDetail() {
                 color={titleColor}
                 fontWeight="bold"
                 textAlign="center"
-                letterSpacing="-0.02em"
-              >
+                letterSpacing="-0.02em">
                 {intl.formatMessage({ id: 'app.welcome' })}
               </Heading>
               <Text
@@ -573,8 +571,7 @@ function ProductDetail() {
                 fontWeight="normal"
                 maxW={{ base: '90%', sm: '70%', lg: '60%' }}
                 lineHeight="1.7"
-                textAlign="center"
-              >
+                textAlign="center">
                 {intl.formatMessage({ id: 'app.welcomeMessage' })}
               </Text>
             </VStack>
@@ -634,15 +631,13 @@ function ProductDetail() {
         mb="60px"
         mt="-80px"
         position="relative"
-        zIndex={10}
-      >
+        zIndex={10}>
         <Card
           w={{ sm: '95%', md: '90%', lg: '85%' }}
           p={{ sm: '16px', md: '32px', lg: '48px' }}
           boxShadow="0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
           borderRadius="2xl"
-          bg={bgColor}
-        >
+          bg={bgColor}>
           <CardHeader mb="24px">
             <HStack spacing={3} flexWrap="wrap">
               <Badge colorScheme="green" fontSize="md" px={3} py={1} borderRadius="full">
@@ -661,8 +656,7 @@ function ProductDetail() {
                     size="xs"
                     variant="ghost"
                     colorScheme="green"
-                    onClick={() => handleEducationOpen('usda-methodology')}
-                  >
+                    onClick={() => handleEducationOpen('usda-methodology')}>
                     Learn about USDA standards
                   </Button>
                 </VStack>
@@ -800,8 +794,7 @@ function ProductDetail() {
                               boxShadow: 'md',
                               bg: 'blue.50'
                             }}
-                            transition="all 0.2s"
-                          >
+                            transition="all 0.2s">
                             How is this calculated?
                           </Button>
                           <Button
@@ -818,8 +811,7 @@ function ProductDetail() {
                               boxShadow: 'md',
                               bg: 'green.50'
                             }}
-                            transition="all 0.2s"
-                          >
+                            transition="all 0.2s">
                             Why trust this data?
                           </Button>
                         </SimpleGrid>
@@ -834,8 +826,7 @@ function ProductDetail() {
                             onClick={() => handleEducationOpen('usda-methodology')}
                             minH="32px"
                             fontSize="xs"
-                            _hover={{ bg: 'blue.50' }}
-                          >
+                            _hover={{ bg: 'blue.50' }}>
                             USDA Standards
                           </Button>
                           <Text color="gray.400" fontSize="xs">
@@ -849,8 +840,7 @@ function ProductDetail() {
                             onClick={() => handleEducationOpen('regional-benchmarks')}
                             minH="32px"
                             fontSize="xs"
-                            _hover={{ bg: 'green.50' }}
-                          >
+                            _hover={{ bg: 'green.50' }}>
                             Regional Data
                           </Button>
                         </HStack>
@@ -879,15 +869,13 @@ function ProductDetail() {
                           bg="gray.50"
                           borderRadius="lg"
                           border="1px solid"
-                          borderColor="gray.200"
-                        >
+                          borderColor="gray.200">
                           <Text
                             fontSize="sm"
                             fontWeight="medium"
                             color="gray.700"
                             mb={3}
-                            textAlign="center"
-                          >
+                            textAlign="center">
                             Carbon Impact Examples
                           </Text>
                           <CarbonImpactVisualizer
@@ -911,8 +899,7 @@ function ProductDetail() {
                           borderRadius="md"
                           borderLeft="3px solid"
                           borderColor="blue.400"
-                          bg="blue.50"
-                        >
+                          bg="blue.50">
                           <HStack justify="space-between">
                             <HStack>
                               <Icon as={FaInfoCircle} color="blue.500" />
@@ -924,8 +911,7 @@ function ProductDetail() {
                               size="xs"
                               variant="ghost"
                               colorScheme="blue"
-                              onClick={() => setShowCarbonVisualizer(true)}
-                            >
+                              onClick={() => setShowCarbonVisualizer(true)}>
                               See examples
                             </Button>
                           </HStack>
@@ -1012,8 +998,7 @@ function ProductDetail() {
                               onClick={() => {
                                 setOffsetAmount(0.05);
                                 onOffsetModalOpen();
-                              }}
-                            >
+                              }}>
                               $0.05
                             </Button>
                             <Button
@@ -1023,8 +1008,7 @@ function ProductDetail() {
                               onClick={() => {
                                 setOffsetAmount(0.1);
                                 onOffsetModalOpen();
-                              }}
-                            >
+                              }}>
                               $0.10
                             </Button>
                             <Button
@@ -1034,8 +1018,7 @@ function ProductDetail() {
                               onClick={() => {
                                 setOffsetAmount(0.25);
                                 onOffsetModalOpen();
-                              }}
-                            >
+                              }}>
                               $0.25
                             </Button>
                           </HStack>
@@ -1075,8 +1058,7 @@ function ProductDetail() {
                             colorScheme="blue"
                             onClick={handleShare}
                             flex={1}
-                            size="md"
-                          >
+                            size="md">
                             {intl.formatMessage({ id: 'app.share' }) || 'Share'} (+3)
                           </Button>
                           <Button
@@ -1084,8 +1066,7 @@ function ProductDetail() {
                             colorScheme="yellow"
                             onClick={onFeedbackModalOpen}
                             flex={1}
-                            size="md"
-                          >
+                            size="md">
                             {intl.formatMessage({ id: 'app.rate' }) || 'Rate'} (+2)
                           </Button>
                         </HStack>
@@ -1303,8 +1284,7 @@ function ProductDetail() {
                             refetchHistory();
                           }
                         }}
-                        cursor="pointer"
-                      >
+                        cursor="pointer">
                         <HStack spacing={2} mb={3}>
                           <Icon as={FaMapMarkerAlt} color="green.500" />
                           <Text fontSize="lg" fontWeight="bold">
@@ -1373,8 +1353,7 @@ function ProductDetail() {
                                 center={
                                   historyData?.parcel?.map_metadata?.center || { lat: 0, lng: 0 }
                                 }
-                                mapTypeId="satellite"
-                              >
+                                mapTypeId="satellite">
                                 <Polygon
                                   path={historyData?.parcel?.polygon || []}
                                   options={{
@@ -1594,8 +1573,7 @@ function ProductDetail() {
                               variant="solid"
                               size="sm"
                               leftIcon={<DownloadIcon />}
-                              onClick={() => window.open(report.document!, '_blank')}
-                            >
+                              onClick={() => window.open(report.document!, '_blank')}>
                               {intl.formatMessage({ id: 'app.view' }) || 'View'}
                             </Button>
                           ) : (
@@ -1646,8 +1624,7 @@ function ProductDetail() {
                       cursor="pointer"
                       onClick={() => navigate(`/production/${history.id}`, { replace: true })}
                       transition="all 0.2s"
-                      _hover={{ transform: 'translateY(-2px)', boxShadow: 'md' }}
-                    >
+                      _hover={{ transform: 'translateY(-2px)', boxShadow: 'md' }}>
                       <Flex align="center" mb={3}>
                         <Image
                           src={history.image || defaultEstablishmentImage}
@@ -1716,8 +1693,7 @@ function ProductDetail() {
                         px={6}
                         isDisabled={isLoadingComment || !commentValue || isSuccessComment}
                         onClick={() => onSubmitHandler()}
-                        leftIcon={<Icon as={FaRegCheckCircle} />}
-                      >
+                        leftIcon={<Icon as={FaRegCheckCircle} />}>
                         {intl.formatMessage({ id: 'app.send' })}
                       </Button>
                     </Flex>
@@ -1760,8 +1736,7 @@ function ProductDetail() {
                         boxShadow: 'md',
                         bg: 'blue.50'
                       }}
-                      transition="all 0.2s"
-                    >
+                      transition="all 0.2s">
                       Regional insights
                     </Button>
                     <Button
@@ -1778,8 +1753,7 @@ function ProductDetail() {
                         boxShadow: 'md',
                         bg: 'green.50'
                       }}
-                      transition="all 0.2s"
-                    >
+                      transition="all 0.2s">
                       Farming practices
                     </Button>
                   </SimpleGrid>
@@ -1865,24 +1839,21 @@ function ProductDetail() {
                   size="sm"
                   colorScheme="green"
                   variant={offsetAmount === 0.05 ? 'solid' : 'outline'}
-                  onClick={() => setOffsetAmount(0.05)}
-                >
+                  onClick={() => setOffsetAmount(0.05)}>
                   $0.05
                 </Button>
                 <Button
                   size="sm"
                   colorScheme="green"
                   variant={offsetAmount === 0.1 ? 'solid' : 'outline'}
-                  onClick={() => setOffsetAmount(0.1)}
-                >
+                  onClick={() => setOffsetAmount(0.1)}>
                   $0.10
                 </Button>
                 <Button
                   size="sm"
                   colorScheme="green"
                   variant={offsetAmount === 0.25 ? 'solid' : 'outline'}
-                  onClick={() => setOffsetAmount(0.25)}
-                >
+                  onClick={() => setOffsetAmount(0.25)}>
                   $0.25
                 </Button>
               </SimpleGrid>
@@ -1893,16 +1864,14 @@ function ProductDetail() {
               colorScheme="gray"
               mr={3}
               onClick={onOffsetModalClose}
-              isDisabled={offsetLoading}
-            >
+              isDisabled={offsetLoading}>
               {intl.formatMessage({ id: 'app.cancel' }) || 'Cancel'}
             </Button>
             <Button
               colorScheme="green"
               onClick={handleOffset}
               isLoading={offsetLoading}
-              leftIcon={<Icon as={FaLeaf} />}
-            >
+              leftIcon={<Icon as={FaLeaf} />}>
               {intl.formatMessage({ id: 'app.payAmount' }, { amount: offsetAmount.toFixed(2) }) ||
                 `Pay $${offsetAmount.toFixed(2)}`}
             </Button>

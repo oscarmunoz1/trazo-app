@@ -152,3 +152,75 @@ export const historyApi = baseApi.injectEndpoints({
 
 export const { useGetPublicHistoryQuery, useCommentHistoryMutation, useDeleteEventMutation } =
   historyApi;
+
+      invalidatesTags: ['History']
+    }),
+
+    deleteEvent: builder.mutation<void, DeleteEventRequest>({
+      query: ({ companyId, establishmentId, eventId, eventType }) => ({
+        url: `companies/${companyId}/establishments/${establishmentId}/events/${eventId}/?event_type=${eventType}`,
+        method: 'DELETE',
+        credentials: 'include'
+      }),
+      invalidatesTags: (result, error, { eventId }) =>
+        result ? [{ type: 'Event', id: eventId }, 'History'] : []
+    })
+  })
+});
+
+export const { useGetPublicHistoryQuery, useCommentHistoryMutation, useDeleteEventMutation } =
+  historyApi;
+
+      invalidatesTags: ['History']
+    }),
+
+    deleteEvent: builder.mutation<void, DeleteEventRequest>({
+      query: ({ companyId, establishmentId, eventId, eventType }) => ({
+        url: `companies/${companyId}/establishments/${establishmentId}/events/${eventId}/?event_type=${eventType}`,
+        method: 'DELETE',
+        credentials: 'include'
+      }),
+      invalidatesTags: (result, error, { eventId }) =>
+        result ? [{ type: 'Event', id: eventId }, 'History'] : []
+    })
+  })
+});
+
+export const { useGetPublicHistoryQuery, useCommentHistoryMutation, useDeleteEventMutation } =
+  historyApi;
+
+      invalidatesTags: ['History']
+    }),
+
+    deleteEvent: builder.mutation<void, DeleteEventRequest>({
+      query: ({ companyId, establishmentId, eventId, eventType }) => ({
+        url: `companies/${companyId}/establishments/${establishmentId}/events/${eventId}/?event_type=${eventType}`,
+        method: 'DELETE',
+        credentials: 'include'
+      }),
+      invalidatesTags: (result, error, { eventId }) =>
+        result ? [{ type: 'Event', id: eventId }, 'History'] : []
+    })
+  })
+});
+
+export const { useGetPublicHistoryQuery, useCommentHistoryMutation, useDeleteEventMutation } =
+  historyApi;
+
+      invalidatesTags: ['History']
+    }),
+
+    deleteEvent: builder.mutation<void, DeleteEventRequest>({
+      query: ({ companyId, establishmentId, eventId, eventType }) => ({
+        url: `companies/${companyId}/establishments/${establishmentId}/events/${eventId}/?event_type=${eventType}`,
+        method: 'DELETE',
+        credentials: 'include'
+      }),
+      invalidatesTags: (result, error, { eventId }) =>
+        result ? [{ type: 'Event', id: eventId }, 'History'] : []
+    })
+  })
+});
+
+export const { useGetPublicHistoryQuery, useCommentHistoryMutation, useDeleteEventMutation } =
+  historyApi;
