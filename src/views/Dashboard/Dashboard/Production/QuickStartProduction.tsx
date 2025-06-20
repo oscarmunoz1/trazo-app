@@ -64,7 +64,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { object, string, number, boolean, date } from 'zod';
 import { useGetCropTemplatesQuery, useGetCropTemplateDetailQuery } from 'store/api/carbonApi';
-import { useStartProductionMutation } from 'store/api/companyApi';
+import { useStartProductionMutation, useGetCropTypesQuery } from 'store/api/companyApi';
 import { StandardPage, StandardCard, StandardButton } from 'components/Design';
 
 // Form validation schema
@@ -76,7 +76,8 @@ const productionSchema = object({
   production_method: string().optional(),
   irrigation_method: string().optional(),
   estimated_yield: number().optional(),
-  type: string().min(1, 'Production type is required')
+  type: string().min(1, 'Production type is required'),
+  crop_type_id: string().min(1, 'Crop type is required')
 });
 
 interface ProductionFormData {
@@ -88,6 +89,7 @@ interface ProductionFormData {
   irrigation_method?: string;
   estimated_yield?: number;
   type: string;
+  crop_type_id: string;
 }
 
 interface QuickStartProductionProps {
@@ -116,14 +118,18 @@ const QuickStartProduction: React.FC<QuickStartProductionProps> = ({
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
   const [customEvents, setCustomEvents] = useState<any[]>([]);
   const [isCreating, setIsCreating] = useState(false);
+  const [selectedCropTypeId, setSelectedCropTypeId] = useState<string | null>(null);
 
-  // API hooks
-  const { data: templatesData, isLoading: isLoadingTemplates } = useGetCropTemplatesQuery();
+  // API hooks - Dynamic template fetching based on crop type
+  const { data: templatesData, isLoading: isLoadingTemplates } = useGetCropTemplatesQuery(
+    selectedCropTypeId ? { crop_type: selectedCropTypeId } : undefined
+  );
   const { data: templateDetail, isLoading: isLoadingDetail } = useGetCropTemplateDetailQuery(
     selectedTemplateId!,
     { skip: !selectedTemplateId }
   );
   const [startProduction] = useStartProductionMutation();
+  const { data: cropTypesData } = useGetCropTypesQuery();
 
   // Form setup
   const {
@@ -139,22 +145,75 @@ const QuickStartProduction: React.FC<QuickStartProductionProps> = ({
       start_date: new Date().toISOString().split('T')[0],
       type: 'OR',
       production_method: 'conventional',
-      irrigation_method: 'drip'
+      irrigation_method: 'drip',
+      crop_type_id: ''
     }
   });
 
   // Auto-select template based on crop type
   useEffect(() => {
-    if (propCropType && templatesData?.templates) {
-      const matchingTemplate = templatesData.templates.find(
-        (template) => template.crop_type.toLowerCase() === propCropType.toLowerCase()
+    if (propCropType && templatesData?.templates && cropTypesData) {
+      // First find the crop type by slug to get its category
+      const matchingCropType = cropTypesData.find(
+        (cropType) => cropType.slug.toLowerCase() === propCropType.toLowerCase()
       );
-      if (matchingTemplate) {
-        setSelectedTemplateId(matchingTemplate.id);
-        setSelectedTemplate(matchingTemplate);
+
+      if (matchingCropType) {
+        // Then find template by category
+        const matchingTemplate = templatesData.templates.find(
+          (template) => template.crop_type.toLowerCase() === matchingCropType.category.toLowerCase()
+        );
+        if (matchingTemplate && matchingTemplate.template_id) {
+          setSelectedTemplateId(matchingTemplate.template_id.toString());
+          setSelectedTemplate(matchingTemplate);
+        }
       }
     }
-  }, [propCropType, templatesData]);
+  }, [propCropType, templatesData, cropTypesData]);
+
+  // Auto-select crop type when propCropType is provided
+  useEffect(() => {
+    if (propCropType && cropTypesData) {
+      const matchingCropType = cropTypesData.find(
+        (cropType) => cropType.slug.toLowerCase() === propCropType.toLowerCase()
+      );
+      if (matchingCropType) {
+        setSelectedCropTypeId(matchingCropType.id.toString());
+        setValue('crop_type_id', matchingCropType.id.toString());
+      }
+    }
+  }, [propCropType, cropTypesData, setValue]);
+
+  // Templates are now filtered by the API based on crop type
+  const filteredTemplates = templatesData?.templates || [];
+
+  // Auto-select template when crop type changes
+  useEffect(() => {
+    if (selectedCropTypeId && filteredTemplates.length > 0) {
+      const firstTemplate = filteredTemplates[0];
+      if (firstTemplate.template_id) {
+        setSelectedTemplateId(firstTemplate.template_id.toString());
+        setSelectedTemplate(firstTemplate);
+      }
+    } else if (!selectedCropTypeId) {
+      setSelectedTemplate(null);
+      setSelectedTemplateId(null);
+      setCustomEvents([]); // Clear events when no crop type is selected
+    }
+  }, [selectedCropTypeId, filteredTemplates]);
+
+  // Clear and reload templates when crop type selection changes from dropdown
+  const watchedCropTypeId = watch('crop_type_id');
+  useEffect(() => {
+    if (watchedCropTypeId && watchedCropTypeId !== selectedCropTypeId) {
+      setSelectedCropTypeId(watchedCropTypeId);
+      // Clear current template selection to force reload
+      setSelectedTemplate(null);
+      setSelectedTemplateId(null);
+      setCustomEvents([]);
+      // RTK Query will automatically refetch when selectedCropTypeId changes
+    }
+  }, [watchedCropTypeId, selectedCropTypeId]);
 
   // Auto-fill form when template is selected
   useEffect(() => {
@@ -237,7 +296,9 @@ const QuickStartProduction: React.FC<QuickStartProductionProps> = ({
 
   const handleTemplateSelect = (template: any) => {
     setSelectedTemplate(template);
-    setSelectedTemplateId(template.id);
+    if (template.template_id) {
+      setSelectedTemplateId(template.template_id.toString()); // Convert to string and check existence
+    }
     onTemplateClose();
 
     toast({
@@ -265,10 +326,25 @@ const QuickStartProduction: React.FC<QuickStartProductionProps> = ({
     try {
       setIsCreating(true);
 
+      // Find the selected crop type to get its slug for the backend
+      const selectedCropType = cropTypesData?.find((ct) => ct.id.toString() === data.crop_type_id);
+
+      // Ensure we have a valid crop type ID
+      if (!data.crop_type_id) {
+        toast({
+          title: 'Missing Crop Type',
+          description: 'Please select a crop type before creating the production.',
+          status: 'error',
+          duration: 5000,
+          isClosable: true
+        });
+        return;
+      }
+
       const productionPayload = {
         name: data.name,
         parcel_id: parseInt(parcelId!),
-        crop_type: selectedTemplate?.crop_type || propCropType || 'Unknown',
+        crop_type: parseInt(data.crop_type_id), // Send the numeric ID, not the slug
         start_date: data.start_date,
         expected_harvest: data.expected_harvest,
         description: data.description,
@@ -276,7 +352,7 @@ const QuickStartProduction: React.FC<QuickStartProductionProps> = ({
         irrigation_method: data.irrigation_method,
         estimated_yield: data.estimated_yield,
         type: data.type,
-        template_id: selectedTemplate?.id,
+        template_id: selectedTemplate?.template_id,
         template_events: customEvents.filter((event) => event.enabled)
       };
 
@@ -340,15 +416,13 @@ const QuickStartProduction: React.FC<QuickStartProductionProps> = ({
       showBackButton
       onBack={() =>
         navigate(`/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}`)
-      }
-    >
+      }>
       <form onSubmit={handleSubmit(onSubmit)}>
         <VStack spacing={8} align="stretch">
           {/* Template Selection Section */}
           <StandardCard
             title="Smart Setup Templates"
-            subtitle="Choose a pre-configured template to reduce setup time by 37+ minutes"
-          >
+            subtitle="Choose a pre-configured template to reduce setup time by 37+ minutes">
             <VStack spacing={6} align="stretch">
               {/* Current Template Display */}
               {selectedTemplate ? (
@@ -357,8 +431,7 @@ const QuickStartProduction: React.FC<QuickStartProductionProps> = ({
                   bg="green.50"
                   borderRadius="lg"
                   borderWidth="2px"
-                  borderColor="green.200"
-                >
+                  borderColor="green.200">
                   <HStack spacing={3}>
                     <Icon
                       as={getCropIcon(selectedTemplate.crop_type)}
@@ -393,8 +466,7 @@ const QuickStartProduction: React.FC<QuickStartProductionProps> = ({
                       size="sm"
                       variant="outline"
                       colorScheme="green"
-                      onClick={onTemplateOpen}
-                    >
+                      onClick={onTemplateOpen}>
                       Change Template
                     </Button>
                   </HStack>
@@ -409,30 +481,42 @@ const QuickStartProduction: React.FC<QuickStartProductionProps> = ({
                   cursor="pointer"
                   transition="all 0.2s"
                   _hover={{ bg: 'blue.100', borderColor: 'blue.300' }}
-                  onClick={onTemplateOpen}
-                >
+                  onClick={selectedCropTypeId ? onTemplateOpen : undefined}
+                  opacity={selectedCropTypeId ? 1 : 0.6}>
                   <HStack spacing={3}>
                     <Icon as={FaRocket} color="blue.500" boxSize={6} />
                     <VStack align="start" spacing={1} flex={1}>
                       <Text fontSize="lg" fontWeight="bold" color="blue.700">
-                        Select a Smart Template
+                        {selectedCropTypeId ? 'Select a Smart Template' : 'Select Crop Type First'}
                       </Text>
                       <Text fontSize="sm" color="blue.600">
-                        🚀 Pre-configured templates reduce setup time by 37+ minutes
+                        {selectedCropTypeId
+                          ? `🚀 ${filteredTemplates.length} template${
+                              filteredTemplates.length !== 1 ? 's' : ''
+                            } available for your crop type`
+                          : '🌱 Choose your crop type above to see available templates'}
                       </Text>
                       <HStack spacing={2} mt={1}>
-                        <Badge colorScheme="green" variant="subtle" fontSize="xs">
-                          4 Crop Templates
-                        </Badge>
-                        <Badge colorScheme="purple" variant="subtle" fontSize="xs">
-                          USDA Verified
-                        </Badge>
-                        <Badge colorScheme="orange" variant="subtle" fontSize="xs">
-                          ROI Analysis
-                        </Badge>
+                        {selectedCropTypeId ? (
+                          <>
+                            <Badge colorScheme="green" variant="subtle" fontSize="xs">
+                              {filteredTemplates.length} Templates
+                            </Badge>
+                            <Badge colorScheme="purple" variant="subtle" fontSize="xs">
+                              USDA Verified
+                            </Badge>
+                            <Badge colorScheme="orange" variant="subtle" fontSize="xs">
+                              ROI Analysis
+                            </Badge>
+                          </>
+                        ) : (
+                          <Badge colorScheme="gray" variant="subtle" fontSize="xs">
+                            Select crop type to continue
+                          </Badge>
+                        )}
                       </HStack>
                     </VStack>
-                    <Icon as={FaArrowRight} color="blue.400" />
+                    {selectedCropTypeId && <Icon as={FaArrowRight} color="blue.400" />}
                   </HStack>
                 </Box>
               )}
@@ -442,6 +526,68 @@ const QuickStartProduction: React.FC<QuickStartProductionProps> = ({
           {/* Production Details Form */}
           <StandardCard title="Production Details" subtitle="Configure your production cycle">
             <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={6}>
+              {/* Crop Type Selection - First field */}
+              <GridItem colSpan={{ base: 1, md: 2 }}>
+                <FormControl isRequired isInvalid={!!errors.crop_type_id}>
+                  <FormLabel>Crop Type</FormLabel>
+                  <Controller
+                    name="crop_type_id"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        size="lg"
+                        placeholder="Select your crop type..."
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setSelectedCropTypeId(e.target.value);
+                        }}>
+                        {cropTypesData?.map((cropType) => (
+                          <option key={cropType.id} value={cropType.id.toString()}>
+                            {cropType.name} - {cropType.category.replace('_', ' ')}
+                          </option>
+                        ))}
+                      </Select>
+                    )}
+                  />
+                  {errors.crop_type_id && (
+                    <Text color="red.500" fontSize="sm" mt={1}>
+                      {errors.crop_type_id.message}
+                    </Text>
+                  )}
+                  {selectedCropTypeId && cropTypesData && (
+                    <Box mt={2} p={3} bg="green.50" borderRadius="md">
+                      {(() => {
+                        const selectedCropType = cropTypesData.find(
+                          (ct) => ct.id.toString() === selectedCropTypeId
+                        );
+                        return selectedCropType ? (
+                          <VStack align="start" spacing={1}>
+                            <Text fontSize="sm" fontWeight="medium" color="green.700">
+                              {selectedCropType.description}
+                            </Text>
+                            <HStack spacing={4} fontSize="xs" color="green.600">
+                              <Text>
+                                <Text as="span" fontWeight="medium">
+                                  Emissions:
+                                </Text>{' '}
+                                {selectedCropType.emissions_per_hectare} kg CO2e/ha
+                              </Text>
+                              <Text>
+                                <Text as="span" fontWeight="medium">
+                                  Carbon Credit Potential:
+                                </Text>{' '}
+                                {selectedCropType.carbon_credit_potential} kg CO2e/ha
+                              </Text>
+                            </HStack>
+                          </VStack>
+                        ) : null;
+                      })()}
+                    </Box>
+                  )}
+                </FormControl>
+              </GridItem>
+
               <GridItem>
                 <FormControl isRequired isInvalid={!!errors.name}>
                   <FormLabel>Production Name</FormLabel>
@@ -554,8 +700,7 @@ const QuickStartProduction: React.FC<QuickStartProductionProps> = ({
           {customEvents.length > 0 && (
             <StandardCard
               title="Pre-configured Events"
-              subtitle="Review and customize the events from your selected template"
-            >
+              subtitle="Review and customize the events from your selected template">
               <VStack spacing={4} align="stretch">
                 {customEvents.map((event, index) => (
                   <Box
@@ -565,8 +710,7 @@ const QuickStartProduction: React.FC<QuickStartProductionProps> = ({
                     borderRadius="md"
                     borderWidth="1px"
                     borderColor={event.enabled ? 'gray.200' : 'gray.300'}
-                    opacity={event.enabled ? 1 : 0.6}
-                  >
+                    opacity={event.enabled ? 1 : 0.6}>
                     <HStack justify="space-between" mb={2}>
                       <HStack>
                         <Switch
@@ -619,16 +763,14 @@ const QuickStartProduction: React.FC<QuickStartProductionProps> = ({
               variant="outline"
               onClick={() =>
                 navigate(`/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}`)
-              }
-            >
+              }>
               Cancel
             </StandardButton>
             <StandardButton
               type="submit"
               isLoading={isCreating}
               loadingText="Creating Production..."
-              leftIcon={<FaRocket />}
-            >
+              leftIcon={<FaRocket />}>
               Start Production
             </StandardButton>
           </HStack>
@@ -646,80 +788,121 @@ const QuickStartProduction: React.FC<QuickStartProductionProps> = ({
                 <Heading size="lg">Select Production Template</Heading>
               </HStack>
               <Text fontSize="sm" color="gray.600" fontWeight="normal">
-                Choose a pre-configured template to accelerate your production setup
+                {selectedCropTypeId && cropTypesData ? (
+                  <>
+                    Templates for{' '}
+                    <Text as="span" fontWeight="semibold" color="green.600">
+                      {cropTypesData.find((ct) => ct.id.toString() === selectedCropTypeId)?.name}
+                    </Text>{' '}
+                    • {filteredTemplates.length} template{filteredTemplates.length !== 1 ? 's' : ''}{' '}
+                    available
+                  </>
+                ) : (
+                  'Choose a pre-configured template to accelerate your production setup'
+                )}
               </Text>
             </VStack>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <Grid templateColumns="repeat(auto-fit, minmax(350px, 1fr))" gap={6}>
-              {templatesData?.templates.map((template) => {
-                const CropIcon = getCropIcon(template.crop_type);
-                return (
-                  <Card
-                    key={template.id}
-                    cursor="pointer"
-                    transition="all 0.2s"
-                    _hover={{
-                      transform: 'translateY(-2px)',
-                      shadow: 'lg',
-                      borderColor: 'blue.300'
-                    }}
-                    onClick={() => handleTemplateSelect(template)}
-                    borderWidth="1px"
-                    borderColor={selectedTemplate?.id === template.id ? 'blue.300' : 'gray.200'}
-                    bg={selectedTemplate?.id === template.id ? 'blue.50' : 'white'}
-                  >
-                    <CardHeader pb={2}>
-                      <HStack justify="space-between">
-                        <HStack>
-                          <Icon as={CropIcon} color="green.500" boxSize={5} />
-                          <VStack align="start" spacing={0}>
-                            <Heading size="md">{template.name}</Heading>
-                            <Text fontSize="sm" color="gray.600">
-                              {template.crop_type.charAt(0).toUpperCase() +
-                                template.crop_type.slice(1)}
+            {filteredTemplates.length > 0 ? (
+              <Grid templateColumns="repeat(auto-fit, minmax(350px, 1fr))" gap={6}>
+                {filteredTemplates.map((template) => {
+                  const CropIcon = getCropIcon(template.crop_type);
+                  return (
+                    <Card
+                      key={template.template_id}
+                      cursor="pointer"
+                      transition="all 0.2s"
+                      _hover={{
+                        transform: 'translateY(-2px)',
+                        shadow: 'lg',
+                        borderColor: 'blue.300'
+                      }}
+                      onClick={() => handleTemplateSelect(template)}
+                      borderWidth="1px"
+                      borderColor={
+                        selectedTemplate?.template_id === template.template_id
+                          ? 'blue.300'
+                          : 'gray.200'
+                      }
+                      bg={
+                        selectedTemplate?.template_id === template.template_id ? 'blue.50' : 'white'
+                      }>
+                      <CardHeader pb={2}>
+                        <HStack justify="space-between">
+                          <HStack>
+                            <Icon as={CropIcon} color="green.500" boxSize={5} />
+                            <VStack align="start" spacing={0}>
+                              <Heading size="md">{template.name}</Heading>
+                              <Text fontSize="sm" color="gray.600">
+                                {template.crop_type.charAt(0).toUpperCase() +
+                                  template.crop_type.slice(1)}
+                              </Text>
+                            </VStack>
+                          </HStack>
+                          <Badge colorScheme="blue" variant="subtle">
+                            {template.events_count} events
+                          </Badge>
+                        </HStack>
+                      </CardHeader>
+                      <CardBody pt={0}>
+                        <Text fontSize="sm" color="gray.700" mb={4} noOfLines={2}>
+                          {template.description}
+                        </Text>
+                        <Grid templateColumns="repeat(2, 1fr)" gap={3}>
+                          <VStack align="start" spacing={1}>
+                            <HStack>
+                              <Icon as={FaClock} color="blue.500" boxSize={3} />
+                              <Text fontSize="xs" fontWeight="medium">
+                                Setup Time
+                              </Text>
+                            </HStack>
+                            <Text fontSize="sm" fontWeight="bold">
+                              {template.setup_time_minutes} minutes
                             </Text>
                           </VStack>
-                        </HStack>
-                        <Badge colorScheme="blue" variant="subtle">
-                          {template.events_count} events
-                        </Badge>
-                      </HStack>
-                    </CardHeader>
-                    <CardBody pt={0}>
-                      <Text fontSize="sm" color="gray.700" mb={4} noOfLines={2}>
-                        {template.description}
-                      </Text>
-                      <Grid templateColumns="repeat(2, 1fr)" gap={3}>
-                        <VStack align="start" spacing={1}>
-                          <HStack>
-                            <Icon as={FaClock} color="blue.500" boxSize={3} />
-                            <Text fontSize="xs" fontWeight="medium">
-                              Setup Time
+                          <VStack align="start" spacing={1}>
+                            <HStack>
+                              <Icon as={FaChartLine} color="green.500" boxSize={3} />
+                              <Text fontSize="xs" fontWeight="medium">
+                                Carbon Credits
+                              </Text>
+                            </HStack>
+                            <Text fontSize="sm" fontWeight="bold">
+                              {template.carbon_potential} kg CO2e
                             </Text>
-                          </HStack>
-                          <Text fontSize="sm" fontWeight="bold">
-                            {template.setup_time_minutes} minutes
-                          </Text>
-                        </VStack>
-                        <VStack align="start" spacing={1}>
-                          <HStack>
-                            <Icon as={FaChartLine} color="green.500" boxSize={3} />
-                            <Text fontSize="xs" fontWeight="medium">
-                              Carbon Credits
-                            </Text>
-                          </HStack>
-                          <Text fontSize="sm" fontWeight="bold">
-                            {template.carbon_potential} kg CO2e
-                          </Text>
-                        </VStack>
-                      </Grid>
-                    </CardBody>
-                  </Card>
-                );
-              })}
-            </Grid>
+                          </VStack>
+                        </Grid>
+                      </CardBody>
+                    </Card>
+                  );
+                })}
+              </Grid>
+            ) : (
+              <VStack spacing={4} py={8} textAlign="center">
+                <Icon as={FaSeedling} boxSize={12} color="gray.400" />
+                <VStack spacing={2}>
+                  <Heading size="md" color="gray.600">
+                    No Templates Available
+                  </Heading>
+                  <Text color="gray.500" maxW="400px">
+                    {selectedCropTypeId
+                      ? `We don't have pre-configured templates for ${
+                          cropTypesData?.find((ct) => ct.id.toString() === selectedCropTypeId)?.name
+                        } yet. You can still create a production manually.`
+                      : 'Select a crop type to see available templates.'}
+                  </Text>
+                </VStack>
+                <Button
+                  variant="outline"
+                  colorScheme="blue"
+                  onClick={onTemplateClose}
+                  leftIcon={<FaEdit />}>
+                  Continue Without Template
+                </Button>
+              </VStack>
+            )}
           </ModalBody>
           <ModalFooter>
             <Button variant="ghost" mr={3} onClick={onTemplateClose}>

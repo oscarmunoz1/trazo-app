@@ -96,7 +96,7 @@ interface CarbonCalculationResult {
   usda_factors_based?: boolean;
   verification_status?: string;
   data_source?: string;
-  calculation_method: string;
+  calculation_method?: string; // Make optional since it can be undefined
   event_type: string;
   timestamp: string;
   cost_analysis?: {
@@ -165,6 +165,158 @@ const getEventConfig = (type: string, description: string) => {
   };
 };
 
+// Helper function to get human-readable event names
+const getEventDisplayName = (event: Event, intl: any): string => {
+  // If it's a general event (event_type 3), use the name field
+  if (event.event_type === 3 && event.name) {
+    return event.name;
+  }
+
+  // For other event types, map the type to a human-readable name
+  const eventTypeMap: Record<string, string> = {
+    // Chemical events
+    'event.chemical.fertilizer':
+      intl.formatMessage({ id: 'event.chemical.fertilizer' }) || 'Fertilizer Application',
+    'event.chemical.pesticide':
+      intl.formatMessage({ id: 'event.chemical.pesticide' }) || 'Pesticide Application',
+    'event.chemical.herbicide':
+      intl.formatMessage({ id: 'event.chemical.herbicide' }) || 'Herbicide Application',
+    'event.chemical.fungicide':
+      intl.formatMessage({ id: 'event.chemical.fungicide' }) || 'Fungicide Application',
+    'event.chemical.insecticide':
+      intl.formatMessage({ id: 'event.chemical.insecticide' }) || 'Insecticide Application',
+
+    // Weather events
+    'event.weather.frost': intl.formatMessage({ id: 'event.weather.frost' }) || 'Frost Event',
+    'event.weather.drought': intl.formatMessage({ id: 'event.weather.drought' }) || 'Drought Event',
+    'event.weather.hailstorm': intl.formatMessage({ id: 'event.weather.hailstorm' }) || 'Hailstorm',
+    'event.weather.high_temperature':
+      intl.formatMessage({ id: 'event.weather.high_temperature' }) || 'High Temperature',
+
+    // Equipment events
+    'event.equipment.fuel_consumption':
+      intl.formatMessage({ id: 'event.equipment.fuel_consumption' }) || 'Fuel Consumption',
+    'event.equipment.tractor':
+      intl.formatMessage({ id: 'event.equipment.tractor' }) || 'Tractor Operation',
+    'event.equipment.harvester':
+      intl.formatMessage({ id: 'event.equipment.harvester' }) || 'Harvester Operation',
+    'event.equipment.pump': intl.formatMessage({ id: 'event.equipment.pump' }) || 'Pump Operation',
+    'event.equipment.other':
+      intl.formatMessage({ id: 'event.equipment.other' }) || 'Equipment Operation',
+
+    // Production events
+    'event.production.harvest': intl.formatMessage({ id: 'event.production.harvest' }) || 'Harvest',
+    'event.production.pruning': intl.formatMessage({ id: 'event.production.pruning' }) || 'Pruning',
+    'event.production.planting':
+      intl.formatMessage({ id: 'event.production.planting' }) || 'Planting',
+    'event.production.irrigation':
+      intl.formatMessage({ id: 'event.production.irrigation' }) || 'Irrigation',
+    'event.production.harvesting':
+      intl.formatMessage({ id: 'event.production.harvesting' }) || 'Harvesting',
+
+    // Soil events
+    'event.soil.soil_test': intl.formatMessage({ id: 'event.soil.soil_test' }) || 'Soil Testing',
+    'event.soil.preparation':
+      intl.formatMessage({ id: 'event.soil.preparation' }) || 'Soil Preparation',
+    'event.soil.amendment': intl.formatMessage({ id: 'event.soil.amendment' }) || 'Soil Amendment',
+    'event.soil.management':
+      intl.formatMessage({ id: 'event.soil.management' }) || 'Soil Management',
+
+    // Pest events
+    'event.pest.monitoring':
+      intl.formatMessage({ id: 'event.pest.monitoring' }) || 'Pest Monitoring',
+    'event.pest.control': intl.formatMessage({ id: 'event.pest.control' }) || 'Pest Control',
+    'event.pest.prevention':
+      intl.formatMessage({ id: 'event.pest.prevention' }) || 'Pest Prevention',
+
+    // Certification events
+    'event.certification.inspection':
+      intl.formatMessage({ id: 'event.certification.inspection' }) || 'Certification Inspection',
+    'event.certification.organic':
+      intl.formatMessage({ id: 'event.certification.organic' }) || 'Organic Certification',
+
+    // Cover crop events
+    'event.cover_crop.establishment':
+      intl.formatMessage({ id: 'event.cover_crop.establishment' }) || 'Cover Crop Establishment',
+    'event.cover_crop.termination':
+      intl.formatMessage({ id: 'event.cover_crop.termination' }) || 'Cover Crop Termination',
+
+    // Tree/plant events
+    'event.tree.planting': intl.formatMessage({ id: 'event.tree.planting' }) || 'Tree Planting',
+    'event.plant.establishment':
+      intl.formatMessage({ id: 'event.plant.establishment' }) || 'Plant Establishment',
+
+    // Site preparation
+    'event.site.preparation':
+      intl.formatMessage({ id: 'event.site.preparation' }) || 'Site Preparation',
+    'event.site.design': intl.formatMessage({ id: 'event.site.design' }) || 'Site Design',
+
+    // Fertilization programs
+    'event.fertilization.program':
+      intl.formatMessage({ id: 'event.fertilization.program' }) || 'Fertilization Program',
+    'event.fertilization.application':
+      intl.formatMessage({ id: 'event.fertilization.application' }) || 'Fertilizer Application',
+
+    // Seeding events
+    'event.seeding.wheat': intl.formatMessage({ id: 'event.seeding.wheat' }) || 'Wheat Seeding',
+    'event.seeding.cotton': intl.formatMessage({ id: 'event.seeding.cotton' }) || 'Cotton Seeding',
+
+    // Nitrogen application
+    'event.nitrogen.application':
+      intl.formatMessage({ id: 'event.nitrogen.application' }) || 'Nitrogen Application',
+
+    // Beneficial insect release
+    'event.beneficial.insect_release':
+      intl.formatMessage({ id: 'event.beneficial.insect_release' }) || 'Beneficial Insect Release',
+
+    // Orchard establishment
+    'event.orchard.establishment':
+      intl.formatMessage({ id: 'event.orchard.establishment' }) || 'Orchard Establishment',
+
+    // Irrigation management
+    'event.irrigation.management':
+      intl.formatMessage({ id: 'event.irrigation.management' }) || 'Irrigation Management',
+
+    // Cover crop system
+    'event.cover_crop.system':
+      intl.formatMessage({ id: 'event.cover_crop.system' }) || 'Cover Crop System',
+
+    // Winter cover crop
+    'event.winter.cover_crop':
+      intl.formatMessage({ id: 'event.winter.cover_crop' }) || 'Winter Cover Crop',
+
+    // High-density site design
+    'event.high_density.site_design':
+      intl.formatMessage({ id: 'event.high_density.site_design' }) || 'High-Density Site Design',
+
+    // Organic soil preparation
+    'event.organic.soil_preparation':
+      intl.formatMessage({ id: 'event.organic.soil_preparation' }) || 'Organic Soil Preparation'
+  };
+
+  // Try to get mapped name first
+  if (eventTypeMap[event.type]) {
+    return eventTypeMap[event.type];
+  }
+
+  // Fallback: try direct translation
+  const directTranslation = intl.formatMessage({ id: event.type });
+  if (directTranslation && directTranslation !== event.type) {
+    return directTranslation;
+  }
+
+  // Last fallback: use description or a cleaned-up version of the type
+  if (event.description) {
+    return event.description;
+  }
+
+  // Clean up the type string for display
+  return event.type
+    .replace(/^event\./, '')
+    .replace(/[._]/g, ' ')
+    .replace(/\b\w/g, (l) => l.toUpperCase());
+};
+
 const extractEventData = (event: Event) => {
   const observation = event.observation || '';
 
@@ -204,9 +356,17 @@ const getQRVisibility = (event: Event): 'high' | 'medium' | 'low' => {
 
 // Helper function to convert technical calculation methods to user-friendly descriptions
 const getCalculationMethodDescription = (
-  method: string,
+  method: string | undefined | null,
   carbonData: CarbonCalculationResult
 ): string => {
+  // Handle undefined/null method
+  if (!method || typeof method !== 'string') {
+    const isUsdaFactorsBased = carbonData.usda_factors_based ?? carbonData.usda_verified ?? false;
+    return isUsdaFactorsBased
+      ? 'Verified using USDA agricultural standards'
+      : 'Estimated using agricultural emission benchmarks';
+  }
+
   // Check if using USDA factors (new field) or fallback to old field
   const isUsdaFactorsBased = carbonData.usda_factors_based ?? carbonData.usda_verified ?? false;
 
@@ -269,9 +429,12 @@ const getDataSourceConfidence = (
 ): 'high' | 'medium' | 'low' => {
   if (carbonData.error) return 'low';
   if (carbonData.usda_verified) return 'high';
+
+  // Check if calculation_method exists before calling includes
   if (
-    carbonData.calculation_method.includes('standard') ||
-    carbonData.calculation_method.includes('specific')
+    carbonData.calculation_method &&
+    (carbonData.calculation_method.includes('standard') ||
+      carbonData.calculation_method.includes('specific'))
   )
     return 'medium';
   return 'low';
@@ -423,9 +586,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                   </Box>
                   <VStack align="start" spacing={1}>
                     <Text fontSize="xl" fontWeight="bold" color={textColor}>
-                      {event.event_type !== 3
-                        ? intl.formatMessage({ id: event.type }) || event.description
-                        : event.name || event.description}
+                      {getEventDisplayName(event, intl)}
                     </Text>
                     <Badge
                       colorScheme={eventConfig.color.split('.')[0]}

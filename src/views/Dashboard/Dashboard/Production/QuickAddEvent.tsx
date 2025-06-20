@@ -36,12 +36,19 @@ import {
   FaMapMarkerAlt,
   FaArrowLeft,
   FaClock,
-  FaRuler
+  FaRuler,
+  FaTractor,
+  FaFlask,
+  FaTools,
+  FaBug,
+  FaChartLine
 } from 'react-icons/fa';
 import { StandardButton } from 'components/Design';
 import { VoiceEventCapture } from 'components/Events/VoiceEventCapture';
 // @ts-ignore - JS file import
 import { useCreateEventMutation } from 'store/api/historyApi.js';
+import { useGetEventTemplatesByCropTypeQuery } from 'store/api/carbonApi';
+import { useGetCropTypesQuery } from 'store/api/companyApi';
 import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -58,6 +65,7 @@ interface EventTemplate {
   carbonCategory: 'high' | 'medium' | 'low';
   sustainabilityScore: number;
   qrVisibility: 'high' | 'medium' | 'low';
+  type: string;
 }
 
 interface QuickAddEventProps {
@@ -90,6 +98,36 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
   const currentCompany = useSelector((state: any) => state.company.currentCompany);
   const { establishmentId, parcelId } = useParams();
 
+  // Get crop types and find the crop type ID for the current production
+  const { data: cropTypesData } = useGetCropTypesQuery();
+
+  // Find the crop type ID based on the cropType prop
+  const currentCropTypeId = React.useMemo(() => {
+    if (!cropTypesData || !cropType) return null;
+
+    // Try to find by exact name match first
+    let matchingCropType = cropTypesData.find(
+      (ct: any) => ct.name.toLowerCase() === cropType.toLowerCase()
+    );
+
+    // If not found, try to find by category or slug
+    if (!matchingCropType) {
+      matchingCropType = cropTypesData.find(
+        (ct: any) =>
+          ct.category.toLowerCase().includes(cropType.toLowerCase()) ||
+          ct.slug.toLowerCase().includes(cropType.toLowerCase())
+      );
+    }
+
+    return matchingCropType?.id || null;
+  }, [cropTypesData, cropType]);
+
+  // Get event templates from database for the current crop type
+  const { data: dbEventTemplatesData } = useGetEventTemplatesByCropTypeQuery(
+    { cropTypeId: currentCropTypeId },
+    { skip: !currentCropTypeId }
+  );
+
   // Reset form when modal opens
   const resetForm = () => {
     setSelectedTemplate(null);
@@ -114,8 +152,60 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
     onClose();
   };
 
+  // Helper function to map event types to icons
+  const getEventIcon = (eventType: string) => {
+    const iconMap: Record<string, any> = {
+      fertilization: FaSeedling,
+      irrigation: FaTint,
+      pest_control: FaSprayCan,
+      pruning: FaCut,
+      planting: FaSeedling,
+      harvest: FaLeaf,
+      soil_management: FaFlask,
+      equipment: FaTractor,
+      weather_protection: FaCamera,
+      certification: FaChartLine,
+      monitoring: FaTools,
+      other: FaBug
+    };
+    return iconMap[eventType] || FaBug;
+  };
+
+  // Helper function to map event types to colors
+  const getEventColor = (eventType: string, carbonCategory?: string) => {
+    // Use carbon category for color if available
+    if (carbonCategory) {
+      const colorMap: Record<string, string> = {
+        high: 'red',
+        medium: 'orange',
+        low: 'green',
+        negative: 'teal',
+        neutral: 'gray'
+      };
+      return colorMap[carbonCategory] || 'blue';
+    }
+
+    // Fallback to event type colors
+    const colorMap: Record<string, string> = {
+      fertilization: 'green',
+      irrigation: 'blue',
+      pest_control: 'orange',
+      pruning: 'purple',
+      planting: 'green',
+      harvest: 'yellow',
+      soil_management: 'brown',
+      equipment: 'gray',
+      weather_protection: 'cyan',
+      certification: 'teal',
+      monitoring: 'pink',
+      other: 'gray'
+    };
+    return colorMap[eventType] || 'blue';
+  };
+
   // Smart event templates based on crop type - CARBON-FOCUSED
   const getEventTemplates = (crop: string): EventTemplate[] => {
+    // General templates (keep existing ones)
     const baseTemplates = [
       {
         id: 'fertilization',
@@ -129,7 +219,8 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
         typical_duration: '2-3 hours',
         carbonCategory: 'high' as const,
         sustainabilityScore: 7,
-        qrVisibility: 'high' as const
+        qrVisibility: 'high' as const,
+        type: 'fertilization'
       },
       {
         id: 'irrigation',
@@ -143,7 +234,8 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
         typical_duration: '1-2 hours setup',
         carbonCategory: 'medium' as const,
         sustainabilityScore: 8,
-        qrVisibility: 'medium' as const
+        qrVisibility: 'medium' as const,
+        type: 'irrigation'
       },
       {
         id: 'pest_control',
@@ -157,7 +249,8 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
         typical_duration: '3-4 hours',
         carbonCategory: 'high' as const,
         sustainabilityScore: 6,
-        qrVisibility: 'high' as const
+        qrVisibility: 'high' as const,
+        type: 'pest_control'
       },
       {
         id: 'pruning',
@@ -171,32 +264,57 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
         typical_duration: '4-6 hours',
         carbonCategory: 'low' as const,
         sustainabilityScore: 9,
-        qrVisibility: 'low' as const
+        qrVisibility: 'low' as const,
+        type: 'pruning'
       }
     ];
 
-    // Customize based on crop type - CARBON-OPTIMIZED
-    if (crop.toLowerCase().includes('citrus')) {
-      return [
-        ...baseTemplates,
-        {
-          id: 'bloom_nutrition',
-          name: 'Nutrición de Floración',
-          icon: FaLeaf,
-          color: 'pink',
-          description: 'Nutrición específica para floración',
-          carbonImpact: 30,
-          costEstimate: 160,
-          efficiency_tip: 'Timing-specific nutrition improves efficiency by 20%',
-          typical_duration: '2-3 hours',
-          carbonCategory: 'medium' as const,
-          sustainabilityScore: 8,
-          qrVisibility: 'medium' as const
-        }
-      ];
+    // Add crop-specific templates from database
+    const dbTemplates: EventTemplate[] = [];
+    if (dbEventTemplatesData?.templates) {
+      dbEventTemplatesData.templates.forEach((template) => {
+        dbTemplates.push({
+          id: `db-${template.id}`,
+          name: template.name,
+          icon: getEventIcon(template.event_type),
+          color: getEventColor(template.event_type, template.carbon_category),
+          description: template.description,
+          carbonImpact: template.carbon_impact || 0,
+          costEstimate: template.cost_estimate || 0,
+          efficiency_tip:
+            template.efficiency_tips || 'Database-sourced template for optimal results',
+          typical_duration: template.typical_duration || '2-3 hours',
+          carbonCategory: template.carbon_category as 'high' | 'medium' | 'low',
+          sustainabilityScore: template.sustainability_score || 7,
+          qrVisibility: template.qr_visibility as 'high' | 'medium' | 'low',
+          type: template.type || template.event_type
+        });
+      });
     }
 
-    return baseTemplates;
+    // Combine general templates with crop-specific ones
+    const allTemplates = [...baseTemplates, ...dbTemplates];
+
+    // Customize based on crop type - CARBON-OPTIMIZED (keep existing logic)
+    if (crop.toLowerCase().includes('citrus')) {
+      allTemplates.push({
+        id: 'bloom_nutrition',
+        name: 'Nutrición de Floración',
+        icon: FaLeaf,
+        color: 'pink',
+        description: 'Nutrición específica para floración',
+        carbonImpact: 30,
+        costEstimate: 160,
+        efficiency_tip: 'Timing-specific nutrition improves efficiency by 20%',
+        typical_duration: '2-3 hours',
+        carbonCategory: 'medium' as const,
+        sustainabilityScore: 8,
+        qrVisibility: 'medium' as const,
+        type: 'bloom_nutrition'
+      });
+    }
+
+    return allTemplates;
   };
 
   const eventTemplates = getEventTemplates(cropType);
@@ -358,7 +476,17 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
 
   // Helper functions for template data conversion
   const getTemplateEventType = (template: EventTemplate): number => {
-    // Map template types to backend event types
+    // Handle database templates (prefixed with 'db-')
+    if (template.id.startsWith('db-')) {
+      // For database templates, we need to get the backend event type
+      // This should be stored in the database template data
+      const dbTemplate = dbEventTemplatesData?.templates.find((t) => `db-${t.id}` === template.id);
+      if (dbTemplate?.backend_event_type !== undefined) {
+        return dbTemplate.backend_event_type;
+      }
+    }
+
+    // Map template types to backend event types (existing logic)
     if (template.id.includes('fertilizer') || template.id.includes('pesticide')) {
       return 1; // Chemical
     } else if (
@@ -376,6 +504,19 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
   };
 
   const getTemplateEventFields = (template: EventTemplate): any => {
+    // Handle database templates (prefixed with 'db-')
+    if (template.id.startsWith('db-')) {
+      const dbTemplate = dbEventTemplatesData?.templates.find((t) => `db-${t.id}` === template.id);
+      if (dbTemplate?.backend_event_fields) {
+        return {
+          ...dbTemplate.backend_event_fields,
+          // Add typical amounts if available
+          ...(dbTemplate.typical_amounts || {})
+        };
+      }
+    }
+
+    // Existing template field mapping
     if (template.id.includes('fertilizer')) {
       return {
         type: 'FE',
@@ -578,8 +719,7 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
                       leftIcon={<FaMicrophone />}
                       colorScheme="blue"
                       onClick={() => setShowVoiceCapture(true)}
-                      size="lg"
-                    >
+                      size="lg">
                       Start Voice Input
                     </Button>
                   </VStack>
@@ -606,73 +746,266 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
                   </Badge>
                 </HStack>
 
-                <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-                  {eventTemplates.map((template) => (
-                    <Box
-                      key={template.id}
-                      p={4}
-                      borderRadius="lg"
-                      borderWidth="2px"
-                      borderColor={
-                        selectedTemplate?.id === template.id ? `${template.color}.300` : 'gray.200'
-                      }
-                      bg={selectedTemplate?.id === template.id ? `${template.color}.50` : 'white'}
-                      cursor="pointer"
-                      onClick={() => handleTemplateSelect(template)}
-                      _hover={{
-                        borderColor: `${template.color}.300`,
-                        transform: 'translateY(-2px)',
-                        boxShadow: 'md'
-                      }}
-                      transition="all 0.2s"
-                    >
-                      <VStack spacing={3} align="start">
-                        <HStack justify="space-between" width="100%">
-                          <HStack>
-                            <Icon as={template.icon} color={`${template.color}.500`} boxSize={5} />
-                            <Text fontWeight="bold" fontSize="sm">
-                              {template.name}
+                {/* General Events Section */}
+                <Box mb={6}>
+                  <HStack mb={3}>
+                    <Icon as={FaTools} color="gray.500" boxSize={4} />
+                    <Text fontWeight="semibold" fontSize="md" color="gray.700">
+                      General Events
+                    </Text>
+                    <Badge colorScheme="gray" size="sm">
+                      Common
+                    </Badge>
+                  </HStack>
+
+                  <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+                    {eventTemplates
+                      .filter((template) => !template.id.startsWith('db-'))
+                      .map((template) => (
+                        <Box
+                          key={template.id}
+                          p={4}
+                          borderRadius="lg"
+                          borderWidth="2px"
+                          borderColor={
+                            selectedTemplate?.id === template.id
+                              ? `${template.color}.400`
+                              : 'gray.200'
+                          }
+                          bg={
+                            selectedTemplate?.id === template.id ? `${template.color}.100` : 'white'
+                          }
+                          cursor="pointer"
+                          onClick={() => handleTemplateSelect(template)}
+                          _hover={{
+                            borderColor: `${template.color}.300`,
+                            transform: 'translateY(-2px)',
+                            boxShadow: 'lg'
+                          }}
+                          boxShadow={selectedTemplate?.id === template.id ? 'lg' : 'sm'}
+                          transform={
+                            selectedTemplate?.id === template.id ? 'translateY(-2px)' : 'none'
+                          }
+                          transition="all 0.2s"
+                          position="relative">
+                          {/* Selection indicator */}
+                          {selectedTemplate?.id === template.id && (
+                            <Box
+                              position="absolute"
+                              top={2}
+                              right={2}
+                              w={6}
+                              h={6}
+                              bg={`${template.color}.500`}
+                              borderRadius="full"
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="center">
+                              <Icon as={FaCamera} color="white" boxSize={3} />
+                            </Box>
+                          )}
+                          <VStack spacing={3} align="start">
+                            <HStack justify="space-between" width="100%">
+                              <HStack>
+                                <Icon
+                                  as={template.icon}
+                                  color={`${template.color}.500`}
+                                  boxSize={5}
+                                />
+                                <Text
+                                  fontWeight="bold"
+                                  fontSize="sm"
+                                  color={
+                                    selectedTemplate?.id === template.id
+                                      ? `${template.color}.700`
+                                      : 'inherit'
+                                  }>
+                                  {template.name}
+                                </Text>
+                              </HStack>
+                              <Badge
+                                colorScheme={
+                                  template.carbonCategory === 'high'
+                                    ? 'red'
+                                    : template.carbonCategory === 'medium'
+                                    ? 'yellow'
+                                    : 'green'
+                                }
+                                size="sm">
+                                {template.carbonImpact} kg CO₂
+                              </Badge>
+                            </HStack>
+
+                            <Text fontSize="xs" color="gray.600">
+                              {template.description}
                             </Text>
-                          </HStack>
-                          <Badge
-                            colorScheme={
-                              template.carbonCategory === 'high'
-                                ? 'red'
-                                : template.carbonCategory === 'medium'
-                                ? 'yellow'
-                                : 'green'
-                            }
-                            size="sm"
-                          >
-                            {template.carbonImpact} kg CO₂
-                          </Badge>
-                        </HStack>
 
-                        <Text fontSize="xs" color="gray.600">
-                          {template.description}
-                        </Text>
+                            <HStack justify="space-between" width="100%">
+                              <HStack>
+                                <Icon as={FaCamera} color="gray.400" boxSize={3} />
+                                <Text fontSize="xs" color="gray.500">
+                                  QR Visibility: {template.qrVisibility}
+                                </Text>
+                              </HStack>
+                              <Text fontSize="xs" color="green.600" fontWeight="bold">
+                                Score: {template.sustainabilityScore}/10
+                              </Text>
+                            </HStack>
 
-                        <HStack justify="space-between" width="100%">
-                          <HStack>
-                            <Icon as={FaCamera} color="gray.400" boxSize={3} />
-                            <Text fontSize="xs" color="gray.500">
-                              QR Visibility: {template.qrVisibility}
-                            </Text>
-                          </HStack>
-                          <Text fontSize="xs" color="green.600" fontWeight="bold">
-                            Score: {template.sustainabilityScore}/10
-                          </Text>
-                        </HStack>
-
-                        <Box p={2} bg="gray.50" borderRadius="md" width="100%">
-                          <Text fontSize="xs" color="gray.600">
-                            💡 {template.efficiency_tip}
-                          </Text>
+                            <Box
+                              p={2}
+                              bg={
+                                selectedTemplate?.id === template.id
+                                  ? `${template.color}.50`
+                                  : 'gray.50'
+                              }
+                              borderRadius="md"
+                              width="100%">
+                              <Text fontSize="xs" color="gray.600">
+                                💡 {template.efficiency_tip}
+                              </Text>
+                            </Box>
+                          </VStack>
                         </Box>
-                      </VStack>
-                    </Box>
-                  ))}
-                </Grid>
+                      ))}
+                  </Grid>
+                </Box>
+
+                {/* Crop-Specific Events Section */}
+                {eventTemplates.filter((template) => template.id.startsWith('db-')).length > 0 && (
+                  <Box>
+                    <HStack mb={3}>
+                      <Icon as={FaSeedling} color="green.500" boxSize={4} />
+                      <Text fontWeight="semibold" fontSize="md" color="green.700">
+                        {dbEventTemplatesData?.crop_type?.name || cropType} Specific Events
+                      </Text>
+                      <Badge colorScheme="green" size="sm">
+                        Crop Optimized
+                      </Badge>
+                    </HStack>
+
+                    <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+                      {eventTemplates
+                        .filter((template) => template.id.startsWith('db-'))
+                        .map((template) => (
+                          <Box
+                            key={template.id}
+                            p={4}
+                            borderRadius="lg"
+                            borderWidth="2px"
+                            borderColor={
+                              selectedTemplate?.id === template.id
+                                ? `${template.color}.400`
+                                : 'green.200'
+                            }
+                            bg={
+                              selectedTemplate?.id === template.id
+                                ? `${template.color}.100`
+                                : 'green.50'
+                            }
+                            cursor="pointer"
+                            onClick={() => handleTemplateSelect(template)}
+                            _hover={{
+                              borderColor: `${template.color}.300`,
+                              transform: 'translateY(-2px)',
+                              boxShadow: 'lg'
+                            }}
+                            boxShadow={selectedTemplate?.id === template.id ? 'lg' : 'sm'}
+                            transform={
+                              selectedTemplate?.id === template.id ? 'translateY(-2px)' : 'none'
+                            }
+                            transition="all 0.2s"
+                            position="relative">
+                            {/* Selection indicator */}
+                            {selectedTemplate?.id === template.id && (
+                              <Box
+                                position="absolute"
+                                top={2}
+                                right={2}
+                                w={6}
+                                h={6}
+                                bg={`${template.color}.500`}
+                                borderRadius="full"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center">
+                                <Icon as={FaCamera} color="white" boxSize={3} />
+                              </Box>
+                            )}
+                            <VStack spacing={3} align="start">
+                              <HStack justify="space-between" width="100%">
+                                <HStack>
+                                  <Icon
+                                    as={template.icon}
+                                    color={`${template.color}.500`}
+                                    boxSize={5}
+                                  />
+                                  <Text
+                                    fontWeight="bold"
+                                    fontSize="sm"
+                                    color={
+                                      selectedTemplate?.id === template.id
+                                        ? `${template.color}.700`
+                                        : 'inherit'
+                                    }>
+                                    {template.name}
+                                  </Text>
+                                  <Badge colorScheme="green" size="xs" variant="solid">
+                                    DB
+                                  </Badge>
+                                </HStack>
+                                <Badge
+                                  colorScheme={
+                                    template.carbonCategory === 'high'
+                                      ? 'red'
+                                      : template.carbonCategory === 'medium'
+                                      ? 'yellow'
+                                      : template.carbonCategory === 'low'
+                                      ? 'green'
+                                      : template.carbonCategory === 'negative'
+                                      ? 'teal'
+                                      : 'gray'
+                                  }
+                                  size="sm">
+                                  {template.carbonImpact} kg CO₂
+                                </Badge>
+                              </HStack>
+
+                              <Text fontSize="xs" color="gray.600">
+                                {template.description}
+                              </Text>
+
+                              <HStack justify="space-between" width="100%">
+                                <HStack>
+                                  <Icon as={FaCamera} color="gray.400" boxSize={3} />
+                                  <Text fontSize="xs" color="gray.500">
+                                    QR Visibility: {template.qrVisibility}
+                                  </Text>
+                                </HStack>
+                                <Text fontSize="xs" color="green.600" fontWeight="bold">
+                                  Score: {template.sustainabilityScore}/10
+                                </Text>
+                              </HStack>
+
+                              <Box
+                                p={2}
+                                bg={
+                                  selectedTemplate?.id === template.id
+                                    ? `${template.color}.50`
+                                    : 'green.100'
+                                }
+                                borderRadius="md"
+                                width="100%">
+                                <Text fontSize="xs" color="green.700">
+                                  💡 {template.efficiency_tip}
+                                </Text>
+                              </Box>
+                            </VStack>
+                          </Box>
+                        ))}
+                    </Grid>
+                  </Box>
+                )}
               </Box>
 
               {/* Selected Template Actions */}
@@ -682,8 +1015,7 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
                   bg="green.50"
                   borderRadius="lg"
                   borderWidth="1px"
-                  borderColor="green.200"
-                >
+                  borderColor="green.200">
                   <VStack spacing={3}>
                     <HStack justify="space-between" width="100%">
                       <Text fontWeight="bold" color="green.700">
@@ -698,8 +1030,7 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
                         colorScheme="green"
                         onClick={handleTemplateCreate}
                         isLoading={isCreating}
-                        loadingText="Creating..."
-                      >
+                        loadingText="Creating...">
                         Quick Create Event
                       </Button>
                       <Button variant="outline" colorScheme="green" onClick={handleShowDetails}>
@@ -720,8 +1051,7 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
                   bg={`${selectedTemplate.color}.50`}
                   borderRadius="lg"
                   borderWidth="1px"
-                  borderColor={`${selectedTemplate.color}.200`}
-                >
+                  borderColor={`${selectedTemplate.color}.200`}>
                   <HStack justify="space-between">
                     <HStack>
                       <Icon
@@ -820,8 +1150,7 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
                 <Button
                   variant="outline"
                   onClick={handleBackToTemplates}
-                  leftIcon={<FaArrowLeft />}
-                >
+                  leftIcon={<FaArrowLeft />}>
                   Back to Templates
                 </Button>
                 <Button
@@ -829,8 +1158,7 @@ const QuickAddEvent: React.FC<QuickAddEventProps> = ({
                   colorScheme="green"
                   onClick={handleDetailedCreate}
                   isLoading={isCreating}
-                  loadingText="Creating Detailed Event..."
-                >
+                  loadingText="Creating Detailed Event...">
                   Create Detailed Event
                 </Button>
               </HStack>

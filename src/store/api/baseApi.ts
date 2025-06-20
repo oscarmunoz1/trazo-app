@@ -25,7 +25,8 @@ export const baseApi = createApi({
     'PendingEvent',
     'Weather',
     'Education',
-    'CropTemplate'
+    'CropTemplate',
+    'EventTemplate'
   ]
 });
 

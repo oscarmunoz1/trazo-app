@@ -814,5 +814,55 @@
   "app.step3Description": "Begin monitoring your agricultural operations",
   "app.addonsAvailableAfterSubscription": "Additional services are available after you complete your subscription",
   "app.yourCompanyIsReady": "Your company is ready! Now choose the perfect plan to get started.",
-  "app.chooseYourBillingCycle": "Choose your billing cycle and save with annual plans"
+  "app.chooseYourBillingCycle": "Choose your billing cycle and save with annual plans",
+
+  "event.soil.soil_test": "Soil Testing",
+  "event.soil.preparation": "Soil Preparation",
+  "event.soil.amendment": "Soil Amendment",
+  "event.soil.management": "Soil Management",
+
+  "event.pest.monitoring": "Pest Monitoring",
+  "event.pest.control": "Pest Control",
+  "event.pest.prevention": "Pest Prevention",
+
+  "event.certification.inspection": "Certification Inspection",
+  "event.certification.organic": "Organic Certification",
+
+  "event.cover_crop.establishment": "Cover Crop Establishment",
+  "event.cover_crop.termination": "Cover Crop Termination",
+
+  "event.tree.planting": "Tree Planting",
+  "event.plant.establishment": "Plant Establishment",
+
+  "event.site.preparation": "Site Preparation",
+  "event.site.design": "Site Design",
+
+  "event.fertilization.program": "Fertilization Program",
+  "event.fertilization.application": "Fertilizer Application",
+
+  "event.seeding.wheat": "Wheat Seeding",
+  "event.seeding.cotton": "Cotton Seeding",
+
+  "event.nitrogen.application": "Nitrogen Application",
+
+  "event.beneficial.insect_release": "Beneficial Insect Release",
+
+  "event.orchard.establishment": "Orchard Establishment",
+
+  "event.irrigation.management": "Irrigation Management",
+
+  "event.cover_crop.system": "Cover Crop System",
+
+  "event.winter.cover_crop": "Winter Cover Crop",
+
+  "event.high_density.site_design": "High-Density Site Design",
+
+  "event.organic.soil_preparation": "Organic Soil Preparation",
+
+  "event.chemical.unknown": "Unknown Chemical Event",
+  "event.weather.unknown": "Unknown Weather Event",
+  "event.production.unknown": "Unknown Production Event",
+  "event.equipment.unknown": "Unknown Equipment Event",
+  "event.soil.unknown": "Unknown Soil Event",
+  "event.pest.unknown": "Unknown Pest Event"
 }

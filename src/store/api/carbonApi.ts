@@ -598,8 +598,10 @@ export interface WeatherAlertEventResponse {
 
 export interface CropTemplate {
   id: string;
+  template_id?: number; // New field for actual template ID
   name: string;
   crop_type: string;
+  crop_type_name?: string; // New field for display name
   description: string;
   events_count: number;
   carbon_potential: number;
@@ -623,6 +625,11 @@ export interface CropTemplate {
     premium_pricing: string;
     cost_savings: string;
   };
+  // New fields from database
+  system_type?: string;
+  management_intensity?: string;
+  is_verified?: boolean;
+  source?: string;
 }
 
 export interface CropTemplatesResponse {
@@ -638,19 +645,27 @@ export interface CropTemplatesResponse {
 
 export interface CropTemplateDetail {
   id: string;
+  template_id?: number; // New field for actual template ID
   name: string;
   description: string;
   crop_type: string;
+  crop_type_name?: string; // New field for display name
   events: Array<{
+    id?: number; // New field for event ID
     name: string;
+    event_type?: string; // More specific field name
     type: string;
     timing: string;
-    frequency: string;
+    frequency?: string;
     carbon_sources: string[];
-    typical_amount: number;
+    typical_amount: number | any; // Can be object
     carbon_impact: number;
     cost_estimate: number;
+    labor_hours?: number; // New field
     efficiency_tips: string;
+    order_sequence?: number; // New field
+    usda_practice_code?: string; // New field
+    is_required?: boolean; // New field
   }>;
   carbon_sources: Array<{
     id: number;
@@ -670,15 +685,26 @@ export interface CropTemplateDetail {
   carbon_credit_potential: number;
   estimated_revenue: number;
   sustainability_opportunities: string[];
-  efficiency_tips: string;
+  efficiency_tips: string[];
   premium_pricing_potential: string;
   typical_costs: number;
+  target_yield?: any; // New field
+  labor_hours_per_acre?: number; // New field
+  sustainability_score?: number; // New field
+  source?: string; // New field
+  is_verified?: boolean; // New field
   roi_analysis: {
     setup_time_saved: string;
     carbon_credits_annual: number;
     premium_pricing: string;
     efficiency_savings: string;
   };
+  // New fields from database
+  system_type?: string;
+  management_intensity?: string;
+  irrigation_system?: string;
+  fertility_program?: string;
+  pest_management?: string;
 }
 
 // Educational content interfaces
@@ -867,6 +893,37 @@ export interface EducationContent {
   }>;
   confidence_level?: number;
   last_updated?: string;
+}
+
+export interface EventTemplateFromDB {
+  id: number;
+  name: string;
+  event_type: string;
+  description: string;
+  timing: string;
+  carbon_impact: number;
+  carbon_category: 'high' | 'medium' | 'low' | 'negative' | 'neutral';
+  cost_estimate: number;
+  sustainability_score: number;
+  qr_visibility: 'high' | 'medium' | 'low' | 'hidden';
+  crop_type_name: string;
+  production_template_name: string;
+  backend_event_type: number;
+  backend_event_fields: Record<string, any>;
+  typical_amounts: Record<string, any>;
+  efficiency_tips?: string;
+  typical_duration?: string;
+  type: string; // Translation key for event name display
+}
+
+export interface EventTemplatesResponse {
+  crop_type: {
+    id: number;
+    name: string;
+    slug: string;
+    category: string;
+  };
+  templates: EventTemplateFromDB[];
 }
 
 export const carbonApi = baseApi.injectEndpoints({
@@ -1203,12 +1260,21 @@ export const carbonApi = baseApi.injectEndpoints({
       providesTags: ['CarbonSummary']
     }),
 
-    getCropTemplates: builder.query<CropTemplatesResponse, void>({
-      query: () => ({
-        url: '/carbon/crop-templates/',
-        method: 'GET',
-        credentials: 'include'
-      }),
+    getCropTemplates: builder.query<CropTemplatesResponse, { crop_type?: string } | void>({
+      query: (params) => {
+        const searchParams = new URLSearchParams();
+        if (params?.crop_type) {
+          searchParams.append('crop_type', params.crop_type);
+        }
+
+        return {
+          url: `/carbon/crop-templates/${
+            searchParams.toString() ? `?${searchParams.toString()}` : ''
+          }`,
+          method: 'GET',
+          credentials: 'include'
+        };
+      },
       providesTags: ['CropTemplate']
     }),
 
@@ -1219,6 +1285,16 @@ export const carbonApi = baseApi.injectEndpoints({
         credentials: 'include'
       }),
       providesTags: (result, error, templateId) => [{ type: 'CropTemplate', id: templateId }]
+    }),
+
+    // NEW: Get event templates by crop type
+    getEventTemplatesByCropType: builder.query<EventTemplatesResponse, { cropTypeId: number }>({
+      query: ({ cropTypeId }) => ({
+        url: `/carbon/event-templates/by_crop_type/`,
+        params: { crop_type_id: cropTypeId },
+        credentials: 'include'
+      }),
+      providesTags: ['EventTemplate']
     }),
 
     // Educational Content Endpoints
@@ -1383,5 +1459,7 @@ export const {
   useGetCarbonImpactExamplesQuery,
   useGetTrustComparisonDataQuery,
   useGetRegionalFarmingPracticesQuery,
-  useGetEducationContentQuery
+  useGetEducationContentQuery,
+  // NEW: Get event templates by crop type
+  useGetEventTemplatesByCropTypeQuery
 } = carbonApi;

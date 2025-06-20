@@ -302,7 +302,7 @@ const companyApi = baseApi.injectEndpoints({
       {
         name: string;
         parcel_id: number;
-        crop_type: string;
+        crop_type: number; // Changed to number to match backend expectation
         start_date: string;
         expected_harvest?: string;
         description?: string;
@@ -328,7 +328,7 @@ const companyApi = baseApi.injectEndpoints({
     // Get crop types for the production form
     getCropTypes: build.query<any[], void>({
       query: () => ({
-        url: '/products/crop-types/',
+        url: '/carbon/crop-types/',
         method: 'GET',
         credentials: 'include'
       })

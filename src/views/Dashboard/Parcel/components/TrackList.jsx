@@ -128,7 +128,7 @@ const TrackList = ({ amount }) => {
   };
 
   return (
-    <Card maxH="100%" height={'fit-content;'}>
+    <Card maxH="100%" height={'fit-content;'} minW="390px">
       <CardHeader p="0px 0px 35px 0px">
         <Flex direction="column" w="100%">
           <Flex p="0px" align="center" justify="space-between">

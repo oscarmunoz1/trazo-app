@@ -927,42 +927,6 @@ function ProductDetail() {
                     </Box>
 
                     <Box mb={6}>
-                      <ConsumerSustainabilityInfo
-                        productName={
-                          (carbonData as any)?.farmer?.name ||
-                          (carbonData as any)?.product?.name ||
-                          ''
-                        }
-                        carbonScore={carbonData?.carbonScore || 0}
-                        sustainabilityPractices={
-                          carbonData?.recommendations
-                            ? carbonData.recommendations.map((rec, index) => ({
-                                icon: (
-                                  <Icon
-                                    as={
-                                      index % 5 === 0
-                                        ? FaWater
-                                        : index % 5 === 1
-                                        ? MdNoFood
-                                        : index % 5 === 2
-                                        ? FaSeedling
-                                        : index % 5 === 3
-                                        ? MdEco
-                                        : FaLeaf
-                                    }
-                                    color="green.500"
-                                    boxSize={5}
-                                  />
-                                ),
-                                title: rec,
-                                description: rec
-                              }))
-                            : []
-                        }
-                      />
-                    </Box>
-
-                    <Box mb={6}>
                       <BlockchainVerificationBadge
                         verificationData={carbonData?.blockchainVerification}
                         isLoading={isCarbonDataLoading}
