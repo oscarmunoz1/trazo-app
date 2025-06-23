@@ -46,7 +46,8 @@ const ImageCarousel = (props: ImageCarouselProps) => {
         h={{ sm: '80%', md: '60%', lg: '230px', xl: '300px' }}
         mb="26px"
         mx={{ sm: 'auto', lg: '0px' }}
-        position="relative">
+        position="relative"
+      >
         <Image
           src={currentImage.url}
           alt={currentImage.name || 'Product image'}
@@ -70,7 +71,8 @@ const ImageCarousel = (props: ImageCarouselProps) => {
             px={2}
             py={1}
             borderRadius="md"
-            fontSize="xs">
+            fontSize="xs"
+          >
             <Text textAlign="center" noOfLines={1}>
               {currentImage.name}
             </Text>
@@ -84,7 +86,8 @@ const ImageCarousel = (props: ImageCarouselProps) => {
           direction="row"
           spacing={{ sm: '20px', md: '35px', lg: '20px' }}
           mx="auto"
-          mb={{ sm: '24px', lg: '0px' }}>
+          mb={{ sm: '24px', lg: '0px' }}
+        >
           {imagesList.map((image, index) => {
             const imageData = getImageData(image);
             const imageKey = typeof image === 'string' ? `img_${index}` : image.id;
@@ -93,7 +96,8 @@ const ImageCarousel = (props: ImageCarouselProps) => {
               <Box
                 key={imageKey}
                 w={{ sm: '36px', md: '90px', lg: '60px' }}
-                h={{ sm: '36px', md: '90px', lg: '60px' }}>
+                h={{ sm: '36px', md: '90px', lg: '60px' }}
+              >
                 <Image
                   src={imageData.url}
                   alt={imageData.name || `Product image ${index + 1}`}

@@ -34,7 +34,8 @@ export const MobileOptimizedCardHeader: React.FC<MobileOptimizedCardHeaderProps>
             borderRadius="full"
             minH="28px"
             display="flex"
-            alignItems="center">
+            alignItems="center"
+          >
             <Icon as={MdVerified} mr={1} boxSize={3} />
             {intl.formatMessage({ id: 'app.verified' })}
           </Badge>
@@ -56,7 +57,8 @@ export const MobileOptimizedCardHeader: React.FC<MobileOptimizedCardHeaderProps>
             fontSize={{ base: 'xl', md: '2xl' }}
             fontWeight="bold"
             textAlign={{ base: 'center', md: 'left' }}
-            lineHeight="1.2">
+            lineHeight="1.2"
+          >
             {carbonData?.farmer?.name || carbonData?.product?.name || 'Product'}
           </Heading>
 
@@ -100,7 +102,8 @@ export const MobileOptimizedCardHeader: React.FC<MobileOptimizedCardHeaderProps>
                 color="green.500"
                 fontWeight="medium"
                 fontSize={{ base: 'sm', md: 'md' }}
-                textAlign={{ base: 'center', md: 'left' }}>
+                textAlign={{ base: 'center', md: 'left' }}
+              >
                 Greener than {carbonData.industryPercentile}% of similar products
               </Text>
             </HStack>

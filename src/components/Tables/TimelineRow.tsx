@@ -244,7 +244,8 @@ function TimelineRow(props: TimelineRowProps) {
           }}
           cursor="pointer"
           onClick={() => (onEventClick ? onEventClick(event) : navigate(url))}
-          transition="all 0.2s">
+          transition="all 0.2s"
+        >
           <VStack align="start" w="100%" spacing={2}>
             {/* Main Event Info */}
             <HStack justify="space-between" align="start" mb={2} w="100%">
@@ -258,7 +259,8 @@ function TimelineRow(props: TimelineRowProps) {
                     variant="subtle"
                     fontSize="xs"
                     px={2}
-                    py={1}>
+                    py={1}
+                  >
                     {eventConfig.category}
                   </Badge>
                 </HStack>
@@ -291,14 +293,16 @@ function TimelineRow(props: TimelineRowProps) {
                         carbonData.verification_status === 'factors_verified'
                       ? ' (USDA Factors)'
                       : ''
-                  }`}>
+                  }`}
+                >
                   <HStack spacing={1}>
                     <Badge
                       colorScheme={carbonData.co2e < 0 ? 'green' : 'orange'}
                       variant="subtle"
                       fontSize="xs"
                       px={2}
-                      py={1}>
+                      py={1}
+                    >
                       {carbonData.co2e > 0 ? '+' : ''}
                       {carbonData.co2e} kg CO₂
                     </Badge>
@@ -310,7 +314,8 @@ function TimelineRow(props: TimelineRowProps) {
                           carbonData.verification_status === 'usda_certified' ? 'green' : 'blue'
                         }
                         variant="solid"
-                        fontSize="xs">
+                        fontSize="xs"
+                      >
                         {carbonData.verification_status === 'usda_certified'
                           ? 'USDA'
                           : 'USDA Factors'}
@@ -345,7 +350,8 @@ function TimelineRow(props: TimelineRowProps) {
 
               {/* QR Visibility (based on consumer relevance) */}
               <Tooltip
-                label={`QR Code Visibility: ${qrVisibility} - How relevant this is to consumers`}>
+                label={`QR Code Visibility: ${qrVisibility} - How relevant this is to consumers`}
+              >
                 <HStack spacing={1}>
                   <Icon
                     as={
@@ -382,7 +388,8 @@ function TimelineRow(props: TimelineRowProps) {
                         : 'red'
                     }
                     variant="subtle"
-                    fontSize="xs">
+                    fontSize="xs"
+                  >
                     {carbonData.efficiency_score}/100
                   </Badge>
                 </Tooltip>

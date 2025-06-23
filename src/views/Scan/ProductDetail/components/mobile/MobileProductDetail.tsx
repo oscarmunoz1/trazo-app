@@ -279,7 +279,8 @@ const MobileProductDetail: React.FC = () => {
         px={4}
         py={{ base: 2, md: 3 }}
         shadow="sm"
-        minH={{ base: '60px', md: '80px' }}>
+        minH={{ base: '60px', md: '80px' }}
+      >
         <HStack justify="space-between" align="center" h="full">
           <Text fontSize={{ base: 'md', md: 'lg' }} fontWeight="bold" noOfLines={1}>
             {productBasicsData?.name || 'Product Details'}
@@ -308,7 +309,8 @@ const MobileProductDetail: React.FC = () => {
             overflow="hidden"
             borderColor={borderColor}
             bg={bgColor}
-            p={{ base: 3, md: 4 }}>
+            p={{ base: 3, md: 4 }}
+          >
             <CarbonScore
               score={carbonScoreData.carbonScore}
               footprint={carbonScoreData.netFootprint}
@@ -337,7 +339,8 @@ const MobileProductDetail: React.FC = () => {
             borderRadius="lg"
             overflow="hidden"
             borderColor={borderColor}
-            bg={bgColor}>
+            bg={bgColor}
+          >
             {/* Add Image Carousel */}
             <Box p={{ base: 3, md: 4 }}>
               <ImageCarousel imagesList={productFullDetailsData?.images || []} />
@@ -362,7 +365,8 @@ const MobileProductDetail: React.FC = () => {
             borderRadius="lg"
             overflow="hidden"
             borderColor={borderColor}
-            bg={bgColor}>
+            bg={bgColor}
+          >
             <Suspense fallback={<TimelineSkeleton />}>
               <LazyEnhancedProductTimeline
                 events={productFullDetailsData.timeline}
@@ -379,7 +383,8 @@ const MobileProductDetail: React.FC = () => {
             borderRadius="lg"
             overflow="hidden"
             borderColor={borderColor}
-            bg={bgColor}>
+            bg={bgColor}
+          >
             <Suspense fallback={<Skeleton height="60px" borderRadius="md" />}>
               <LazyBlockchainVerificationBadge
                 verificationData={{
@@ -401,7 +406,8 @@ const MobileProductDetail: React.FC = () => {
             borderRadius="lg"
             overflow="hidden"
             borderColor={borderColor}
-            bg={bgColor}>
+            bg={bgColor}
+          >
             <Suspense fallback={<EstablishmentInfoSkeleton />}>
               <LazyEstablishmentInfo
                 establishment={{
@@ -433,7 +439,8 @@ const MobileProductDetail: React.FC = () => {
         borderTopWidth="1px"
         borderColor={borderColor}
         shadow="lg"
-        zIndex={5}>
+        zIndex={5}
+      >
         <HStack spacing={{ base: 2, md: 4 }} justify="space-around">
           <Button
             colorScheme="green"
@@ -453,7 +460,8 @@ const MobileProductDetail: React.FC = () => {
               transform: 'translateY(0)',
               boxShadow: 'md'
             }}
-            transition="all 0.2s">
+            transition="all 0.2s"
+          >
             Offset
           </Button>
 
@@ -474,7 +482,8 @@ const MobileProductDetail: React.FC = () => {
               transform: 'translateY(0)',
               boxShadow: 'md'
             }}
-            transition="all 0.2s">
+            transition="all 0.2s"
+          >
             Share
           </Button>
 
@@ -495,7 +504,8 @@ const MobileProductDetail: React.FC = () => {
               transform: 'translateY(0)',
               boxShadow: 'md'
             }}
-            transition="all 0.2s">
+            transition="all 0.2s"
+          >
             Review
           </Button>
         </HStack>

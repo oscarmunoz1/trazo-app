@@ -26,7 +26,9 @@ export const baseApi = createApi({
     'Weather',
     'Education',
     'CropTemplate',
-    'EventTemplate'
+    'CropType',
+    'EventTemplate',
+    'USDA'
   ]
 });
 

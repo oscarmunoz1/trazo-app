@@ -39,7 +39,8 @@ export const MobileOptimizedHeader: React.FC<MobileOptimizedHeaderProps> = ({
       bg="linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 100%)"
       pt={{ base: '120px', md: '150px' }}
       pb={{ base: '60px', md: '120px' }}
-      px={4}>
+      px={4}
+    >
       <Container maxW="6xl" mx="auto">
         <VStack spacing={{ base: 4, md: 6 }} textAlign="center">
           {/* Compact Welcome Badge */}
@@ -50,7 +51,8 @@ export const MobileOptimizedHeader: React.FC<MobileOptimizedHeaderProps> = ({
             px={{ base: 3, md: 4 }}
             py={{ base: 1, md: 2 }}
             borderRadius="full"
-            textTransform="none">
+            textTransform="none"
+          >
             <HStack spacing={2}>
               <Icon as={FaLeaf} boxSize={{ base: 3, md: 4 }} />
               <Text fontWeight="medium">
@@ -69,7 +71,8 @@ export const MobileOptimizedHeader: React.FC<MobileOptimizedHeaderProps> = ({
               fontWeight="bold"
               textAlign="center"
               letterSpacing="-0.02em"
-              lineHeight="1.2">
+              lineHeight="1.2"
+            >
               {productName || intl.formatMessage({ id: 'app.welcome' })}
             </Heading>
             <Text
@@ -78,7 +81,8 @@ export const MobileOptimizedHeader: React.FC<MobileOptimizedHeaderProps> = ({
               fontWeight="normal"
               maxW={{ base: '95%', sm: '80%', lg: '60%' }}
               lineHeight="1.6"
-              textAlign="center">
+              textAlign="center"
+            >
               {location || intl.formatMessage({ id: 'app.welcomeMessage' })}
             </Text>
           </VStack>

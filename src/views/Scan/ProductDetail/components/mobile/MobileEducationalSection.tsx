@@ -34,7 +34,8 @@ const MobileEducationalSection: React.FC<MobileEducationalSectionProps> = ({
           fontSize={{ base: 'sm', md: 'md' }}
           fontWeight="semibold"
           color="gray.700"
-          mb={{ base: 2, md: 1 }}>
+          mb={{ base: 2, md: 1 }}
+        >
           Learn More About This Data
         </Text>
         <Divider />
@@ -64,7 +65,8 @@ const MobileEducationalSection: React.FC<MobileEducationalSectionProps> = ({
           }}
           transition="all 0.2s"
           borderWidth="1px"
-          borderRadius="lg">
+          borderRadius="lg"
+        >
           <Text textAlign="center" lineHeight="1.2">
             How is this calculated?
           </Text>
@@ -92,7 +94,8 @@ const MobileEducationalSection: React.FC<MobileEducationalSectionProps> = ({
           }}
           transition="all 0.2s"
           borderWidth="1px"
-          borderRadius="lg">
+          borderRadius="lg"
+        >
           <Text textAlign="center" lineHeight="1.2">
             Why trust this data?
           </Text>
@@ -114,7 +117,8 @@ const MobileEducationalSection: React.FC<MobileEducationalSectionProps> = ({
             py={{ base: 2, md: 1 }}
             _hover={{ bg: 'blue.50' }}
             _active={{ bg: 'blue.100' }}
-            borderRadius="md">
+            borderRadius="md"
+          >
             USDA Standards
           </Button>
 
@@ -130,7 +134,8 @@ const MobileEducationalSection: React.FC<MobileEducationalSectionProps> = ({
             py={{ base: 2, md: 1 }}
             _hover={{ bg: 'green.50' }}
             _active={{ bg: 'green.100' }}
-            borderRadius="md">
+            borderRadius="md"
+          >
             Regional Data
           </Button>
         </HStack>

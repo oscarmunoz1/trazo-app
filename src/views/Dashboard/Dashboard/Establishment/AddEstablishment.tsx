@@ -76,18 +76,27 @@ function AddEstablishment({ isEdit = false }: Props) {
           type: data.type || data.establishmentType || '',
           latitude: data.latitude !== undefined ? data.latitude : null,
           longitude: data.longitude !== undefined ? data.longitude : null,
-          crops_grown: data.cropsGrown || [],
+          crops_grown: JSON.stringify(data.cropsGrown || []),
           certifications: Array.isArray(data.certifications)
             ? data.certifications.join(', ')
             : data.certifications || '',
-          sustainability_practices: data.sustainabilityPractices || [],
+          sustainability_practices: JSON.stringify(data.sustainabilityPractices || []),
           contact_person: data.contact_person || '',
           contact_phone: data.contact_phone || data.phone || '',
           contact_email: data.contact_email || data.email || '',
-          // Image upload fields
-          uploaded_image_urls: data.uploaded_image_urls || [],
-          images_to_delete: data.images_to_delete || [],
-          new_images: data.new_images || []
+          // Image upload fields - only include if there are changes
+          ...(data.uploaded_image_urls &&
+            data.uploaded_image_urls.length > 0 && {
+              uploaded_image_urls: data.uploaded_image_urls
+            }),
+          ...(data.images_to_delete &&
+            data.images_to_delete.length > 0 && {
+              images_to_delete: data.images_to_delete
+            }),
+          ...(data.new_images &&
+            data.new_images.length > 0 && {
+              new_images: data.new_images
+            })
         };
 
         console.log('Updating establishment data:', establishmentUpdateData);
@@ -127,18 +136,24 @@ function AddEstablishment({ isEdit = false }: Props) {
           type: data.type || data.establishmentType || '',
           latitude: data.latitude !== undefined ? data.latitude : null,
           longitude: data.longitude !== undefined ? data.longitude : null,
-          crops_grown: data.cropsGrown || [],
+          crops_grown: JSON.stringify(data.cropsGrown || []),
           certifications: Array.isArray(data.certifications)
             ? data.certifications.join(', ')
             : data.certifications || '',
-          sustainability_practices: data.sustainabilityPractices || [],
+          sustainability_practices: JSON.stringify(data.sustainabilityPractices || []),
           contact_person: data.contact_person || '',
           contact_phone: data.contact_phone || data.phone || '',
           contact_email: data.contact_email || data.email || '',
           company: currentCompany.id,
-          // Image upload fields
-          uploaded_image_urls: data.uploaded_image_urls || [],
-          new_images: data.new_images || []
+          // Image upload fields - only include if there are uploaded images
+          ...(data.uploaded_image_urls &&
+            data.uploaded_image_urls.length > 0 && {
+              uploaded_image_urls: data.uploaded_image_urls
+            }),
+          ...(data.new_images &&
+            data.new_images.length > 0 && {
+              new_images: data.new_images
+            })
         };
 
         console.log('Sending establishment data to backend:', establishmentData);

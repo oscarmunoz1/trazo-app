@@ -9,15 +9,17 @@ import {
   Th,
   Thead,
   Tr,
-  useColorModeValue
+  useColorModeValue,
+  Card,
+  CardHeader,
+  Badge,
+  Button,
+  Tooltip
 } from '@chakra-ui/react';
 import { FaRegCheckCircle, FaRegDotCircle } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // Custom components
-import Card from 'components/Card/Card';
-import CardHeader from 'components/Card/CardHeader.tsx';
-import DashboardTableRow from 'components/Tables/DashboardTableRow';
 import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
 import React from 'react';
 import avatar1 from 'assets/img/avatars/avatar1.png';
@@ -28,9 +30,13 @@ import { useGetParcelHistoriesQuery } from 'store/api/historyApi';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 
+// Import Enhanced Table Row Component
+import CarbonDashboardTableRow from './CarbonDashboardTableRow';
+
 const HistoryCard = ({ title, amount, captions }) => {
   const intl = useIntl();
   const textColor = useColorModeValue('gray.700', 'white');
+  const cardBgColor = useColorModeValue('white', 'gray.800');
   const navigate = useNavigate();
 
   const currentCompany = useSelector((state) => state.company.currentCompany);
@@ -44,22 +50,82 @@ const HistoryCard = ({ title, amount, captions }) => {
     }
   );
 
+  // Enhanced captions for carbon transparency focus
+  const carbonFocusedCaptions = [
+    'Production Overview', // Combined time frame and production info
+    'Product & Verification', // Combined product and verification status
+    'Team', // Members column (hidden on mobile)
+    'Carbon Impact' // Enhanced carbon score with impact level
+  ];
+
   return (
     <Card
-      overflow={'auto'}
-      p="16px"
+      bg={cardBgColor}
+      borderRadius="xl"
+      boxShadow="lg"
+      overflow="hidden"
       h={{ sm: 'fit-content', xl: 'fit-content' }}
-      overflowX={{ sm: 'scroll', xl: 'hidden', height: 'fit-content' }}
+      transition="all 0.3s ease"
+      _hover={{ transform: 'translateY(-2px)', boxShadow: 'xl' }}
     >
-      <CardHeader p="12px 0px 28px 0px">
-        <Flex direction="column">
-          <Text fontSize="lg" color={textColor} fontWeight="bold" pb=".5rem">
-            {intl.formatMessage({ id: 'app.productions' })}
-          </Text>
-          <Flex align="center">
-            <Icon as={IoCheckmarkDoneCircleSharp} color="green.300" w={4} h={4} pe="3px" />
-            <Text fontSize="sm" color="gray.400" fontWeight="normal">
-              <Text fontWeight="bold" as="span">
+      <CardHeader p="20px" pb="12px">
+        <Flex direction="column" gap={4}>
+          <Flex justify="space-between" align="center">
+            <Flex align="center" gap={3}>
+              <Text fontSize="xl" color={textColor} fontWeight="bold">
+                {intl.formatMessage({ id: 'app.productions' })}
+              </Text>
+              <Badge
+                colorScheme="green"
+                variant="solid"
+                borderRadius="full"
+                px={3}
+                py={1}
+                fontSize="xs"
+                textTransform="none"
+              >
+                Carbon Tracked
+              </Badge>
+            </Flex>
+            <Tooltip
+              label={
+                data &&
+                data.some(
+                  (production) =>
+                    !production.finish_date || new Date(production.finish_date) > new Date()
+                )
+                  ? 'Complete current production before starting a new one'
+                  : 'Start a new production cycle'
+              }
+              placement="bottom-end"
+            >
+              <Button
+                size="sm"
+                colorScheme="green"
+                variant="ghost"
+                leftIcon={<Icon as={IoCheckmarkDoneCircleSharp} />}
+                isDisabled={
+                  data &&
+                  data.some(
+                    (production) =>
+                      !production.finish_date || new Date(production.finish_date) > new Date()
+                  )
+                }
+                onClick={() =>
+                  navigate(
+                    `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/add`
+                  )
+                }
+              >
+                New Production
+              </Button>
+            </Tooltip>
+          </Flex>
+
+          <Flex align="center" gap={2}>
+            <Icon as={IoCheckmarkDoneCircleSharp} color="green.500" w={5} h={5} />
+            <Text fontSize="sm" color="gray.500" fontWeight="medium">
+              <Text fontWeight="bold" as="span" color={textColor}>
                 {amount}{' '}
                 {amount > 1
                   ? intl.formatMessage({ id: 'app.productions' }).toLowerCase()
@@ -72,62 +138,75 @@ const HistoryCard = ({ title, amount, captions }) => {
           </Flex>
         </Flex>
       </CardHeader>
+
       {isLoading ? (
         <Flex width={'100%'} height={'120px'} justifyContent={'center'} alignItems="center">
-          <CircularProgress isIndeterminate value={1} color="green.300" size="25px" />
+          <CircularProgress isIndeterminate color="green.500" size="40px" />
         </Flex>
       ) : (
         <>
           {data && data.length > 0 ? (
-            <Table variant="simple" color={textColor}>
+            <Table variant="simple" size="md">
               <Thead>
-                <Tr my=".8rem" ps="0px">
-                  {captions.map((caption, idx) => {
-                    return (
-                      <Th color="gray.400" key={idx} ps={idx === 0 ? '0px' : null}>
-                        {caption}
-                      </Th>
-                    );
-                  })}
+                <Tr>
+                  {carbonFocusedCaptions.map((caption, idx) => (
+                    <Th
+                      key={idx}
+                      color="gray.400"
+                      fontWeight="semibold"
+                      fontSize="xs"
+                      textTransform="uppercase"
+                      letterSpacing="wider"
+                      ps={idx === 0 ? '20px' : '16px'}
+                      py="16px"
+                      borderColor="gray.100"
+                      bg="gray.50"
+                      _dark={{ bg: 'gray.700', borderColor: 'gray.600' }}
+                      display={idx === 2 ? { base: 'none', md: 'table-cell' } : 'table-cell'}
+                    >
+                      {caption}
+                    </Th>
+                  ))}
                 </Tr>
               </Thead>
               <Tbody>
-                {data?.map((history) => {
-                  return (
-                    <DashboardTableRow
-                      key={history.id}
-                      name={`${new Date(history.start_date).toLocaleDateString()}-${new Date(
-                        history.finish_date
-                      ).toLocaleDateString()}`}
-                      logo={
-                        history.certificate_percentage === 100 ? FaRegCheckCircle : FaRegDotCircle
-                      }
-                      members={history.members}
-                      product={history.product}
-                      progression={history.certificate_percentage}
-                      color={history.certificate_percentage === 100 ? 'green.300' : 'blue.400'}
-                      onClick={() => {
-                        navigate(
-                          `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${history.id}`
-                        );
-                      }}
-                    />
-                  );
-                })}
+                {data?.map((history) => (
+                  <CarbonDashboardTableRow
+                    key={history.id}
+                    production={history}
+                    onClick={() => {
+                      navigate(
+                        `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/${history.id}`
+                      );
+                    }}
+                  />
+                ))}
               </Tbody>
             </Table>
           ) : (
-            <Flex width={'100%'} height={'70px'} justifyContent="center">
-              <Text
-                display={'flex'}
-                fontSize={'md'}
-                fontWeight={'300'}
-                justifyContent={'center'}
-                alignItems={'center'}
-                textAlign={'center'}
-              >
+            <Flex
+              width={'100%'}
+              height={'120px'}
+              justifyContent="center"
+              alignItems="center"
+              direction="column"
+              gap={3}
+            >
+              <Text fontSize={'lg'} fontWeight={'500'} color="gray.400" textAlign={'center'}>
                 {intl.formatMessage({ id: 'app.noProductionsYet' })}
               </Text>
+              <Button
+                size="sm"
+                colorScheme="green"
+                variant="outline"
+                onClick={() =>
+                  navigate(
+                    `/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/production/add`
+                  )
+                }
+              >
+                Create First Production
+              </Button>
             </Flex>
           )}
         </>

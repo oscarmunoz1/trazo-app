@@ -49,7 +49,7 @@ export const REVIEW_URL = (reviewId: string) =>
 export const HISTORY_URL = (historyId: string) =>
   historyId ? `${ROOT_URL}/histories/${historyId}/` : `${ROOT_URL}/histories/`;
 export const PARCEL_HISTORY_URL = (companyId: string, establishmentId: string, parcelId: string) =>
-  `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/parcels/${parcelId}/history/`;
+  `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/parcels/${parcelId}/histories/`;
 export const CURRENT_HISTORY = (companyId: string, establishmentId: string, parcelId: string) =>
   `${ROOT_URL}/companies/${companyId}/establishments/${establishmentId}/parcels/${parcelId}/current_history/`;
 export const FINISH_HISTORY = (companyId: string, establishmentId: string, parcelId: string) =>

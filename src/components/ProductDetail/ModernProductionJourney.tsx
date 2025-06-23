@@ -220,7 +220,8 @@ export const ModernProductionJourney: React.FC<ModernProductionJourneyProps> = (
                   variant={selectedCategory === category ? 'solid' : 'outline'}
                   colorScheme={selectedCategory === category ? 'green' : 'gray'}
                   onClick={() => setSelectedCategory(category)}
-                  textTransform="capitalize">
+                  textTransform="capitalize"
+                >
                   {category === 'all' ? 'All Activities' : category}
                 </Button>
               </WrapItem>
@@ -244,7 +245,8 @@ export const ModernProductionJourney: React.FC<ModernProductionJourneyProps> = (
                       size="40px"
                       bg={config.bgColor}
                       border="2px solid"
-                      borderColor={config.borderColor}>
+                      borderColor={config.borderColor}
+                    >
                       <Icon as={config.icon} color={config.color} boxSize={5} />
                     </Circle>
                     {!isLast && <Box w="2px" h="60px" bg={borderColor} mt={2} />}
@@ -256,7 +258,8 @@ export const ModernProductionJourney: React.FC<ModernProductionJourneyProps> = (
                       size="sm"
                       bg={config.bgColor}
                       border="1px solid"
-                      borderColor={config.borderColor}>
+                      borderColor={config.borderColor}
+                    >
                       <CardBody>
                         <VStack spacing={3} align="stretch">
                           {/* Event header */}
@@ -266,7 +269,8 @@ export const ModernProductionJourney: React.FC<ModernProductionJourneyProps> = (
                                 <Badge
                                   size="sm"
                                   colorScheme={config.categoryColor}
-                                  variant="subtle">
+                                  variant="subtle"
+                                >
                                   {config.category}
                                 </Badge>
                                 {event.certified && (
@@ -362,7 +366,8 @@ export const ModernProductionJourney: React.FC<ModernProductionJourneyProps> = (
                 colorScheme="green"
                 size="sm"
                 onClick={() => setShowAll(!showAll)}
-                leftIcon={<Icon as={showAll ? FaChevronUp : FaChevronDown} />}>
+                leftIcon={<Icon as={showAll ? FaChevronUp : FaChevronDown} />}
+              >
                 {showAll ? `Show Less` : `Show ${filteredEvents.length - 4} More Activities`}
               </Button>
             </Box>

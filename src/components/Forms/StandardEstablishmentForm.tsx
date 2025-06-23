@@ -988,7 +988,7 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                       Cancel
                     </StandardButton>
                     <StandardButton onClick={nextStep} rightIcon={<FaChevronRight />}>
-                      Continue to Operations
+                      Next: Media
                     </StandardButton>
                   </HStack>
                 </HStack>
@@ -1423,13 +1423,8 @@ export const StandardEstablishmentForm: React.FC<StandardEstablishmentFormProps>
                     <StandardButton variant="outline" onClick={onCancel}>
                       Cancel
                     </StandardButton>
-                    <StandardButton
-                      type="submit"
-                      isLoading={isLoading}
-                      loadingText={isEdit ? 'Updating...' : 'Creating...'}
-                      leftIcon={<FaCheckCircle />}
-                    >
-                      {isEdit ? 'Update Establishment' : 'Create Establishment'}
+                    <StandardButton onClick={nextStep} rightIcon={<FaChevronRight />}>
+                      Next: Media
                     </StandardButton>
                   </HStack>
                 </HStack>

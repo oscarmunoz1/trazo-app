@@ -487,6 +487,27 @@ function NewEvent({ isEdit = false, eventId = null }) {
     setActiveStep(2);
   };
 
+  // Handle tab form submission (Event Details step)
+  const onSubmitTab = (data) => {
+    const updatedData = { ...eventFormData, ...data };
+    setEventFormData(updatedData);
+
+    dispatch(
+      setForm({
+        event: {
+          ...currentEvent,
+          ...updatedData
+        }
+      })
+    );
+
+    // Recalculate carbon with new data
+    calculateCarbonWithDebounce(updatedData, activeEventType);
+
+    // Move to next step (Description)
+    setActiveStep(2);
+  };
+
   // Handle event type change
   const handleEventTypeChange = (eventTypeId) => {
     setActiveEventType(eventTypeId);
@@ -537,8 +558,63 @@ function NewEvent({ isEdit = false, eventId = null }) {
 
       const backendEventType = eventTypeMapping[activeEventType] ?? activeEventType;
 
+      // Enhanced validation to prevent "Unknown" values
+      const validateAndEnhanceEventData = (data) => {
+        const enhancedData = { ...data };
+
+        // Get current history's crop type for intelligent defaults
+        const currentParcel = currentCompany?.establishments
+          ?.find((est) => est.id === parseInt(establishmentId || '0'))
+          ?.parcels?.find((p) => p.id === parseInt(parcelId || '0'));
+        const cropType = currentParcel?.current_history?.crop_type?.name || 'general';
+
+        // Validate required fields are present - don't add mocked values, instead ensure forms have proper inputs
+        const requiredFieldsByType = {
+          1: ['type', 'commercial_name', 'volume', 'area', 'concentration', 'way_of_application'], // Chemical
+          2: ['type'], // Production - other fields are optional but encouraged
+          4: ['type', 'equipment_name'], // Equipment - fuel data should come from form inputs
+          5: ['type'], // Soil Management - specific fields should come from form inputs
+          7: ['type'], // Pest Management - specific fields should come from form inputs
+          0: ['type'], // Weather
+          3: ['name'], // General
+          6: ['type'] // Business
+        };
+
+        const requiredFields = requiredFieldsByType[backendEventType] || [];
+        const missingFields = requiredFields.filter((field) => {
+          const value = enhancedData[field];
+          return (
+            !value || value.toString().toLowerCase() === 'unknown' || value.toString().trim() === ''
+          );
+        });
+
+        if (missingFields.length > 0) {
+          console.warn(
+            `Missing required fields for event type ${backendEventType}:`,
+            missingFields
+          );
+          // Don't auto-fill - let the form validation catch this
+          throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
+        }
+
+        // Ensure observation is never empty or "Unknown" - this is the only field we'll provide a fallback for
+        if (
+          !enhancedData.observation ||
+          enhancedData.observation.toLowerCase() === 'unknown' ||
+          enhancedData.observation.trim() === ''
+        ) {
+          const eventTypeName =
+            eventTypeConfig.find((t) => t.id === activeEventType)?.label || 'Farm';
+          enhancedData.observation = `${eventTypeName} activity completed successfully. Standard procedures followed for ${cropType} production.`;
+        }
+
+        return enhancedData;
+      };
+
+      const enhancedEventFormData = validateAndEnhanceEventData(eventFormData);
+
       const finalEventData = {
-        ...eventFormData,
+        ...enhancedEventFormData,
         event_type: backendEventType, // Use corrected event_type mapping
         companyId: currentCompany.id,
         establishmentId: parseInt(establishmentId || '0'),
@@ -546,6 +622,8 @@ function NewEvent({ isEdit = false, eventId = null }) {
         parcels: [parseInt(parcelId || '0')],
         album: { images: acceptedFiles }
       };
+
+      console.log('Final event data being sent:', finalEventData);
 
       if (isEdit) {
         // Update existing event
@@ -575,23 +653,24 @@ function NewEvent({ isEdit = false, eventId = null }) {
           title: intl.formatMessage({ id: 'app.success' }) || 'Success',
           description:
             intl.formatMessage({ id: 'app.eventCreatedSuccessfully' }) ||
-            'Event created successfully',
+            'Event created successfully with complete data for carbon calculation',
           status: 'success',
           duration: 5000,
           isClosable: true
         });
       }
 
-      dispatch(clearForm());
-      navigate(`/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}/`);
+      // Navigate back to the parcel details
+      navigate(`/admin/dashboard/establishment/${establishmentId}/parcel/${parcelId}`, {
+        replace: true
+      });
     } catch (error) {
-      console.error(`Error ${isEdit ? 'updating' : 'creating'} event:`, error);
+      console.error('Error creating/updating event:', error);
       toast({
         title: intl.formatMessage({ id: 'app.error' }) || 'Error',
         description:
-          intl.formatMessage({
-            id: isEdit ? 'app.errorUpdatingEvent' : 'app.errorCreatingEvent'
-          }) || `Failed to ${isEdit ? 'update' : 'create'} event`,
+          intl.formatMessage({ id: 'app.errorCreatingEvent' }) ||
+          'Failed to save event. Please try again.',
         status: 'error',
         duration: 5000,
         isClosable: true
@@ -620,6 +699,111 @@ function NewEvent({ isEdit = false, eventId = null }) {
       calculateCarbonWithDebounce(eventFormData, activeEventType);
     }
   }, [eventFormData, activeEventType, activeStep]);
+
+  // Get current history's crop type for intelligent defaults
+  const currentParcel = currentCompany?.establishments
+    ?.find((est) => est.id === parseInt(establishmentId || '0'))
+    ?.parcels?.find((p) => p.id === parseInt(parcelId || '0'));
+  const cropType = currentParcel?.current_history?.crop_type?.name || 'general';
+
+  const tabConfig = [
+    {
+      id: 0,
+      label: intl.formatMessage({ id: 'app.weather' }),
+      component: (
+        <WeatherTab
+          onSubmitHandler={onSubmitTab}
+          onPrev={() => setActiveEventType(null)}
+          initialValues={eventFormData}
+          cropType={cropType}
+        />
+      )
+    },
+    {
+      id: 1,
+      label: intl.formatMessage({ id: 'app.production' }),
+      component: (
+        <ProductionTab
+          onSubmitHandler={onSubmitTab}
+          onPrev={() => setActiveEventType(null)}
+          initialValues={eventFormData}
+          cropType={cropType}
+        />
+      )
+    },
+    {
+      id: 2,
+      label: intl.formatMessage({ id: 'app.chemical' }),
+      component: (
+        <ChemicalTab
+          onSubmitHandler={onSubmitTab}
+          onPrev={() => setActiveEventType(null)}
+          initialValues={eventFormData}
+          cropType={cropType}
+        />
+      )
+    },
+    {
+      id: 3,
+      label: intl.formatMessage({ id: 'app.general' }),
+      component: (
+        <GeneralTab
+          onSubmitHandler={onSubmitTab}
+          onPrev={() => setActiveEventType(null)}
+          initialValues={eventFormData}
+          cropType={cropType}
+        />
+      )
+    },
+    {
+      id: 4,
+      label: intl.formatMessage({ id: 'app.equipment' }),
+      component: (
+        <EquipmentTab
+          onSubmitHandler={onSubmitTab}
+          onPrev={() => setActiveEventType(null)}
+          initialValues={eventFormData}
+          cropType={cropType}
+        />
+      )
+    },
+    {
+      id: 5,
+      label: intl.formatMessage({ id: 'app.soilManagement' }),
+      component: (
+        <SoilManagementTab
+          onSubmitHandler={onSubmitTab}
+          onPrev={() => setActiveEventType(null)}
+          initialValues={eventFormData}
+          cropType={cropType}
+        />
+      )
+    },
+    {
+      id: 6,
+      label: intl.formatMessage({ id: 'app.business' }),
+      component: (
+        <BusinessTab
+          onSubmitHandler={onSubmitTab}
+          onPrev={() => setActiveEventType(null)}
+          initialValues={eventFormData}
+          cropType={cropType}
+        />
+      )
+    },
+    {
+      id: 7,
+      label: intl.formatMessage({ id: 'app.pestManagement' }),
+      component: (
+        <PestManagementTab
+          onSubmitHandler={onSubmitTab}
+          onPrev={() => setActiveEventType(null)}
+          initialValues={eventFormData}
+          cropType={cropType}
+        />
+      )
+    }
+  ];
 
   return (
     <Box w="100%" bg={useColorModeValue('gray.50', 'gray.900')} minH="100vh" pt={6}>
@@ -899,6 +1083,7 @@ function NewEvent({ isEdit = false, eventId = null }) {
                             onSubmitHandler={onSubmitMainInfo}
                             onPrev={goToPreviousStep}
                             initialValues={isEdit && existingEvent ? existingEvent : {}}
+                            cropType={cropType}
                           />
                         )}
                         {activeEventType === 1 && (
@@ -906,6 +1091,7 @@ function NewEvent({ isEdit = false, eventId = null }) {
                             onSubmitHandler={onSubmitMainInfo}
                             onPrev={goToPreviousStep}
                             initialValues={isEdit && existingEvent ? existingEvent : {}}
+                            cropType={cropType}
                           />
                         )}
                         {activeEventType === 2 && (
@@ -913,6 +1099,7 @@ function NewEvent({ isEdit = false, eventId = null }) {
                             onSubmitHandler={onSubmitMainInfo}
                             onPrev={goToPreviousStep}
                             initialValues={isEdit && existingEvent ? existingEvent : {}}
+                            cropType={cropType}
                           />
                         )}
                         {activeEventType === 3 && (
@@ -920,6 +1107,7 @@ function NewEvent({ isEdit = false, eventId = null }) {
                             onSubmitHandler={onSubmitMainInfo}
                             onPrev={goToPreviousStep}
                             initialValues={isEdit && existingEvent ? existingEvent : {}}
+                            cropType={cropType}
                           />
                         )}
                         {activeEventType === 4 && (
@@ -927,6 +1115,7 @@ function NewEvent({ isEdit = false, eventId = null }) {
                             onSubmitHandler={onSubmitMainInfo}
                             onPrev={goToPreviousStep}
                             initialValues={isEdit && existingEvent ? existingEvent : {}}
+                            cropType={cropType}
                           />
                         )}
                         {activeEventType === 5 && (
@@ -934,6 +1123,7 @@ function NewEvent({ isEdit = false, eventId = null }) {
                             onSubmitHandler={onSubmitMainInfo}
                             onPrev={goToPreviousStep}
                             initialValues={isEdit && existingEvent ? existingEvent : {}}
+                            cropType={cropType}
                           />
                         )}
                         {activeEventType === 6 && (
@@ -941,6 +1131,7 @@ function NewEvent({ isEdit = false, eventId = null }) {
                             onSubmitHandler={onSubmitMainInfo}
                             onPrev={goToPreviousStep}
                             initialValues={isEdit && existingEvent ? existingEvent : {}}
+                            cropType={cropType}
                           />
                         )}
                         {activeEventType === 7 && (
@@ -948,6 +1139,7 @@ function NewEvent({ isEdit = false, eventId = null }) {
                             onSubmitHandler={onSubmitMainInfo}
                             onPrev={goToPreviousStep}
                             initialValues={isEdit && existingEvent ? existingEvent : {}}
+                            cropType={cropType}
                           />
                         )}
                       </CardBody>

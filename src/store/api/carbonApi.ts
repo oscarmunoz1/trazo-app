@@ -932,7 +932,8 @@ export const carbonApi = baseApi.injectEndpoints({
     getEstablishmentCarbonSummary: builder.query<CarbonSummary, string>({
       query: (establishmentId) => ({
         url: `carbon/establishments/${establishmentId}/summary/`,
-        method: 'GET'
+        method: 'GET',
+        credentials: 'include'
       }),
       providesTags: ['CarbonSummary']
     }),
@@ -940,7 +941,8 @@ export const carbonApi = baseApi.injectEndpoints({
     getProductionCarbonSummary: builder.query<CarbonSummary, string>({
       query: (productionId) => ({
         url: `carbon/productions/${productionId}/summary/`,
-        method: 'GET'
+        method: 'GET',
+        credentials: 'include'
       }),
       providesTags: ['CarbonSummary']
     }),
@@ -961,7 +963,8 @@ export const carbonApi = baseApi.injectEndpoints({
     >({
       query: (productionId) => ({
         url: `carbon/public/productions/${productionId}/qr-summary/?quick=true`,
-        method: 'GET'
+        method: 'GET',
+        credentials: 'include'
       }),
       providesTags: ['CarbonSummary']
     }),
@@ -970,7 +973,8 @@ export const carbonApi = baseApi.injectEndpoints({
     getQRCodeSummary: builder.query<QRCodeSummary, string>({
       query: (productionId) => ({
         url: `carbon/public/productions/${productionId}/qr-summary/`,
-        method: 'GET'
+        method: 'GET',
+        credentials: 'include'
       }),
       providesTags: ['CarbonSummary']
     }),
@@ -978,7 +982,8 @@ export const carbonApi = baseApi.injectEndpoints({
     getPublicCarbonSummary: builder.query<CarbonSummary, string>({
       query: (productionId) => ({
         url: `carbon/public/productions/${productionId}/summary/`,
-        method: 'GET'
+        method: 'GET',
+        credentials: 'include'
       }),
       providesTags: ['CarbonSummary']
     }),
@@ -986,7 +991,8 @@ export const carbonApi = baseApi.injectEndpoints({
     getProductionTimeline: builder.query<CarbonEvent[], string>({
       query: (productionId) => ({
         url: `carbon/productions/${productionId}/timeline/`,
-        method: 'GET'
+        method: 'GET',
+        credentials: 'include'
       }),
       providesTags: ['CarbonSummary']
     }),
@@ -1005,7 +1011,8 @@ export const carbonApi = baseApi.injectEndpoints({
       query: (data) => ({
         url: 'carbon/offsets/',
         method: 'POST',
-        body: data
+        body: data,
+        credentials: 'include'
       }),
       invalidatesTags: ['CarbonSummary']
     }),
@@ -1415,6 +1422,311 @@ export const carbonApi = baseApi.injectEndpoints({
         };
       },
       providesTags: ['Education']
+    }),
+
+    // USDA Government Data Integration
+    getUSDAEmissionFactors: builder.query<
+      {
+        success: boolean;
+        crop_type: string;
+        state: string;
+        api_status: {
+          nass_configured: boolean;
+          ers_configured: boolean;
+          data_source: string;
+        };
+        emission_factors: Record<string, any>;
+        benchmark_data: {
+          regional_yield: number;
+          unit: string;
+          kg_per_hectare: number;
+        };
+        carbon_calculation: Record<string, any>;
+        usda_credibility: Record<string, any>;
+        api_attribution: string;
+        timestamp: string;
+        real_data: boolean;
+      },
+      { crop_type?: string; state?: string }
+    >({
+      query: ({ crop_type = 'corn', state = 'IA' }) => {
+        const params = new URLSearchParams();
+        params.append('crop_type', crop_type);
+        params.append('state', state);
+
+        return {
+          url: `carbon/usda/real-factors/?${params.toString()}`,
+          method: 'GET',
+          credentials: 'include'
+        };
+      },
+      providesTags: ['USDA'],
+      // Cache for 10 minutes to reduce API calls
+      keepUnusedDataFor: 600
+    }),
+
+    getNutritionalCarbonAnalysis: builder.query<
+      {
+        success: boolean;
+        crop_type: string;
+        nutritional_analysis: {
+          nutritional_data: Record<string, number>;
+          carbon_efficiency: Record<string, any>;
+          food_description: string;
+          data_source: string;
+        };
+        api_source: string;
+        timestamp: string;
+      },
+      { crop_type?: string }
+    >({
+      query: ({ crop_type = 'corn' }) => {
+        const params = new URLSearchParams();
+        params.append('crop_type', crop_type);
+
+        return {
+          url: `carbon/usda/nutritional-analysis/?${params.toString()}`,
+          method: 'GET',
+          credentials: 'include'
+        };
+      },
+      providesTags: ['USDA']
+    }),
+
+    getCompleteUSDAAnalysis: builder.query<
+      {
+        success: boolean;
+        analysis: Record<string, any>;
+        input_parameters: {
+          crop_type: string;
+          state: string;
+          farm_practices: Record<string, any>;
+        };
+        timestamp: string;
+      },
+      {
+        crop_type?: string;
+        state?: string;
+        area_hectares?: number;
+        yield_per_hectare?: number;
+        nitrogen_kg?: number;
+        phosphorus_kg?: number;
+        diesel_liters?: number;
+      }
+    >({
+      query: ({
+        crop_type = 'corn',
+        state = 'IA',
+        area_hectares = 100,
+        yield_per_hectare = 9000,
+        nitrogen_kg = 150,
+        phosphorus_kg = 50,
+        diesel_liters = 80
+      }) => {
+        const params = new URLSearchParams();
+        params.append('crop_type', crop_type);
+        params.append('state', state);
+        params.append('area_hectares', area_hectares.toString());
+        params.append('yield_per_hectare', yield_per_hectare.toString());
+        params.append('nitrogen_kg', nitrogen_kg.toString());
+        params.append('phosphorus_kg', phosphorus_kg.toString());
+        params.append('diesel_liters', diesel_liters.toString());
+
+        return {
+          url: `carbon/usda/complete-analysis/?${params.toString()}`,
+          method: 'GET',
+          credentials: 'include'
+        };
+      },
+      providesTags: ['USDA']
+    }),
+
+    validateUSDACompliance: builder.mutation<
+      {
+        status: string;
+        validation_result: Record<string, any>;
+        timestamp: string;
+      },
+      {
+        crop_type: string;
+        state: string;
+        co2e: number;
+        area_hectares: number;
+        usda_factors_based?: boolean;
+        method?: string;
+      }
+    >({
+      query: (data) => ({
+        url: 'carbon/usda/validate-compliance/',
+        method: 'POST',
+        body: data,
+        credentials: 'include'
+      }),
+      invalidatesTags: ['USDA']
+    }),
+
+    getUSDABenchmarkComparison: builder.query<
+      {
+        farm_carbon_intensity: number;
+        crop_type: string;
+        state: string;
+        benchmark_comparison: Record<string, any>;
+        timestamp: string;
+      },
+      {
+        carbon_intensity: number;
+        crop_type?: string;
+        state?: string;
+      }
+    >({
+      query: ({ carbon_intensity, crop_type = 'corn', state = 'CA' }) => {
+        const params = new URLSearchParams();
+        params.append('carbon_intensity', carbon_intensity.toString());
+        params.append('crop_type', crop_type);
+        params.append('state', state);
+
+        return {
+          url: `carbon/usda/benchmark-comparison/?${params.toString()}`,
+          method: 'GET',
+          credentials: 'include'
+        };
+      },
+      providesTags: ['USDA']
+    }),
+
+    // Voice Processing Endpoints
+    processVoiceEvent: builder.mutation<
+      {
+        type: string;
+        description: string;
+        date: string;
+        detected_amounts: string[];
+        detected_products: string[];
+        detected_systems?: string[];
+        confidence: number;
+        suggested_carbon_impact: number;
+        language_detected?: string;
+        processing_time?: number;
+        auto_approved?: boolean;
+        confidence_factors?: {
+          keyword_match: number;
+          amount_detection: number;
+          context_relevance: number;
+          language_clarity: number;
+        };
+      },
+      {
+        transcript: string;
+        crop_type: string;
+        language?: string;
+        timestamp?: string;
+      }
+    >({
+      query: (data) => ({
+        url: 'carbon/process-voice-event/',
+        method: 'POST',
+        body: data,
+        credentials: 'include'
+      }),
+      invalidatesTags: ['Event', 'CarbonSummary']
+    }),
+
+    processVoiceEventWithAI: builder.mutation<
+      {
+        type: string;
+        description: string;
+        date: string;
+        detected_amounts: string[];
+        detected_products: string[];
+        detected_systems?: string[];
+        confidence: number;
+        suggested_carbon_impact: number;
+        language_detected?: string;
+        processing_time?: number;
+        auto_approved?: boolean;
+        confidence_factors?: {
+          keyword_match: number;
+          amount_detection: number;
+          context_relevance: number;
+          language_clarity: number;
+        };
+      },
+      {
+        transcript: string;
+        crop_type: string;
+        language?: string;
+        timestamp?: string;
+      }
+    >({
+      query: (data) => ({
+        url: 'carbon/process-voice-event/',
+        method: 'POST',
+        body: data,
+        credentials: 'include'
+      }),
+      invalidatesTags: ['Event', 'CarbonSummary']
+    }),
+
+    // AI-Powered Smart Event Suggestions
+    getAIEventSuggestions: builder.query<
+      {
+        suggestions: Array<{
+          id: string;
+          name: string;
+          description: string;
+          reasoning: string;
+          carbon_impact: number;
+          priority: 'high' | 'medium' | 'low';
+          confidence: number;
+          timing_relevance: string;
+          efficiency_tips: string[];
+          estimated_duration: string;
+          category:
+            | 'fertilization'
+            | 'irrigation'
+            | 'pest_control'
+            | 'harvest'
+            | 'equipment'
+            | 'soil_management';
+          seasonal_relevance: number;
+          best_practices: string[];
+        }>;
+        reasoning: string;
+        context: {
+          season: string;
+          crop_type: string;
+          location?: string;
+          current_month: number;
+        };
+        ai_confidence: number;
+        generated_at: string;
+      },
+      {
+        crop_type: string;
+        location?: string;
+        season?: string;
+        recent_events?: string[]; // Optional - backend fetches from database automatically
+        farm_context?: Record<string, any>;
+      }
+    >({
+      query: ({ crop_type, location, season, recent_events, farm_context }) => {
+        const params = new URLSearchParams();
+        params.append('crop_type', crop_type);
+        if (location) params.append('location', location);
+        if (season) params.append('season', season);
+        // recent_events parameter still supported but backend will fetch from database
+        if (recent_events) params.append('recent_events', JSON.stringify(recent_events));
+        if (farm_context) params.append('farm_context', JSON.stringify(farm_context));
+
+        return {
+          url: `carbon/ai-event-suggestions/?${params.toString()}`,
+          method: 'GET',
+          credentials: 'include'
+        };
+      },
+      providesTags: ['Event', 'CarbonSummary'],
+      // Cache for 15 minutes since suggestions are context-dependent
+      keepUnusedDataFor: 900
     })
   })
 });
@@ -1461,5 +1773,16 @@ export const {
   useGetRegionalFarmingPracticesQuery,
   useGetEducationContentQuery,
   // NEW: Get event templates by crop type
-  useGetEventTemplatesByCropTypeQuery
+  useGetEventTemplatesByCropTypeQuery,
+  // USDA Government Data Integration hooks
+  useGetUSDAEmissionFactorsQuery,
+  useGetNutritionalCarbonAnalysisQuery,
+  useGetCompleteUSDAAnalysisQuery,
+  useValidateUSDAComplianceMutation,
+  useGetUSDABenchmarkComparisonQuery,
+  // Voice Processing hooks
+  useProcessVoiceEventMutation,
+  useProcessVoiceEventWithAIMutation,
+  // AI Smart Suggestions hook
+  useGetAIEventSuggestionsQuery
 } = carbonApi;

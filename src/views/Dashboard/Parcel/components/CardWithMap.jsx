@@ -128,7 +128,7 @@ const CardWithBackground = ({ polygon, zoom, center }) => {
   if (!isLoaded) return 'Loading Maps';
 
   return (
-    <Card maxHeight="290.5px" p="1rem">
+    <Card maxHeight="290.5px" p="0px">
       <CardBody p="0px" w="100%" h={{ sm: '200px', lg: '100%' }} borderRadius="15px">
         {isLoaded && (
           <GoogleMap
@@ -139,8 +139,7 @@ const CardWithBackground = ({ polygon, zoom, center }) => {
             }}
             zoom={mapZoom}
             center={mapCenter}
-            mapTypeId="satellite"
-          >
+            mapTypeId="satellite">
             {polygon && polygon.length > 0 && (
               <Polygon
                 path={polygon}

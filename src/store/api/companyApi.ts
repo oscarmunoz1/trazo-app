@@ -332,6 +332,18 @@ const companyApi = baseApi.injectEndpoints({
         method: 'GET',
         credentials: 'include'
       })
+    }),
+    // Get lightweight crop types for dropdowns (performance optimized)
+    getCropTypesDropdown: build.query<
+      Array<{ id: number; name: string; category: string; slug: string }>,
+      void
+    >({
+      query: () => ({
+        url: '/carbon/crop-types/dropdown/',
+        method: 'GET',
+        credentials: 'include'
+      }),
+      providesTags: ['CropType']
     })
   }),
   overrideExisting: false
@@ -362,5 +374,6 @@ export const {
   useGetCarbonEntriesQuery,
   useGetPublicEstablishmentQuery,
   useStartProductionMutation,
-  useGetCropTypesQuery
+  useGetCropTypesQuery,
+  useGetCropTypesDropdownQuery
 } = companyApi;
