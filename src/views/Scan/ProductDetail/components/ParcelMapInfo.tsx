@@ -138,7 +138,8 @@ export const ParcelMapInfo: React.FC<ParcelMapInfoProps> = ({ parcelData }) => {
               variant="outline"
               bg="white"
               leftIcon={<Icon as={isMapExpanded ? FaCompress : FaExpand} />}
-              onClick={() => setIsMapExpanded(!isMapExpanded)}>
+              onClick={() => setIsMapExpanded(!isMapExpanded)}
+            >
               {isMapExpanded ? 'Collapse' : 'Expand'}
             </Button>
           </Box>

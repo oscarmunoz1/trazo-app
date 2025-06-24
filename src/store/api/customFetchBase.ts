@@ -4,7 +4,7 @@ import { BaseQueryApi } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import { Mutex } from 'async-mutex';
 import { fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
-const baseUrl = import.meta.env.VITE_APP_BACKEND_URL;
+const baseUrl = import.meta.env.VITE_APP_BACKEND_URL || '/api';
 
 // Create a new mutex
 const mutex = new Mutex();

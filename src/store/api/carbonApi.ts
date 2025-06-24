@@ -1,11 +1,33 @@
 import { baseApi } from './baseApi';
 
 export interface CarbonSummary {
-  totalEmissions: number;
-  totalOffsets: number;
-  netFootprint: number;
-  carbonScore: number;
-  badges: Array<{
+  establishment_id?: string;
+  year?: number;
+  total_emissions: number;
+  total_offsets: number;
+  net_carbon: number;
+  carbon_score: number;
+  entries_count?: {
+    emissions: number;
+    offsets: number;
+    total: number;
+  };
+  has_data?: boolean;
+  recent_entries?: Array<{
+    id: number;
+    type: 'emission' | 'offset';
+    amount: number;
+    source: string;
+    date: string;
+  }>;
+  calculated_at?: string;
+  data_source?: string;
+  // Legacy camelCase fields for backward compatibility
+  totalEmissions?: number;
+  totalOffsets?: number;
+  netFootprint?: number;
+  carbonScore?: number;
+  badges?: Array<{
     id: string;
     name: string;
     icon: string;

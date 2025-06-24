@@ -151,7 +151,8 @@ export const ParcelModal: React.FC<ParcelModalProps> = ({ isOpen, onClose, parce
                   fontSize="xs"
                   px={2}
                   py={1}
-                  borderRadius="full">
+                  borderRadius="full"
+                >
                   {parcelData.area} hectares
                 </Badge>
                 {parcelData.certified && (
@@ -161,7 +162,8 @@ export const ParcelModal: React.FC<ParcelModalProps> = ({ isOpen, onClose, parce
                     fontSize="xs"
                     px={2}
                     py={1}
-                    borderRadius="full">
+                    borderRadius="full"
+                  >
                     <Icon as={FaCheckCircle} mr={1} boxSize={2} />
                     Certified
                   </Badge>
@@ -173,7 +175,8 @@ export const ParcelModal: React.FC<ParcelModalProps> = ({ isOpen, onClose, parce
                     fontSize="xs"
                     px={2}
                     py={1}
-                    borderRadius="full">
+                    borderRadius="full"
+                  >
                     {parcelData.unique_code}
                   </Badge>
                 )}
@@ -280,7 +283,8 @@ export const ParcelModal: React.FC<ParcelModalProps> = ({ isOpen, onClose, parce
                 bg={useColorModeValue('blue.50', 'blue.900')}
                 borderRadius="lg"
                 border="1px"
-                borderColor="blue.200">
+                borderColor="blue.200"
+              >
                 <CardBody p={6}>
                   <HStack mb={3}>
                     <Icon as={FaSeedling} color="blue.500" />

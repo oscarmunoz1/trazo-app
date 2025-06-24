@@ -112,7 +112,8 @@ export const CompanyModal: React.FC<CompanyModalProps> = ({ isOpen, onClose, com
                   fontSize="xs"
                   px={2}
                   py={1}
-                  borderRadius="full">
+                  borderRadius="full"
+                >
                   {companyData.subscription_plan.name} Plan
                 </Badge>
               )}
@@ -228,7 +229,8 @@ export const CompanyModal: React.FC<CompanyModalProps> = ({ isOpen, onClose, com
                         href={companyData.website}
                         isExternal
                         color={textColor}
-                        _hover={{ color: accentColor }}>
+                        _hover={{ color: accentColor }}
+                      >
                         {companyData.website}
                         <Icon as={FaExternalLinkAlt} ml={2} boxSize={3} />
                       </Link>
@@ -254,7 +256,8 @@ export const CompanyModal: React.FC<CompanyModalProps> = ({ isOpen, onClose, com
                         leftIcon={<FaFacebook />}
                         colorScheme="facebook"
                         variant="outline"
-                        size="sm">
+                        size="sm"
+                      >
                         Facebook
                       </Button>
                     )}
@@ -266,7 +269,8 @@ export const CompanyModal: React.FC<CompanyModalProps> = ({ isOpen, onClose, com
                         leftIcon={<FaInstagram />}
                         colorScheme="pink"
                         variant="outline"
-                        size="sm">
+                        size="sm"
+                      >
                         Instagram
                       </Button>
                     )}
@@ -294,7 +298,8 @@ export const CompanyModal: React.FC<CompanyModalProps> = ({ isOpen, onClose, com
                         px={3}
                         py={2}
                         borderRadius="md"
-                        fontSize="sm">
+                        fontSize="sm"
+                      >
                         {cert}
                       </Badge>
                     ))}

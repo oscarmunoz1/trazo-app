@@ -69,7 +69,8 @@ export const ModernProductHeader: React.FC<ModernProductHeaderProps> = ({
       bgGradient="linear(to-br, green.50, blue.50)"
       borderBottomRadius="3xl"
       overflow="hidden"
-      position="relative">
+      position="relative"
+    >
       {/* Background Pattern */}
       <Box
         position="absolute"
@@ -98,7 +99,8 @@ export const ModernProductHeader: React.FC<ModernProductHeaderProps> = ({
                     fontSize="sm"
                     display="flex"
                     alignItems="center"
-                    gap={1}>
+                    gap={1}
+                  >
                     <Icon as={BsShieldCheck} boxSize={3} />
                     USDA Verified
                   </Badge>
@@ -113,7 +115,8 @@ export const ModernProductHeader: React.FC<ModernProductHeaderProps> = ({
                     fontSize="sm"
                     display="flex"
                     alignItems="center"
-                    gap={1}>
+                    gap={1}
+                  >
                     <Icon as={MdScience} boxSize={3} />
                     {Math.round(confidenceScore)}% Accuracy
                   </Badge>
@@ -151,7 +154,8 @@ export const ModernProductHeader: React.FC<ModernProductHeaderProps> = ({
               spacing={8}
               align="center"
               justify="space-between"
-              flexDir={{ base: 'column', lg: 'row' }}>
+              flexDir={{ base: 'column', lg: 'row' }}
+            >
               {/* Carbon Score Display */}
               <VStack spacing={4} align="center">
                 <Box position="relative">
@@ -160,7 +164,8 @@ export const ModernProductHeader: React.FC<ModernProductHeaderProps> = ({
                     bg="green.50"
                     border="8px solid"
                     borderColor="green.200"
-                    position="relative">
+                    position="relative"
+                  >
                     <VStack spacing={1}>
                       <Heading size="4xl" color="green.600" fontWeight="black">
                         {carbonScore}
@@ -184,7 +189,8 @@ export const ModernProductHeader: React.FC<ModernProductHeaderProps> = ({
                         fontSize="xs"
                         display="flex"
                         alignItems="center"
-                        gap={1}>
+                        gap={1}
+                      >
                         <Icon as={BsTrophy} boxSize={3} />
                         Excellent!
                       </Badge>
@@ -271,7 +277,8 @@ export const ModernProductHeader: React.FC<ModernProductHeaderProps> = ({
                     leftIcon={<Icon as={FaLightbulb} />}
                     onClick={() => onEducationOpen('carbon_impact')}
                     borderRadius="full"
-                    flex={1}>
+                    flex={1}
+                  >
                     Learn More
                   </Button>
 
@@ -282,7 +289,8 @@ export const ModernProductHeader: React.FC<ModernProductHeaderProps> = ({
                     leftIcon={<Icon as={isAuthenticated ? FaStar : FaHeart} />}
                     onClick={handleReviewClick}
                     borderRadius="full"
-                    flex={1}>
+                    flex={1}
+                  >
                     {isAuthenticated ? 'Leave Review' : 'Quick Feedback'}
                   </Button>
                 </HStack>

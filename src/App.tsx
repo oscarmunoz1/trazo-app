@@ -54,7 +54,7 @@ import PlanUsage from 'views/Dashboard/PlanUsage';
 import Billing from 'views/Pages/Account/Billing';
 import NoSubscriptionRedirect from './utils/protections/NoSubscriptionRedirect';
 import NewProduction from 'views/Dashboard/Dashboard/components/forms/NewProduction';
-import CarbonDashboard from 'views/Dashboard/Dashboard/Establishment/CarbonDashboard';
+import ModernCarbonDashboard from 'views/Dashboard/Dashboard/Establishment/ModernCarbonDashboard';
 import IoTDashboard from 'views/Dashboard/Dashboard/Establishment/IoTDashboard';
 import PublicEstablishmentProfile from 'views/Scan/PublicEstablishmentProfile/PublicEstablishmentProfile';
 import { usePointsStore } from './store/pointsStore';
@@ -240,7 +240,7 @@ const App = () => {
                   exact
                   element={
                     <NoSubscriptionRedirect>
-                      <CarbonDashboard />
+                      <ModernCarbonDashboard />
                     </NoSubscriptionRedirect>
                   }
                 />
